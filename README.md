@@ -16,9 +16,8 @@ The repository will be subdivided into the following folders:
   
   
 - #### [scripts]:
-  - common_garden: common_garden_2021.R, CG_weekly_subsets.R, maternal_effects.R
+  - common_garden: common_garden_2021.R, common_garden_2022.R, CG_weekly_subsets.R, maternal_effects.R
   - phenology: 
-  - common_garden_2022.R
   - hobo: HOBO_2021.R
   - tomst: CG_TOMST.R, KP_TOMST.R, ALL_TOMST.R, QHI_TOMST.R, CG_vs_TOMST.R
   
