@@ -24,7 +24,7 @@ The repository will be subdivided into the following folders:
   
 - #### [figures]
 
-- other?
+- #### [docs]: planning docs etc.
 
 *****
 
