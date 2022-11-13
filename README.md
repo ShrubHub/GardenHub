@@ -1,6 +1,6 @@
 # GardenHub
 ### A repository for the common garden experiment data analyses
-#### Last update: 11/11/2022 by Erica Zaja
+#### Last update: 13/11/2022 by Erica Zaja
 
 ******
 
@@ -9,9 +9,9 @@ The repository will be subdivided into the following folders:
 
 - #### [data]:
   - common_garden: one sub-folder per year 2013-2021, with all raw data if available and weekly subsets (Erica)
-  - phenology: phenocam spreadsheets and ground truthing data (2022)
+  - [phenology](https://github.com/ShrubHub/GardenHub/tree/main/data/phenology): add phenocam spreadsheets when done
   - source_pops: all source population data (2017-2022) including Salix_field_data.csv
-  - tomst: all raw tomst data (Erica has it)
+  - [tomst](https://github.com/ShrubHub/GardenHub/tree/main/data/tomst)
   - hobo: HOBO_CommonGarden_12August_2021.csv
   
   
