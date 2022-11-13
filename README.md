@@ -15,11 +15,11 @@ The repository will be subdivided into the following folders:
   - hobo: HOBO_CommonGarden_12August_2021.csv
   
   
-- #### [scripts]:
-  - common_garden: common_garden_2021.R, common_garden_2022.R, CG_weekly_subsets.R, maternal_effects.R
+- #### [scripts](https://github.com/ShrubHub/GardenHub/tree/main/scripts):
+  - [common_garden](https://github.com/ShrubHub/GardenHub/tree/main/scripts/common_garden)
   - phenology: 
-  - hobo: HOBO_2021.R
-  - tomst: CG_TOMST.R, KP_TOMST.R, ALL_TOMST.R, QHI_TOMST.R, CG_vs_TOMST.R
+  - [hobo](https://github.com/ShrubHub/GardenHub/tree/main/scripts/hobo)
+  - [tomst](https://github.com/ShrubHub/GardenHub/tree/main/scripts/tomst)
   
 - #### [figures]
 
