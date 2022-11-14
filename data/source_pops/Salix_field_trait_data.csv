@@ -1,0 +1,460 @@
+Species,SLA_mm2_mg,Plant_height_veg_m,Plant_height_repro_m,Seed_mass_dry_mg,LDMC_g_g,Wood_density_mg_mm3,Leaf_area_mm2,Leaf_fresh_mass_g,Leaf_dry_mass_mg,Species_sex,Lat,Lon,Elevation_m,Site,Subsite_name,Treatment,date,DOY,Year_measured,Data_contributor,Data_coPIs,ValueKindName
+Salix arctica,,0.023,0.051,,,,,,,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix arctica,,0.03,0.049,,,,,,,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix arctica,,0.04,0.058,,,,,,,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix arctica,,0.019,0.035,,,,,,,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix arctica,,0.026,0.055,,,,,,10,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix arctica,,0.045,0.09,,,,,,25,f,61.10549,-138.6618,1693,Kluane,,none,08-Jul,189,2014,Isla Myers-Smith,,Individual Mean
+Salix arctica,,0.029,0.061,,,,,,30,f,61.10549,-138.6618,1693,Kluane,,none,08-Jul,189,2014,Isla Myers-Smith,,Individual Mean
+Salix arctica,,0.041,0.074,,,,,,25,f,61.10549,-138.6618,1693,Kluane,,none,08-Jul,189,2014,Isla Myers-Smith,,Individual Mean
+Salix arctica,,0.058,0.113,,,,,,30,f,61.10549,-138.6618,1693,Kluane,,none,08-Jul,189,2014,Isla Myers-Smith,,Individual Mean
+Salix arctica,,0.064,0.055,,,,,,5,m,61.10549,-138.6618,1693,Kluane,,none,08-Jul,189,2014,Isla Myers-Smith,,Individual Mean
+Salix arctica,13.93,,,,,,96,,7,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,14.67,,,,,,127,,9,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,12.8,,,,,,54,,5,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,12.85,,,,,,85,,6.5,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,12.3,,,,,,134,,11.5,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,13.05,,,,,,480,,31,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,14.22,,,,,,414,,32,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,12.97,,,,,,485,,31,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,13.64,,,,,,406,,29,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,14.05,,,,,,109,,9.5,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,12.18,,,,,,648,,51.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,11.54,,,,,,909,,73.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,12.7,,,,,,885,,72.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,10.12,,,,,,1215,,108.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,12.25,,,,,,804,,67.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,10.06,,,,,,2245,,205.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,10.21,,,,,,1511,,132,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,14.26,,,,,,1330,,75.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,24.91,,,,,,1392,,51,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,8.98,,,,,,1234,,139,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,11.98,,,,,,945,,99.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,10.88,,,,,,2285,,237,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,99,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,137,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,74,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,82,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,149,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,329,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,496,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,319,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,385,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,158,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,607,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,787,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,956,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,982,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,850,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,1888,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,1185,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,824,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,1149,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,1262,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,1440,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,,2871,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix arctica,,,,,,0.740331492,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.662082515,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.672,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.749084249,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.732,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.749482402,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.738197425,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.646387833,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.739612188,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.745583039,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.678527607,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.699001427,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.854368932,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.796747967,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.818181818,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.633333333,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.794871795,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.615384615,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.617647059,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.653846154,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.47826087,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,,,,,,0.642857143,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix arctica,10.52758402,0.08,0.077,,0.384634146,0.76409894,1109.3,0.205,78.85,Female,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,10.05552896,0.098,0.084,,0.409607843,0.656644035,866.2,0.255,104.45,Female,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,10.33189033,0.061,0.07,,0.396,0.660910518,708.7,0.175,69.3,Female,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,10.69727891,0.044,0.061,,0.392,0.712087912,157,0.075,29.4,Female,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,9.24772746,0.162,0.153,,0.382519685,0.647229615,1815.562,0.635,242.9,Female,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,10.61965318,0.081,0.102,,0.346,0.746887967,584.4,0.25,86.5,Female,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,13.33161512,0.164,0.155,0.03,0.415714286,0.638888889,488.7,0.07,29.1,Female,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,11.40073193,0.092,0.127,,0.390357143,0.646846847,627.8,0.14,54.65,Female,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,9.510846954,0.116,0.12,,0.39127907,0.621192053,1656.7,0.43,168.25,Female,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,9.102306463,0.188,0.208,,0.394504505,0.691525424,2210.2,0.555,218.95,Female,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,11.45700637,0.14,0.16,,0.330526316,0.7,762.6,0.19,62.8,Female,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,14.23935091,0.183,,,0.308125,0.617497457,1188.3,0.24,73.95,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,11.30290011,0.152,,,0.404782609,0.644897959,487.5,0.115,46.55,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,13.01891716,0.176,0.23,,0.356511628,0.620611552,1044,0.215,76.65,Female,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,11.8266129,0.198,0.174,,0.381538462,0.823834197,844.9,0.13,49.6,Female,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,10.28284672,0.06,0.106,,0.456666667,,256.1,0.06,27.4,Female,69.57632,138.86952,59,Qikiqtaruk,HE15PTS11,None,28/07/2015,209,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,8.906217071,0.103,0.128,,0.451904762,,363.8,0.105,47.45,Female,69.57632,138.86952,59,Qikiqtaruk,HE15PTS11,None,28/07/2015,209,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,7.335168617,0.074,0.112,,0.484333333,,645.2,0.15,72.65,Female,69.57632,138.86952,59,Qikiqtaruk,HE15PTS11,None,28/07/2015,209,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,9.839534884,0.025,0.059,,0.614285714,,85.2,0.035,21.5,Female,69.57632,138.86952,59,Qikiqtaruk,HE15PTS11,None,28/07/2015,209,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,9.439606742,0.058,0.086,,0.418823529,,357.4,0.085,35.6,Female,69.57632,138.86952,59,Qikiqtaruk,HE15PTS11,None,28/07/2015,209,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,550.9,,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,1234.4,,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,723.3,,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,472,,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,2676.984,,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,1252.8,,,,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,287.2,,,,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,618.3,,,,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,1543.7,,,,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,1775.7,,,,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,676.4,,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,917.7,,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,564.8,,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,951.8,,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,328.3,,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,307.4,,,,69.57632,138.86952,59,Qikiqtaruk,HE15PTS11,None,28/07/2015,209,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,481.4,,,,69.57632,138.86952,59,Qikiqtaruk,HE15PTS11,None,28/07/2015,209,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,420.6,,,,69.57632,138.86952,59,Qikiqtaruk,HE15PTS11,None,28/07/2015,209,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,337.9,,,,69.57632,138.86952,59,Qikiqtaruk,HE15PTS11,None,28/07/2015,209,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,,,,,,314.7,,,,69.57632,138.86952,59,Qikiqtaruk,HE15PTS11,None,28/07/2015,209,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix arctica,,0.056,0.064,,,,,0.083,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.032,0.05,,,,,0.141,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.072,0.045,,,,,0.126,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.05,0.036,,,,,0.098,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.046,0.063,,,,,0.081,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.116,0.075,,,,,0.129,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,26/07/2016,208,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.141,,,,,,0.223,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,26/07/2016,208,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.143,0.185,,,,,0.159,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,26/07/2016,208,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.18,0.21,,,,,0.136,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,26/07/2016,208,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.139,0.061,,,,,0.164,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,26/07/2016,208,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.085,0.087,,,,,,,,61.21649,-138.28606,1631,Kluane,HE16PCTraits1,None,28/06/2016,180,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.067,0,,,,,,,,61.21649,-138.28606,1631,Kluane,HE16PCTraits1,None,28/06/2016,180,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.028,0.036,,,,,,,,61.21649,-138.28606,1631,Kluane,HE16PCTraits1,None,28/06/2016,180,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.059,0.022,,,,,,,,61.21649,-138.28606,1631,Kluane,HE16PCTraits1,None,28/06/2016,180,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.041,0.036,,,,,,,,61.21649,-138.28606,1631,Kluane,HE16PCTraits1,None,28/06/2016,180,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.067,0,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.065,0.086,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.128,0,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.049,0.045,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.057,0,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.038,0,,,,,,,,60.95528,-138.41401,1875,Kluane,HE16KPTraits3,None,08/07/2016,190,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.07,0.085,,,,,,,,60.95528,-138.41401,1875,Kluane,HE16KPTraits3,None,08/07/2016,190,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.05,0.078,,,,,,,,60.95528,-138.41401,1875,Kluane,HE16KPTraits3,None,08/07/2016,190,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.054,0.046,,,,,,,,60.95528,-138.41401,1875,Kluane,HE16KPTraits3,None,08/07/2016,190,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.06,0.099,,,,,,,,60.95528,-138.41401,1875,Kluane,HE16KPTraits3,None,08/07/2016,190,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix arctica,,0.048,0,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,0.05,0,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,0.03,0,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,0.05,0,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,0.05,0,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,0.098,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,0.028,0.043,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,0.035,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,0.066,0.041,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,0.055,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,,,,,,,,,,61.2143,-138.28691,1652,Kluane,PCTRAITSS2,None,14/08/2017,226,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,,,,,,,,,,61.2143,-138.28691,1652,Kluane,PCTRAITSS2,None,14/08/2017,226,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,,,,,,,,,,61.2143,-138.28691,1652,Kluane,PCTRAITSS2,None,14/08/2017,226,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,,,,,,,,,,61.2143,-138.28691,1652,Kluane,PCTRAITSS2,None,14/08/2017,226,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix arctica,,,,,,,,,,,61.2143,-138.28691,1652,Kluane,PCTRAITSS2,None,14/08/2017,226,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,0.548,0.502,,,,,,5,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix pulchra,,0.374,0.36,,,,,,5,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix pulchra,,0.53,0.495,,,,,,10,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix pulchra,,0.663,0.661,,,,,,15,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix pulchra,,0.325,0.26,,,,,,5,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix pulchra,,0.505,0.48,,,,,,5,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix pulchra,,0.373,0.243,,,,,,5,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix pulchra,,0.211,0.171,,,,,,5,m,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix pulchra,,0.445,0.441,,,,,,10,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix pulchra,,0.676,0.611,,,,,,,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix pulchra,17.38,,,,,,246,,13,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,15.78,,,,,,132,,9,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,12.88,,,,,,301,,17,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,12.03,,,,,,230,,19,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,12.56,,,,,,127,,12.5,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,19.97,,,,,,273,,16,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,17.89,,,,,,150,,9,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,1.8,,,,,,148,,96,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,13.17,,,,,,222,,18,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,25.41,,,,,,218,,8.5,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,10.24,,,,,,198,,18.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,8.21,,,,,,288,,31,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,9.16,,,,,,323,,37.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,10.91,,,,,,585,,52,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,9.58,,,,,,325,,30,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,11.61,,,,,,420,,38.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,9.97,,,,,,614,,57,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,9.33,,,,,,406,,42.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,8.83,,,,,,316,,38.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,9.04,,,,,,483,,51.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,206,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,152,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,137,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,227,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,187,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,366,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,172,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,197,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,252,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,214,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,181,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,221,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,364,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,550,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,250,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,474,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,523,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,387,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,364,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,,448,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Jennifer Lowe; Haydn Thomas,Individual Mean
+Salix pulchra,,,,,,0.742819843,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.624430956,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.7015625,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.602391629,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.712230216,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.68852459,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.723577236,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.74556213,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.700447094,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.782352941,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.500633714,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.592369478,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.620839363,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.560869565,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.644366197,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.52173913,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.606557377,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.643695015,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.606714628,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,,,,,,0.541341654,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix pulchra,9.916461916,0.211,,,0.626153846,0.593180016,423.8,0.065,40.7,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,7.536470588,0.215,,,0.566666667,0.655487805,161.9,0.075,42.5,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,9.581491713,0.301,,,0.724,0.542508711,331,0.05,36.2,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,10.42857143,0.245,,,0.665,0.646373057,250.4,0.03,19.95,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,8.513657056,0.211,,,0.5272,0.585654596,513,0.125,65.9,Male,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,11.07738815,0.413,,,0.459444444,0.619765494,606.5,0.09,41.35,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,11.55797101,0.321,,,0.591428571,0.649321267,179.5,0.035,20.7,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,11.12051121,0.253,,,0.427346154,0.57195122,557.9,0.13,55.555,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,11.44375,0.506,,,0.451282051,0.571743929,1268,0.195,88,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,10.79466119,0.478,,,0.487,0.502902903,235.2,0.05,24.35,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,10.31221719,0.213,,,0.736666667,0.653266332,216.4,0.03,22.1,,69.57891,138.94557,56,Qikiqtaruk,HE15PTS6,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,9.24584323,0.233,,,0.52625,0.567630058,314.1,0.08,42.1,,69.57891,138.94557,56,Qikiqtaruk,HE15PTS6,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,9.053977273,0.214,,,0.541538462,0.566120219,346.4,0.065,35.2,,69.57891,138.94557,56,Qikiqtaruk,HE15PTS6,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,10.60450563,0.12,0.038,,0.499375,0.592173913,384.6,0.08,39.95,Female,69.57891,138.94557,56,Qikiqtaruk,HE15PTS6,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,9.52259332,0.336,0.07,,0.565555556,0.705497382,484.7,0.09,50.9,Female,69.57891,138.94557,56,Qikiqtaruk,HE15PTS6,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,11.33333333,0.275,,,1.71,0.66563147,192.2,0.01,17.1,Male,69.57536,138.86479,63,Qikiqtaruk,HE15PTS16,None,04/08/2015,216,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,9.344761905,0.221,,,0.875,0.725239617,237.7,0.03,26.25,,69.57536,138.86479,63,Qikiqtaruk,HE15PTS16,None,04/08/2015,216,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,9.778969957,0.294,,,1.165,0.698033708,276.8,0.02,23.3,,69.57536,138.86479,63,Qikiqtaruk,HE15PTS16,None,04/08/2015,216,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,10.03219697,0.201,,,0.754285714,0.760722348,261,0.035,26.4,,69.57536,138.86479,63,Qikiqtaruk,HE15PTS16,None,04/08/2015,216,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,9.713382508,0.285,,,0.499473684,0.662182362,565.5,0.095,47.45,Female,69.57536,138.86479,63,Qikiqtaruk,HE15PTS16,None,04/08/2015,216,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,383.4,,,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,478.7,,,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,362.7,,,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,165.7,,,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,609.1,,,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,309.6,,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,299,,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,677.7,,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,746.1,,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,290.5,,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,239.4,,,,69.57891,138.94557,56,Qikiqtaruk,HE15PTS6,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,464.4,,,,69.57891,138.94557,56,Qikiqtaruk,HE15PTS6,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,291,,,,69.57891,138.94557,56,Qikiqtaruk,HE15PTS6,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,462.7,,,,69.57891,138.94557,56,Qikiqtaruk,HE15PTS6,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,,,,,69.57891,138.94557,56,Qikiqtaruk,HE15PTS6,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,195.4,,,,69.57536,138.86479,63,Qikiqtaruk,HE15PTS16,None,04/08/2015,216,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,252.9,,,,69.57536,138.86479,63,Qikiqtaruk,HE15PTS16,None,04/08/2015,216,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,178.9,,,,69.57536,138.86479,63,Qikiqtaruk,HE15PTS16,None,04/08/2015,216,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,268.7,,,,69.57536,138.86479,63,Qikiqtaruk,HE15PTS16,None,04/08/2015,216,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,,,,,,356.3,,,,69.57536,138.86479,63,Qikiqtaruk,HE15PTS16,None,04/08/2015,216,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix pulchra,,0.201,,,,,,0.006,,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2016,208,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.248,,,,,,0.018,,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2016,208,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.235,,,,,,0.058,,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2016,208,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.29,,,,,,0.051,,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2016,208,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.315,,,,,,0.034,,,69.57751,138.91127,67,Qikiqtaruk,HE15PTS4,None,26/07/2016,208,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.44,,,,,,0.017,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.205,,,,,,0.032,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.2,,,,,,0.036,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.364,,,,,,0.061,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.329,,,,,,0.023,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.322,0.163,,,,,,,,61.21649,-138.28606,1631,Kluane,HE16PCTraits1,None,28/06/2016,180,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.27,0,,,,,,,,61.21649,-138.28606,1631,Kluane,HE16PCTraits1,None,28/06/2016,180,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.288,0,,,,,,,,61.21649,-138.28606,1631,Kluane,HE16PCTraits1,None,28/06/2016,180,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.162,0,,,,,,,,61.21649,-138.28606,1631,Kluane,HE16PCTraits1,None,28/06/2016,180,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.613,0,,,,,,,,61.21649,-138.28606,1631,Kluane,HE16PCTraits1,None,28/06/2016,180,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.701,0.617,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.266,0,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,1.028,0.925,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,2.82,2.44,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,0.408,0,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix pulchra,,1.07,0.98,,,,,,,,60.97682,138.41019,1472,Kluane,KP17Traits1,None,06/08/2017,218,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,1.46,1.27,,,,,,,,60.97682,138.41019,1472,Kluane,KP17Traits1,None,06/08/2017,218,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,1.06,0.9,,,,,,,,60.97682,138.41019,1472,Kluane,KP17Traits1,None,06/08/2017,218,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,1.83,,,,,,,,,60.97682,138.41019,1472,Kluane,KP17Traits1,None,06/08/2017,218,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,1.26,1.18,,,,,,,,60.97682,138.41019,1472,Kluane,KP17Traits1,None,06/08/2017,218,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,0.84,0.73,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,0.62,0.555,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,0.49,0,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,0.84,0.39,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,0.68,0,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,0.81,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,0.28,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,0.4,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,0.89,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix pulchra,,0.33,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,0.731,0.714,,,,,,20,m,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix richardsonii,,0.803,0.781,,,,,,20,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix richardsonii,,0.61,0.55,,,,,,20,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix richardsonii,,0.566,0.531,,,,,,40,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix richardsonii,,0.575,0.137,,,,,,15,f,61.10549,-138.6618,1693,Kluane,,none,07-Jul,188,2014,Isla Myers-Smith,,Individual Mean
+Salix richardsonii,,0.69,0.47,,,,,,50,unk,61.1726,-138.3824,980,Kluane,,none,08-Jul,189,2014,Isla Myers-Smith,,Individual Mean
+Salix richardsonii,,0.69,0.62,,,,,,40,f,61.1726,-138.3824,980,Kluane,,none,08-Jul,189,2014,Isla Myers-Smith,,Individual Mean
+Salix richardsonii,,0.72,,,,,,,35,,61.1726,-138.3824,980,Kluane,,none,08-Jul,189,2014,Isla Myers-Smith,,Individual Mean
+Salix richardsonii,,0.61,,,,,,,45,,61.1726,-138.3824,980,Kluane,,none,08-Jul,189,2014,Isla Myers-Smith,,Individual Mean
+Salix richardsonii,,0.74,0.69,,,,,,15,unk,61.1726,-138.3824,980,Kluane,,none,08-Jul,189,2014,Isla Myers-Smith,,Individual Mean
+Salix richardsonii,17.30952381,,,,,,340,,21,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,17.4375,,,,,,504,,24,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,18.56315789,,,,,,372.7,,19,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,20.94210526,,,,,,742.6,,38,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,15.17631579,,,,,,233.4,,19,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,12.55897436,,,,,,490.8,,39,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,13.66455696,,,,,,523.2,,39.5,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,13.52555556,,,,,,646.4,,45,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,10.29009901,,,,,,509,,50.5,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,15.74666667,,,,,,378,,22.5,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,12.10483871,,,,,,899,,62,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,12.39325843,,,,,,1179,,89,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,11.17532468,,,,,,820,,77,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,9.970760234,,,,,,1083,,85.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,10.23664122,,,,,,622,,65.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,10.76875,,,,,,761,,80,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,12.68306011,,,,,,1114,,91.5,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,14.32258065,,,,,,718,,62,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,9.990654206,,,,,,1158,,107,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,387,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,333,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,332.7,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,849,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,343.3,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,488.8,,,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,556.3,,,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,570.9,,,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,530.3,,,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,330.6,,,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,602,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,1027,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,901,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,622,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,719,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,962,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,1207,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,1058,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,,980,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas; Jennifer Lowe,Individual Mean
+Salix richardsonii,,,,,,0.744760479,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.803592814,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.657327586,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.70095518,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.748654467,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.659192825,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.538229982,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.544132918,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.614583333,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.572864322,,,,,61.10549,-138.6618,1693,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.554140127,,,,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.534847051,,,,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.641657335,,,,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.699870634,,,,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.548472076,,,,,61.1726,-138.3824,980,Kluane,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.65290222,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.703477444,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.74516129,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.726870079,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,,,,,,0.718028696,,,,,69.5749,-138.8631,76,Qikiqtaruk,,none,Jul,July,2014,Isla Myers-Smith,Haydn Thomas,Single
+Salix richardsonii,9.566791511,0.321,0.269,,0.445,0.715343915,428.7,0.09,40.05,Male,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,10.19388464,0.374,0.228,,0.368974359,0.69339207,609.6,0.195,71.95,Female,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,10.6117837,0.35,0.28,,0.427241379,0.717326733,468.1,0.145,61.95,Female,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,11.48864418,0.495,0.471,,0.322888889,0.65778781,784.7,0.225,72.65,Female,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,12.30016051,0.31,0.189,,0.366470588,0.653741497,440.7,0.085,31.15,Female,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,11.6475827,0.412,0.395,,0.393,0.731313131,531.3,0.1,39.3,Male,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,11.61092715,0.423,,,0.355294118,0.717312349,348.3,0.085,30.2,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,9.796788141,0.431,0.3,,0.394878049,0.720276498,856.1,0.205,80.95,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,20.20352997,0.372,0.35,,0.190575758,0.662912309,723.9,0.165,31.445,Female,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,10.16045627,0.43,0.425,,0.365277778,0.673846154,621.5,0.18,65.75,Female,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,14.39469129,0.495,0.474,,0.353673469,0.560465116,1135.6,0.245,86.65,Female,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,9.98019802,0.544,0.489,,0.538666667,0.487905605,500.1,0.075,40.4,Male,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,11.58942065,0.357,,,0.425357143,0.594944708,934,0.14,59.55,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,10.81847826,0.263,,,0.484210526,0.72305141,554.3,0.095,46,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,9.736352357,0.414,,,0.374883721,0.604516129,929.7,0.215,80.6,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,10.40228789,0.253,0.227,,0.4196,0.745414527,540.9,0.125,52.45,Male,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,01/08/2015,213,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,10.62539185,0.428,0.405,,0.39875,0.659183673,811.4,0.16,63.8,Male,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,01/08/2015,213,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,10.14553473,0.312,,,0.4535,0.708597285,388.2,0.1,45.35,,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,01/08/2015,213,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,9.579346558,0.41,0.354,,0.476111111,0.689626556,689.1,0.18,85.7,Male,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,01/08/2015,213,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,8.855405405,0.31,,,0.493333333,0.756256801,307.6,0.075,37,,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,01/08/2015,213,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,337.6,,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,857.3,,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,22/07/2015,203,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,846.7,,,,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,884.6,,,,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,325.6,,,,69.57677,138.90984,29,Qikiqtaruk,HE15PTS2,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,384.2,,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,353,,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,730,,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,546.7,,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,714.6,,,,69.56985,138.89821,-4,Qikiqtaruk,HE15PTS3,None,25/07/2015,206,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,1359,,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,306.3,,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,446.3,,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,441,,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,639.8,,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,26/07/2015,207,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,550.3,,,,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,01/08/2015,213,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,544.4,,,,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,01/08/2015,213,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,532,,,,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,01/08/2015,213,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,952.8,,,,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,01/08/2015,213,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,,,,,,347.7,,,,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,01/08/2015,213,2015,"Haydn Thomas, Isla Myers-Smith","Jakob Assmann, Joe Boyle, Santeri Lehtonen, Isabell Eischeid",Single
+Salix richardsonii,,0.168,,,,,,0.034,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.205,0.175,,,,,0.073,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.155,,,,,,0.074,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.24,,,,,,0.068,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.185,,,,,,0.063,,,69.57645,-138.994435,49,Qikiqtaruk,HE15PTS1,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.445,0.25,,,,,0.033,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.512,,,,,,0.066,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.382,0.157,,,,,0.067,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.454,0.404,,,,,0.097,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.545,0.456,,,,,0.06,,,69.57794,138.94218,40,Qikiqtaruk,HE15PTS5,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.296,,,,,,0.071,,,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.204,,,,,,0.091,,,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.326,,,,,,0.097,,,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.29,,,,,,0.064,,,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.383,,,,,,0.1,,,69.58015,138.92355,74,Qikiqtaruk,HE15PTS9,None,24/07/2016,206,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.931,0.836,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,1.48,0,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,1.24,0,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.22,0,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,1.74,0,,,,,,,,61.219,-138.28477,1577,Kluane,HE16PCTraits4,None,29/06/2016,181,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,1.067,1.01,,,,,,,,60.96201,-138.41271,1734,Kluane,HE16KPTraits1,None,04/07/2016,186,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.715,0.69,,,,,,,,60.96201,-138.41271,1734,Kluane,HE16KPTraits1,None,04/07/2016,186,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.835,0.79,,,,,,,,60.96201,-138.41271,1734,Kluane,HE16KPTraits1,None,04/07/2016,186,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.863,0.732,,,,,,,,60.96201,-138.41271,1734,Kluane,HE16KPTraits1,None,04/07/2016,186,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.665,0.622,,,,,,,,60.96201,-138.41271,1734,Kluane,HE16KPTraits1,None,04/07/2016,186,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,1.352,0,,,,,,,,60.96727,-138.42202,1616,Kluane,HE16KPTraits2,None,05/07/2016,187,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,1.43,0,,,,,,,,60.96727,-138.42202,1616,Kluane,HE16KPTraits2,None,05/07/2016,187,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.804,0,,,,,,,,60.96727,-138.42202,1616,Kluane,HE16KPTraits2,None,05/07/2016,187,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,1.81,1.62,,,,,,,,60.96727,-138.42202,1616,Kluane,HE16KPTraits2,None,05/07/2016,187,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,1.445,1.248,,,,,,,,60.96727,-138.42202,1616,Kluane,HE16KPTraits2,None,05/07/2016,187,2016,Haydn Thomas,"Sandra Angers-Blondin, John Godlee, Eleanor Walker",Single
+Salix richardsonii,,0.91,0.842,,,,,,,,60.97682,138.41019,1472,Kluane,KP17Traits1,None,06/08/2017,218,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,1.48,1.43,,,,,,,,60.97682,138.41019,1472,Kluane,KP17Traits1,None,06/08/2017,218,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,1.8,1.63,,,,,,,,60.97682,138.41019,1472,Kluane,KP17Traits1,None,06/08/2017,218,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,0.82,0.76,,,,,,,,60.97682,138.41019,1472,Kluane,KP17Traits1,None,06/08/2017,218,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,1.25,1.06,,,,,,,,60.97682,138.41019,1472,Kluane,KP17Traits1,None,06/08/2017,218,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,0.575,0.54,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,1.04,1,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,0.539,0.53,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,0.57,0,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,0.41,0.4,,,,,,,,60.96206,-138.41288,1716,Kluane,KP17Traits2,None,07/08/2017,219,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,0.388,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,0.66,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,0.55,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,0.31,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,0.66,,,,,,,,,61.21222,-138.27775,1649,Kluane,PCTRAITSS1,None,13/08/2017,225,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,,,,,,,,,,61.2143,-138.28691,1652,Kluane,PCTRAITSS2,None,14/08/2017,226,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,,,,,,,,,,61.2143,-138.28691,1652,Kluane,PCTRAITSS2,None,14/08/2017,226,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,,,,,,,,,,61.2143,-138.28691,1652,Kluane,PCTRAITSS2,None,14/08/2017,226,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,,,,,,,,,,61.2143,-138.28691,1652,Kluane,PCTRAITSS2,None,14/08/2017,226,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
+Salix richardsonii,,,,,,,,,,,61.2143,-138.28691,1652,Kluane,PCTRAITSS2,None,14/08/2017,226,2017,Haydn Thomas,"Izzy Rich, Cameron Cosgrove, Matt Little",Single
