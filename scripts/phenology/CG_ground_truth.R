@@ -20,5 +20,10 @@ CG_ground_truth <- read_excel("data/phenology/groundtruthing_2022/FINAL_phenocam
 str(CG_ground_truth)
 
 CG_ground_truth$Species <- as.factor(CG_ground_truth$Species)
-# CG_ground_truth$P5_first_yellowing<- as.POSIXct(CG_ground_truth$P5_first_yellowing, format = "%Y/%m/%d")
+
+CG_ground_truth_long <- CG_ground_truth %>%
+  gather(key = phenophase, value = date, c('P3_first_pollen', 'P2_5_catkin_burst', 'P4_onset_seed_dispersal', 
+                                           'P5_first_yellowing', 'P6_last_yellowing', 'P6_5_first_leaf_shed'))
+
+str(CG_ground_truth_long)        
 
