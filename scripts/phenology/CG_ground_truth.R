@@ -14,6 +14,7 @@ library(gridExtra)
 # Data collected in the common garden in summer 2022 (weekly throughout June-July-August)
 CG_ground_truth <- read_excel("data/phenology/groundtruthing_2022/FINAL_phenocam_groundtruthing_common_garden22_copy5.xlsx")
 
+# 3. DATA WRANGLING ----
 
 
 
