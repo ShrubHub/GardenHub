@@ -16,5 +16,9 @@ CG_ground_truth <- read_excel("data/phenology/groundtruthing_2022/FINAL_phenocam
 
 # 3. DATA WRANGLING ----
 
+# Putting variables in right format
+str(CG_ground_truth)
 
+CG_ground_truth$Species <- as.factor(CG_ground_truth$Species)
+# CG_ground_truth$P5_first_yellowing<- as.POSIXct(CG_ground_truth$P5_first_yellowing, format = "%Y/%m/%d")
 
