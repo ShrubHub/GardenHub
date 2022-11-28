@@ -18,10 +18,10 @@ growth_2022 <- read_csv("scripts/common_garden/common_garden_data_2022/wrangled_
 growth <- read.csv("scripts/common_garden/common_garden_data_2021/all_growth_2021.csv")
 
 # Data collected from source locations (Kluane and QHI) between 2013 – 2017
-field_data <- read.csv('scripts/common_garden/Salix_field_trait_data.csv')
+field_data <- read.csv('data/source_pops/Salix_field_trait_data.csv')
 
 # Data collected from source locations (Kluane and QHI) in 2022
-all_source_pop_2022 <- read_csv("scripts/common_garden/common_garden_data_2022/all_source_pop_2022.csv")
+all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
 
 # 3. DATA WRANGLING ----
 
@@ -91,7 +91,6 @@ field_data <- dplyr::select(field_data, Species, Plant_height_veg_m, Lat, Lon,
 # Making variables into the right format
 field_data$Species <- as.factor(field_data$Species)
 field_data$Site <- as.factor(field_data$Site)
-
 
 # 3.1. DATA EXPLORE: Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
@@ -168,7 +167,7 @@ heights_all_source_pop$Species <- as.factor(heights_all_source_pop$Species)
 str(heights_all_source_pop)
 
 # Saving all source population heights 2017-2022 data as csv file
-write.csv(heights_all_source_pop, 'scripts/common_garden/common_garden_data_2022/heights_all_source_pop.csv')
+write.csv(heights_all_source_pop, 'data/source_pops/heights_all_source_pop.csv')
 
 
 # 4. DATA VISUALISATION ----
@@ -349,7 +348,7 @@ data_leaf_2022 <- all_merged_data_2022 %>% filter(Year == 2022)
 # a. Canopy height (m) 
 (plot_height_compare <- ggplot() +
    geom_boxplot(data = heights_all_source_pop, aes(x = Site, y = Canopy_Height_cm, fill = Site, group = Site), colour = "lightgrey", size = 0.5, alpha = 0.3) +
-   geom_boxplot(data = all_merged_data_2022, aes(x = Site, y = (Canopy_Height_cm), fill = Site, group = Site), colour = "black", size = 0.5, alpha = 0.8) +
+   #geom_boxplot(data = all_merged_data_2022, aes(x = Site, y = (Canopy_Height_cm), fill = Site, group = Site), colour = "black", size = 0.5, alpha = 0.8) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Canopy height (cm)") +
    xlab("") +
@@ -366,8 +365,5 @@ data_leaf_2022 <- all_merged_data_2022 %>% filter(Year == 2022)
          axis.text.y = element_text(size = 12, colour = "black")))
 
 
-#### TO DO ----
-# I could add my height data to the field_data and then use my weekly subsets for the other analysis
-# Stats: traits ~ sample age
 
 
