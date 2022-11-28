@@ -7,6 +7,7 @@
 library(ggplot2)
 library(viridis)
 library(lubridate)
+library(tidyverse)
 library(dplyr)
 
 
@@ -36,7 +37,7 @@ source_traits_2017 <- source_traits_2017 %>%
 str(source_traits_2017)
 str(SLA_2022)
 SLA_2022$DOY <- as.character(SLA_2022$DOY) # converting to character to merge because source pop data is so messed up
-SLA_2022$year <- as.integer(SLA_2022$DOY) # converting to same variable type for merging 
+SLA_2022$year <- as.integer(SLA_2022$year) # converting to same variable type for merging 
 
 # merge! 
 all_source_traits_2022 <- full_join(SLA_2022, source_traits_2017, by = c("Site" = "Site", 
