@@ -23,6 +23,9 @@ field_data <- read.csv('data/source_pops/Salix_field_trait_data.csv')
 # Data collected from source locations (Kluane and QHI) in 2022
 all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
 
+# Dataset with mother data (2013-2017)
+Common_garden_2017 <- read_csv("data/common_garden_data_2017/Common_garden_2017.csv")
+
 # 3. DATA WRANGLING ----
 
 # Keeping only relevant columns of 2022 data
@@ -92,6 +95,59 @@ field_data <- dplyr::select(field_data, Species, Plant_height_veg_m, Lat, Lon,
 field_data$Species <- as.factor(field_data$Species)
 field_data$Site <- as.factor(field_data$Site)
 
+# Merging field height data from 2017-2022 datasets
+heights_2022_source_pop <- all_source_pop_2022 %>%
+  select(Species, Site, Canopy_Height_cm)
+
+heights_2017_source_pop <- field_data %>%
+  select(Species, Plant_height_veg_m, Site) %>%
+  mutate(Canopy_Height_cm = Plant_height_veg_m*100) %>%
+  select(-Plant_height_veg_m) %>% 
+  na.omit()
+
+heights_all_source_pop <- rbind(heights_2017_source_pop, heights_2022_source_pop)
+
+heights_all_source_pop$Site <- as.factor(heights_all_source_pop$Site)
+heights_all_source_pop$Species <- as.factor(heights_all_source_pop$Species)
+str(heights_all_source_pop)
+# Saving all source population heights 2017-2022 data as csv file
+write.csv(heights_all_source_pop, 'data/source_pops/heights_all_source_pop.csv')
+
+# only keeping relevant columns of mother data
+mother_data <- Common_garden_2017 %>%
+  select(Sample_ID, Match, Sample_location, Date_sampled,
+         Date_propagated, Date_planted, Year_planted, Mother_height,
+         Mother_CW_1, Mother_CW_2, Mother_LS, Mother_LL1, Mother_LL2, 
+         Mother_LL3, Mother_SE1, Mother_SE2, Mother_SE3, Cutting_length, 
+         Cutting_diameter) %>%
+  rename("SampleID" = "Sample_ID", 
+         "Canopy_Height_cm" = "Mother_height",
+         "Length_1_mm" = "Mother_LL1",
+         "Length_2_mm" = "Mother_LL2",
+         "Length_3_mm" = "Mother_LL3",
+         "Stem_Elongation_1_mm" = "Mother_SE1",
+         "Stem_Elongation_2_mm" = "Mother_SE2",
+         "Stem_Elongation_3_mm" = "Mother_SE3",
+         "Width_cm" = "Mother_CW_1",
+         "Width_2_cm" = "Mother_CW_2", 
+         "Site" = "Sample_location")
+
+str(mother_data)
+
+# Making variables right format
+mother_data$Width_cm <- as.numeric(mother_data$Width_cm)
+mother_data$Width_2_cm <- as.numeric(mother_data$Width_2_cm)
+mother_data$Stem_Elongation_3_mm <- as.numeric(mother_data$Stem_Elongation_3_mm)
+mother_data$Site <- as.factor(mother_data$Site)
+
+# Merging wrangled versions of salix_field_data, all_source_pop_2022, common_garden_2017
+all_source_pop_plus_mother <- bind_rows(heights_2017_source_pop, all_source_pop_2022,
+                        mother_data)
+
+# Saving all source population heights 2017-2022 data as csv file
+write.csv(all_source_pop_plus_mother, 'data/source_pops/all_source_pop_plus_mother.csv')
+
+
 # 3.1. DATA EXPLORE: Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
 
@@ -148,26 +204,6 @@ count_salarct_kluane <- growth_2022 %>%
          Site == "Kluane",
          Species == "Salix arctica")
 # n = 30
-
-
-# Merging field height data from 2017-2022 datasets
-heights_2022_source_pop <- all_source_pop_2022 %>%
-  select(Species, Site, Canopy_Height_cm)
-
-heights_2017_source_pop <- field_data %>%
-  select(Species, Plant_height_veg_m, Site) %>%
-  mutate(Canopy_Height_cm = Plant_height_veg_m*100) %>%
-  select(-Plant_height_veg_m) %>% 
-  na.omit()
-
-heights_all_source_pop <- rbind(heights_2017_source_pop, heights_2022_source_pop)
-
-heights_all_source_pop$Site <- as.factor(heights_all_source_pop$Site)
-heights_all_source_pop$Species <- as.factor(heights_all_source_pop$Species)
-str(heights_all_source_pop)
-
-# Saving all source population heights 2017-2022 data as csv file
-write.csv(heights_all_source_pop, 'data/source_pops/heights_all_source_pop.csv')
 
 
 # 4. DATA VISUALISATION ----
