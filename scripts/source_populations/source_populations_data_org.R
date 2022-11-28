@@ -11,7 +11,7 @@ library(dplyr)
 
 
 # data ---- 
-SLA_2022 <- read.csv("data/common_garden_2022/field_sla_2022.csv") # source pop data from 2021-22
+SLA_2022 <- read.csv("data/common_garden_data_2022/field_sla_2022.csv") # source pop data from 2021-22
 source_traits_2017 <- read.csv("data/source_pops/Salix_field_trait_data.csv") # source population from 2013-2017
 
 str(SLA_2022)
@@ -50,7 +50,8 @@ all_source_traits_2022 <- full_join(SLA_2022, source_traits_2017, by = c("Site" 
                                                            "leaf_fresh_mass_g" = "Leaf_fresh_mass_g", 
                                                            "site_id" = "Subsite_name"
                                                            )) 
-  
+# save data 
+write.csv(all_source_traits_2022,'data/source_pops/all_source_area_traits.csv')
 
 # all years plots ---- 
 (sla_all_source <- ggplot(all_source_traits_2022) +
