@@ -9,18 +9,19 @@ library(viridis)
 library(readr)
 library(dplyr)
 library(lme4)
+library(sjPlot)
 
 # 2. LOADING DATA -----
 
 # Datasets with mother heights (2013-2017)
-Common_garden_2017 <- read_csv("scripts/common_garden/common_garden_data_2017/Common_garden_2017.csv")
+Common_garden_2017 <- read_csv("data/common_garden_data_2017/Common_garden_2017.csv")
 Common_garden_2017_sampling_date <- read_csv("scripts/common_garden/common_garden_data_2017/Common_garden_2017_sampling_date.csv")
 
 # All 2022 data from the common garden
-all_cg_2022 <- read_csv("scripts/common_garden/common_garden_data_2022/wrangled_ALL_combined_Common_Garden_Measurements_2022.csv")
+all_cg_2022 <- read_csv("data/common_garden_2022/wrangled_ALL_combined_Common_Garden_Measurements_2022.csv")
 
 # All 2022 data from the source populations
-all_source_pop_2022 <- read_csv("scripts/common_garden/common_garden_data_2022/all_source_pop_2022.csv")
+all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
 
 # 3. DATA WRANGLING ----
 
@@ -60,6 +61,11 @@ mother_cg_2022_july$Species <- as.factor(mother_cg_2022_july$Species)
 mother_cg_2022_july$Canopy_Height_cm <- as.numeric(mother_cg_2022_july$Canopy_Height_cm)
 mother_cg_2022_july$Mother_height <- as.numeric(mother_cg_2022_july$Mother_height)
 
+mother_cg_2022$Site <- as.factor(mother_cg_2022$Site)
+mother_cg_2022$Species <- as.factor(mother_cg_2022$Species)
+mother_cg_2022$Canopy_Height_cm <- as.numeric(mother_cg_2022$Canopy_Height_cm)
+mother_cg_2022$Mother_height <- as.numeric(mother_cg_2022$Mother_height)
+
 # Merging source pop dataset with mothers dataset
 # Keeping relevant columns
 source_pop_heights_2022 <-  all_source_pop_2022 %>% 
@@ -70,8 +76,7 @@ mother_heights_2017_01 <- Common_garden_2017 %>%
    mutate(Site = case_when(Sample_location %in% c("QHI", "Qikiqtaruk") ~ "Qikiqtaruk",
                            Sample_location %in% c("Pika Camp", "Kluane Plateau", "Printers Pass") ~ "Kluane")) %>%
 filter(Species %in% c("Salix pulchra", "Salix arctica", "Salix richardsonii")) 
-# Check where Printers pass is
-                           
+
 
 #source_pop_mother_compare <- merge(mother_heights_2017_01, source_pop_heights_2022, by ="Site","Species")
 
@@ -117,12 +122,14 @@ filter(Species %in% c("Salix pulchra", "Salix arctica", "Salix richardsonii"))
             axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
             axis.text.y = element_text(size = 12, colour = "black")))
 
+str(mother_cg_2022_july)
 
 # 5. DATA ANALYSIS -----
 
-# Simple linear model: effect of mother heights and species + site on canopy heights in the CG
-model <- lm(Canopy_Height_cm~Mother_height*Species + Site, data = mother_cg_2022_july)
+# Lmeri: effect of mother heights on canopy heights in the CG
+model <- lmer(Canopy_Height_cm~Mother_height + (1|SampleID), data = mother_cg_2022)
 summary(model)
+tab_model(model)
 plot(model)
 qqnorm(resid(model))
 qqline(resid(model)) 
