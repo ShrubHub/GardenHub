@@ -24,11 +24,26 @@ field_data <- read.csv('data/source_pops/Salix_field_trait_data.csv')
 
 # Data collected from source locations (Kluane and QHI) in 2022
 all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
+X010822 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/010822_EZ_weekly_source_pop_Kluane_2022.xlsx")
+X090722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/090722_EZ_weekly_source_pop_Kluane_2022.xlsx")
+X130822 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/130822_EZ_weekly_source_pop_Kluane_2022.xlsx")
+X160722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/160722_EZ_weekly_source_pop_Kluane_2022.xlsx")
+X240722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/240722_EZ_weekly_source_pop_Kluane_2022.xlsx")
 
 # Dataset with mother data (2013-2017)
 Common_garden_2017 <- read_csv("data/common_garden_data_2017/Common_garden_2017.csv")
 
 # 3. DATA WRANGLING ----
+
+# making raw data dates into POSIXct
+X010822$SampleDate <- as.POSIXct(X010822$SampleDate, format = "%d/%m/%Y")
+X090722$SampleDate <- as.POSIXct(X090722$SampleDate, format = "%d/%m/%Y")
+X130822$SampleDate <- as.POSIXct(X130822$SampleDate, format = "%d/%m/%Y")
+
+# merging 2022 source pop subsets
+all_source_pop_2022 <- rbind(X010822,X090722,X130822,X160722, X240722)
+
+write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
 
 # Keeping only relevant columns of 2022 data
 growth_2022 <- dplyr::select(growth_2022, Bed, SampleID, Year_planted, Species, Site, Sample_Date,
@@ -97,24 +112,10 @@ field_data <- dplyr::select(field_data, Species, Plant_height_veg_m, Lat, Lon,
 field_data$Species <- as.factor(field_data$Species)
 field_data$Site <- as.factor(field_data$Site)
 
-# Merging field height data from 2017-2022 datasets
-heights_2022_source_pop <- all_source_pop_2022 %>%
-  select(Species, Site, Canopy_Height_cm)
-
-heights_2017_source_pop <- field_data %>%
-  select(Species, Plant_height_veg_m, Site) %>%
+# multiplying by 100 to get height in cm
+field_source_pop <- field_data %>%
   mutate(Canopy_Height_cm = Plant_height_veg_m*100) %>%
-  select(-Plant_height_veg_m) %>% 
-  na.omit()
-
-heights_all_source_pop <- rbind(heights_2017_source_pop, heights_2022_source_pop)
-
-heights_all_source_pop$Site <- as.factor(heights_all_source_pop$Site)
-heights_all_source_pop$Species <- as.factor(heights_all_source_pop$Species)
-str(heights_all_source_pop)
-
-# Saving all source population heights 2017-2022 data as csv file
-write.csv(heights_all_source_pop, 'data/source_pops/heights_all_source_pop.csv')
+  select(-Plant_height_veg_m)
 
 # only keeping relevant columns of mother data
 mother_data <- Common_garden_2017 %>%
@@ -145,6 +146,7 @@ mother_data$Stem_Elongation_3_mm <- as.numeric(mother_data$Stem_Elongation_3_mm)
 mother_data$Site <- as.factor(mother_data$Site)
 # mother_data$SampleDate <- as.Date(mother_data$SampleDate, format = "%d/%m/%Y")
 mother_data$SampleDate <- as.POSIXct(mother_data$SampleDate, format = "%d/%m/%Y")
+mother_data$Date_planted <- as.POSIXct(mother_data$Date_planted, format = "%d/%m/%Y")
 
 # function to convert "0017" to "2017"
 two_dig_year_cnvt <- function(z, year=2013){
@@ -164,7 +166,7 @@ mother_data_test <-  mother_data_test[!grepl(c("BN"), mother_data_test$SampleID)
 
 
 # Merging wrangled versions of salix_field_data, all_source_pop_2022, common_garden_2017
-all_source_pop_plus_mother <- bind_rows(heights_2017_source_pop, all_source_pop_2022,
+all_source_pop_plus_mother <- bind_rows(field_source_pop, all_source_pop_2022,
                         mother_data)
 
 str(all_source_pop_plus_mother$SampleDate)
@@ -181,6 +183,22 @@ length(unique(all_source_pop_plus_mother$SampleID)) # how many unique sampleIDs 
 
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(all_source_pop_plus_mother, 'data/source_pops/all_source_pop_plus_mother.csv')
+
+# Merging field height data from 2017-2022 datasets
+heights_2022_source_pop <- all_source_pop_2022 %>%
+  select(Species, Site, Canopy_Height_cm)
+
+heights_2017_source_pop <- field_data %>%
+  select(Species, Plant_height_veg_m, Site) %>%
+  mutate(Canopy_Height_cm = Plant_height_veg_m*100) %>%
+  select(-Plant_height_veg_m) %>% 
+  na.omit()
+
+heights_all_source_pop <- rbind(heights_2017_source_pop, heights_2022_source_pop)
+
+heights_all_source_pop$Site <- as.factor(heights_all_source_pop$Site)
+heights_all_source_pop$Species <- as.factor(heights_all_source_pop$Species)
+str(heights_all_source_pop)
 
 
 # 3.1. DATA EXPLORE: Sample size ----
