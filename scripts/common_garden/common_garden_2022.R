@@ -2,7 +2,7 @@
 ### Data wrangling and visualisation script
 ### By Erica Zaja, created on 30/09/2022
 ## Adapted from Madelaine Anderson's common_garden_2021.R 
-## Last updated: 29/11/2022
+## Last updated: 29/11/2022 by Madelaine 
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -14,10 +14,10 @@ library(lubridate)
 # 2. LOADING DATA ----
 
 # Data collected in the common garden in summer 2022 (June-July-August)
-growth_2022 <- read_csv("scripts/common_garden/common_garden_data_2022/wrangled_ALL_combined_Common_Garden_Measurements_2022.csv")
+growth_2022 <- read_csv("data/common_garden_data_2022/wrangled_ALL_combined_Common_Garden_Measurements_2022.csv")
 
 # Common garden data collected between 2013-2021
-growth <- read.csv("scripts/common_garden/common_garden_data_2021/all_growth_2021.csv")
+growth <- read.csv("data/common_garden_data_2021/all_growth_2021.csv")
 
 # Data collected from source locations (Kluane and QHI) between 2013 – 2017
 field_data <- read.csv('data/source_pops/Salix_field_trait_data.csv')
@@ -166,6 +166,9 @@ str(all_source_pop_plus_mother$SampleDate)
 unique(all_source_pop_plus_mother$SampleDate)
 all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_mother$SampleDate,
                                                            format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
+
+# extract species and cg sample_ids to match to maternal data because some don't have species 
+
 
 
 # Saving all source population heights 2017-2022 data as csv file
