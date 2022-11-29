@@ -208,23 +208,6 @@ length(unique(all_source_pop_plus_mother$SampleID)) # how many unique sampleIDs 
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(all_source_pop_plus_mother, 'data/source_pops/all_source_pop_plus_mother.csv')
 
-# Merging field height data from 2017-2022 datasets
-heights_2022_source_pop <- all_source_pop_2022 %>%
-  select(Species, Site, Canopy_Height_cm)
-
-heights_2017_source_pop <- field_data %>%
-  select(Species, Plant_height_veg_m, Site) %>%
-  mutate(Canopy_Height_cm = Plant_height_veg_m*100) %>%
-  select(-Plant_height_veg_m) %>% 
-  na.omit()
-
-heights_all_source_pop <- rbind(heights_2017_source_pop, heights_2022_source_pop)
-
-heights_all_source_pop$Site <- as.factor(heights_all_source_pop$Site)
-heights_all_source_pop$Species <- as.factor(heights_all_source_pop$Species)
-str(heights_all_source_pop)
-
-
 # 3.1. DATA EXPLORE: Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
 
