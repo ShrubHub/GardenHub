@@ -158,6 +158,11 @@ two_dig_year_cnvt <- function(z, year=2013){
 # converting "0017" to "2017"
 mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 
+# to filter out Betula nana from mother_data .... 
+mother_data_test <-  mother_data[!grepl(c("b"), mother_data$SampleID),,drop = FALSE] # any b in sample id is for betula
+mother_data_test <-  mother_data_test[!grepl(c("BN"), mother_data_test$SampleID),,drop = FALSE] # same as above but with uppercase B, must use BN because one clone is called B
+
+
 # Merging wrangled versions of salix_field_data, all_source_pop_2022, common_garden_2017
 all_source_pop_plus_mother <- bind_rows(heights_2017_source_pop, all_source_pop_2022,
                         mother_data)
@@ -168,13 +173,14 @@ all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_m
                                                            format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
 
 # extract species and cg sample_ids to match to maternal data because some don't have species 
-
+unique(all_source_pop_plus_mother$Species) # contains NAs 
+# how many NAs for species? 
+sum(is.na(all_source_pop_plus_mother$Species)) # 953, uh-oh 
+length(unique(all_source_pop_plus_mother$SampleID)) # how many unique sampleIDs # 1003 
 
 
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(all_source_pop_plus_mother, 'data/source_pops/all_source_pop_plus_mother.csv')
-
-
 
 
 # 3.1. DATA EXPLORE: Sample size ----
