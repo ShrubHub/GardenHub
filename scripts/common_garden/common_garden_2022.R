@@ -193,6 +193,11 @@ unique(all_source_pop_plus_mother$SampleDate)
 all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_mother$SampleDate,
                                                            format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
 
+# making a year column
+all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
+  mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y")) %>%
+  select(-Year_measured,- `2022 Notes`)
+
 # extract species and cg sample_ids to match to maternal data because some don't have species 
 unique(all_source_pop_plus_mother$Species) # contains NAs 
 # how many NAs for species? 
