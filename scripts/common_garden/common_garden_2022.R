@@ -205,8 +205,8 @@ all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
 unique(all_source_pop_plus_mother$Species) # contains NAs 
 # how many NAs for species? 
 sum(is.na(all_source_pop_plus_mother$Species)) # 879, uh-oh 
-length(unique(all_source_pop_plus_mother$SampleID)) # how many unique sampleIDs # 1003 
-
+length(unique(all_source_pop_plus_mother$SampleID)) # how many unique sampleIDs # #900 
+# I'm wondering if we should filter 
 
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(all_source_pop_plus_mother, 'data/source_pops/all_source_pop_plus_mother.csv')
