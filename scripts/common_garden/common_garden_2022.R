@@ -8,6 +8,8 @@
 library(tidyverse)
 library(viridis)
 library(readr)
+library(base)
+library(lubridate)
 
 # 2. LOADING DATA ----
 
@@ -110,6 +112,7 @@ heights_all_source_pop <- rbind(heights_2017_source_pop, heights_2022_source_pop
 heights_all_source_pop$Site <- as.factor(heights_all_source_pop$Site)
 heights_all_source_pop$Species <- as.factor(heights_all_source_pop$Species)
 str(heights_all_source_pop)
+
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(heights_all_source_pop, 'data/source_pops/heights_all_source_pop.csv')
 
@@ -130,7 +133,8 @@ mother_data <- Common_garden_2017 %>%
          "Stem_Elongation_3_mm" = "Mother_SE3",
          "Width_cm" = "Mother_CW_1",
          "Width_2_cm" = "Mother_CW_2", 
-         "Site" = "Sample_location")
+         "Site" = "Sample_location",
+         "SampleDate" = "Date_sampled")
 
 str(mother_data)
 
@@ -139,13 +143,35 @@ mother_data$Width_cm <- as.numeric(mother_data$Width_cm)
 mother_data$Width_2_cm <- as.numeric(mother_data$Width_2_cm)
 mother_data$Stem_Elongation_3_mm <- as.numeric(mother_data$Stem_Elongation_3_mm)
 mother_data$Site <- as.factor(mother_data$Site)
+# mother_data$SampleDate <- as.Date(mother_data$SampleDate, format = "%d/%m/%Y")
+mother_data$SampleDate <- as.POSIXct(mother_data$SampleDate, format = "%d/%m/%Y")
+
+# function to convert "0017" to "2017"
+two_dig_year_cnvt <- function(z, year=2013){
+  y <- as.numeric(format(z, '%Y'))
+  range <- 2013 - 2000
+  year(z) <- ifelse(y >= 0 & y <= range, 2000 + y, 
+                    ifelse(y > range & y <= 200, 2000 + y, y))
+  z
+}
+
+# converting "0017" to "2017"
+mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 
 # Merging wrangled versions of salix_field_data, all_source_pop_2022, common_garden_2017
 all_source_pop_plus_mother <- bind_rows(heights_2017_source_pop, all_source_pop_2022,
                         mother_data)
 
+str(all_source_pop_plus_mother$SampleDate)
+unique(all_source_pop_plus_mother$SampleDate)
+all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_mother$SampleDate,
+                                                           format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
+
+
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(all_source_pop_plus_mother, 'data/source_pops/all_source_pop_plus_mother.csv')
+
+
 
 
 # 3.1. DATA EXPLORE: Sample size ----
