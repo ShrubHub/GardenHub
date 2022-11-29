@@ -3,7 +3,7 @@
 # Madelaine 28/11/22
 # last updated: 
 
-# libraries ---- 
+# 1. libraries ---- 
 library(ggplot2)
 library(viridis)
 library(lubridate)
@@ -11,13 +11,14 @@ library(tidyverse)
 library(dplyr)
 
 
-# data ---- 
+# 2. data ---- 
 SLA_2022 <- read.csv("data/common_garden_data_2022/field_sla_2022.csv") # source pop data from 2021-22
 source_traits_2017 <- read.csv("data/source_pops/Salix_field_trait_data.csv") # source population from 2013-2017
 
 str(SLA_2022)
 str(source_traits_2017) # why oh why are the dates so terrible 
 
+# 3. data re-org 
 # minor org on data frames 
 # make separate columns for date  
 SLA_2022$year <-  format(as.Date(SLA_2022$date_sampled, format="%Y-%m-%d"),"%Y")
@@ -39,7 +40,7 @@ str(SLA_2022)
 SLA_2022$DOY <- as.character(SLA_2022$DOY) # converting to character to merge because source pop data is so messed up
 SLA_2022$year <- as.integer(SLA_2022$year) # converting to same variable type for merging 
 
-# merge! 
+# 4. merge! ----
 all_source_traits_2022 <- full_join(SLA_2022, source_traits_2017, by = c("Site" = "Site", 
                                                            "Species" = "Species", 
                                                            "DOY" = "DOY",
@@ -54,7 +55,10 @@ all_source_traits_2022 <- full_join(SLA_2022, source_traits_2017, by = c("Site" 
 # save data 
 write.csv(all_source_traits_2022,'data/source_pops/all_source_area_traits.csv')
 
-# all years plots ---- 
+
+# 6. plots ----
+
+# data from all yeares 
 (sla_all_source <- ggplot(all_source_traits_2022) +
    geom_boxplot(aes(x = Site, y = SLA, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
    facet_grid(cols = vars(Species)) +
