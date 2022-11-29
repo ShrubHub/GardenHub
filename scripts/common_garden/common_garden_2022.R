@@ -10,6 +10,7 @@ library(viridis)
 library(readr)
 library(base)
 library(lubridate)
+library(xlsx)
 
 # 2. LOADING DATA ----
 
@@ -23,12 +24,12 @@ growth <- read.csv("data/common_garden_data_2021/all_growth_2021.csv")
 field_data <- read.csv('data/source_pops/Salix_field_trait_data.csv')
 
 # Data collected from source locations (Kluane and QHI) in 2022
-all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
 X010822 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/010822_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X090722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/090722_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X130822 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/130822_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X160722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/160722_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X240722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/240722_EZ_weekly_source_pop_Kluane_2022.xlsx")
+all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
 
 # Dataset with mother data (2013-2017)
 Common_garden_2017 <- read_csv("data/common_garden_data_2017/Common_garden_2017.csv")
@@ -43,6 +44,7 @@ X130822$SampleDate <- as.POSIXct(X130822$SampleDate, format = "%d/%m/%Y")
 # merging 2022 source pop subsets
 all_source_pop_2022 <- rbind(X010822,X090722,X130822,X160722, X240722)
 
+# saving source pop 2022 data as csv
 write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
 
 # Keeping only relevant columns of 2022 data
@@ -115,7 +117,24 @@ field_data$Site <- as.factor(field_data$Site)
 # multiplying by 100 to get height in cm
 field_source_pop <- field_data %>%
   mutate(Canopy_Height_cm = Plant_height_veg_m*100) %>%
-  select(-Plant_height_veg_m)
+  select(-Plant_height_veg_m)%>%
+  na.omit()
+
+write.csv(field_source_pop, 'data/source_pops/field_source_pop.csv')
+# fixing date issue manually was quicker
+
+# loading new dataset
+field_source_pop_new <- read_csv("data/source_pops/field_source_pop_new.csv")
+
+field_source_pop_new$date <- as.POSIXct(field_source_pop_new$date, format = "%d/%m/%Y")
+
+str(field_source_pop_new$date) # right!
+
+field_source_pop_new <- field_source_pop_new %>%
+  rename("SampleDate" = "date", 
+         "Latitude" = "Lat",
+         "Longitude" = "Lon", 
+         "Elevation" = "Elevation_m")
 
 # only keeping relevant columns of mother data
 mother_data <- Common_garden_2017 %>%
@@ -166,7 +185,7 @@ mother_data_test <-  mother_data_test[!grepl(c("BN"), mother_data_test$SampleID)
 
 
 # Merging wrangled versions of salix_field_data, all_source_pop_2022, common_garden_2017
-all_source_pop_plus_mother <- bind_rows(field_source_pop, all_source_pop_2022,
+all_source_pop_plus_mother <- bind_rows(field_source_pop_new, all_source_pop_2022,
                         mother_data)
 
 str(all_source_pop_plus_mother$SampleDate)
