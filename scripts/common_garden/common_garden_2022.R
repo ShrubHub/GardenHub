@@ -2,7 +2,7 @@
 ### Data wrangling and visualisation script
 ### By Erica Zaja, created on 30/09/2022
 ## Adapted from Madelaine Anderson's common_garden_2021.R 
-## Last updated: 07/10/2022
+## Last updated: 29/11/2022
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
