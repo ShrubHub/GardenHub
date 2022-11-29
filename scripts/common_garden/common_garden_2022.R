@@ -43,6 +43,9 @@ X130822$SampleDate <- as.POSIXct(X130822$SampleDate, format = "%d/%m/%Y")
 
 # merging 2022 source pop subsets
 all_source_pop_2022 <- rbind(X010822,X090722,X130822,X160722, X240722)
+all_source_pop_2022 <- all_source_pop_2022 %>% 
+  filter(Species != "Salix reticulata") %>% 
+  select(-...1)
 
 # saving source pop 2022 data as csv
 write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
@@ -200,7 +203,6 @@ all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
 
 # extract species and cg sample_ids to match to maternal data because some don't have species 
 unique(all_source_pop_plus_mother$Species) # contains NAs 
-# wtf this now has reticulata? lol okay the other  problem is that it has 1234 # observations which is just so satisfying and filtering will ruin that 
 # how many NAs for species? 
 sum(is.na(all_source_pop_plus_mother$Species)) # 879, uh-oh 
 length(unique(all_source_pop_plus_mother$SampleID)) # how many unique sampleIDs # 1003 
