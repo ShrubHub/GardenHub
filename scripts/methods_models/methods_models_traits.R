@@ -19,9 +19,12 @@ all_source_area_traits <- read.csv("data/source_pops/all_source_area_traits.csv"
 
 # SLA ----
 str(all_source_area_traits)
-
-SLA_method_mod <- lmer(SLA ~ Site*Species + (1|year/))
-
+# not including field_sample_id because those don't exist for any values prior to 2021 ? and not repeated measures anyways 
+SLA_method_mod <- lmer(SLA ~ Site*Species + (1|year), data = all_source_area_traits) 
+summary(SLA_method_mod)
+plot(SLA_method_mod)
+qqnorm(resid(SLA_method_mod))
+qqline(resid(SLA_method_mod)) 
 
 # LDMC ---- 
 
