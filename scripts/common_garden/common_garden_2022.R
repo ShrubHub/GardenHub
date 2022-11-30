@@ -11,7 +11,7 @@ library(readr)
 library(base)
 library(lubridate)
 library(xlsx)
-#library(readxl) # reads excel files if java doesn't work for (xlsx)
+library(readxl) # reads excel files if java doesn't work for (xlsx)
 
 # 2. LOADING DATA ----
 
@@ -86,6 +86,8 @@ growth <- dplyr::select(growth, Bed, SampleID, Year_planted, Species, Site, Samp
 
 # Merging 2022 data with 2013-2021 data 
 all_growth_2022 <- rbind(growth, growth_2022)
+str(all_growth_2022)
+unique(all_growth_2022$Sample_Date)
 
 # Saving 2013-2022 data as csv file
 #write.csv(all_growth_2022, 'scripts/common_garden/common_garden_data_2022/all_growth_2022.csv')
@@ -110,9 +112,11 @@ all_merged_data_2022 <- all_growth_2022 %>%
   filter(Day != 2) %>% 
   mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
          mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
-         mean_width = ((Width_cm + Width_2_cm)/2),
-         biovolume = (Width_cm*Width_2_cm*Canopy_Height_cm))
+         mean_width = ((Width_cm + Width_2_cm)/2)) %>% 
+  rename("SampleDate"= "Sample_Date")
+         #biovolume = (Width_cm*Width_2_cm*Canopy_Height_cm))
 
+str(all_merged_data_2022)
 # Saving all merged and formatted 2013-2022 data as csv file
 write.csv(all_merged_data_2022, 'scripts/common_garden/common_garden_data_2022/all_merged_data_2022.csv')
 
@@ -124,6 +128,7 @@ all_merged_data_2022$Site <- as.factor(as.character(all_merged_data_2022$Site))
 all_merged_data_2022$Month <- as.numeric(all_merged_data_2022$Month)
 all_merged_data_2022$Day <- as.numeric(all_merged_data_2022$Day)
 all_merged_data_2022$Canopy_Height_cm <- as.numeric(all_merged_data_2022$Canopy_Height_cm)
+all_merged_data_2022$SampleDate <- as.POSIXct(all_merged_data_2022$SampleDate, format = "%d/%m/%Y")
 
 # Checking all variables are right format
 str(all_merged_data_2022)
@@ -201,7 +206,7 @@ two_dig_year_cnvt <- function(z, year=2013){
 # converting "0017" to "2017"
 mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 
-# to filter out Betula nana from mother_data .... 
+# to filter out Betula nana from mother_data 
 mother_data <-  mother_data[!grepl(c("b"), mother_data$SampleID),,drop = FALSE] # any b in sample id is for betula
 mother_data <-  mother_data[!grepl(c("BN"), mother_data$SampleID),,drop = FALSE] # same as above but with uppercase B, must use BN because one clone is called B
 
@@ -257,6 +262,7 @@ QHI_mid_july_2022 <- all_source_pop_plus_mother %>%
 
 # extract species and cg sample_ids to match to maternal data because some don't have species 
 unique(all_source_pop_plus_mother$Species) # contains NAs 
+
 # how many NAs for species? 
 sum(is.na(all_source_pop_plus_mother$Species)) # 879, uh-oh that's most of them
 length(unique(all_source_pop_plus_mother$SampleID)) # how many unique sampleIDs # #900 
