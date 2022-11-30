@@ -11,6 +11,7 @@ library(readr)
 library(base)
 library(lubridate)
 library(xlsx)
+#library(openxlsx)
 
 # 2. LOADING DATA ----
 
@@ -30,7 +31,12 @@ X130822 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subs
 X160722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/160722_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X240722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/240722_EZ_weekly_source_pop_Kluane_2022.xlsx")
 all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
-
+# same but use read.xlsx function instead of read.excel because java wasn't working 
+#X010822 <- read.xlsx("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/010822_EZ_weekly_source_pop_Kluane_2022.xlsx")
+#X090722 <- read.xlsx("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/090722_EZ_weekly_source_pop_Kluane_2022.xlsx")
+#X130822 <- read.xlsx("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/130822_EZ_weekly_source_pop_Kluane_2022.xlsx")
+#X160722 <- read.xlsx("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/160722_EZ_weekly_source_pop_Kluane_2022.xlsx")
+#X240722 <- read.xlsx("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/240722_EZ_weekly_source_pop_Kluane_2022.xlsx")
 # Dataset with mother data (2013-2017)
 Common_garden_2017 <- read_csv("data/common_garden_data_2017/Common_garden_2017.csv")
 
