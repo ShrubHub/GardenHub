@@ -127,7 +127,7 @@ str(mother_cg_2022_july)
 # 5. DATA ANALYSIS -----
 
 # Lmeri: effect of mother heights on canopy heights in the CG
-model <- lmer(Canopy_Height_cm~Mother_height + (1|SampleID), data = mother_cg_2022)
+model <- lmer(Canopy_Height_cm~Mother_height + (1|sample_age) + (1|SampleID) + (1|Species), data = mother_cg_2022)
 summary(model)
 tab_model(model)
 plot(model)

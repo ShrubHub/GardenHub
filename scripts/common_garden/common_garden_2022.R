@@ -193,6 +193,10 @@ mother_data$Site <- as.factor(mother_data$Site)
 # mother_data$SampleDate <- as.Date(mother_data$SampleDate, format = "%d/%m/%Y")
 mother_data$SampleDate <- as.POSIXct(mother_data$SampleDate, format = "%d/%m/%Y")
 mother_data$Date_planted <- as.POSIXct(mother_data$Date_planted, format = "%d/%m/%Y")
+mother_data$Date_propagated <- as.Date(mother_data$Date_propagated, format="%d/%m/%Y")
+mother_data$Date_planted <- as.Date(mother_data$Date_planted, format="%d/%m/%Y")
+mother_data$Cutting_diameter<- as.numeric(mother_data$Cutting_diameter)
+mother_data$Cutting_length <- as.numeric(mother_data$Cutting_length)
 
 # function to convert "0017" to "2017"
 two_dig_year_cnvt <- function(z, year=2013){
@@ -204,6 +208,7 @@ two_dig_year_cnvt <- function(z, year=2013){
 }
 
 # converting "0017" to "2017"
+mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 
 # to filter out Betula nana from mother_data 
@@ -245,6 +250,7 @@ all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
 
 unique(all_source_pop_plus_mother$Site)
 all_source_pop_plus_mother$Site <- as.factor(all_source_pop_plus_mother$Site)
+all_source_pop_plus_mother$SampleID <- as.factor(all_source_pop_plus_mother$SampleID)
 
 # only keeping mid july dates for Kluane 2022
 kluane_mid_july_2022 <- all_source_pop_plus_mother %>%
@@ -252,13 +258,31 @@ kluane_mid_july_2022 <- all_source_pop_plus_mother %>%
   filter(SampleDate == "2022-07-16")%>%
   ungroup()
 
+kluane_mid_july_2022$Date_propagated <- as.Date(kluane_mid_july_2022$Date_propagated, format="%d/%m/%Y")
+kluane_mid_july_2022$Date_planted <- as.Date(kluane_mid_july_2022$Date_planted, format="%d/%m/%Y")
+
 # only keeping mid july dates for QHI 2022
-QHI_mid_july_2022 <- all_source_pop_plus_mother %>%
+QHI_mid_july_2022_a <- all_source_pop_plus_mother %>%
   group_by(Site, SampleYear) %>%
-  filter(SampleDate == "2022-07-20")%>%
-  ungroup()
-## problem to fix: not all shrubs measured in one single date on QHI. so need to keep a couple of july dates?
+  filter(between(SampleDate, as.Date("2022-07-19"), as.Date("2022-07-21")))%>%
+  distinct() %>%
+  ungroup() 
+
+QHI_mid_july_2022_b <- all_source_pop_plus_mother %>%
+  group_by(Site, SampleYear, SampleID) %>%
+  filter(SampleDate == "2022-07-25" & 
+          SampleID %in% c("HESP07", "HESP08", "HESP09", "HESP10")) %>%
+  distinct() %>%
+  ungroup() 
+
+QHI_mid_july_2022 <- rbind(QHI_mid_july_2022_a, QHI_mid_july_2022_b)
+
+QHI_mid_july_2022$Date_propagated <- as.Date(QHI_mid_july_2022$Date_propagated, format="%d/%m/%Y")
+QHI_mid_july_2022$Date_planted <- as.Date(QHI_mid_july_2022$Date_planted, format="%d/%m/%Y")
+
 # re-merge with mother data
+july_source_pop_plus_mother <- bind_rows(kluane_mid_july_2022, QHI_mid_july_2022, 
+                                         mother_data, field_source_pop_new)
 
 # extract species and cg sample_ids to match to maternal data because some don't have species 
 unique(all_source_pop_plus_mother$Species) # contains NAs 
