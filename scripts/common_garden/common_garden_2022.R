@@ -296,13 +296,20 @@ all_source_pop_plus_mother$Date_planted <- as.Date(all_source_pop_plus_mother$Da
 all_source_pop_plus_mother$Cutting_diameter <- as.numeric(all_source_pop_plus_mother$Cutting_diameter)
 all_source_pop_plus_mother$SampleYear<- as.numeric(all_source_pop_plus_mother$SampleYear)
 
+# are SampleSite and Site the same? 
+all_source_pop_plus_mother$SampleSite <- as.factor(all_source_pop_plus_mother$SampleSite)
+identical(all_source_pop_plus_mother[['SampleSite']],all_source_pop_plus_mother[['Site']])
+all(all_source_pop_plus_mother$SampleSite == all_source_pop_plus_mother$Site)
+# seems like no 
+unique(all_source_pop_plus_mother$Site) # SampleSite has more site specific info 
+unique(all_source_pop_plus_mother$SampleSite) # SampleSite has more site specific info 
+# omitting next lines to preserve info in SampleSite 
+# all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
+#  mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
+#                          SampleSite %in% c("Qikiqtaruk"," QHI") ~ 'Qikiqtaruk'))
 # formatting site columns
-all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
-  rename("SampleSite" = "Site") 
-
-all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
-  mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
-                          SampleSite %in% c("Qikiqtaruk"," QHI") ~ 'Qikiqtaruk'))
+# all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
+#  rename("SampleSite" = "Site") 
         
 # making variables right format
 unique(all_source_pop_plus_mother$Site)
@@ -349,6 +356,7 @@ july_source_pop_plus_mother$Species <- as.factor(july_source_pop_plus_mother$Spe
 july_source_pop_plus_mother$Site <- as.factor(july_source_pop_plus_mother$Site)
 july_source_pop_plus_mother$SampleID <- as.factor(july_source_pop_plus_mother$SampleID)
 unique(july_source_pop_plus_mother$SampleID)
+length(unique(july_source_pop_plus_mother$SampleID))
 
 # Saving july source population heights 2017-2022 data as csv file
 write.csv(july_source_pop_plus_mother, 'data/source_pops/july_source_pop_plus_mother.csv')
@@ -359,8 +367,7 @@ unique(all_source_pop_plus_mother$Species) # contains NAs
 
 # how many NAs for species? 
 sum(is.na(all_source_pop_plus_mother$Species)) # 879, uh-oh that's most of them
-length(unique(all_source_pop_plus_mother$SampleID)) # how many unique sampleIDs # #900 
-# what sample date to keep for Kluane samples? filter those first 
+length(unique(all_source_pop_plus_mother$SampleID)) # how many unique sampleIDs # #930 
 
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(all_source_pop_plus_mother, 'data/source_pops/all_source_pop_plus_mother.csv')
