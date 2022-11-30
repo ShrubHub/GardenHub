@@ -363,11 +363,32 @@ write.csv(july_source_pop_plus_mother, 'data/source_pops/july_source_pop_plus_mo
 
 # 3.6. Matching SampleIDs with species -----
 # extract species and cg sample_ids to match to maternal data because some don't have species 
-unique(all_source_pop_plus_mother$Species) # contains NAs 
-
+unique(july_source_pop_plus_mother$Species) # contains NAs because of mother_data 
+unique(july_source_pop_plus_mother$SampleID)
 # how many NAs for species? 
-sum(is.na(all_source_pop_plus_mother$Species)) # 879, uh-oh that's most of them
-length(unique(all_source_pop_plus_mother$SampleID)) # how many unique sampleIDs # #930 
+sum(is.na(july_source_pop_plus_mother$Species)) # 879, uh-oh that's most of them
+length(unique(july_source_pop_plus_mother$SampleID)) # how many unique sampleIDs # #930 
+
+# major issue here is a lack of consistency between uppercase, lowercase, dashes, etc. 
+# pull sample_ids and species list from common garden samples 
+cg_ids <- all_merged_data_2022 %>% 
+  select(SampleID, Species) %>% 
+  distinct(SampleID, Species) %>% # keep each sample ID once 
+  rename("Species2" = "Species")
+# make all sample ids upper case - will this work? idk 
+cg_ids$SampleID <- toupper(cg_ids$SampleID) 
+july_source_pop_plus_mother$SampleID <-toupper(test$SampleID)
+
+july_source_pop_plus_mother <- left_join(july_source_pop_plus_mother, cg_ids, by = c("SampleID"))
+# make conditional spp column based on Species and Species2 
+july_source_pop_plus_mother <- july_source_pop_plus_mother %>% 
+  mutate(spp = case_when(Species == "Salix arctica" | Species2 == "Salix arctica" ~ "Salix arctica",
+                         Species == "Salix pulchra" | Species2 == "Salix pulchra" ~ "Salix pulchra", 
+                         Species == "Salix richardsonii" | Species2 == "Salix richardsonii" ~ "Salix richardsonii"))
+sum(is.na(july_source_pop_plus_mother$spp)) # 243, that's a lot less 
+# NOTE: SPECIES IS NOW CALLED spp 
+# I think we could make a standard SampleID column without any spaces or sympbols and match that way, or manually go through with the other 243
+# can rename to Species 
 
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(all_source_pop_plus_mother, 'data/source_pops/all_source_pop_plus_mother.csv')
