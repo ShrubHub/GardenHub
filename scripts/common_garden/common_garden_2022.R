@@ -30,6 +30,7 @@ X090722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subs
 X130822 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/130822_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X160722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/160722_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X240722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/240722_EZ_weekly_source_pop_Kluane_2022.xlsx")
+all_weekly_QHI_2022 <- read_csv("data/source_pops/source_pop_Qiki_shrub_data/weekly_subsets/all_weekly_QHI_2022.csv")
 all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
 
 # Dataset with mother data (2013-2017)
@@ -42,10 +43,28 @@ X010822$SampleDate <- as.POSIXct(X010822$SampleDate, format = "%d/%m/%Y")
 X090722$SampleDate <- as.POSIXct(X090722$SampleDate, format = "%d/%m/%Y")
 X130822$SampleDate <- as.POSIXct(X130822$SampleDate, format = "%d/%m/%Y")
 
-# merging 2022 source pop subsets
-all_source_pop_2022 <- rbind(X010822,X090722,X130822,X160722, X240722)
-all_source_pop_2022 <- all_source_pop_2022 %>% 
-  filter(Species != "Salix reticulata") 
+# merging 2022 source pop subsets in Kluane
+kluane_source_pop_2022 <- rbind(X010822,X090722,X130822,X160722, X240722)
+kluane_source_pop_2022 <- all_source_pop_2022 %>% 
+  filter(Species != "Salix reticulata")
+
+# Creating mean stem elongation, mean leaf length and mean width columns
+kluane_source_pop_2022 <- kluane_source_pop_2022 %>% 
+  #filter(Species != "Salix reticulata") %>% 
+  mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
+         mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
+         mean_width = ((Width_cm + Width_2_cm)/2)) %>% 
+  select(-Stem_diameter_2, - Stem_diameter_3)
+         
+
+# removing sort column from QHI subsets
+QHI_source_pop_2022 <- all_weekly_QHI_2022[,-1]
+
+all_source_pop_2022 <- rbind(QHI_source_pop_2022, kluane_source_pop_2022)
+str(all_source_pop_2022)
+
+all_source_pop_2022$Species <- as.factor(all_source_pop_2022$Species)
+all_source_pop_2022$SampleDate <- as.POSIXct(all_source_pop_2022$SampleDate, format = "%d/%m/%Y")
 
 # saving source pop 2022 data as csv
 write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
@@ -186,7 +205,6 @@ mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 mother_data <-  mother_data[!grepl(c("b"), mother_data$SampleID),,drop = FALSE] # any b in sample id is for betula
 mother_data <-  mother_data[!grepl(c("BN"), mother_data$SampleID),,drop = FALSE] # same as above but with uppercase B, must use BN because one clone is called B
 
-
 # Merging wrangled versions of salix_field_data, all_source_pop_2022, common_garden_2017
 all_source_pop_plus_mother <- bind_rows(field_source_pop_new, all_source_pop_2022,
                         mother_data)
@@ -200,6 +218,28 @@ all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_m
 all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
   mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y")) %>%
   select(-Year_measured,- `2022 Notes`)
+
+str(all_source_pop_plus_mother)
+all_source_pop_plus_mother$Species <- as.factor(all_source_pop_plus_mother$Species)
+all_source_pop_plus_mother$Site <- as.factor(all_source_pop_plus_mother$Site)
+all_source_pop_plus_mother$SampleDate <- as.Date(all_source_pop_plus_mother$SampleDate, format="%d/%m/%Y")
+all_source_pop_plus_mother$SampleID <- as.factor(all_source_pop_plus_mother$SampleID)
+all_source_pop_plus_mother$Stem_diameter <- as.numeric(all_source_pop_plus_mother$Stem_diameter)
+all_source_pop_plus_mother$Date_propagated <- as.Date(all_source_pop_plus_mother$Date_propagated, format="%d/%m/%Y")
+all_source_pop_plus_mother$Date_planted <- as.Date(all_source_pop_plus_mother$Date_planted, format="%d/%m/%Y")
+all_source_pop_plus_mother$Cutting_diameter <- as.numeric(all_source_pop_plus_mother$Cutting_diameter)
+all_source_pop_plus_mother$SampleYear<- as.numeric(all_source_pop_plus_mother$SampleYear)
+
+all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
+  rename("SampleSite" = "Site") 
+
+all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
+  mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
+                          SampleSite %in% c("Qikiqtaruk"," QHI") ~ 'Qikiqtaruk'))
+        
+
+unique(all_source_pop_plus_mother$Site)
+all_source_pop_plus_mother$Site <- as.factor(all_source_pop_plus_mother$Site)
 
 # extract species and cg sample_ids to match to maternal data because some don't have species 
 unique(all_source_pop_plus_mother$Species) # contains NAs 
