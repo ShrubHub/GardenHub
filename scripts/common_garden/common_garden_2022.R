@@ -25,12 +25,16 @@ growth <- read.csv("data/common_garden_data_2021/all_growth_2021.csv")
 field_data <- read.csv('data/source_pops/Salix_field_trait_data.csv')
 
 # Data collected from source locations (Kluane and QHI) in 2022
+# kluane subsets collected weekly in 2022
 X010822 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/010822_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X090722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/090722_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X130822 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/130822_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X160722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/160722_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X240722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/240722_EZ_weekly_source_pop_Kluane_2022.xlsx")
+# All weekly subsets merged from QHI data 2022
 all_weekly_QHI_2022 <- read_csv("data/source_pops/source_pop_Qiki_shrub_data/weekly_subsets/all_weekly_QHI_2022.csv")
+
+# Data from both Kluane and QHI 2022
 all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
 
 # Dataset with mother data (2013-2017)
@@ -38,13 +42,16 @@ Common_garden_2017 <- read_csv("data/common_garden_data_2017/Common_garden_2017.
 
 # 3. DATA WRANGLING ----
 
-# making raw data dates into POSIXct
+# 3.1. Source pop subsets 2022 ----
+
+# Making raw data (Kluane subsets 2022) dates into POSIXct
 X010822$SampleDate <- as.POSIXct(X010822$SampleDate, format = "%d/%m/%Y")
 X090722$SampleDate <- as.POSIXct(X090722$SampleDate, format = "%d/%m/%Y")
 X130822$SampleDate <- as.POSIXct(X130822$SampleDate, format = "%d/%m/%Y")
 
 # merging 2022 source pop subsets in Kluane
 kluane_source_pop_2022 <- rbind(X010822,X090722,X130822,X160722, X240722)
+# Removing salix reticulata
 kluane_source_pop_2022 <- all_source_pop_2022 %>% 
   filter(Species != "Salix reticulata")
 
@@ -56,20 +63,22 @@ kluane_source_pop_2022 <- kluane_source_pop_2022 %>%
          mean_width = ((Width_cm + Width_2_cm)/2)) %>% 
   select(-Stem_diameter_2, - Stem_diameter_3)
          
-
 # removing sort column from QHI subsets
 QHI_source_pop_2022 <- all_weekly_QHI_2022[,-1]
-unique(QHI_source_pop_2022$SampleDate)
+
+# merging QHI and Kluane data from 2022
 all_source_pop_2022 <- rbind(QHI_source_pop_2022, kluane_source_pop_2022)
 str(all_source_pop_2022)
 
+# making variables right format
 all_source_pop_2022$Species <- as.factor(all_source_pop_2022$Species)
 all_source_pop_2022$SampleDate <- as.POSIXct(all_source_pop_2022$SampleDate, format = "%d/%m/%Y")
 
 # saving source pop 2022 data as csv
 write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
 
-# Keeping only relevant columns of 2022 data
+# 3.2. CG growth 2022 ----
+# Keeping only relevant columns of 2022 common garden data
 growth_2022 <- dplyr::select(growth_2022, Bed, SampleID, Year_planted, Species, Site, Sample_Date,
                              Month, Day, Year, Canopy_Height_cm, Width_cm, Width_2_cm, Stem_diameter,
                              Stem_Elongation_1_mm, Stem_Elongation_2_mm, Stem_Elongation_3_mm, 
@@ -133,6 +142,7 @@ all_merged_data_2022$SampleDate <- as.POSIXct(all_merged_data_2022$SampleDate, f
 # Checking all variables are right format
 str(all_merged_data_2022)
 
+# 3.3. Field data from 2017 ----
 # Keeping only relevant columns
 field_data <- dplyr::select(field_data, Species, Plant_height_veg_m, Lat, Lon, 
                             Elevation_m, Site, date, Year_measured)
@@ -150,13 +160,14 @@ field_source_pop <- field_data %>%
 write.csv(field_source_pop, 'data/source_pops/field_source_pop.csv')
 # fixing date issue manually was quicker
 
-# loading new dataset
+# loading new dataset (modified a couple dates manually)
 field_source_pop_new <- read_csv("data/source_pops/field_source_pop_new.csv")
 
+# making date into right format
 field_source_pop_new$date <- as.POSIXct(field_source_pop_new$date, format = "%d/%m/%Y")
-
 str(field_source_pop_new$date) # right!
 
+# renaming columns so they match 
 field_source_pop_new <- field_source_pop_new %>%
   rename("SampleDate" = "date", 
          "Latitude" = "Lat",
@@ -164,10 +175,12 @@ field_source_pop_new <- field_source_pop_new %>%
          "Elevation" = "Elevation_m", 
          "SampleSite" = "Site")
 
+# making site column
 field_source_pop_new <- field_source_pop_new %>%
   mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
                           SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))
 
+# date into the right format
 field_source_pop_new$SampleDate <- format(as.POSIXct(field_source_pop_new$SampleDate,
                                                            format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
 
@@ -175,9 +188,11 @@ field_source_pop_new$SampleDate <- format(as.POSIXct(field_source_pop_new$Sample
 field_source_pop_new <- field_source_pop_new %>%
   mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y"))
 
+# variables into right format
 field_source_pop_new$SampleDate <- as.POSIXct(field_source_pop_new$SampleDate, format = "%d/%m/%Y")
 field_source_pop_new$SampleYear <- as.numeric(field_source_pop_new$SampleYear)
 
+# 3.4. Mother data -----
 # only keeping relevant columns of mother data
 mother_data <- Common_garden_2017 %>%
   select(Sample_ID, Match, Sample_location, Date_sampled,
@@ -226,33 +241,39 @@ two_dig_year_cnvt <- function(z, year=2013){
 mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 
+# renaming site col
 mother_data <- mother_data %>%
   rename("SampleSite" = "Site") 
 
+# making site column
 mother_data <- mother_data %>%
   mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
                           SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))
 
+# site as factor
 mother_data$Site <- as.factor(mother_data$Site)
-
 str(mother_data)
 
+# Making means cols
 mother_data <- mother_data %>%
   mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y"), 
          mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
        mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
        mean_width = ((Width_cm + Width_2_cm)/2)) 
 
+# year as numeric
 mother_data$SampleYear <- as.numeric(mother_data$SampleYear)
 
 # to filter out Betula nana from mother_data 
 mother_data <-  mother_data[!grepl(c("b"), mother_data$SampleID),,drop = FALSE] # any b in sample id is for betula
 mother_data <-  mother_data[!grepl(c("BN"), mother_data$SampleID),,drop = FALSE] # same as above but with uppercase B, must use BN because one clone is called B
 
+# 3.5. Merging source pop plus mother ----
 # Merging wrangled versions of salix_field_data, all_source_pop_2022, common_garden_2017
 all_source_pop_plus_mother <- bind_rows(field_source_pop_new, all_source_pop_2022,
                         mother_data)
 
+# formatting variables
 str(all_source_pop_plus_mother$SampleDate)
 unique(all_source_pop_plus_mother$SampleDate)
 all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_mother$SampleDate,
@@ -263,6 +284,7 @@ all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
   mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y")) %>%
   select(-Year_measured,- `2022 Notes`)
 
+# variables in right format
 str(all_source_pop_plus_mother)
 all_source_pop_plus_mother$Species <- as.factor(all_source_pop_plus_mother$Species)
 all_source_pop_plus_mother$Site <- as.factor(all_source_pop_plus_mother$Site)
@@ -274,6 +296,7 @@ all_source_pop_plus_mother$Date_planted <- as.Date(all_source_pop_plus_mother$Da
 all_source_pop_plus_mother$Cutting_diameter <- as.numeric(all_source_pop_plus_mother$Cutting_diameter)
 all_source_pop_plus_mother$SampleYear<- as.numeric(all_source_pop_plus_mother$SampleYear)
 
+# formatting site columns
 all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
   rename("SampleSite" = "Site") 
 
@@ -281,7 +304,7 @@ all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
   mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
                           SampleSite %in% c("Qikiqtaruk"," QHI") ~ 'Qikiqtaruk'))
         
-
+# making variables right format
 unique(all_source_pop_plus_mother$Site)
 all_source_pop_plus_mother$Site <- as.factor(all_source_pop_plus_mother$Site)
 all_source_pop_plus_mother$SampleID <- as.factor(all_source_pop_plus_mother$SampleID)
@@ -292,6 +315,7 @@ kluane_mid_july_2022 <- all_source_pop_plus_mother %>%
   filter(SampleDate == "2022-07-16")%>%
   ungroup()
 
+# variables in right format
 kluane_mid_july_2022$Date_propagated <- as.Date(kluane_mid_july_2022$Date_propagated, format="%d/%m/%Y")
 kluane_mid_july_2022$Date_planted <- as.Date(kluane_mid_july_2022$Date_planted, format="%d/%m/%Y")
 str(kluane_mid_july_2022)
@@ -309,8 +333,10 @@ QHI_mid_july_2022_b <- all_source_pop_plus_mother %>%
   distinct() %>%
   ungroup() 
 
+# merging the july subsets of QHI
 QHI_mid_july_2022 <- rbind(QHI_mid_july_2022_a, QHI_mid_july_2022_b)
 
+# formatting dates
 QHI_mid_july_2022$Date_propagated <- as.Date(QHI_mid_july_2022$Date_propagated, format="%d/%m/%Y")
 QHI_mid_july_2022$Date_planted <- as.Date(QHI_mid_july_2022$Date_planted, format="%d/%m/%Y")
 
@@ -318,6 +344,7 @@ QHI_mid_july_2022$Date_planted <- as.Date(QHI_mid_july_2022$Date_planted, format
 july_source_pop_plus_mother <- bind_rows(kluane_mid_july_2022, QHI_mid_july_2022, 
                                          mother_data, field_source_pop_new)
 
+# formatting variables
 july_source_pop_plus_mother$Species <- as.factor(july_source_pop_plus_mother$Species)
 july_source_pop_plus_mother$Site <- as.factor(july_source_pop_plus_mother$Site)
 july_source_pop_plus_mother$SampleID <- as.factor(july_source_pop_plus_mother$SampleID)
@@ -326,6 +353,7 @@ unique(july_source_pop_plus_mother$SampleID)
 # Saving july source population heights 2017-2022 data as csv file
 write.csv(july_source_pop_plus_mother, 'data/source_pops/july_source_pop_plus_mother.csv')
 
+# 3.6. Matching SampleIDs with species -----
 # extract species and cg sample_ids to match to maternal data because some don't have species 
 unique(all_source_pop_plus_mother$Species) # contains NAs 
 
@@ -337,7 +365,7 @@ length(unique(all_source_pop_plus_mother$SampleID)) # how many unique sampleIDs 
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(all_source_pop_plus_mother, 'data/source_pops/all_source_pop_plus_mother.csv')
 
-# 3.1. DATA EXPLORE: Sample size ----
+# 3.7. Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
 
 # How many shrubs of each type (Arctic vs Alpine?)
