@@ -11,7 +11,7 @@ library(readr)
 library(base)
 library(lubridate)
 library(xlsx)
-#library(openxlsx)
+#library(readxl) # reads excel files if java doesn't work for (xlsx)
 
 # 2. LOADING DATA ----
 
@@ -31,12 +31,7 @@ X130822 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subs
 X160722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/160722_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X240722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/240722_EZ_weekly_source_pop_Kluane_2022.xlsx")
 all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
-# same but use read.xlsx function instead of read.excel because java wasn't working 
-#X010822 <- read.xlsx("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/010822_EZ_weekly_source_pop_Kluane_2022.xlsx")
-#X090722 <- read.xlsx("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/090722_EZ_weekly_source_pop_Kluane_2022.xlsx")
-#X130822 <- read.xlsx("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/130822_EZ_weekly_source_pop_Kluane_2022.xlsx")
-#X160722 <- read.xlsx("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/160722_EZ_weekly_source_pop_Kluane_2022.xlsx")
-#X240722 <- read.xlsx("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/240722_EZ_weekly_source_pop_Kluane_2022.xlsx")
+
 # Dataset with mother data (2013-2017)
 Common_garden_2017 <- read_csv("data/common_garden_data_2017/Common_garden_2017.csv")
 
@@ -50,8 +45,7 @@ X130822$SampleDate <- as.POSIXct(X130822$SampleDate, format = "%d/%m/%Y")
 # merging 2022 source pop subsets
 all_source_pop_2022 <- rbind(X010822,X090722,X130822,X160722, X240722)
 all_source_pop_2022 <- all_source_pop_2022 %>% 
-  filter(Species != "Salix reticulata") %>% 
-  select(-...1)
+  filter(Species != "Salix reticulata") 
 
 # saving source pop 2022 data as csv
 write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
@@ -190,7 +184,7 @@ mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 
 # to filter out Betula nana from mother_data .... 
 mother_data <-  mother_data[!grepl(c("b"), mother_data$SampleID),,drop = FALSE] # any b in sample id is for betula
-mother_data <-  mother_data_test[!grepl(c("BN"), mother_data_test$SampleID),,drop = FALSE] # same as above but with uppercase B, must use BN because one clone is called B
+mother_data <-  mother_data[!grepl(c("BN"), mother_data$SampleID),,drop = FALSE] # same as above but with uppercase B, must use BN because one clone is called B
 
 
 # Merging wrangled versions of salix_field_data, all_source_pop_2022, common_garden_2017
@@ -210,9 +204,9 @@ all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
 # extract species and cg sample_ids to match to maternal data because some don't have species 
 unique(all_source_pop_plus_mother$Species) # contains NAs 
 # how many NAs for species? 
-sum(is.na(all_source_pop_plus_mother$Species)) # 879, uh-oh 
+sum(is.na(all_source_pop_plus_mother$Species)) # 879, uh-oh that's most of them
 length(unique(all_source_pop_plus_mother$SampleID)) # how many unique sampleIDs # #900 
-# I'm wondering if we should filter 
+# what sample date to keep for Kluane samples? filter those first 
 
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(all_source_pop_plus_mother, 'data/source_pops/all_source_pop_plus_mother.csv')
