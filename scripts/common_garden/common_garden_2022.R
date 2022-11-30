@@ -59,7 +59,7 @@ kluane_source_pop_2022 <- kluane_source_pop_2022 %>%
 
 # removing sort column from QHI subsets
 QHI_source_pop_2022 <- all_weekly_QHI_2022[,-1]
-
+unique(QHI_source_pop_2022$SampleDate)
 all_source_pop_2022 <- rbind(QHI_source_pop_2022, kluane_source_pop_2022)
 str(all_source_pop_2022)
 
@@ -240,6 +240,20 @@ all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
 
 unique(all_source_pop_plus_mother$Site)
 all_source_pop_plus_mother$Site <- as.factor(all_source_pop_plus_mother$Site)
+
+# only keeping mid july dates for Kluane 2022
+kluane_mid_july_2022 <- all_source_pop_plus_mother %>%
+  group_by(Site, SampleYear) %>%
+  filter(SampleDate == "2022-07-16")%>%
+  ungroup()
+
+# only keeping mid july dates for QHI 2022
+QHI_mid_july_2022 <- all_source_pop_plus_mother %>%
+  group_by(Site, SampleYear) %>%
+  filter(SampleDate == "2022-07-20")%>%
+  ungroup()
+## problem to fix: not all shrubs measured in one single date on QHI. so need to keep a couple of july dates?
+# re-merge with mother data
 
 # extract species and cg sample_ids to match to maternal data because some don't have species 
 unique(all_source_pop_plus_mother$Species) # contains NAs 
