@@ -161,7 +161,22 @@ field_source_pop_new <- field_source_pop_new %>%
   rename("SampleDate" = "date", 
          "Latitude" = "Lat",
          "Longitude" = "Lon", 
-         "Elevation" = "Elevation_m")
+         "Elevation" = "Elevation_m", 
+         "SampleSite" = "Site")
+
+field_source_pop_new <- field_source_pop_new %>%
+  mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
+                          SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))
+
+field_source_pop_new$SampleDate <- format(as.POSIXct(field_source_pop_new$SampleDate,
+                                                           format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
+
+# making a year column
+field_source_pop_new <- field_source_pop_new %>%
+  mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y"))
+
+field_source_pop_new$SampleDate <- as.POSIXct(field_source_pop_new$SampleDate, format = "%d/%m/%Y")
+field_source_pop_new$SampleYear <- as.numeric(field_source_pop_new$SampleYear)
 
 # only keeping relevant columns of mother data
 mother_data <- Common_garden_2017 %>%
@@ -210,6 +225,25 @@ two_dig_year_cnvt <- function(z, year=2013){
 # converting "0017" to "2017"
 mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
+
+mother_data <- mother_data %>%
+  rename("SampleSite" = "Site") 
+
+mother_data <- mother_data %>%
+  mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
+                          SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))
+
+mother_data$Site <- as.factor(mother_data$Site)
+
+str(mother_data)
+
+mother_data <- mother_data %>%
+  mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y"), 
+         mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
+       mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
+       mean_width = ((Width_cm + Width_2_cm)/2)) 
+
+mother_data$SampleYear <- as.numeric(mother_data$SampleYear)
 
 # to filter out Betula nana from mother_data 
 mother_data <-  mother_data[!grepl(c("b"), mother_data$SampleID),,drop = FALSE] # any b in sample id is for betula
@@ -260,7 +294,7 @@ kluane_mid_july_2022 <- all_source_pop_plus_mother %>%
 
 kluane_mid_july_2022$Date_propagated <- as.Date(kluane_mid_july_2022$Date_propagated, format="%d/%m/%Y")
 kluane_mid_july_2022$Date_planted <- as.Date(kluane_mid_july_2022$Date_planted, format="%d/%m/%Y")
-
+str(kluane_mid_july_2022)
 # only keeping mid july dates for QHI 2022
 QHI_mid_july_2022_a <- all_source_pop_plus_mother %>%
   group_by(Site, SampleYear) %>%
@@ -283,6 +317,14 @@ QHI_mid_july_2022$Date_planted <- as.Date(QHI_mid_july_2022$Date_planted, format
 # re-merge with mother data
 july_source_pop_plus_mother <- bind_rows(kluane_mid_july_2022, QHI_mid_july_2022, 
                                          mother_data, field_source_pop_new)
+
+july_source_pop_plus_mother$Species <- as.factor(july_source_pop_plus_mother$Species)
+july_source_pop_plus_mother$Site <- as.factor(july_source_pop_plus_mother$Site)
+july_source_pop_plus_mother$SampleID <- as.factor(july_source_pop_plus_mother$SampleID)
+unique(july_source_pop_plus_mother$SampleID)
+
+# Saving july source population heights 2017-2022 data as csv file
+write.csv(july_source_pop_plus_mother, 'data/source_pops/july_source_pop_plus_mother.csv')
 
 # extract species and cg sample_ids to match to maternal data because some don't have species 
 unique(all_source_pop_plus_mother$Species) # contains NAs 
