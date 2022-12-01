@@ -377,7 +377,7 @@ cg_ids <- all_merged_data_2022 %>%
   rename("Species2" = "Species")
 # make all sample ids upper case - will this work? idk 
 cg_ids$SampleID <- toupper(cg_ids$SampleID) 
-july_source_pop_plus_mother$SampleID <-toupper(test$SampleID)
+july_source_pop_plus_mother$SampleID <-toupper(july_source_pop_plus_mother$SampleID)
 
 july_source_pop_plus_mother <- left_join(july_source_pop_plus_mother, cg_ids, by = c("SampleID"))
 # make conditional spp column based on Species and Species2 
@@ -387,8 +387,27 @@ july_source_pop_plus_mother <- july_source_pop_plus_mother %>%
                          Species == "Salix richardsonii" | Species2 == "Salix richardsonii" ~ "Salix richardsonii"))
 sum(is.na(july_source_pop_plus_mother$spp)) # 243, that's a lot less 
 # NOTE: SPECIES IS NOW CALLED spp 
-# I think we could make a standard SampleID column without any spaces or sympbols and match that way, or manually go through with the other 243
+# I think we could make a standard SampleID column without any spaces or symbols and match that way, or manually go through with the other 243
 # can rename to Species 
+
+test <- july_source_pop_plus_mother
+july_source_pop_plus_mother$SampleID_standard<-gsub("-","",as.character(july_source_pop_plus_mother$SampleID)) # remove "-"
+july_source_pop_plus_mother$SampleID_standard<-gsub(" ","",as.character(july_source_pop_plus_mother$SampleID_standard)) # remove spaces " " 
+cg_ids_2 <- cg_ids %>% 
+  rename("Species3" = "Species2") %>% 
+  rename("SampleID_standard" = "SampleID")
+
+test_merge <- left_join(test, cg_ids_2, by = "SampleID_standard")
+
+test_merge_spp <- test_merge %>% 
+  mutate(spp_2 = case_when(spp == "Salix arctica" | Species3 == "Salix arctica" ~ "Salix arctica",
+                         spp == "Salix pulchra" | Species3 == "Salix pulchra" ~ "Salix pulchra", 
+                         spp == "Salix richardsonii" | Species3 == "Salix richardsonii" ~ "Salix richardsonii"))
+sum(is.na(test_merge_spp$spp_2)) # 170! that's even less !
+# NB SPECIES COLUMN CURRENTLY CALLED spp_2 
+# WILL STREAMLINE WHEN ALL IS GOOD TO GO, DON'T WANT TO MISTAKENLY OVERWRITE 
+# save this version just for ease 
+write.csv(test_merge_spp, 'data/source_pops/test_merge_spp.csv')
 
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(all_source_pop_plus_mother, 'data/source_pops/all_source_pop_plus_mother.csv')
