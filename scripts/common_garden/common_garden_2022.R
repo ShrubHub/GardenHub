@@ -51,17 +51,15 @@ X130822$SampleDate <- as.POSIXct(X130822$SampleDate, format = "%d/%m/%Y")
 
 # merging 2022 source pop subsets in Kluane
 kluane_source_pop_2022 <- rbind(X010822,X090722,X130822,X160722, X240722)
-# Removing salix reticulata
-kluane_source_pop_2022 <- all_source_pop_2022 %>% 
-  filter(Species != "Salix reticulata")
 
 # Creating mean stem elongation, mean leaf length and mean width columns
+# remove S. reticulata 
 kluane_source_pop_2022 <- kluane_source_pop_2022 %>% 
-  #filter(Species != "Salix reticulata") %>% 
+  filter(Species != "Salix reticulata") %>% 
   mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
          mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
-         mean_width = ((Width_cm + Width_2_cm)/2)) %>% 
-  select(-Stem_diameter_2, - Stem_diameter_3)
+         mean_width = ((Width_cm + Width_2_cm)/2)) # %>% 
+ # select(-Stem_diameter_2, - Stem_diameter_3)
          
 # removing sort column from QHI subsets
 QHI_source_pop_2022 <- all_weekly_QHI_2022[,-1]
@@ -75,7 +73,7 @@ all_source_pop_2022$Species <- as.factor(all_source_pop_2022$Species)
 all_source_pop_2022$SampleDate <- as.POSIXct(all_source_pop_2022$SampleDate, format = "%d/%m/%Y")
 
 # saving source pop 2022 data as csv
-write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
+# write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
 
 # 3.2. CG growth 2022 ----
 # Keeping only relevant columns of 2022 common garden data
@@ -127,7 +125,7 @@ all_merged_data_2022 <- all_growth_2022 %>%
 
 str(all_merged_data_2022)
 # Saving all merged and formatted 2013-2022 data as csv file
-write.csv(all_merged_data_2022, 'scripts/common_garden/common_garden_data_2022/all_merged_data_2022.csv')
+# write.csv(all_merged_data_2022, 'scripts/common_garden/common_garden_data_2022/all_merged_data_2022.csv')
 
 # Making variables into the right format
 all_merged_data_2022$Bed <- as.factor(as.character(all_merged_data_2022$Bed))
@@ -157,7 +155,7 @@ field_source_pop <- field_data %>%
   select(-Plant_height_veg_m)%>%
   na.omit()
 
-write.csv(field_source_pop, 'data/source_pops/field_source_pop.csv')
+# write.csv(field_source_pop, 'data/source_pops/field_source_pop.csv')
 # fixing date issue manually was quicker
 
 # loading new dataset (modified a couple dates manually)
@@ -374,52 +372,46 @@ length(unique(july_source_pop_plus_mother$SampleID)) # how many unique sampleIDs
 cg_ids <- all_merged_data_2022 %>% 
   select(SampleID, Species) %>% 
   distinct(SampleID, Species) %>% # keep each sample ID once 
-  rename("Species2" = "Species")
-# make all sample ids upper case - will this work? idk 
-cg_ids$SampleID <- toupper(cg_ids$SampleID) 
+  rename("Species2" = "Species") %>% # for matching 
+  rename("SampleID_standard" = "SampleID")
+
+# make all sample ids upper case 
+cg_ids$SampleID_standard <- toupper(cg_ids$SampleID_standard) 
 july_source_pop_plus_mother$SampleID <-toupper(july_source_pop_plus_mother$SampleID)
 
-july_source_pop_plus_mother <- left_join(july_source_pop_plus_mother, cg_ids, by = c("SampleID"))
-# make conditional spp column based on Species and Species2 
-july_source_pop_plus_mother <- july_source_pop_plus_mother %>% 
+# make standard SampleID column for july_source_pop_plus_mother IDs 
+# aka remove spaces and dashes and use uppercase letters 
+july_source_pop_plus_mother$SampleID_standard<-gsub("-","",as.character(july_source_pop_plus_mother$SampleID)) # remove "-"
+july_source_pop_plus_mother$SampleID_standard<-gsub(" ","",as.character(july_source_pop_plus_mother$SampleID_standard)) # remove spaces " " 
+
+# calling this unique source mother working for merges 
+unique_source_mother_working <- left_join(july_source_pop_plus_mother, cg_ids, by = c("SampleID_standard"))
+
+unique_source_mother_working_merge <- unique_source_mother_working %>% 
   mutate(spp = case_when(Species == "Salix arctica" | Species2 == "Salix arctica" ~ "Salix arctica",
                          Species == "Salix pulchra" | Species2 == "Salix pulchra" ~ "Salix pulchra", 
                          Species == "Salix richardsonii" | Species2 == "Salix richardsonii" ~ "Salix richardsonii"))
-sum(is.na(july_source_pop_plus_mother$spp)) # 243, that's a lot less 
-# NOTE: SPECIES IS NOW CALLED spp 
-# I think we could make a standard SampleID column without any spaces or symbols and match that way, or manually go through with the other 243
-# can rename to Species 
 
-test <- july_source_pop_plus_mother
-july_source_pop_plus_mother$SampleID_standard<-gsub("-","",as.character(july_source_pop_plus_mother$SampleID)) # remove "-"
-july_source_pop_plus_mother$SampleID_standard<-gsub(" ","",as.character(july_source_pop_plus_mother$SampleID_standard)) # remove spaces " " 
-cg_ids_2 <- cg_ids %>% 
-  rename("Species3" = "Species2") %>% 
-  rename("SampleID_standard" = "SampleID")
+sum(is.na(unique_source_mother_working_merge$spp)) # 170, 
+unique_source_mother_working_merge$spp_test <- ifelse(grepl("SA", unique_source_mother_working_merge$SampleID_standard), "Salix arctica",
+                                  ifelse(grepl("SR", unique_source_mother_working_merge$SampleID_standard), "Salix richardsonii", 
+                                         ifelse(grepl("SP", unique_source_mother_working_merge$SampleID_standard), "Salix pulchra", NA)))
 
-test_merge <- left_join(test, cg_ids_2, by = "SampleID_standard")
+unique_source_mother_check <- unique_source_mother_working_merge %>% 
+  mutate(spp_3 = case_when(spp == "Salix arctica" | spp_test == "Salix arctica" ~ "Salix arctica",
+                           spp == "Salix pulchra" | spp_test == "Salix pulchra" ~ "Salix pulchra", 
+                           spp == "Salix richardsonii" | spp_test == "Salix richardsonii" ~ "Salix richardsonii"))
+sum(is.na(unique_source_mother_check$spp_3)) # 0 baby! 
 
-test_merge_spp <- test_merge %>% 
-  mutate(spp_2 = case_when(spp == "Salix arctica" | Species3 == "Salix arctica" ~ "Salix arctica",
-                         spp == "Salix pulchra" | Species3 == "Salix pulchra" ~ "Salix pulchra", 
-                         spp == "Salix richardsonii" | Species3 == "Salix richardsonii" ~ "Salix richardsonii"))
-sum(is.na(test_merge_spp$spp_2)) # 170! that's even less !
-# NB SPECIES COLUMN CURRENTLY CALLED spp_2 
-# WILL STREAMLINE WHEN ALL IS GOOD TO GO, DON'T WANT TO MISTAKENLY OVERWRITE 
-# save this version just for ease 
-test_merge_spp$spp_test <- ifelse(grepl("SA", test_merge_spp$SampleID), "Salix arctica",
-                               ifelse(grepl("SR", test_merge_spp$SampleID), "Salix richardsonii", 
-                                      ifelse(grepl("SP", test_merge_spp$SampleID), "Salix pulchra", NA)))
+# drop old Species columns and rename spp_3 column to Species
+unique_source_mother <- unique_source_mother_check %>% 
+  select(-c(spp_test, Species, Species2, spp)) %>% 
+  rename("Species" = "spp_3")
+# check to make sure we still have no NAs for species 
+sum(is.na(unique_source_mother$Species)) # success! 
 
-test_merge_spp_3 <- test_merge_spp %>% 
-  mutate(spp_3 = case_when(spp_2 == "Salix arctica" | spp_test == "Salix arctica" ~ "Salix arctica",
-                           spp_2 == "Salix pulchra" | spp_test == "Salix pulchra" ~ "Salix pulchra", 
-                           spp_2 == "Salix richardsonii" | spp_test == "Salix richardsonii" ~ "Salix richardsonii"))
-sum(is.na(test_merge_spp_3$spp_3)) # 0 baby! 
-# 
-july_source_pop_plus_mother <- test_merge_spp_3
 # Saving all source population heights 2017-2022 data as csv file
-write.csv(july_source_pop_plus_mother, 'data/source_pops/july_source_pop_plus_mother.csv')
+write.csv(unique_source_mother, 'data/source_pops/unique_source_mother.csv')
 
 # 3.7. Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
