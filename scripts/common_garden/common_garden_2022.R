@@ -407,10 +407,19 @@ sum(is.na(test_merge_spp$spp_2)) # 170! that's even less !
 # NB SPECIES COLUMN CURRENTLY CALLED spp_2 
 # WILL STREAMLINE WHEN ALL IS GOOD TO GO, DON'T WANT TO MISTAKENLY OVERWRITE 
 # save this version just for ease 
-write.csv(test_merge_spp, 'data/source_pops/test_merge_spp.csv')
+test_merge_spp$spp_test <- ifelse(grepl("SA", test_merge_spp$SampleID), "Salix arctica",
+                               ifelse(grepl("SR", test_merge_spp$SampleID), "Salix richardsonii", 
+                                      ifelse(grepl("SP", test_merge_spp$SampleID), "Salix pulchra", NA)))
 
+test_merge_spp_3 <- test_merge_spp %>% 
+  mutate(spp_3 = case_when(spp_2 == "Salix arctica" | spp_test == "Salix arctica" ~ "Salix arctica",
+                           spp_2 == "Salix pulchra" | spp_test == "Salix pulchra" ~ "Salix pulchra", 
+                           spp_2 == "Salix richardsonii" | spp_test == "Salix richardsonii" ~ "Salix richardsonii"))
+sum(is.na(test_merge_spp_3$spp_3)) # 0 baby! 
+# 
+july_source_pop_plus_mother <- test_merge_spp_3
 # Saving all source population heights 2017-2022 data as csv file
-write.csv(all_source_pop_plus_mother, 'data/source_pops/all_source_pop_plus_mother.csv')
+write.csv(july_source_pop_plus_mother, 'data/source_pops/july_source_pop_plus_mother.csv')
 
 # 3.7. Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
