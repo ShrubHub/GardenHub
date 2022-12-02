@@ -52,14 +52,33 @@ all_source_traits_2022 <- full_join(SLA_2022, source_traits_2017, by = c("Site" 
                                                            "leaf_fresh_mass_g" = "Leaf_fresh_mass_g", 
                                                            "site_id" = "Subsite_name"
                                                            )) 
-# save data 
+str(all_source_traits_2022)
+
+all_source_traits_2022$Site <- as.factor(all_source_traits_2022$Site)
+all_source_traits_2022$Species <- as.factor(all_source_traits_2022$Species)
+all_source_traits_2022$year <- as.factor(all_source_traits_2022$year)
+all_source_traits_2022$month <- as.factor(all_source_traits_2022$month)
+
+
+all_source_traits_2022$month_1 <-  format(as.Date(all_source_traits_2022$date, format="%d/%m/%Y"),"%m")
+all_source_traits_2022$month_2 <- ifelse(grepl("Jul",all_source_traits_2022$date),"7",NA)
+
+all_source_traits_2022 <- all_source_traits_2022 %>% 
+  mutate(MONTH = case_when(month == "6" | month_1 == "06" ~ "6",
+         month == "7" | month_2 == "7" | month_1 == "07" ~ "7", 
+         month_1 == "08" ~ "8")) %>% 
+  dplyr::select(-c(month_2, month_1, month))
+
+# 5. save data ----
 write.csv(all_source_traits_2022,'data/source_pops/all_source_area_traits.csv')
 
+# load ! 
+all_source_area_traits <- read.csv('data/source_pops/all_source_area_traits.csv')
 
 # 6. plots ----
 
 # data from all yeares 
-(sla_all_source <- ggplot(all_source_traits_2022) +
+(sla_all_source <- ggplot(all_source_area_traits) +
    geom_boxplot(aes(x = Site, y = SLA, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
    facet_grid(cols = vars(Species)) +
    ylab("SLA (mm2mg-1)") +
@@ -98,7 +117,7 @@ write.csv(all_source_traits_2022,'data/source_pops/all_source_area_traits.csv')
           axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
-(ldmc_source_all <- ggplot(all_source_traits_2022) +
+(ldmc_source_all <- ggplot(all_source_area_traits) +
     geom_boxplot(aes(x = Site, y = LDMC_g_g, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
     facet_grid(cols = vars(Species)) +
     ylab("LDMC") +
@@ -116,6 +135,30 @@ write.csv(all_source_traits_2022,'data/source_pops/all_source_area_traits.csv')
           axis.title = element_text(size = 14),
           axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
+
+# only JULY plots ---- 
+july_traits <-all_source_area_traits %>% 
+  filter(MONTH == "7")
+
+(sla_2022_source <- ggplot(july_traits) +
+    geom_boxplot(aes(x = Site, y = SLA, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
+    facet_grid(cols = vars(Species)) +
+    ylab("SLA (mm2mg-1)") +
+    xlab("Source population") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
 
 # only 2022 plots ====
 # quick plot of ALL source populations SLA 
