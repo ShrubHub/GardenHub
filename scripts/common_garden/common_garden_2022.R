@@ -58,11 +58,15 @@ kluane_source_pop_2022 <- kluane_source_pop_2022 %>%
   filter(Species != "Salix reticulata") %>% 
   mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
          mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
-         mean_width = ((Width_cm + Width_2_cm)/2)) # %>% 
- # select(-Stem_diameter_2, - Stem_diameter_3)
-         
+         mean_width = ((Width_cm + Width_2_cm)/2)) %>% 
+ select(- Stem_diameter_2, - Stem_diameter_3)
+        
+kluane_source_pop_2022$Stem_diameter <- as.numeric(kluane_source_pop_2022$Stem_diameter)
+
 # removing sort column from QHI subsets
 QHI_source_pop_2022 <- all_weekly_QHI_2022[,-1]
+QHI_source_pop_2022$Stem_diameter <- as.numeric(QHI_source_pop_2022$Stem_diameter)
+
 
 # merging QHI and Kluane data from 2022
 all_source_pop_2022 <- rbind(QHI_source_pop_2022, kluane_source_pop_2022)
@@ -70,10 +74,12 @@ str(all_source_pop_2022)
 
 # making variables right format
 all_source_pop_2022$Species <- as.factor(all_source_pop_2022$Species)
+all_source_pop_2022$Site <- as.factor(all_source_pop_2022$Site)
 all_source_pop_2022$SampleDate <- as.POSIXct(all_source_pop_2022$SampleDate, format = "%d/%m/%Y")
+all_source_pop_2022$Stem_diameter <- as.numeric(all_source_pop_2022$Stem_diameter)
 
 # saving source pop 2022 data as csv
-# write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
+write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
 
 # 3.2. CG growth 2022 ----
 # Keeping only relevant columns of 2022 common garden data
@@ -173,6 +179,7 @@ field_source_pop_new <- field_source_pop_new %>%
          "Elevation" = "Elevation_m", 
          "SampleSite" = "Site")
 
+
 # making site column
 field_source_pop_new <- field_source_pop_new %>%
   mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
@@ -189,6 +196,8 @@ field_source_pop_new <- field_source_pop_new %>%
 # variables into right format
 field_source_pop_new$SampleDate <- as.POSIXct(field_source_pop_new$SampleDate, format = "%d/%m/%Y")
 field_source_pop_new$SampleYear <- as.numeric(field_source_pop_new$SampleYear)
+field_source_pop_new$Site <- as.factor(field_source_pop_new$Site)
+field_source_pop_new$Species <- as.factor(field_source_pop_new$Species)
 
 # 3.4. Mother data -----
 # only keeping relevant columns of mother data
@@ -236,7 +245,6 @@ two_dig_year_cnvt <- function(z, year=2013){
 }
 
 # converting "0017" to "2017"
-mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 
 # renaming site col
