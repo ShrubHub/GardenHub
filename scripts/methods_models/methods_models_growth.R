@@ -7,47 +7,58 @@
 # lmer(growth_variable  ~ site*species +  (1|sample_year/field_sample_ID))
 # N.B Site is Kluane or QHI
 
-# Loading libraries ----
+# 1. Loading libraries ----
 library(lme4)
 
-# Loading data ---- 
-july_source_pop_plus_mother <- read.csv("data/source_pop/july_source_pops_plus_mother.csv")
+# 2. Loading data ---- 
+unique_source_mother <- read_csv("data/source_pops/unique_source_mother.csv")
 
-# 1. Canopy height (cm) -----
-str(july_source_pop_plus_mother)
+# 3. Modelling ----
+# a. Canopy height (cm) -----
 
-july_source_pop_plus_mother$SampleYear <- as.factor(july_source_pop_plus_mother$SampleYear)
-unique(july_source_pop_plus_mother$SampleYear)
+# variables in right format
+str(unique_source_mother)
+unique_source_mother$SampleYear <- as.factor(july_source_pop_plus_mother$SampleYear)
+unique_source_mother$Species <- as.factor(unique_source_mother$Species)
+unique_source_mother$Site <- as.factor(unique_source_mother$Site)
+unique(unique_source_mother$SampleYear)
 
-height_method_mod <- lmer(Canopy_Height_cm ~ Site*Species + (1|SampleYear), data = july_source_pop_plus_mother)
+# Running lmer
+height_method_mod <- lmer(Canopy_Height_cm ~ Site*Species + (1|SampleYear), data = unique_source_mother)
 
 summary(height_method_mod)
 plot(height_method_mod)
 qqnorm(resid(height_method_mod))
 qqline(resid(height_method_mod)) 
 
-# 2. Stem elongation ---- 
-july_source_pop_plus_mother_elong <- july_source_pop_plus_mother %>%
-  select(mean_stem_elong, Site, Species, SampleYear, SampleID) %>%
-  drop_na(mean_stem_elong)
-  
-str(july_source_pop_plus_mother_elong)
+# b. Stem elongation ---- 
+#unique_source_mother_elong <- unique_source_mother %>%
+ #select(mean_stem_elong, Site, Species, SampleYear, SampleID) %>%
+  #drop_na(mean_stem_elong)
 
-stem_elong_method_mod <- lmer(mean_stem_elong ~ Site*Species + (1|SampleYear), data = july_source_pop_plus_mother_elong)
-# doesnt work because we havent identified the species yet
+stem_elong_method_mod <- lmer(mean_stem_elong ~ Site*Species + (1|SampleYear), data = unique_source_mother)
+# fixed-effect model matrix is rank deficient so dropping 1 column / coefficient?
 summary(stem_elong_method_mod)
 plot(stem_elong_method_mod)
 qqnorm(resid(stem_elong_method_mod))
 qqline(resid(stem_elong_method_mod)) 
 
-# 3. Width---- 
-july_source_pop_plus_mother_width <- july_source_pop_plus_mother %>%
-  select(mean_width, Site, Species, SampleYear, SampleID) %>%
-  drop_na(mean_width)
+# c. Width---- 
+width_method_mod <- lmer(mean_width ~ Site*Species + (1|SampleYear), data = unique_source_mother)
+summary(width_method_mod)
+plot(width_method_mod)
+qqnorm(resid(width_method_mod ))
+qqline(resid(width_method_mod )) 
 
-width_method_mod <- lmer(mean_width ~ Site*Species + (1|SampleYear), data = july_source_pop_plus_mother)
+str(unique_source_mother)
 
-# 4. Stem diameter -----
+# d. Stem diameter -----
+unique_source_mother_diam <- unique_source_mother %>%
+select(Stem_diameter, Site, Species, SampleYear, SampleID) %>%
+drop_na(Stem_diameter)
 
-diam_method_mod <- lmer(Stem_diameter ~ Site*Species + (1|SampleYear), data = july_source_pop_plus_mother)
+unique(unique_source_mother_diam$Site)
+# where did all the kluane stem diameters go?
 
+diam_method_mod <- lm(Stem_diameter ~ Site*Species, data = unique_source_mother)
+# removing sample year random effect because only data from 2022

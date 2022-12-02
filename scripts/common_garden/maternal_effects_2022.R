@@ -13,15 +13,12 @@ library(sjPlot)
 
 # 2. LOADING DATA -----
 
-# Datasets with mother heights (2013-2017)
-Common_garden_2017 <- read_csv("data/common_garden_data_2017/Common_garden_2017.csv")
-Common_garden_2017_sampling_date <- read_csv("scripts/common_garden/common_garden_data_2017/Common_garden_2017_sampling_date.csv")
+# Datasets with mother data (2013-2017) and source pop data
+unique_source_mother <- read_csv("data/source_pops/unique_source_mother.csv")
 
 # All 2022 data from the common garden
 all_cg_2022 <- read_csv("data/common_garden_2022/wrangled_ALL_combined_Common_Garden_Measurements_2022.csv")
 
-# All 2022 data from the source populations
-all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
 
 # 3. DATA WRANGLING ----
 
