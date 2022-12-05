@@ -95,18 +95,31 @@ growth_2022 <- growth_2022[1:780, ]
 #################### MADI -----
 # filter out june observations 
 cg_2022 <- growth_2022 %>% 
-  dplyr::filter(Month != "6")
+  dplyr::filter(Month != "6") %>% 
+  select(Canopy_Height_cm, Sample_Date, SampleID, Bed, Stem_diameter)
+cg_2022$Canopy_Height_cm <- as.numeric(cg_2022$Canopy_Height_cm)
+sum(is.na(cg_2022$Canopy_Height_cm)) #119 NAs for July and Aug 
 
-cg_2022$max_height <- pmax(cg_2022$fwt_r, cg_2022$fwt_l)
+# new approach 
+july <- growth_2022 %>% 
+  filter(Month == "7") %>% 
+  select(SampleID, Canopy_Height_cm) %>% 
+  rename("jul_height" = "Canopy_Height_cm")
+july$jul_height <- as.numeric(july$jul_height)
 
+aug <-  growth_2022 %>% 
+  filter(Month == "8") %>% 
+  rename("aug_height" = "Canopy_Height_cm")
+aug$aug_height <- as.numeric(aug$aug_height)
 
+july_aug <- left_join(aug, july, by = "SampleID") %>% 
+  mutate(height = coalesce(aug_height, jul_height))
+sum(is.na(july_aug$height)) #119 NAs for July and Aug # 0? is this real life?
 
 
 # only keeping july 2022
 growth_2022_july <- growth_2022 %>%
-  filter(Month == "7") %>% 
-  rename("canopy_jul" = "Canopy_Height_cm") %>% 
-  select(canopy_jul, SampleID, Sample_Date)
+  filter(Month == "7") 
 
 
 growth_2022_july$Canopy_Height_cm <- as.numeric(growth_2022_july$Canopy_Height_cm)
@@ -116,9 +129,7 @@ length(unique(growth_2022_july$Width_cm)) # 117
 
 # only keeping august 2022
 growth_2022_august <- growth_2022 %>%
-  filter(Month == "8") %>% 
-  rename("canopy_aug" = "Canopy_Height_cm") %>% 
-  select(canopy_aug, SampleID, Sample_Date)
+  filter(Month == "8") 
 
 growth_2022_august$Canopy_Height_cm <- as.numeric(growth_2022_august$Canopy_Height_cm)
 growth_2022_august$Width_cm <- as.numeric(growth_2022_august$Width_cm)
@@ -126,16 +137,6 @@ length(unique(growth_2022_august$Canopy_Height_cm)) # 78
 length(unique(growth_2022_august$Width_cm)) # 86
 
 # decide to keep either the growth_2022 august or july dataset and merge it with growth dataset
-
-
-growth_2022_j_a <-  left_join(growth_2022_august, growth_2022_july, by = c("SampleID" = "SampleID"))
-growth_2022_j_a$canopy_jul <- as.numeric(growth_2022_j_a$canopy_jul)
-growth_2022_j_a$canopy_aug <- as.numeric(growth_2022_j_a$canopy_aug)
-
-growth_2022_j_a$canopy_max <-  pmax(growth_2022_j_a$canopy_aug, growth_2022_j_a$canopy_jul) # this takes max value, which is not what we want
-
-
-
 growth_2022_july_august <- growth_2022 %>%
   filter(Month %in% c(7,8)) 
 
