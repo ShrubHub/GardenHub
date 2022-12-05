@@ -16,7 +16,7 @@ library(readxl) # reads excel files if java doesn't work for (xlsx)
 # 2. LOADING DATA ----
 
 # Data collected in the common garden in summer 2022 (June-July-August)
-growth_2022 <- read_csv("data/common_garden_data_2022/wrangled_ALL_combined_Common_Garden_Measurements_2022.csv")
+growth_2022 <- read.csv("data/common_garden_data_2022/wrangled_ALL_combined_Common_Garden_Measurements_2022.csv")
 
 # Common garden data collected between 2013-2021
 growth <- read.csv("data/common_garden_data_2021/all_growth_2021.csv")
@@ -35,10 +35,10 @@ X240722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subs
 all_weekly_QHI_2022 <- read_csv("data/source_pops/source_pop_Qiki_shrub_data/weekly_subsets/all_weekly_QHI_2022.csv")
 
 # Data from both Kluane and QHI 2022
-all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
+all_source_pop_2022 <- read.csv("data/source_pops/all_source_pop_2022.csv")
 
 # Dataset with mother data (2013-2017)
-Common_garden_2017 <- read_csv("data/common_garden_data_2017/Common_garden_2017.csv")
+Common_garden_2017 <- read.csv("data/common_garden_data_2017/Common_garden_2017.csv")
 
 # 3. DATA WRANGLING ----
 
@@ -93,9 +93,21 @@ growth_2022 <- dplyr::select(growth_2022, Bed, SampleID, Year_planted, Species, 
 growth_2022 <- growth_2022[1:780, ]
 
 #################### MADI -----
+# filter out june observations 
+cg_2022 <- growth_2022 %>% 
+  dplyr::filter(Month != "6")
+
+cg_2022$max_height <- pmax(cg_2022$fwt_r, cg_2022$fwt_l)
+
+
+
+
 # only keeping july 2022
 growth_2022_july <- growth_2022 %>%
-  filter(Month == "7") 
+  filter(Month == "7") %>% 
+  rename("canopy_jul" = "Canopy_Height_cm") %>% 
+  select(canopy_jul, SampleID, Sample_Date)
+
 
 growth_2022_july$Canopy_Height_cm <- as.numeric(growth_2022_july$Canopy_Height_cm)
 growth_2022_july$Width_cm <- as.numeric(growth_2022_july$Width_cm)
@@ -104,7 +116,9 @@ length(unique(growth_2022_july$Width_cm)) # 117
 
 # only keeping august 2022
 growth_2022_august <- growth_2022 %>%
-  filter(Month == "8")
+  filter(Month == "8") %>% 
+  rename("canopy_aug" = "Canopy_Height_cm") %>% 
+  select(canopy_aug, SampleID, Sample_Date)
 
 growth_2022_august$Canopy_Height_cm <- as.numeric(growth_2022_august$Canopy_Height_cm)
 growth_2022_august$Width_cm <- as.numeric(growth_2022_august$Width_cm)
@@ -112,6 +126,16 @@ length(unique(growth_2022_august$Canopy_Height_cm)) # 78
 length(unique(growth_2022_august$Width_cm)) # 86
 
 # decide to keep either the growth_2022 august or july dataset and merge it with growth dataset
+
+
+growth_2022_j_a <-  left_join(growth_2022_august, growth_2022_july, by = c("SampleID" = "SampleID"))
+growth_2022_j_a$canopy_jul <- as.numeric(growth_2022_j_a$canopy_jul)
+growth_2022_j_a$canopy_aug <- as.numeric(growth_2022_j_a$canopy_aug)
+
+growth_2022_j_a$canopy_max <-  pmax(growth_2022_j_a$canopy_aug, growth_2022_j_a$canopy_jul) # this takes max value, which is not what we want
+
+
+
 growth_2022_july_august <- growth_2022 %>%
   filter(Month %in% c(7,8)) 
 
