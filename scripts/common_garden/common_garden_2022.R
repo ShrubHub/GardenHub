@@ -92,6 +92,7 @@ growth_2022 <- dplyr::select(growth_2022, Bed, SampleID, Year_planted, Species, 
 # Subsetting data to remove NA columns
 growth_2022 <- growth_2022[1:780, ]
 
+#################### MADI -----
 # only keeping july 2022
 growth_2022_july <- growth_2022 %>%
   filter(Month == "7") 
@@ -111,6 +112,19 @@ length(unique(growth_2022_august$Canopy_Height_cm)) # 78
 length(unique(growth_2022_august$Width_cm)) # 86
 
 # decide to keep either the growth_2022 august or july dataset and merge it with growth dataset
+growth_2022_july_august <- growth_2022 %>%
+  filter(Month %in% c(7,8)) 
+
+growth_2022_july_august$Canopy_Height_cm <- as.numeric(growth_2022_july_august$Canopy_Height_cm)
+
+# filling august NAs with july NAs to keep max heights 
+growth_test <- growth_2022 %>% 
+  group_by(SampleID) %>% 
+  mutate(Canopy_Height_cm_new = replace_na(Canopy_Height_cm, Month == "7", na.rm = T))
+
+growth_test <- growth_2022 %>% 
+  mutate(Canopy_Height_cm_new = if_else(is.na(Canopy_Height_cm) & Month == 8, paste(Canopy_Height_cm, Month == 8 , na.rm = T), factor(NA)))
+#################### MADI -----
 
 # Keeping only relevant columns of 2013-2021 data
 growth <- dplyr::select(growth, Bed, SampleID, Year_planted, Species, Site, Sample_Date,
