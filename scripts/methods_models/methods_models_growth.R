@@ -32,6 +32,7 @@ summary(height_method_mod)
 plot(height_method_mod)
 qqnorm(resid(height_method_mod))
 qqline(resid(height_method_mod)) 
+tab_model(height_method_mod)
 
 # Height lmer with species random effect
 height_method_mod_2 <- lmer(Canopy_Height_cm ~ Site + (1|Species) + (1|SampleYear), data = unique_source_mother)
@@ -39,6 +40,7 @@ summary(height_method_mod_2)
 plot(height_method_mod_2)
 qqnorm(resid(height_method_mod_2))
 qqline(resid(height_method_mod_2)) 
+tab_model(height_method_mod_2)
 
 # b. Stem elongation ---- 
 
@@ -49,6 +51,7 @@ summary(stem_elong_method_mod)
 plot(stem_elong_method_mod)
 qqnorm(resid(stem_elong_method_mod))
 qqline(resid(stem_elong_method_mod)) 
+tab_model(stem_elong_method_mod)
 
 # Stem elongation lmer with species random effect
 stem_elong_method_mod_2 <- lmer(mean_stem_elong ~ Site + (1|Species) + (1|SampleYear), data = unique_source_mother)
@@ -57,6 +60,8 @@ summary(stem_elong_method_mod_2)
 plot(stem_elong_method_mod_2)
 qqnorm(resid(stem_elong_method_mod_2))
 qqline(resid(stem_elong_method_mod_2)) 
+tab_model(stem_elong_method_mod_2)
+
 
 # c. Width---- 
 
@@ -67,6 +72,7 @@ summary(width_method_mod)
 plot(width_method_mod)
 qqnorm(resid(width_method_mod))
 qqline(resid(width_method_mod)) 
+tab_model(width_method_mod)
 
 # Width lmer with species random effect
 width_method_mod_2 <- lmer(mean_width ~ Site + (1|Species) + (1|SampleYear), data = unique_source_mother)
@@ -75,6 +81,7 @@ summary(width_method_mod_2)
 plot(width_method_mod_2)
 qqnorm(resid(width_method_mod_2))
 qqline(resid(width_method_mod_2)) 
+tab_model(width_method_mod_2 )
 
 # d. Stem diameter -----
 
@@ -86,6 +93,7 @@ summary(diam_method_mod)
 plot(diam_method_mod)
 qqnorm(resid(diam_method_mod))
 qqline(resid(diam_method_mod)) 
+tab_model(diam_method_mod)
 
 # Diameter lmer with species random effect
 diam_method_mod_2 <- lmer(Stem_diameter ~ Site + (1|Species), data = unique_source_mother)
@@ -95,4 +103,6 @@ summary(diam_method_mod_2)
 plot(diam_method_mod_2)
 qqnorm(resid(diam_method_mod_2))
 qqline(resid(diam_method_mod_2)) 
+tab_model(diam_method_mod_2)
+
 
