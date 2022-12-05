@@ -91,7 +91,7 @@ summary(LA_method_mod_spp)
 plot(LA_method_mod_spp)
 qqnorm(resid(LA_method_mod_spp))
 qqline(resid(LA_method_mod_spp)) 
-tab_model(LA_method_mod_spp)
+tab_model(LA_method_mod_spp)I
 
 (LA_p <- ggplot(all_source_area_traits, aes(Site, LA)) +
     geom_boxplot() +
@@ -100,8 +100,13 @@ tab_model(LA_method_mod_spp)
 # leaf length (LL) ----
 # use mean value from 3 leaf lengths 
 # note: we only have two years of data for leaf length in the source populations, omitted as random effect for now? 
-LL_method_mod <- lmer(mean_leaf_length ~ Site*Species, data = unique_source_mother) 
+# also note: we don't have arctica leaf length data for Kluane so making new df without arctica 
+ll_data <-  unique_source_mother %>% 
+  filter(Species != "Salix arctica")
+
+LL_method_mod <- lm(mean_leaf_length ~ Site*Species, data = ll_data) 
 # note: fixed-effect model matrix is rank deficient so dropping 1 column / coefficient
+
 summary(LL_method_mod) 
 plot(LL_method_mod)
 qqnorm(resid(LL_method_mod))
@@ -109,17 +114,18 @@ qqline(resid(LL_method_mod))
 tab_model(LL_method_mod)
 
 # species as random effect 
-LL_method_mod_spp <- lmer(mean_leaf_length ~ Site + (1|Species), data = unique_source_mother) 
+LL_method_mod_spp <- lmer(mean_leaf_length ~ Site + (1|Species), data = ll_data) 
 summary(LL_method_mod_spp) 
 plot(LL_method_mod_spp)
 qqnorm(resid(LL_method_mod_spp))
 qqline(resid(LL_method_mod_spp))
 tab_model(LL_method_mod_spp)
 
-(ll_p <- ggplot(unique_source_mother, aes(Site, mean_leaf_length)) +
+(ll_p <- ggplot(ll_data, aes(Site, mean_leaf_length)) +
     geom_boxplot() +
     facet_wrap(vars(Species))) 
-# currently missing kluane data from this year (2022)
+
+
 # shrub width ---- 
 # oh it seems as though Erica has run this and stem diameter !
 # 
