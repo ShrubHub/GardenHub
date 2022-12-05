@@ -45,7 +45,7 @@ tab_model(height_method_mod_2)
 # b. Stem elongation ---- 
 
 # Stem elongation lmer with species interacting
-stem_elong_method_mod <- lmer(mean_stem_elong ~ Site*Species + (1|SampleYear), data = unique_source_mother)
+stem_elong_method_mod <- lm(mean_stem_elong ~ Site*Species, data = unique_source_mother)
 # fixed-effect model matrix is rank deficient so dropping 1 column / coefficient?
 summary(stem_elong_method_mod)
 plot(stem_elong_method_mod)
@@ -54,7 +54,7 @@ qqline(resid(stem_elong_method_mod))
 tab_model(stem_elong_method_mod)
 
 # Stem elongation lmer with species random effect
-stem_elong_method_mod_2 <- lmer(mean_stem_elong ~ Site + (1|Species) + (1|SampleYear), data = unique_source_mother)
+stem_elong_method_mod_2 <- lmer(mean_stem_elong ~ Site + (1|Species), data = unique_source_mother)
 #no warning for this 
 summary(stem_elong_method_mod_2)
 plot(stem_elong_method_mod_2)
