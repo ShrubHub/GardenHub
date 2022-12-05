@@ -62,7 +62,6 @@ qqnorm(resid(stem_elong_method_mod_2))
 qqline(resid(stem_elong_method_mod_2)) 
 tab_model(stem_elong_method_mod_2)
 
-
 # c. Width---- 
 
 # Width lmer with species interacting
