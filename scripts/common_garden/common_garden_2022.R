@@ -367,6 +367,7 @@ kluane_mid_july_2022 <- all_source_pop_plus_mother %>%
 kluane_mid_july_2022$Date_propagated <- as.Date(kluane_mid_july_2022$Date_propagated, format="%d/%m/%Y")
 kluane_mid_july_2022$Date_planted <- as.Date(kluane_mid_july_2022$Date_planted, format="%d/%m/%Y")
 str(kluane_mid_july_2022)
+
 # only keeping mid july dates for QHI 2022
 QHI_mid_july_2022_a <- all_source_pop_plus_mother %>%
   group_by(Site, SampleYear) %>%
@@ -391,6 +392,9 @@ QHI_mid_july_2022$Date_planted <- as.Date(QHI_mid_july_2022$Date_planted, format
 # re-merge with mother data
 july_source_pop_plus_mother <- bind_rows(kluane_mid_july_2022, QHI_mid_july_2022, 
                                          mother_data, field_source_pop_new)
+# checking dataset has kluane 2022
+test <- july_source_pop_plus_mother %>%
+  filter(SampleYear == "2022")
 
 # formatting variables
 july_source_pop_plus_mother$Species <- as.factor(july_source_pop_plus_mother$Species)
