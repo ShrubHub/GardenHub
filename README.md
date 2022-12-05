@@ -13,7 +13,7 @@ The repository will be subdivided into the following folders:
   - [phenology](https://github.com/ShrubHub/GardenHub/tree/main/data/phenology): including ground-truthing sheets (2022), add phenocam spreadsheets when done (only missing CG ones)
   - [source_pops](https://github.com/ShrubHub/GardenHub/tree/main/data/source_pops): all source population data (2017-2022)
       - For all years source population SLA, LA, LDMC: [all_source_area_traits.csv](https://github.com/ShrubHub/GardenHub/blob/main/data/source_pops/all_source_area_traits.csv)
-      - For all years source (and maternal) population height, width, stem elongation, leaf length, stem diameter:  [all_source_pop_plus_mother.csv](https://github.com/ShrubHub/GardenHub/blob/main/data/source_pops/all_source_pop_plus_mother.csv)
+      - For all years source (and maternal) population height, width, stem elongation, leaf length, stem diameter:  [unique_source_mother.csv](https://github.com/ShrubHub/GardenHub/blob/main/data/source_pops/unique_source_mother.csv)
 
 
   - [tomst](https://github.com/ShrubHub/GardenHub/tree/main/data/tomst): TOMST for common garden and source populations 2021-2022
