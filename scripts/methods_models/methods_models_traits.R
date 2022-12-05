@@ -7,12 +7,13 @@
 #  lmer(SLA ~ site*species +  (1|sample_year/field_sample_ID))
 #  OR, having species as a random effect: 
 # lmer(SLA ~ site + (1|sample_year) + (1|species))
-# where site is Kluane or Qikiqtaruk 
+# where site is Kluane (southern) or Qikiqtaruk (northern)
 
 
 # libraries ----
 library(lme4)
 library(dplyr)
+library(sjPlot)
 
 # data ---- 
 # SLA, LDMC, LA: 
@@ -39,6 +40,11 @@ summary(SLA_method_mod)
 plot(SLA_method_mod)
 qqnorm(resid(SLA_method_mod))
 qqline(resid(SLA_method_mod)) 
+tab_model(SLA_method_mod)
+
+(SLA_p <- ggplot(all_source_area_traits, aes(Site, SLA)) +
+    geom_boxplot() +
+    facet_wrap(vars(Species)))
 
 # okay, do we want species as an interaction term? not our main q and our other models aren't including it
 # here, as random effect: 
@@ -47,6 +53,7 @@ summary(SLA_method_mod_spp)
 plot(SLA_method_mod_spp)
 qqnorm(resid(SLA_method_mod_spp))
 qqline(resid(SLA_method_mod_spp))
+tab_model(SLA_method_mod_spp)
 
 # LDMC ---- 
 # same comments as above (SLA)
@@ -55,6 +62,11 @@ summary(LDMC_method_mod)
 plot(LDMC_method_mod)
 qqnorm(resid(LDMC_method_mod))
 qqline(resid(LDMC_method_mod)) 
+tab_model(LDMC_method_mod)
+
+(LDMC_p <- ggplot(all_source_area_traits, aes(Site, LDMC_g_g)) +
+    geom_boxplot() +
+    facet_wrap(vars(Species)))
 
 # species as random effect 
 LDMC_method_mod_spp <- lmer(LDMC_g_g ~ Site + (1|year) + (1|Species), data = all_source_area_traits) 
@@ -62,6 +74,8 @@ summary(LDMC_method_mod_spp)
 plot(LDMC_method_mod_spp)
 qqnorm(resid(LDMC_method_mod_spp))
 qqline(resid(LDMC_method_mod_spp)) 
+tab_model(LDMC_method_mod_spp)
+
 
 # LA ---- 
 LA_method_mod <- lmer(LA ~ Site*Species + (1|year), data = all_source_area_traits) 
@@ -69,6 +83,7 @@ summary(LA_method_mod)
 plot(LA_method_mod)
 qqnorm(resid(LA_method_mod))
 qqline(resid(LA_method_mod)) 
+tab_model(LA_method_mod)
 
 # species as random effect 
 LA_method_mod_spp <- lmer(LA ~ Site + (1|year) + (1|Species), data = all_source_area_traits) 
@@ -76,26 +91,37 @@ summary(LA_method_mod_spp)
 plot(LA_method_mod_spp)
 qqnorm(resid(LA_method_mod_spp))
 qqline(resid(LA_method_mod_spp)) 
+tab_model(LA_method_mod_spp)
+
+(LA_p <- ggplot(all_source_area_traits, aes(Site, LA)) +
+    geom_boxplot() +
+    facet_wrap(vars(Species)))
 
 # leaf length (LL) ----
 # use mean value from 3 leaf lengths 
-LL_method_mod <- lmer(mean_leaf_length ~ Site*Species + (1|SampleYear), data = unique_source_mother) 
+# note: we only have two years of data for leaf length in the source populations, omitted as random effect for now? 
+LL_method_mod <- lmer(mean_leaf_length ~ Site*Species, data = unique_source_mother) 
 # note: fixed-effect model matrix is rank deficient so dropping 1 column / coefficient
 summary(LL_method_mod) 
 plot(LL_method_mod)
 qqnorm(resid(LL_method_mod))
 qqline(resid(LL_method_mod))
+tab_model(LL_method_mod)
 
 # species as random effect 
-LL_method_mod_spp <- lmer(mean_leaf_length ~ Site + (1|Species) + (1|SampleYear), data = unique_source_mother) 
+LL_method_mod_spp <- lmer(mean_leaf_length ~ Site + (1|Species), data = unique_source_mother) 
 summary(LL_method_mod_spp) 
 plot(LL_method_mod_spp)
 qqnorm(resid(LL_method_mod_spp))
 qqline(resid(LL_method_mod_spp))
+tab_model(LL_method_mod_spp)
 
-
+(ll_p <- ggplot(unique_source_mother, aes(Site, mean_leaf_length)) +
+    geom_boxplot() +
+    facet_wrap(vars(Species))) 
+# currently missing kluane data from this year (2022)
 # shrub width ---- 
-# oh it seems as though Erica has run this and stem diameter 
+# oh it seems as though Erica has run this and stem diameter !
 # 
 
 
