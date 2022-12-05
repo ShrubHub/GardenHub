@@ -83,6 +83,10 @@ qqnorm(resid(width_method_mod_2))
 qqline(resid(width_method_mod_2)) 
 tab_model(width_method_mod_2 )
 
+(width_p <- ggplot(unique_source_mother, aes(Site, mean_width)) +
+    geom_boxplot() +
+    facet_wrap(vars(Species))) 
+    
 # d. Stem diameter -----
 
 # Diameter lmer with species interacting
