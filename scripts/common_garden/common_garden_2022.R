@@ -88,8 +88,29 @@ growth_2022 <- dplyr::select(growth_2022, Bed, SampleID, Year_planted, Species, 
                              Stem_Elongation_1_mm, Stem_Elongation_2_mm, Stem_Elongation_3_mm, 
                              Length_1_mm, Length_2_mm, Length_3_mm)
 
+
 # Subsetting data to remove NA columns
 growth_2022 <- growth_2022[1:780, ]
+
+# only keeping july 2022
+growth_2022_july <- growth_2022 %>%
+  filter(Month == "7") 
+
+growth_2022_july$Canopy_Height_cm <- as.numeric(growth_2022_july$Canopy_Height_cm)
+growth_2022_july$Width_cm <- as.numeric(growth_2022_july$Width_cm)
+length(unique(growth_2022_july$Canopy_Height_cm)) # 117
+length(unique(growth_2022_july$Width_cm)) # 117
+
+# only keeping august 2022
+growth_2022_august <- growth_2022 %>%
+  filter(Month == "8")
+
+growth_2022_august$Canopy_Height_cm <- as.numeric(growth_2022_august$Canopy_Height_cm)
+growth_2022_august$Width_cm <- as.numeric(growth_2022_august$Width_cm)
+length(unique(growth_2022_august$Canopy_Height_cm)) # 78
+length(unique(growth_2022_august$Width_cm)) # 86
+
+# decide to keep either the growth_2022 august or july dataset and merge it with growth dataset
 
 # Keeping only relevant columns of 2013-2021 data
 growth <- dplyr::select(growth, Bed, SampleID, Year_planted, Species, Site, Sample_Date,
