@@ -17,7 +17,7 @@ library(sjPlot)
 unique_source_mother <- read_csv("data/source_pops/unique_source_mother.csv")
 
 # All 2022 data from the common garden
-all_cg_2022 <- read_csv("data/common_garden_data_2022/all_growth_2022.csv")
+all_cg_2022 <- read_csv("data/common_garden_data_2022/all_growth_2022.csv") # note this currently has three time points for 2022 measurements
 
 
 # 3. DATA WRANGLING ----
