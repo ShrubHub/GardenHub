@@ -92,6 +92,11 @@ growth_2022 <- dplyr::select(growth_2022, Bed, SampleID, Year_planted, Species, 
 # Subsetting data to remove NA columns
 growth_2022 <- growth_2022[1:780, ]
 
+# make standard sample ID column to avoid issue of dashes, spaces, etc. 
+growth_2022$SampleID_standard <- toupper(growth_2022$SampleID) # make all uppercase characters 
+growth_2022$SampleID_standard<-gsub("-","",as.character(growth_2022$SampleID_standard)) # remove "-"
+growth_2022$SampleID_standard<-gsub(" ","",as.character(growth_2022$SampleID_standard)) # remove spaces " " 
+
 #################### MADI -----
 # filter out june observations 
 cg_2022 <- growth_2022 %>% 
@@ -114,7 +119,8 @@ aug$aug_height <- as.numeric(aug$aug_height)
 
 july_aug <- left_join(aug, july, by = "SampleID") %>% 
   mutate(height = coalesce(aug_height, jul_height))
-sum(is.na(july_aug$height)) #119 NAs for July and Aug # 0? is this real life?
+sum(is.na(july_aug$height)) # 40? is this right ? 
+# it seems right 
 
 
 # only keeping july 2022
