@@ -14,13 +14,13 @@ library(sjPlot)
 # 2. LOADING DATA -----
 
 # Datasets with mother data (2013-2017) and source pop data
-unique_source_mother <- read_csv("data/source_pops/unique_source_mother.csv")
+unique_source_mother <- read_csv("data/source_pops/mother_data.csv")
 
 # All 2022 data from the common garden
 all_cg_2022 <- read_csv("data/common_garden_data_2022/all_growth_2022.csv") # note this currently has three time points for 2022 measurements
 
 
-# 3. DATA WRANGLING ----
+# 3. DATA WRANGLING ----we 
 
 # Match mother heights with heights in common garden
 
@@ -30,23 +30,21 @@ cg_heights_2022 <- all_cg_2022 %>%
          Month, Day, Year, Canopy_Height_cm, Length_1_mm, Length_2_mm,
          Length_3_mm)
 
-unique(Common_garden_2017$Sample_location)
+# make standard ID column for CG data 
+# make standard sample ID column to avoid issue of dashes, spaces, etc. 
+cg_heights_2022$SampleID_standard <- toupper(cg_heights_2022$SampleID) # make all uppercase characters 
+cg_heights_2022$SampleID_standard<-gsub("-","",as.character(cg_heights_2022$SampleID_standard)) # remove "-"
+cg_heights_2022$SampleID_standard<-gsub(" ","",as.character(cg_heights_2022$SampleID_standard)) # remove spaces " " 
 
-# Keeping only relevant columns in Common Garden dataset 2017
-mother_heights_2017 <- Common_garden_2017 %>%
-  select(Sample_ID, Match, Sample_location, Date_sampled,
-         Date_propagated, Date_planted, Year_planted, Mother_height,
-         Mother_CW_1, Mother_CW_2, Mother_LS, Mother_LL1, Mother_LL2, 
-         Mother_LL3, Mother_SE1, Mother_SE2, Mother_SE3, Cutting_length, 
-         Cutting_diameter) %>%
-  rename("SampleID" = "Sample_ID")
+# make standard ID column for maternal data 
+cg_heights_2022$SampleID_standard <- toupper(cg_heights_2022$SampleID) # make all uppercase characters 
+cg_heights_2022$SampleID_standard<-gsub("-","",as.character(cg_heights_2022$SampleID_standard)) # remove "-"
+cg_heights_2022$SampleID_standard<-gsub(" ","",as.character(cg_heights_2022$SampleID_standard)) # remove spaces " " 
 
-unique(Common_garden_2017$Species)
 
-# Joining datasets by Sample ID
-mother_cg_2022 <- merge(mother_heights_2017, cg_heights_2022, by ="SampleID", "Match")
 
 # Only keeping peak greeness measure (supposedly time in season when shrubs are tallest)
+# do we still want this? 
 mother_cg_2022_july <- mother_cg_2022 %>%
   filter(Sample_Date == "23/07/2022")
 
