@@ -342,6 +342,10 @@ mother_data$SampleYear <- as.numeric(mother_data$SampleYear)
 mother_data <-  mother_data[!grepl(c("b"), mother_data$SampleID),,drop = FALSE] # any b in sample id is for betula
 mother_data <-  mother_data[!grepl(c("BN"), mother_data$SampleID),,drop = FALSE] # same as above but with uppercase B, must use BN because one clone is called B
 
+# save mother data 
+write.csv(mother_data, 'data/source_pops/mother_data.csv')
+
+
 # 3.5. Merging source pop plus mother ----
 # Merging wrangled versions of salix_field_data, all_source_pop_2022, common_garden_2017
 all_source_pop_plus_mother <- bind_rows(field_source_pop_new, all_source_pop_2022,
