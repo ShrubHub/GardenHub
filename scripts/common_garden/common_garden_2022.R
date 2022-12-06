@@ -160,6 +160,10 @@ growth <- dplyr::select(growth, Bed, SampleID, Year_planted, Species, Site, Samp
                         Month, Day, Year, Canopy_Height_cm, Width_cm, Width_2_cm, Stem_diameter,
                         Stem_Elongation_1_mm, Stem_Elongation_2_mm, Stem_Elongation_3_mm, 
                         Length_1_mm, Length_2_mm, Length_3_mm)
+# make standard sample ID column to avoid issue of dashes, spaces, etc. 
+growth$SampleID_standard <- toupper(growth$SampleID) # make all uppercase characters 
+growth$SampleID_standard<-gsub("-","",as.character(growth$SampleID_standard)) # remove "-"
+growth$SampleID_standard<-gsub(" ","",as.character(growth$SampleID_standard)) # remove spaces " " 
 
 # Merging 2022 data with 2013-2021 data 
 all_growth_2022 <- rbind(growth, growth_2022)
@@ -167,7 +171,7 @@ str(all_growth_2022)
 unique(all_growth_2022$Sample_Date)
 
 # Saving 2013-2022 data as csv file
-#write.csv(all_growth_2022, 'scripts/common_garden/common_garden_data_2022/all_growth_2022.csv')
+#write.csv(all_growth_2022, 'data/common_garden_data_2022/all_growth_2022.csv')
 
 # Making variables into the right format
 all_growth_2022$Stem_Elongation_1_mm <- as.numeric(all_growth_2022$Stem_Elongation_1_mm)
