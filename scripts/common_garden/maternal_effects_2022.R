@@ -14,7 +14,7 @@ library(sjPlot)
 # 2. LOADING DATA -----
 
 # Datasets with mother data (2013-2017) and source pop data
-unique_source_mother <- read_csv("data/source_pops/mother_data.csv")
+mother_data <- read_csv("data/source_pops/mother_data.csv")
 
 # All 2022 data from the common garden
 all_cg_2022 <- read_csv("data/common_garden_data_2022/all_growth_2022.csv") # note this currently has three time points for 2022 measurements
@@ -36,10 +36,11 @@ cg_heights_2022$SampleID_standard <- toupper(cg_heights_2022$SampleID) # make al
 cg_heights_2022$SampleID_standard<-gsub("-","",as.character(cg_heights_2022$SampleID_standard)) # remove "-"
 cg_heights_2022$SampleID_standard<-gsub(" ","",as.character(cg_heights_2022$SampleID_standard)) # remove spaces " " 
 
+str(mother_data)
 # make standard ID column for maternal data 
-cg_heights_2022$SampleID_standard <- toupper(cg_heights_2022$SampleID) # make all uppercase characters 
-cg_heights_2022$SampleID_standard<-gsub("-","",as.character(cg_heights_2022$SampleID_standard)) # remove "-"
-cg_heights_2022$SampleID_standard<-gsub(" ","",as.character(cg_heights_2022$SampleID_standard)) # remove spaces " " 
+mother_data$SampleID_standard <- toupper(mother_data$SampleID) # make all uppercase characters 
+mother_data$SampleID_standard<-gsub("-","",as.character(mother_data$SampleID_standard)) # remove "-"
+mother_data$SampleID_standard<-gsub(" ","",as.character(mother_data$SampleID_standard)) # remove spaces " " 
 
 
 
