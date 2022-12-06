@@ -98,28 +98,69 @@ growth_2022$SampleID_standard<-gsub("-","",as.character(growth_2022$SampleID_sta
 growth_2022$SampleID_standard<-gsub(" ","",as.character(growth_2022$SampleID_standard)) # remove spaces " " 
 
 #################### MADI -----
-# filter out june observations 
-cg_2022 <- growth_2022 %>% 
-  dplyr::filter(Month != "6") %>% 
-  select(Canopy_Height_cm, Sample_Date, SampleID, Bed, Stem_diameter)
-cg_2022$Canopy_Height_cm <- as.numeric(cg_2022$Canopy_Height_cm)
-sum(is.na(cg_2022$Canopy_Height_cm)) #119 NAs for July and Aug 
+# make all variables numeric to drop written observations 
+growth_2022$Canopy_Height_cm <- as.numeric(growth_2022$Canopy_Height_cm)
+growth_2022$Width_cm <- as.numeric(growth_2022$Width_cm)
+growth_2022$Width_2_cm <- as.numeric(growth_2022$Width_2_cm)
+growth_2022$Stem_diameter <- as.numeric(growth_2022$Stem_diameter)
+growth_2022$Stem_Elongation_1_mm <- as.numeric(growth_2022$Stem_Elongation_1_mm)
+growth_2022$Stem_Elongation_2_mm <- as.numeric(growth_2022$Stem_Elongation_2_mm)
+growth_2022$Stem_Elongation_3_mm <- as.numeric(growth_2022$Stem_Elongation_3_mm)
+growth_2022$Length_1_mm <- as.numeric(growth_2022$Length_1_mm)
+growth_2022$Length_2_mm <- as.numeric(growth_2022$Length_2_mm)
+growth_2022$Length_3_mm <- as.numeric(growth_2022$Length_3_mm)
 
-# new approach 
+#filter out July observations and only keep sampleID (to match) and growth variables 
 july <- growth_2022 %>% 
   filter(Month == "7") %>% 
-  select(SampleID, Canopy_Height_cm) %>% 
-  rename("jul_height" = "Canopy_Height_cm")
-july$jul_height <- as.numeric(july$jul_height)
-
+  select(SampleID, Canopy_Height_cm, Width_cm, Width_2_cm, 
+         Stem_diameter, Stem_Elongation_1_mm, Stem_Elongation_2_mm, 
+         Stem_Elongation_3_mm, Length_1_mm, Length_2_mm, Length_3_mm) %>% 
+  rename("jul_height" = "Canopy_Height_cm", # rename all to july values 
+         "jul_width_1" = "Width_cm", 
+         "jul_width_2" = "Width_2_cm", 
+         "jul_Stem_diameter" = "Stem_diameter",
+         "jul_stem_Elong_1_mm" = "Stem_Elongation_1_mm",
+         "jul_stem_Elong_2_mm" = "Stem_Elongation_2_mm",
+         "jul_stem_Elong_3_mm" = "Stem_Elongation_3_mm",
+         "jul_length_1_mm" = "Length_1_mm",
+         "jul_length_2_mm" = "Length_2_mm",
+         "jul_length_3_mm" = "Length_3_mm")
+str(july) # all good 
+sum(is.na(july$jul_height)) # 44 NAs
+# same for august 
 aug <-  growth_2022 %>% 
   filter(Month == "8") %>% 
-  rename("aug_height" = "Canopy_Height_cm")
-aug$aug_height <- as.numeric(aug$aug_height)
+  rename("aug_height" = "Canopy_Height_cm", 
+         "aug_width_1" = "Width_cm", 
+         "aug_width_2" = "Width_2_cm", 
+         "aug_Stem_diameter" = "Stem_diameter",
+         "aug_stem_Elong_1_mm" = "Stem_Elongation_1_mm",
+         "aug_stem_Elong_2_mm" = "Stem_Elongation_2_mm",
+         "aug_stem_Elong_3_mm" = "Stem_Elongation_3_mm",
+         "aug_length_1_mm" = "Length_1_mm",
+         "aug_length_2_mm" = "Length_2_mm",
+         "aug_length_3_mm" = "Length_3_mm")
+str(aug) # all good 
+sum(is.na(aug$aug_height)) # 75 NAs
+# merge the two dataframes by SampleID and merge columns for traits/growth
+# use august value unless NA, in which case use 
+july_aug <- left_join(aug, july, by = "SampleID")  %>% 
+  mutate(height = coalesce(aug_height, jul_height), 
+         width_1 = coalesce(aug_width_1, jul_width_1),
+         width_2 = coalesce(aug_width_2, jul_width_2), 
+         stem_diam = coalesce(aug_Stem_diameter, jul_Stem_diameter), 
+         stem_elong_1 = coalesce(aug_stem_Elong_1_mm, jul_stem_Elong_1_mm), 
+         stem_elong_2 = coalesce(aug_stem_Elong_2_mm, jul_stem_Elong_2_mm), 
+         stem_elong_3 = coalesce(aug_stem_Elong_3_mm, jul_stem_Elong_3_mm),
+         leaf_length_1 = coalesce(aug_length_1_mm, jul_length_1_mm), 
+         leaf_length_2 = coalesce(aug_length_2_mm, jul_length_2_mm), 
+         leaf_length_3 = coalesce(aug_length_3_mm, jul_length_3_mm)) %>% 
+  select(-Sample_Date)
 
-july_aug <- left_join(aug, july, by = "SampleID") %>% 
-  mutate(height = coalesce(aug_height, jul_height))
-sum(is.na(july_aug$height)) # 40? is this right ? 
+sum(is.na(july_aug$height)) # 44 aka same as July but now with some Aug observations when available 
+
+# I think we can delete the part below? @Erica confirm
 
 # only keeping july 2022
 growth_2022_july <- growth_2022 %>%
