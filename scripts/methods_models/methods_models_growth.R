@@ -56,6 +56,8 @@ tab_model(stem_elong_method_mod)
 # Stem elongation lmer with species random effect
 stem_elong_method_mod_2 <- lmer(mean_stem_elong ~ Site + (1|Species), data = unique_source_mother)
 #no warning for this 
+# N.B only comparing pulchra and richardsonii
+
 summary(stem_elong_method_mod_2)
 plot(stem_elong_method_mod_2)
 qqnorm(resid(stem_elong_method_mod_2))
@@ -65,6 +67,9 @@ tab_model(stem_elong_method_mod_2)
 # c. Width---- 
 
 # Width lmer with species interacting
+unique_source_mother_width <- unique_source_mother %>%
+  select(Site, Species, SampleYear, SampleID, mean_width)
+
 width_method_mod <- lmer(mean_width ~ Site*Species + (1|SampleYear), data = unique_source_mother)
 
 summary(width_method_mod)
@@ -91,6 +96,7 @@ tab_model(width_method_mod_2 )
 # Diameter lmer with species interacting
 diam_method_mod <- lm(Stem_diameter ~ Site*Species, data = unique_source_mother)
 # removing sample year random effect because only data from 2022
+# N.B only comparing pulchra and richardsonii
 
 summary(diam_method_mod)
 plot(diam_method_mod)
