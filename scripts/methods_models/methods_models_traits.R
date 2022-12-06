@@ -14,6 +14,8 @@
 library(lme4)
 library(dplyr)
 library(sjPlot)
+library(ggplot2)
+library(ggpubr)
 
 # data ---- 
 # SLA, LDMC, LA: 
@@ -105,7 +107,6 @@ ll_data <-  unique_source_mother %>%
   filter(Species != "Salix arctica")
 
 LL_method_mod <- lm(mean_leaf_length ~ Site*Species, data = ll_data) 
-# note: fixed-effect model matrix is rank deficient so dropping 1 column / coefficient
 
 summary(LL_method_mod) 
 plot(LL_method_mod)
@@ -114,6 +115,7 @@ qqline(resid(LL_method_mod))
 tab_model(LL_method_mod)
 
 # species as random effect 
+# although only 2 levels so I'm not inclined to do this, see above model 
 LL_method_mod_spp <- lmer(mean_leaf_length ~ Site + (1|Species), data = ll_data) 
 summary(LL_method_mod_spp) 
 plot(LL_method_mod_spp)
@@ -126,8 +128,7 @@ tab_model(LL_method_mod_spp)
     facet_wrap(vars(Species))) 
 
 
-# shrub width ---- 
-# oh it seems as though Erica has run this and stem diameter !
-# 
+# quick arrange 
+(traits_plots <- ggarrange(SLA_p, LA_p, LDMC_p, ll_p, nrow = 2, ncol = 2))
 
 
