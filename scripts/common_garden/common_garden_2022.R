@@ -120,8 +120,6 @@ aug$aug_height <- as.numeric(aug$aug_height)
 july_aug <- left_join(aug, july, by = "SampleID") %>% 
   mutate(height = coalesce(aug_height, jul_height))
 sum(is.na(july_aug$height)) # 40? is this right ? 
-# it seems right 
-
 
 # only keeping july 2022
 growth_2022_july <- growth_2022 %>%
