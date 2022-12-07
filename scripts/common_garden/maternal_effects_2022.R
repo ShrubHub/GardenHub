@@ -24,7 +24,7 @@ all_cg_2022 <- read_csv("data/common_garden_data_2022/all_growth_2022.csv") # no
 
 ## @Madi, ALSO note for code below: When i started this script i only wanted to look
 # at mother heights vs child heights, but I think now we want to look at other
-# mother variables too? So we should match mother and child based on SampleID.
+# mother variables too (height, width, stem diam)? So we should match mother and child based on SampleID.
 # SO we can probably delete the chunk where I keep only the heights column
 
 # Match mother heights with heights in common garden
@@ -49,7 +49,7 @@ mother_data$SampleID_standard<-gsub(" ","",as.character(mother_data$SampleID_sta
 
 
 # Only keeping peak greeness measure (supposedly time in season when shrubs are tallest)
-# do we still want this? 
+# do we still want this? No, I think we want to use the new CG_july_aug_2022, and the mother_data
 mother_cg_2022_july <- mother_cg_2022 %>%
   filter(Sample_Date == "23/07/2022")
 
@@ -126,13 +126,30 @@ str(mother_cg_2022_july)
 
 # 5. DATA ANALYSIS -----
 
-# Lmer: effect of mother heights on canopy heights in the CG
-model <- lmer(Canopy_Height_cm~Mother_height + (1|sample_age) + (1|SampleID) + (1|Species), data = mother_cg_2022)
-summary(model)
-tab_model(model)
-plot(model)
-qqnorm(resid(model))
-qqline(resid(model)) 
+# 1. Lmer: effect of mother heights on canopy heights in the CG
+maternal_height <- lmer(Canopy_Height_cm~Mother_height + (1|sample_age) + (1|SampleID) + (1|Species), data = mother_cg_2022)
+summary(maternal_height)
+tab_model(maternal_height)
+plot(maternal_height)
+qqnorm(resid(maternal_height))
+qqline(resid(maternal_height)) 
+
+
+# 2. Lmer: effect of mother widths on widths in the CG
+maternal_width <- lmer(mean_width~Mother_width + (1|sample_age) + (1|SampleID) + (1|Species), data = mother_cg_2022)
+summary(maternal_width )
+tab_model(maternal_width )
+plot(maternal_width )
+qqnorm(resid(maternal_width ))
+qqline(resid(maternal_width )) 
+
+# 3. Lmer: effect of mother diameters on diameters in the CG
+maternal_diam <- lmer(Stem_diameter~Mother_diam + (1|sample_age) + (1|SampleID) + (1|Species), data = mother_cg_2022)
+summary(maternal_diam)
+tab_model(maternal_diam)
+plot(maternal_diam)
+qqnorm(resid(maternal_diam))
+qqline(resid(maternal_diam)) 
 
 
 
