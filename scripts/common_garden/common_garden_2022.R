@@ -249,7 +249,7 @@ unique(all_growth_2022$Sample_Date) # one NA
 which(is.na(all_growth_2022$Sample_Date)) # at row 5211 
 
 # Saving 2013-2022 data as csv file
-#write.csv(all_growth_2022, 'data/common_garden_data_2022/all_growth_2022.csv')
+write.csv(all_growth_2022, 'data/common_garden_data_2022/all_growth_2022.csv')
 
 # Making variables into the right format
 all_growth_2022$Stem_Elongation_1_mm <- as.numeric(all_growth_2022$Stem_Elongation_1_mm)
