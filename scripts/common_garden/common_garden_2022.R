@@ -394,7 +394,6 @@ mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 mother_data$Date_propagated <- two_dig_year_cnvt(mother_data$Date_propagated)
 mother_data$Date_planted <- two_dig_year_cnvt(mother_data$Date_planted)
 
-
 # renaming site col
 mother_data <- mother_data %>%
   rename("SampleSite" = "Site") 
@@ -421,6 +420,11 @@ mother_data$SampleYear <- as.numeric(mother_data$SampleYear)
 # to filter out Betula nana from mother_data 
 mother_data <-  mother_data[!grepl(c("b"), mother_data$SampleID),,drop = FALSE] # any b in sample id is for betula
 mother_data <-  mother_data[!grepl(c("BN"), mother_data$SampleID),,drop = FALSE] # same as above but with uppercase B, must use BN because one clone is called B
+
+# make standard ID column for maternal data 
+mother_data$SampleID_standard <- toupper(mother_data$SampleID) # make all uppercase characters 
+mother_data$SampleID_standard<-gsub("-","",as.character(mother_data$SampleID_standard)) # remove "-"
+mother_data$SampleID_standard<-gsub(" ","",as.character(mother_data$SampleID_standard)) # remove spaces " " 
 
 # save mother data 
 write.csv(mother_data, 'data/source_pops/mother_data.csv')
