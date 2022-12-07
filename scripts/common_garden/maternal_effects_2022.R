@@ -17,8 +17,8 @@ library(sjPlot)
 mother_data <- read_csv("data/source_pops/mother_data.csv")
 
 # All 2022 data from the common garden
-all_cg_2022 <- read_csv("data/common_garden_data_2022/all_growth_2022.csv") # note this currently has three time points for 2022 measurements
-## @Madi, NOTE: instead of this dataset above, should we be using CG_july_aug_2022? 
+all_cg_2022 <- read_csv("data/common_garden_data_2022/all_merged_data_2022.csv") 
+
 
 # 3. DATA WRANGLING ---- 
 
@@ -29,57 +29,45 @@ all_cg_2022 <- read_csv("data/common_garden_data_2022/all_growth_2022.csv") # no
 
 # Match mother heights with heights in common garden
 # Keeping only relevant columns in Common Garden dataset 2022
-cg_heights_2022 <- all_cg_2022 %>%
-  select(SampleID, Year_planted, Species, Site, Sample_Date,
-         Month, Day, Year, Canopy_Height_cm, Length_1_mm, Length_2_mm,
-         Length_3_mm)
-
-# make standard ID column for CG data 
-# make standard sample ID column to avoid issue of dashes, spaces, etc. 
-cg_heights_2022$SampleID_standard <- toupper(cg_heights_2022$SampleID) # make all uppercase characters 
-cg_heights_2022$SampleID_standard<-gsub("-","",as.character(cg_heights_2022$SampleID_standard)) # remove "-"
-cg_heights_2022$SampleID_standard<-gsub(" ","",as.character(cg_heights_2022$SampleID_standard)) # remove spaces " " 
-
-str(mother_data)
-# make standard ID column for maternal data 
-mother_data$SampleID_standard <- toupper(mother_data$SampleID) # make all uppercase characters 
-mother_data$SampleID_standard<-gsub("-","",as.character(mother_data$SampleID_standard)) # remove "-"
-mother_data$SampleID_standard<-gsub(" ","",as.character(mother_data$SampleID_standard)) # remove spaces " " 
-
-
-
-# Only keeping peak greeness measure (supposedly time in season when shrubs are tallest)
-# do we still want this? No, I think we want to use the new CG_july_aug_2022, and the mother_data
-mother_cg_2022_july <- mother_cg_2022 %>%
-  filter(Sample_Date == "23/07/2022")
-
-str(mother_cg_2022_july)
+cg_2022 <- all_cg_2022 %>%
+  select(-...1)
 
 # Making variables in right format
-mother_cg_2022_july$Site <- as.factor(mother_cg_2022_july$Site)
-mother_cg_2022_july$Species <- as.factor(mother_cg_2022_july$Species)
-mother_cg_2022_july$Canopy_Height_cm <- as.numeric(mother_cg_2022_july$Canopy_Height_cm)
-mother_cg_2022_july$Mother_height <- as.numeric(mother_cg_2022_july$Mother_height)
+str(mother_data)
+mother_data$Site <- as.factor(mother_data$Site)
+mother_data$SampleID <- as.factor(mother_data$SampleID)
+mother_data$SampleYear <- as.factor(mother_data$SampleYear)
 
-mother_cg_2022$Site <- as.factor(mother_cg_2022$Site)
-mother_cg_2022$Species <- as.factor(mother_cg_2022$Species)
-mother_cg_2022$Canopy_Height_cm <- as.numeric(mother_cg_2022$Canopy_Height_cm)
-mother_cg_2022$Mother_height <- as.numeric(mother_cg_2022$Mother_height)
+# rename variables to make clear mother metrics before merge
+mother_data_merge <-  mother_data %>% 
+  rename("Mother_Canopy_Height_cm" = "Canopy_Height_cm", 
+         "Mother_Width_cm" = "Width_cm",
+         "Mother_Width_2_cm" = "Width_2_cm",
+         "Mother_Mother_LS" = "Mother_LS",
+         "Mother_Length_1_mm" = "Length_1_mm",
+         "Mother_Length_2_mm" = "Length_2_mm",
+         "Mother_Length_3_mm" = "Length_3_mm",
+         "Mother_Stem_Elongation_1_mm" = "Stem_Elongation_1_mm",
+         "Mother_Stem_Elongation_2_mm" = "Stem_Elongation_2_mm",
+         "Mother_Stem_Elongation_3_mm" = "Stem_Elongation_3_mm",
+         "Mother_mean_stem_elong" = "mean_stem_elong",
+         "Mother_mean_leaf_length" = "mean_leaf_length",
+         "Mother_mother_mean_width" = "mean_width") %>% 
+  select(-Match, -...1, -...2) %>%   # these columns are useless and will only cause anger and pain
+  select(-SampleID, -site) # also drop this because it's weird inconsistent and will cause merging issues 
+# note we don't have species but when we merge by standard sample ID these will appear 
+str(mother_data_merge)
+str(cg_2022)
+
+mother_cg <- full_join(mother_data_merge, cg_2022, by = c("SampleID_standard" = "SampleID_standard", 
+                                                          "Year_planted" = "Year_planted", 
+                                                          "SampleDate" = "Sample_Date"))
+
+# Making variables in right format
+
 
 # Merging source pop dataset with mothers dataset
 # Keeping relevant columns
-source_pop_heights_2022 <-  all_source_pop_2022 %>% 
-   select(Species, SampleDate, Site, Canopy_Height_cm)
-
-mother_heights_2017_01 <- Common_garden_2017 %>%
-   select(Sample_ID, Species, Sample_location, Date_sampled, Mother_height, Species) %>%
-   mutate(Site = case_when(Sample_location %in% c("QHI", "Qikiqtaruk") ~ "Qikiqtaruk",
-                           Sample_location %in% c("Pika Camp", "Kluane Plateau", "Printers Pass") ~ "Kluane")) %>%
-filter(Species %in% c("Salix pulchra", "Salix arctica", "Salix richardsonii")) 
-
-
-#source_pop_mother_compare <- merge(mother_heights_2017_01, source_pop_heights_2022, by ="Site","Species")
-
 
 # 4. DATA VISUALISATION ----
 (plot_mother_compare <- ggplot(mother_cg_2022_july) +
@@ -127,7 +115,7 @@ str(mother_cg_2022_july)
 # 5. DATA ANALYSIS -----
 
 # 1. Lmer: effect of mother heights on canopy heights in the CG
-maternal_height <- lmer(Canopy_Height_cm~Mother_height + (1|sample_age) + (1|SampleID) + (1|Species), data = mother_cg_2022)
+maternal_height <- lmer(Canopy_Height_cm~Mother_Canopy_Height_cm + (1|sample_age) + (1|SampleID) + (1|Species), data = mother_cg)
 summary(maternal_height)
 tab_model(maternal_height)
 plot(maternal_height)
