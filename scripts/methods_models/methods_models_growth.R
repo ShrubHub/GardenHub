@@ -9,6 +9,9 @@
 
 # 1. Loading libraries ----
 library(lme4)
+library(dplyr)
+library(sjPlot)
+library(ggpubr)
 
 # 2. Loading data ---- 
 unique_source_mother <- read_csv("data/source_pops/unique_source_mother.csv")
@@ -33,6 +36,11 @@ plot(height_method_mod)
 qqnorm(resid(height_method_mod))
 qqline(resid(height_method_mod)) 
 tab_model(height_method_mod)
+
+(height_p <- ggplot(unique_source_mother, aes(Site, Canopy_Height_cm)) +
+    geom_boxplot() +
+    facet_wrap(vars(Species))+
+    ylim (0,250)) # to remove outliers
 
 # Height lmer with species random effect
 height_method_mod_2 <- lmer(Canopy_Height_cm ~ Site + (1|Species) + (1|SampleYear), data = unique_source_mother)
@@ -64,6 +72,10 @@ qqnorm(resid(stem_elong_method_mod_2))
 qqline(resid(stem_elong_method_mod_2)) 
 tab_model(stem_elong_method_mod_2)
 
+(elong_p <- ggplot(unique_source_mother, aes(Site, mean_stem_elong)) +
+    geom_boxplot() +
+    facet_wrap(vars(Species))) 
+  
 # c. Width---- 
 
 # Width lmer with species interacting
@@ -114,4 +126,10 @@ qqnorm(resid(diam_method_mod_2))
 qqline(resid(diam_method_mod_2)) 
 tab_model(diam_method_mod_2)
 
+(diam_p <- ggplot(unique_source_mother, aes(Site, Stem_diameter)) +
+    geom_boxplot() +
+    facet_wrap(vars(Species))) 
+
+# quick arrange 
+(growth_plots <- ggarrange(height_p, width_p, elong_p, diam_p, nrow = 2, ncol = 2))
 
