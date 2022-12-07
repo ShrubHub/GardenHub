@@ -28,7 +28,8 @@ SLA_2022$DOY <-  yday(as.POSIXct(SLA_2022$date_sampled, format = "%Y-%m-%d"))
 SLA_2022 <- SLA_2022 %>% 
   mutate(Site = recode(Site, "Kluane Plateau" = 'Kluane', "Qikiqtaruk" = 'Qikiqtaruk')) %>% 
   filter(month != "08")  %>%   #filter out august observations to avoid any senescence 
- mutate(total_leaf_dry_mass_mg = total_leaf_dry_mass_g*1000) %>% # convert leaf mass per area to mg instead of g 
+  mutate(total_leaf_dry_mass_mg = total_leaf_dry_mass_g*1000) %>% # convert leaf mass per area to mg instead of g 
+  mutate(LA*100) %>%  #convert leaf area to mm2 instead of cm2
   mutate(LDMC_g_g = LDMC/1000) %>% # covert LDMC from mg g-1 to g g-1
   dplyr::select(-c(X, LDMC, rehydrated_leaf_sample_remarks, total_leaf_dry_mass_g, sample_remarks, dried_leaf_sample_remarks))  
 
