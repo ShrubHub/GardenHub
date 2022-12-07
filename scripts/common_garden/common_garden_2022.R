@@ -242,42 +242,41 @@ growth$SampleID_standard <- toupper(growth$SampleID) # make all uppercase charac
 growth$SampleID_standard<-gsub("-","",as.character(growth$SampleID_standard)) # remove "-"
 growth$SampleID_standard<-gsub(" ","",as.character(growth$SampleID_standard)) # remove spaces " " 
 
+# Removing Betula nana and Betula glandulosa, keeping only month of August for consistency,
+# Creating mean stem elongation, mean leaf length and mean width columns
+growth_to_merge <- growth %>% 
+  filter(Species != "unknown" & Species!="Betula nana" & Species!="Betula glandulosa") %>% 
+  filter(Month == "8") %>%
+  filter(Day != 2) 
+
 # Merging 2022 data with 2013-2021 data 
-all_growth_2022 <- rbind(growth, CG_july_aug_2022) 
+all_growth_2022 <- rbind(growth_to_merge, CG_july_aug_2022) 
 str(all_growth_2022)
 unique(all_growth_2022$Sample_Date) # one NA
 which(is.na(all_growth_2022$Sample_Date)) # at row 5211 
 
-# Saving 2013-2022 data as csv file
-write.csv(all_growth_2022, 'data/common_garden_data_2022/all_growth_2022.csv')
+# calculate mean leaf length, mean width, mean stem elongation, sample year 
+all_merged_data_2022 <- all_growth_2022 %>% 
+  mutate(Sample_age = Year - Year_planted) %>%
+  mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
+       mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
+       mean_width = ((Width_cm + Width_2_cm)/2)) 
+#biovolume = (Width_cm*Width_2_cm*Canopy_Height_cm))
 
 # Making variables into the right format
-all_growth_2022$Stem_Elongation_1_mm <- as.numeric(all_growth_2022$Stem_Elongation_1_mm)
-all_growth_2022$Stem_Elongation_2_mm <- as.numeric(all_growth_2022$Stem_Elongation_2_mm)
-all_growth_2022$Stem_Elongation_3_mm <- as.numeric(all_growth_2022$Stem_Elongation_3_mm)
-all_growth_2022$Length_1_mm <- as.numeric(all_growth_2022$Length_1_mm)
-all_growth_2022$Length_2_mm <- as.numeric(all_growth_2022$Length_2_mm)
-all_growth_2022$Length_3_mm <- as.numeric(all_growth_2022$Length_3_mm)
-all_growth_2022$Width_cm <- as.numeric(all_growth_2022$Width_cm)
-all_growth_2022$Width_2_cm <- as.numeric(all_growth_2022$Width_2_cm)
-all_growth_2022$Canopy_Height_cm <- as.numeric(all_growth_2022$Canopy_Height_cm)
-
-# Removing Betula nana and Betula glandulosa, keeping only month of August for consistency,
-# Creating mean stem elongation, mean leaf length and mean width columns
-all_merged_data_2022 <- all_growth_2022 %>% 
-  filter(Species != "unknown" & Species!="Betula nana" & Species!="Betula glandulosa") %>% 
-  mutate(Sample_age = Year - Year_planted) %>%
-  filter(Month == "8") %>%
-  filter(Day != 2) %>% 
-  mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
-         mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
-         mean_width = ((Width_cm + Width_2_cm)/2)) %>% 
-  rename("SampleDate"= "Sample_Date")
-         #biovolume = (Width_cm*Width_2_cm*Canopy_Height_cm))
+all_merged_data_2022$Stem_Elongation_1_mm <- as.numeric(all_merged_data_2022$Stem_Elongation_1_mm)
+all_merged_data_2022$Stem_Elongation_2_mm <- as.numeric(all_merged_data_2022$Stem_Elongation_2_mm)
+all_merged_data_2022$Stem_Elongation_3_mm <- as.numeric(all_merged_data_2022$Stem_Elongation_3_mm)
+all_merged_data_2022$Length_1_mm <- as.numeric(all_merged_data_2022$Length_1_mm)
+all_merged_data_2022$Length_2_mm <- as.numeric(all_merged_data_2022$Length_2_mm)
+all_merged_data_2022$Length_3_mm <- as.numeric(all_merged_data_2022$Length_3_mm)
+all_merged_data_2022$Width_cm <- as.numeric(all_merged_data_2022$Width_cm)
+all_merged_data_2022$Width_2_cm <- as.numeric(all_merged_data_2022$Width_2_cm)
+all_merged_data_2022$Canopy_Height_cm <- as.numeric(all_merged_data_2022$Canopy_Height_cm)
 
 str(all_merged_data_2022)
 # Saving all merged and formatted 2013-2022 data as csv file
-# write.csv(all_merged_data_2022, 'scripts/common_garden/common_garden_data_2022/all_merged_data_2022.csv')
+write.csv(all_merged_data_2022, 'data/common_garden_data_2022/all_merged_data_2022.csv')
 
 # Making variables into the right format
 all_merged_data_2022$Bed <- as.factor(as.character(all_merged_data_2022$Bed))
