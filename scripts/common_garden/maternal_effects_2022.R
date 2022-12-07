@@ -18,12 +18,16 @@ mother_data <- read_csv("data/source_pops/mother_data.csv")
 
 # All 2022 data from the common garden
 all_cg_2022 <- read_csv("data/common_garden_data_2022/all_growth_2022.csv") # note this currently has three time points for 2022 measurements
+## @Madi, NOTE: instead of this dataset above, should we be using CG_july_aug_2022? 
 
+# 3. DATA WRANGLING ---- 
 
-# 3. DATA WRANGLING ----we 
+## @Madi, ALSO note for code below: When i started this script i only wanted to look
+# at mother heights vs child heights, but I think now we want to look at other
+# mother variables too? So we should match mother and child based on SampleID.
+# SO we can probably delete the chunk where I keep only the heights column
 
 # Match mother heights with heights in common garden
-
 # Keeping only relevant columns in Common Garden dataset 2022
 cg_heights_2022 <- all_cg_2022 %>%
   select(SampleID, Year_planted, Species, Site, Sample_Date,
@@ -122,7 +126,7 @@ str(mother_cg_2022_july)
 
 # 5. DATA ANALYSIS -----
 
-# Lmeri: effect of mother heights on canopy heights in the CG
+# Lmer: effect of mother heights on canopy heights in the CG
 model <- lmer(Canopy_Height_cm~Mother_height + (1|sample_age) + (1|SampleID) + (1|Species), data = mother_cg_2022)
 summary(model)
 tab_model(model)
