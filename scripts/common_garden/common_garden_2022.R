@@ -2,7 +2,7 @@
 ### Data wrangling and visualisation script
 ### By Erica Zaja, created on 30/09/2022
 ## Adapted from Madelaine Anderson's common_garden_2021.R 
-## Last updated: 29/11/2022 by Madelaine 
+## Last updated: 07/12/2022 by Madelaine and Erica
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -129,7 +129,6 @@ july <- growth_2022 %>%
          "jul_length_3_mm" = "Length_3_mm")
 
 str(july) # all good 
-sum(is.na(july$jul_height)) # 44 NAs
 # date: 23/07/2022
 
 # same for august 
@@ -147,7 +146,6 @@ aug <-  growth_2022 %>%
          "aug_length_3_mm" = "Length_3_mm")
 
 str(aug) # all good 
-sum(is.na(aug$aug_height)) # 75 NAs
 
 # merge the two dataframes by SampleID and merge columns for traits/growth
 # use august value unless NA, in which case use 
@@ -164,7 +162,45 @@ july_aug <- left_join(aug, july, by = "SampleID")  %>%
          Length_3_mm = coalesce(aug_length_3_mm, jul_length_3_mm)) %>%
   select(- Sample_Date)
 
-sum(is.na(july_aug$height)) # 44 aka same as July but now with some Aug observations when available 
+sum(is.na(july_aug$aug_height)) # 76 NAs
+sum(is.na(july_aug$jul_height)) # 44 NAs
+sum(is.na(july_aug$Canopy_Height_cm)) # 44 aka same as July but now with some Aug observations when available 
+
+sum(is.na(july_aug$aug_width_1)) # 76 NAs
+sum(is.na(july_aug$jul_width_1)) # 44
+sum(is.na(july_aug$Width_cm)) # 44
+
+sum(is.na(july_aug$aug_width_2)) # 76 NAs
+sum(is.na(july_aug$jul_width_2)) # 44
+sum(is.na(july_aug$Width_2_cm)) # 44
+
+sum(is.na(july_aug$aug_stem_Elong_1_mm)) # 78 NAs
+sum(is.na(july_aug$jul_stem_Elong_1_mm)) # 48
+sum(is.na(july_aug$Stem_Elongation_1_mm)) # 47  
+
+sum(is.na(july_aug$aug_stem_Elong_2_mm)) # 86 NAs
+sum(is.na(july_aug$jul_stem_Elong_2_mm)) # 53
+sum(is.na(july_aug$Stem_Elongation_2_mm)) # 51
+
+sum(is.na(july_aug$aug_stem_Elong_3_mm)) # 93 NAs
+sum(is.na(july_aug$jul_stem_Elong_3_mm)) # 75
+sum(is.na(july_aug$Stem_Elongation_3_mm)) # 67
+
+sum(is.na(july_aug$aug_length_1_mm)) # 77 NAs
+sum(is.na(july_aug$jul_length_1_mm)) # 44
+sum(is.na(july_aug$Length_1_mm)) # 44 
+
+sum(is.na(july_aug$aug_length_2_mm)) # 78 NAs
+sum(is.na(july_aug$jul_length_2_mm)) # 45
+sum(is.na(july_aug$Length_2_mm)) # 44 
+
+sum(is.na(july_aug$aug_length_3_mm)) # 83 NAs
+sum(is.na(july_aug$jul_length_3_mm)) # 46
+sum(is.na(july_aug$Length_3_mm)) # 45 
+
+sum(is.na(july_aug$aug_Stem_diameter)) # 76 NAs
+sum(is.na(july_aug$jul_Stem_diameter)) # 46
+sum(is.na(july_aug$Stem_diameter)) # 44 
 
 # statement specify the date depending on which value was used 
 CG_july_aug_2022_dates <- july_aug %>%
@@ -175,8 +211,8 @@ CG_july_aug_2022_dates <- july_aug %>%
                                    Length_2_mm == jul_length_2_mm & Length_3_mm == jul_length_3_mm 
                                  ~ make_date(year = "2022", month = "7", day = "23"), 
                                              TRUE ~ make_date(year = "2022", month = "8", day = "17")))
-# 17 samples from July? Is that right @Madi?
-  
+
+
 # keep relevant columns for merge with 2013-2021 dataset
 CG_july_aug_2022 <- CG_july_aug_2022_dates %>%
   dplyr::select(Bed, SampleID, Year_planted, Species, Site, Sample_Date, SampleID_standard,
@@ -187,7 +223,7 @@ CG_july_aug_2022 <- CG_july_aug_2022_dates %>%
           Month = lubridate::month(Sample_Date), 
           Day = lubridate::day(Sample_Date))
 
-str(CG_july_aug_2022)
+str(CG_july_aug_2022) 
 
 # convert date format to merge below
 CG_july_aug_2022$Sample_Date <- as.POSIXct(CG_july_aug_2022$Sample_Date)
@@ -210,6 +246,7 @@ growth$SampleID_standard<-gsub(" ","",as.character(growth$SampleID_standard)) # 
 all_growth_2022 <- rbind(growth, CG_july_aug_2022) 
 str(all_growth_2022)
 unique(all_growth_2022$Sample_Date) # one NA
+which(is.na(all_growth_2022$Sample_Date)) # at row 5211 
 
 # Saving 2013-2022 data as csv file
 #write.csv(all_growth_2022, 'data/common_garden_data_2022/all_growth_2022.csv')
