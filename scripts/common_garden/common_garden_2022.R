@@ -12,6 +12,7 @@ library(base)
 library(lubridate)
 library(xlsx)
 library(readxl) # reads excel files if java doesn't work for (xlsx)
+require(lubridate)
 
 # 2. LOADING DATA ----
 
@@ -129,6 +130,7 @@ july <- growth_2022 %>%
 
 str(july) # all good 
 sum(is.na(july$jul_height)) # 44 NAs
+# date: 23/07/2022
 
 # same for august 
 aug <-  growth_2022 %>% 
@@ -150,26 +152,51 @@ sum(is.na(aug$aug_height)) # 75 NAs
 # merge the two dataframes by SampleID and merge columns for traits/growth
 # use august value unless NA, in which case use 
 july_aug <- left_join(aug, july, by = "SampleID")  %>% 
-  mutate(height = coalesce(aug_height, jul_height), 
-         width_1 = coalesce(aug_width_1, jul_width_1),
-         width_2 = coalesce(aug_width_2, jul_width_2), 
-         stem_diam = coalesce(aug_Stem_diameter, jul_Stem_diameter), 
-         stem_elong_1 = coalesce(aug_stem_Elong_1_mm, jul_stem_Elong_1_mm), 
-         stem_elong_2 = coalesce(aug_stem_Elong_2_mm, jul_stem_Elong_2_mm), 
-         stem_elong_3 = coalesce(aug_stem_Elong_3_mm, jul_stem_Elong_3_mm),
-         leaf_length_1 = coalesce(aug_length_1_mm, jul_length_1_mm), 
-         leaf_length_2 = coalesce(aug_length_2_mm, jul_length_2_mm), 
-         leaf_length_3 = coalesce(aug_length_3_mm, jul_length_3_mm)) %>% 
-  select(-Sample_Date)
+  mutate(Canopy_Height_cm = coalesce(aug_height, jul_height), 
+         Width_cm = coalesce(aug_width_1, jul_width_1),
+         Width_2_cm = coalesce(aug_width_2, jul_width_2), 
+         Stem_diameter = coalesce(aug_Stem_diameter, jul_Stem_diameter), 
+         Stem_Elongation_1_mm = coalesce(aug_stem_Elong_1_mm, jul_stem_Elong_1_mm), 
+         Stem_Elongation_2_mm  = coalesce(aug_stem_Elong_2_mm, jul_stem_Elong_2_mm), 
+         Stem_Elongation_3_mm  = coalesce(aug_stem_Elong_3_mm, jul_stem_Elong_3_mm),
+         Length_1_mm = coalesce(aug_length_1_mm, jul_length_1_mm), 
+         Length_2_mm = coalesce(aug_length_2_mm, jul_length_2_mm), 
+         Length_3_mm = coalesce(aug_length_3_mm, jul_length_3_mm)) %>%
+  select(- Sample_Date)
 
 sum(is.na(july_aug$height)) # 44 aka same as July but now with some Aug observations when available 
 
+# statement specify the date depending on which value was used 
+CG_july_aug_2022_dates <- july_aug %>%
+  mutate(Sample_Date = case_when(Canopy_Height_cm == jul_height & Width_cm == jul_width_1 &
+                                   Width_2_cm == jul_width_2 & Stem_diameter == jul_Stem_diameter &
+                                   Stem_Elongation_1_mm == jul_stem_Elong_1_mm & Stem_Elongation_2_mm == jul_stem_Elong_2_mm & 
+                                 Stem_Elongation_3_mm == jul_stem_Elong_3_mm &  Length_1_mm == jul_length_1_mm & 
+                                   Length_2_mm == jul_length_2_mm & Length_3_mm == jul_length_3_mm 
+                                 ~ make_date(year = "2022", month = "7", day = "23"), 
+                                             TRUE ~ make_date(year = "2022", month = "8", day = "17")))
+# 17 samples from July? Is that right @Madi?
+  
+# keep relevant columns for merge with 2013-2021 dataset
+CG_july_aug_2022 <- CG_july_aug_2022_dates %>%
+  dplyr::select(Bed, SampleID, Year_planted, Species, Site, Sample_Date, SampleID_standard,
+                Canopy_Height_cm, Width_cm, Width_2_cm, Stem_diameter, 
+                Stem_Elongation_1_mm, Stem_Elongation_2_mm, Stem_Elongation_3_mm, 
+                Length_1_mm, Length_2_mm, Length_3_mm) %>%
+  mutate(Year = lubridate::year(Sample_Date), 
+          Month = lubridate::month(Sample_Date), 
+          Day = lubridate::day(Sample_Date))
+
+str(CG_july_aug_2022)
 
 # Keeping only relevant columns of 2013-2021 data
 growth <- dplyr::select(growth, Bed, SampleID, Year_planted, Species, Site, Sample_Date,
                         Month, Day, Year, Canopy_Height_cm, Width_cm, Width_2_cm, Stem_diameter,
                         Stem_Elongation_1_mm, Stem_Elongation_2_mm, Stem_Elongation_3_mm, 
                         Length_1_mm, Length_2_mm, Length_3_mm)
+
+# ERICA HERE write code to convert growth dates into DATE format, to then merge properly with CG_july_aug_2022 ----
+
 # make standard sample ID column to avoid issue of dashes, spaces, etc. 
 growth$SampleID_standard <- toupper(growth$SampleID) # make all uppercase characters 
 growth$SampleID_standard<-gsub("-","",as.character(growth$SampleID_standard)) # remove "-"
