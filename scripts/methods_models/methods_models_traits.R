@@ -93,11 +93,25 @@ summary(LA_method_mod_spp)
 plot(LA_method_mod_spp)
 qqnorm(resid(LA_method_mod_spp))
 qqline(resid(LA_method_mod_spp)) 
-tab_model(LA_method_mod_spp)I
+tab_model(LA_method_mod_spp)
 
 (LA_p <- ggplot(all_source_area_traits, aes(Site, LA)) +
     geom_boxplot() +
     facet_wrap(vars(Species)))
+# something weird is going on with leaf area data -- not sure if maybe in past years units were not consistent? 
+# filter only data collected by Madi in 2021 and 2022
+# note this dramatically reduces sample size, but curious if there is a difference 
+
+mad_LA <- all_source_area_traits %>% 
+  filter(year %in% c("2021", "2022"))
+
+LA_method_mod_mad <- lmer(LA ~ Site + + (1|Species), data = mad_LA) # omitted sample year bc only 2 levels 
+summary(LA_method_mod_mad)
+tab_model(LA_method_mod_mad)
+
+(LA_p_mad <- ggplot(mad_LA, aes(Site, LA)) + 
+    geom_boxplot() +
+    facet_wrap(vars(Species))) # this makes sense to me, for what it's worth 
 
 # leaf length (LL) ----
 # use mean value from 3 leaf lengths 
