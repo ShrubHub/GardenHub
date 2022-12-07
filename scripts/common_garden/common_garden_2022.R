@@ -31,6 +31,7 @@ X090722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subs
 X130822 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/130822_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X160722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/160722_EZ_weekly_source_pop_Kluane_2022.xlsx")
 X240722 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/240722_EZ_weekly_source_pop_Kluane_2022.xlsx")
+
 # All weekly subsets merged from QHI data 2022
 all_weekly_QHI_2022 <- read_csv("data/source_pops/source_pop_Qiki_shrub_data/weekly_subsets/all_weekly_QHI_2022.csv")
 
@@ -55,18 +56,18 @@ kluane_source_pop_2022 <- rbind(X010822,X090722,X130822,X160722, X240722)
 # Creating mean stem elongation, mean leaf length and mean width columns
 # remove S. reticulata 
 kluane_source_pop_2022 <- kluane_source_pop_2022 %>% 
-  filter(Species != "Salix reticulata") %>% 
+  filter(Species != "Salix reticulata") %>% # removing salix reticulata
   mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
          mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
          mean_width = ((Width_cm + Width_2_cm)/2)) %>% 
- select(- Stem_diameter_2, - Stem_diameter_3)
+ select(- Stem_diameter_2, - Stem_diameter_3) # stem diam 2 and 3 were taken for sal ret
         
+# reclassing stem diam
 kluane_source_pop_2022$Stem_diameter <- as.numeric(kluane_source_pop_2022$Stem_diameter)
+QHI_source_pop_2022$Stem_diameter <- as.numeric(QHI_source_pop_2022$Stem_diameter)
 
 # removing sort column from QHI subsets
 QHI_source_pop_2022 <- all_weekly_QHI_2022[,-1]
-QHI_source_pop_2022$Stem_diameter <- as.numeric(QHI_source_pop_2022$Stem_diameter)
-
 
 # merging QHI and Kluane data from 2022
 all_source_pop_2022 <- rbind(QHI_source_pop_2022, kluane_source_pop_2022)
@@ -97,7 +98,6 @@ growth_2022$SampleID_standard <- toupper(growth_2022$SampleID) # make all upperc
 growth_2022$SampleID_standard<-gsub("-","",as.character(growth_2022$SampleID_standard)) # remove "-"
 growth_2022$SampleID_standard<-gsub(" ","",as.character(growth_2022$SampleID_standard)) # remove spaces " " 
 
-#################### MADI -----
 # make all variables numeric to drop written observations 
 growth_2022$Canopy_Height_cm <- as.numeric(growth_2022$Canopy_Height_cm)
 growth_2022$Width_cm <- as.numeric(growth_2022$Width_cm)
@@ -126,8 +126,10 @@ july <- growth_2022 %>%
          "jul_length_1_mm" = "Length_1_mm",
          "jul_length_2_mm" = "Length_2_mm",
          "jul_length_3_mm" = "Length_3_mm")
+
 str(july) # all good 
 sum(is.na(july$jul_height)) # 44 NAs
+
 # same for august 
 aug <-  growth_2022 %>% 
   filter(Month == "8") %>% 
@@ -141,8 +143,10 @@ aug <-  growth_2022 %>%
          "aug_length_1_mm" = "Length_1_mm",
          "aug_length_2_mm" = "Length_2_mm",
          "aug_length_3_mm" = "Length_3_mm")
+
 str(aug) # all good 
 sum(is.na(aug$aug_height)) # 75 NAs
+
 # merge the two dataframes by SampleID and merge columns for traits/growth
 # use august value unless NA, in which case use 
 july_aug <- left_join(aug, july, by = "SampleID")  %>% 
@@ -160,41 +164,6 @@ july_aug <- left_join(aug, july, by = "SampleID")  %>%
 
 sum(is.na(july_aug$height)) # 44 aka same as July but now with some Aug observations when available 
 
-# I think we can delete the part below? @Erica confirm
-
-# only keeping july 2022
-growth_2022_july <- growth_2022 %>%
-  filter(Month == "7") 
-
-
-growth_2022_july$Canopy_Height_cm <- as.numeric(growth_2022_july$Canopy_Height_cm)
-growth_2022_july$Width_cm <- as.numeric(growth_2022_july$Width_cm)
-length(unique(growth_2022_july$Canopy_Height_cm)) # 117
-length(unique(growth_2022_july$Width_cm)) # 117
-
-# only keeping august 2022
-growth_2022_august <- growth_2022 %>%
-  filter(Month == "8") 
-
-growth_2022_august$Canopy_Height_cm <- as.numeric(growth_2022_august$Canopy_Height_cm)
-growth_2022_august$Width_cm <- as.numeric(growth_2022_august$Width_cm)
-length(unique(growth_2022_august$Canopy_Height_cm)) # 78
-length(unique(growth_2022_august$Width_cm)) # 86
-
-# decide to keep either the growth_2022 august or july dataset and merge it with growth dataset
-growth_2022_july_august <- growth_2022 %>%
-  filter(Month %in% c(7,8)) 
-
-growth_2022_july_august$Canopy_Height_cm <- as.numeric(growth_2022_july_august$Canopy_Height_cm)
-
-# filling august NAs with july NAs to keep max heights 
-growth_test <- growth_2022 %>% 
-  group_by(SampleID) %>% 
-  mutate(Canopy_Height_cm_new = replace_na(Canopy_Height_cm, Month == "7", na.rm = T))
-
-growth_test <- growth_2022 %>% 
-  mutate(Canopy_Height_cm_new = if_else(is.na(Canopy_Height_cm) & Month == 8, paste(Canopy_Height_cm, Month == 8 , na.rm = T), factor(NA)))
-#################### MADI -----
 
 # Keeping only relevant columns of 2013-2021 data
 growth <- dplyr::select(growth, Bed, SampleID, Year_planted, Species, Site, Sample_Date,
