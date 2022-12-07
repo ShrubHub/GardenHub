@@ -389,8 +389,11 @@ two_dig_year_cnvt <- function(z, year=2013){
   z
 }
 
-# converting "0017" to "2017"
+# converting "0017" to "2017" for SampleDate, DatePlanted 
 mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
+mother_data$Date_propagated <- two_dig_year_cnvt(mother_data$Date_propagated)
+mother_data$Date_planted <- two_dig_year_cnvt(mother_data$Date_planted)
+
 
 # renaming site col
 mother_data <- mother_data %>%
