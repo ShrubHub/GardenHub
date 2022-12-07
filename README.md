@@ -1,6 +1,6 @@
 # GardenHub
 ### A repository for the common garden experiment data analyses
-#### Last update: 14/11/2022 by Erica Zaja
+#### Last update: 07/12/2022 by Madi 
 
 ******
 
@@ -13,6 +13,7 @@ The repository will be subdivided into the following folders:
   - [phenology](https://github.com/ShrubHub/GardenHub/tree/main/data/phenology): including ground-truthing sheets (2022), add phenocam spreadsheets when done (only missing CG ones)
   - [source_pops](https://github.com/ShrubHub/GardenHub/tree/main/data/source_pops): all source population data (2017-2022)
       - For all years source population SLA, LA, LDMC: [all_source_area_traits.csv](https://github.com/ShrubHub/GardenHub/blob/main/data/source_pops/all_source_area_traits.csv)
+            - For all maternal population height, width, stem elongation, leaf length, stem diameter (note: no species IDs, can be found by matching Standard IDs):  [mother_data.csv](https://github.com/ShrubHub/GardenHub/blob/main/data/source_pops/mother_data.csv)
       - For all years source (and maternal) population height, width, stem elongation, leaf length, stem diameter:  [unique_source_mother.csv](https://github.com/ShrubHub/GardenHub/blob/main/data/source_pops/unique_source_mother.csv)
 
 
@@ -22,6 +23,8 @@ The repository will be subdivided into the following folders:
   
 - #### [scripts](https://github.com/ShrubHub/GardenHub/tree/main/scripts):
   - [common_garden](https://github.com/ShrubHub/GardenHub/tree/main/scripts/common_garden)
+  - [source_populations] organization and merging of data from source population trait measurements (Madi collected 2021-22 and previous TS data): (https://github.com/ShrubHub/GardenHub/tree/main/scripts/source_populations)
+  - [methods_models]  (https://github.com/ShrubHub/GardenHub/tree/main/scripts/methods_models)
   - phenology: 
   - [hobo](https://github.com/ShrubHub/GardenHub/tree/main/scripts/hobo)
   - [tomst](https://github.com/ShrubHub/GardenHub/tree/main/scripts/tomst)
