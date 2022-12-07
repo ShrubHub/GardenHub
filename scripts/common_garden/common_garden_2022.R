@@ -189,13 +189,17 @@ CG_july_aug_2022 <- CG_july_aug_2022_dates %>%
 
 str(CG_july_aug_2022)
 
+# convert date format to merge below
+CG_july_aug_2022$Sample_Date <- as.POSIXct(CG_july_aug_2022$Sample_Date)
+CG_july_aug_2022$Sample_Date <- format(as.POSIXct(CG_july_aug_2022$Sample_Date,format='%Y-%m-%d %H:%M:%S'),format='%Y-%m-%d')
+
 # Keeping only relevant columns of 2013-2021 data
 growth <- dplyr::select(growth, Bed, SampleID, Year_planted, Species, Site, Sample_Date,
                         Month, Day, Year, Canopy_Height_cm, Width_cm, Width_2_cm, Stem_diameter,
                         Stem_Elongation_1_mm, Stem_Elongation_2_mm, Stem_Elongation_3_mm, 
                         Length_1_mm, Length_2_mm, Length_3_mm)
-
-# ERICA HERE write code to convert growth dates into DATE format, to then merge properly with CG_july_aug_2022 ----
+str(growth)
+growth$Sample_Date <- as.POSIXct(growth$Sample_Date, format = "%d/%m/%Y")
 
 # make standard sample ID column to avoid issue of dashes, spaces, etc. 
 growth$SampleID_standard <- toupper(growth$SampleID) # make all uppercase characters 
@@ -203,9 +207,9 @@ growth$SampleID_standard<-gsub("-","",as.character(growth$SampleID_standard)) # 
 growth$SampleID_standard<-gsub(" ","",as.character(growth$SampleID_standard)) # remove spaces " " 
 
 # Merging 2022 data with 2013-2021 data 
-all_growth_2022 <- rbind(growth, growth_2022)
+all_growth_2022 <- rbind(growth, CG_july_aug_2022) 
 str(all_growth_2022)
-unique(all_growth_2022$Sample_Date)
+unique(all_growth_2022$Sample_Date) # one NA
 
 # Saving 2013-2022 data as csv file
 #write.csv(all_growth_2022, 'data/common_garden_data_2022/all_growth_2022.csv')
