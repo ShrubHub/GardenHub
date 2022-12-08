@@ -86,8 +86,11 @@ mother_cg_long_heights <- mother_cg %>%
   pivot_longer(cols=c ("Mother_Canopy_Height_cm","Canopy_Height_cm"),
                names_to = "treatment", values_to = "Height_cm")
 
+
 # making treatment a factor
 mother_cg_long_heights$treatment <- as.factor(mother_cg_long_heights$treatment)
+mother_cg_long_heights$Sample_age <- as.factor(mother_cg_long_heights$Sample_age)
+mother_cg_long_heights$SampleID_standard <- as.factor(mother_cg_long_heights$SampleID_standard)
 
 # renaming 
 levels(mother_cg_long_heights$treatment) <- list(Mother  = "Mother_Canopy_Height_cm", Child = "Canopy_Height_cm")
@@ -99,7 +102,7 @@ levels(mother_cg_long_heights$treatment) <- list(Mother  = "Mother_Canopy_Height
   #facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Canopy Height (cm)") +
-   xlab("\nMother Height (cm)") +
+   xlab("\nTreatment") +
    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
    theme_bw() +
@@ -114,10 +117,14 @@ levels(mother_cg_long_heights$treatment) <- list(Mother  = "Mother_Canopy_Height
          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black"))
 
+# N.B. to make figure like Gergana, create MEAN (one value) Mother height and MEAN child height (one value)
+# and plot one line per shrub 
+
 # 5. DATA ANALYSIS -----
 
 # 1. Lmer: effect of mother heights on canopy heights in the CG
-maternal_height <- lmer(Canopy_Height_cm~Mother_Canopy_Height_cm + (1|sample_age) + (1|SampleID) + (1|Species), data = mother_cg)
+# N.B. gives me errror message when i run it with sample_age random effect
+maternal_height <- lmer(Height_cm ~ treatment + (1|Species) + (1|SampleID_standard), data = mother_cg_long_heights)
 summary(maternal_height)
 tab_model(maternal_height)
 plot(maternal_height)
