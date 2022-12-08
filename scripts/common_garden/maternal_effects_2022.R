@@ -66,18 +66,32 @@ mother_data_merge <- mother_data_merge %>%
 
 mother_data_merge$Species <- as.factor(mother_data_merge$Species)
 
+# MADI HELP: Summarising means -----
+# need to have mean values for each species at each site, for all the traits we
+# need to plot, for both mother data and common garden. 
+# Means not all computing for some reason???
+mother_cg_means <- mother_data_merge %>%
+  group_by(Species, Site) %>%
+  summarise(n = n(),  # Calculating sample size n
+            mean_mother_height = mean(Mother_Canopy_Height_cm),
+            mean_mother_width = mean(Mother_mean_width),
+            mean_mother_elong = mean(Mother_mean_stem_elong),
+            mean_mother_diam = mean(Cutting_diameter))
+            #SD = sd(Mother_Canopy_Height_cm))%>%  # Calculating standard deviation
+  #mutate(SE = SD / sqrt(n))  # Calculating standard  error
+
 # checking format of CG data
 str(cg_2022)
 cg_2022$Site <- as.factor(cg_2022$Site)
 cg_2022$Species <- as.factor(cg_2022$Species)
 
 # merging datasets
-mother_cg <- full_join(mother_data_merge, cg_2022, by = c("SampleID_standard" = "SampleID_standard", 
-                                                          "Year_planted" = "Year_planted", 
-                                                          "SampleDate" = "Sample_Date",
-                                                          "Species" = "Species",
-                                                          "Site" = "Site"))
-
+mother_cg <- full_join(mother_data_merge, cg_2022, 
+                       by = c("SampleID_standard" = "SampleID_standard", 
+                              "Year_planted" = "Year_planted", 
+                               "SampleDate" = "Sample_Date",
+                                "Species" = "Species",
+                                "Site" = "Site"))
 
 # HEIGHTS: making one single column for each trait and a "treatment" column for mother/child
 mother_cg_long_heights <- mother_cg %>%
