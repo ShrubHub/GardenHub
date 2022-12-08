@@ -136,7 +136,7 @@ mad_traits <- all_source_area_traits %>%
   filter(year %in% c("2021", "2022")) %>% 
   select(-X)
 
-LA_method_mod_mad <- lmer(LA ~ Site + + (1|Species), data = mad_LA) # omitted sample year bc only 2 levels 
+LA_method_mod_mad <- lmer(LA ~ Site + (1|Species), data = mad_LA) # omitted sample year bc only 2 levels 
 summary(LA_method_mod_mad)
 tab_model(LA_method_mod_mad)
 
@@ -167,3 +167,6 @@ tab_model(LA_method_mod_mad)
     geom_boxplot() +
     facet_wrap(vars(SampleYear)))
 
+(LA_p_year <- ggplot(all_source_area_traits, aes(Site, LA)) + # the unnits must be reported wrong in the 2017 data 
+    geom_boxplot() +
+    facet_wrap(vars(year)))
