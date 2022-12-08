@@ -1,7 +1,7 @@
 #### MATERNAL EFFECTS SCRIPT 
 ### Data wrangling and visualisation script
 ### By Erica Zaja, created on 31/10/2022
-## Last updated: 31/10/2022
+## Last updated: 08/12/2022 by Madi
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -23,7 +23,6 @@ all_cg_2022 <- read_csv("data/common_garden_data_2022/all_merged_data_2022.csv")
 # 3. DATA WRANGLING ---- 
 
 # Match mother heights with heights in common garden
-# Keeping only relevant columns in Common Garden dataset 2022
 cg_2022 <- all_cg_2022 %>%
   select(-...1)
 
@@ -35,7 +34,7 @@ mother_data$SampleYear <- as.factor(mother_data$SampleYear)
 
 # rename variables to make clear mother metrics before merge
 mother_data_merge <-  mother_data %>% 
-  rename("Mother_Canopy_Height_cm" = "Canopy_Height_cm", 
+  dplyr::rename("Mother_Canopy_Height_cm" = "Canopy_Height_cm", 
          "Mother_Width_cm" = "Width_cm",
          "Mother_Width_2_cm" = "Width_2_cm",
          "Mother_Mother_LS" = "Mother_LS",
@@ -48,11 +47,11 @@ mother_data_merge <-  mother_data %>%
          "Mother_mean_stem_elong" = "mean_stem_elong",
          "Mother_mean_leaf_length" = "mean_leaf_length",
          "Mother_mean_width" = "mean_width") %>% 
-  select(-Match, -...1, -...2) %>%   # these columns are useless and will only cause anger and pain
-  select(-SampleID, - Site) %>%
-  mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
+  dplyr::select(-Match, -...1, -...2) %>%   # these columns are useless and will only cause anger and pain
+  dplyr::select(-SampleID, - Site) %>%
+  dplyr::mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
                           SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))%>%
-  select(-SampleSite)
+  dplyr::select(-SampleSite)
 # also drop this because it's weird inconsistent and will cause merging issues 
 
 # reclassing variables
@@ -100,6 +99,26 @@ mother_cg_sd_MA <-  mother_data_merge %>%
 # note, unlike for maternal data, there are multiple years of data here
 str(all_cg_2022)
 cg_means <- all_cg_2022 %>%
+  group_by(Species, Site) %>%
+  dplyr::summarise(n = n(),  # Calculating sample size n
+                   mean_Canopy_Height_cm = mean(Canopy_Height_cm, na.rm = TRUE),
+                   mean_mean_width = mean(mean_width, na.rm = TRUE),
+                   mean_mean_stem_elong = mean(mean_stem_elong, na.rm = TRUE),
+                   mean_Stem_diameter = mean(Stem_diameter, na.rm = TRUE), 
+                   mean_mean_leaf_length = mean(mean_leaf_length, na.rm = TRUE), 
+                   sd_Canopy_Height_cm = sd(Canopy_Height_cm, na.rm = TRUE),
+                   sd_width = sd(mean_width, na.rm = TRUE),
+                   sd_stem_elong = sd(mean_stem_elong, na.rm = TRUE),
+                   sd_leaf_length = sd(mean_leaf_length, na.rm = TRUE),
+                   sd_Stem_diameter = sd(Stem_diameter, na.rm = TRUE),
+                   se_Canopy_Height_cm = sd(Canopy_Height_cm, na.rm = TRUE)/sqrt(n), 
+                   se_mean_mother_width = sd(mean_width, na.rm = TRUE)/sqrt(n),
+                   se_mean_mother_elong = sd(mean_stem_elong, na.rm = TRUE)/sqrt(n),
+                   se_mean_leaf_length = sd(mean_leaf_length, na.rm = TRUE)/sqrt(n),
+                   se_Stem_diameter = sd(Stem_diameter, na.rm = TRUE)/sqrt(n))
+# make cg means using only 2022 data 
+cg_means_2022 <- all_cg_2022 %>%
+  filter(Year == "2022") %>% 
   group_by(Species, Site) %>%
   dplyr::summarise(n = n(),  # Calculating sample size n
                    mean_Canopy_Height_cm = mean(Canopy_Height_cm, na.rm = TRUE),
