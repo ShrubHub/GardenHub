@@ -47,7 +47,7 @@ mother_data_merge <-  mother_data %>%
          "Mother_Stem_Elongation_3_mm" = "Stem_Elongation_3_mm",
          "Mother_mean_stem_elong" = "mean_stem_elong",
          "Mother_mean_leaf_length" = "mean_leaf_length",
-         "Mother_mother_mean_width" = "mean_width") %>% 
+         "Mother_mean_width" = "mean_width") %>% 
   select(-Match, -...1, -...2) %>%   # these columns are useless and will only cause anger and pain
   select(-SampleID, - Site) %>%
   mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
@@ -79,7 +79,7 @@ mother_cg <- full_join(mother_data_merge, cg_2022, by = c("SampleID_standard" = 
                                                           "Site" = "Site"))
 
 
-# making one single column for each trait and a "treatment" column for mother/child
+# HEIGHTS: making one single column for each trait and a "treatment" column for mother/child
 mother_cg_long_heights <- mother_cg %>%
   select(SampleDate,  Year_planted, Mother_Canopy_Height_cm, Canopy_Height_cm,
          Species, SampleYear, SampleID_standard, Site, Year, Sample_age) %>%
@@ -95,8 +95,25 @@ mother_cg_long_heights$SampleID_standard <- as.factor(mother_cg_long_heights$Sam
 # renaming 
 levels(mother_cg_long_heights$treatment) <- list(Mother  = "Mother_Canopy_Height_cm", Child = "Canopy_Height_cm")
 
+# WIDTHS: making one single column for each trait and a "treatment" column for mother/child
+mother_cg_long_widths <- mother_cg %>%
+  select(SampleDate,  Year_planted, Mother_mean_width, mean_width,
+         Species, SampleYear, SampleID_standard, Site, Year, Sample_age) %>%
+  pivot_longer(cols=c ("Mother_mean_width","mean_width"),
+               names_to = "treatment", values_to = "Width")
+
+# making treatment a factor
+mother_cg_long_widths$treatment <- as.factor(mother_cg_long_heights$treatment)
+mother_cg_long_widths$Sample_age <- as.factor(mother_cg_long_heights$Sample_age)
+mother_cg_long_widths$SampleID_standard <- as.factor(mother_cg_long_heights$SampleID_standard)
+
+# renaming 
+levels(mother_cg_long_widths$treatment) <- list(Mother  = "Mother_mean_width", Child = "mean_width")
+
 # 4. DATA VISUALISATION ----
-(plot_mother_compare <- ggplot(mother_cg_long_heights) +
+
+# Heights
+(plot_mother_compare_heights <- ggplot(mother_cg_long_heights) +
    geom_point(aes(x = treatment, y= Height_cm, colour = Site, group = Site), size = 1.5, alpha = 0.5) +
    geom_smooth(aes(x = treatment, y= Height_cm, colour = Site, fill = Site, group = Site), method = "lm")) +
   #facet_grid(cols = vars(Species)) +
@@ -117,6 +134,28 @@ levels(mother_cg_long_heights$treatment) <- list(Mother  = "Mother_Canopy_Height
          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black"))
 
+# Widths
+(plot_mother_compare_widths <- ggplot(mother_cg_long_widths) +
+   geom_point(aes(x = treatment, y= Width, colour = Site, group = Site), size = 1.5, alpha = 0.5) +
+   geom_smooth(aes(x = treatment, y= Width, colour = Site, fill = Site, group = Site), method = "lm")) +
+  #facet_grid(cols = vars(Species)) +
+  facet_wrap(~Species, scales = "free_y") +
+  ylab("Width (cm)") +
+  xlab("\nTreatment") +
+  scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+  scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+  theme_bw() +
+  theme(panel.border = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.text = element_text(size = 15, color = "black", face = "italic"),
+        legend.title = element_text(size=15), #change legend title font size
+        legend.text = element_text(size=12),
+        axis.line = element_line(colour = "black"),
+        axis.title = element_text(size = 18),
+        axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
+        axis.text.y = element_text(size = 15, colour = "black"))
+
 # N.B. to make figure like Gergana, create MEAN (one value) Mother height and MEAN child height (one value)
 # and plot one line per shrub 
 
@@ -131,9 +170,9 @@ plot(maternal_height)
 qqnorm(resid(maternal_height))
 qqline(resid(maternal_height)) 
 
-
 # 2. Lmer: effect of mother widths on widths in the CG
-maternal_width <- lmer(mean_width~Mother_width + (1|sample_age) + (1|SampleID) + (1|Species), data = mother_cg_2022)
+# N.B. gives me errror message when i run it with sample_age random effect
+maternal_width <- lmer(Width~treatment + (1|SampleID_standard) + (1|Species), data = mother_cg_long_widths)
 summary(maternal_width )
 tab_model(maternal_width )
 plot(maternal_width )
