@@ -1,7 +1,7 @@
-#### HOBO 2021 SCRIPT
+#### Common garden HOBO 2021 SCRIPT
 ### Data wrangling and visualisation script
 ### By Erica Zaja and Madi Anderson, created on 20/10/2022
-## Last updated: 20/10/2022 by Madelaine 
+## Last updated: 08/12/2022 by Madelaine 
 
 # 1. LOADING LIBRARIES -----
 library(lubridate)
@@ -11,7 +11,7 @@ library(dplyr)
 library(gridExtra)
 
 # 2. LOADING DATA ----
-HOBO_Common_garden_12Aug2021 <- read.csv(file = "scripts/common_garden/common_garden_data_2021/HOBO_Common_garden_12Aug2021.csv")
+HOBO_Common_garden_12Aug2021 <- read.csv(file = "data/hobo/HOBO_Common_garden_12Aug2021.csv")
 
 # 3. DATA WRANGLING ----
 
