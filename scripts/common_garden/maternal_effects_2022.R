@@ -22,11 +22,6 @@ all_cg_2022 <- read_csv("data/common_garden_data_2022/all_merged_data_2022.csv")
 
 # 3. DATA WRANGLING ---- 
 
-## @Madi, ALSO note for code below: When i started this script i only wanted to look
-# at mother heights vs child heights, but I think now we want to look at other
-# mother variables too (height, width, stem diam)? So we should match mother and child based on SampleID.
-# SO we can probably delete the chunk where I keep only the heights column
-
 # Match mother heights with heights in common garden
 # Keeping only relevant columns in Common Garden dataset 2022
 cg_2022 <- all_cg_2022 %>%
@@ -54,26 +49,54 @@ mother_data_merge <-  mother_data %>%
          "Mother_mean_leaf_length" = "mean_leaf_length",
          "Mother_mother_mean_width" = "mean_width") %>% 
   select(-Match, -...1, -...2) %>%   # these columns are useless and will only cause anger and pain
-  select(-SampleID, -site) # also drop this because it's weird inconsistent and will cause merging issues 
-# note we don't have species but when we merge by standard sample ID these will appear 
-str(mother_data_merge)
-str(cg_2022)
+  select(-SampleID, - Site) %>%
+  mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
+                          SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))%>%
+  select(-SampleSite)
+# also drop this because it's weird inconsistent and will cause merging issues 
 
+# reclassing variables
+str(mother_data_merge)
+mother_data_merge$Site <- as.factor(mother_data_merge$Site)
+
+mother_data_merge <- mother_data_merge %>% 
+  mutate(Species = ifelse(grepl("SA", mother_data_merge $SampleID_standard), "Salix arctica",
+                            ifelse(grepl("SR", mother_data_merge $SampleID_standard), "Salix richardsonii", 
+                                   ifelse(grepl("SP", mother_data_merge $SampleID_standard), "Salix pulchra", NA))))
+
+mother_data_merge$Species <- as.factor(mother_data_merge$Species)
+
+# checking format of CG data
+str(cg_2022)
+cg_2022$Site <- as.factor(cg_2022$Site)
+cg_2022$Species <- as.factor(cg_2022$Species)
+
+# merging datasets
 mother_cg <- full_join(mother_data_merge, cg_2022, by = c("SampleID_standard" = "SampleID_standard", 
                                                           "Year_planted" = "Year_planted", 
-                                                          "SampleDate" = "Sample_Date"))
+                                                          "SampleDate" = "Sample_Date",
+                                                          "Species" = "Species",
+                                                          "Site" = "Site"))
 
-# Making variables in right format
 
+# making one single column for each trait and a "treatment" column for mother/child
+mother_cg_long_heights <- mother_cg %>%
+  select(SampleDate,  Year_planted, Mother_Canopy_Height_cm, Canopy_Height_cm,
+         Species, SampleYear, SampleID_standard, Site, Year, Sample_age) %>%
+  pivot_longer(cols=c ("Mother_Canopy_Height_cm","Canopy_Height_cm"),
+               names_to = "treatment", values_to = "Height_cm")
 
-# Merging source pop dataset with mothers dataset
-# Keeping relevant columns
+# making treatment a factor
+mother_cg_long_heights$treatment <- as.factor(mother_cg_long_heights$treatment)
+
+# renaming 
+levels(mother_cg_long_heights$treatment) <- list(Mother  = "Mother_Canopy_Height_cm", Child = "Canopy_Height_cm")
 
 # 4. DATA VISUALISATION ----
-(plot_mother_compare <- ggplot(mother_cg_2022_july) +
-   geom_point(aes(x = Mother_height, y= Canopy_Height_cm, colour = Site, group = Site), size = 1.5, alpha = 0.5) +
-   geom_smooth(aes(x = Mother_height, y = Canopy_Height_cm, colour = Site, fill = Site, group = Site, method = "lm")) +
-   #facet_grid(cols = vars(Species)) +
+(plot_mother_compare <- ggplot(mother_cg_long_heights) +
+   geom_point(aes(x = treatment, y= Height_cm, colour = Site, group = Site), size = 1.5, alpha = 0.5) +
+   geom_smooth(aes(x = treatment, y= Height_cm, colour = Site, fill = Site, group = Site), method = "lm")) +
+  #facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Canopy Height (cm)") +
    xlab("\nMother Height (cm)") +
@@ -89,28 +112,7 @@ mother_cg <- full_join(mother_data_merge, cg_2022, by = c("SampleID_standard" = 
          axis.line = element_line(colour = "black"),
          axis.title = element_text(size = 18),
          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
-         axis.text.y = element_text(size = 15, colour = "black")))
-
-# Comparing mother heights with source pop heights collected in 2022
-(plot_mother_height_compare <- ggplot() +
-      geom_boxplot(data = mother_heights_2017_01, aes(x = Site, y = Mother_height, fill = Site, group = Site), colour = "lightgrey", size = 0.5, alpha = 0.3) +
-      geom_boxplot(data = source_pop_heights_2022, aes(x = Site, y = (Canopy_Height_cm), fill = Site, group = Site), colour = "black", size = 0.5, alpha = 0.8) +
-      facet_wrap(~Species, scales = "free_y") +
-      ylab("Canopy height (cm)") +
-      xlab("") +
-      scale_colour_viridis_d(begin = 0.85, end = 0.4) +
-      scale_fill_viridis_d(begin = 0.85, end = 0.4) +
-      # ylim(-0.01, 2.0) +
-      theme_bw() +
-      theme(panel.border = element_blank(),
-            panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
-            axis.line = element_line(colour = "black"),
-            axis.title = element_text(size = 14),
-            axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
-            axis.text.y = element_text(size = 12, colour = "black")))
-
-str(mother_cg_2022_july)
+         axis.text.y = element_text(size = 15, colour = "black"))
 
 # 5. DATA ANALYSIS -----
 
