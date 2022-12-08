@@ -66,10 +66,8 @@ mother_data_merge <- mother_data_merge %>%
 
 mother_data_merge$Species <- as.factor(mother_data_merge$Species)
 
-# MADI HELP: Summarising means -----
-# need to have mean values for each species at each site, for all the traits we
-# need to plot, for both mother data and common garden. 
-# Means not all computing for some reason???
+# Summarising means -----
+# also calculate standard error and standard deviation 
 mother_cg_means <- mother_data_merge %>%
   group_by(Species, Site) %>%
   dplyr::summarise(n = n(),  # Calculating sample size n
@@ -81,7 +79,7 @@ mother_cg_means <- mother_data_merge %>%
             sd_mother_width = sd(Mother_mean_width, na.rm = TRUE),
             sd_mother_elong = sd(Mother_mean_stem_elong, na.rm = TRUE),
             sd_mother_diam = sd(Cutting_diameter, na.rm = TRUE),
-            se_moether_height = sd(Mother_Canopy_Height_cm, na.rm = TRUE)/sqrt(n), 
+            se_mother_height = sd(Mother_Canopy_Height_cm, na.rm = TRUE)/sqrt(n), 
             se_mean_mother_width = sd(Mother_mean_width, na.rm = TRUE)/sqrt(n),
             se_mean_mother_elong = sd(Mother_mean_stem_elong, na.rm = TRUE)/sqrt(n),
             se_mean_mother_diam = sd(Cutting_diameter, na.rm = TRUE)/sqrt(n))
@@ -97,6 +95,28 @@ mother_cg_sd_MA <-  mother_data_merge %>%
   summarise_at(c("Mother_Canopy_Height_cm", "Mother_mean_width", 
                  "Mother_mean_stem_elong", "Cutting_diameter"),
                sd, na.rm = TRUE) 
+
+# same as above for common garden data 
+# note, unlike for maternal data, there are multiple years of data here
+str(all_cg_2022)
+cg_means <- all_cg_2022 %>%
+  group_by(Species, Site) %>%
+  dplyr::summarise(n = n(),  # Calculating sample size n
+                   mean_Canopy_Height_cm = mean(Canopy_Height_cm, na.rm = TRUE),
+                   mean_mean_width = mean(mean_width, na.rm = TRUE),
+                   mean_mean_stem_elong = mean(mean_stem_elong, na.rm = TRUE),
+                   mean_Stem_diameter = mean(Stem_diameter, na.rm = TRUE), 
+                   mean_mean_leaf_length = mean(mean_leaf_length, na.rm = TRUE), 
+                   sd_Canopy_Height_cm = sd(Canopy_Height_cm, na.rm = TRUE),
+                   sd_width = sd(mean_width, na.rm = TRUE),
+                   sd_stem_elong = sd(mean_stem_elong, na.rm = TRUE),
+                   sd_leaf_length = sd(mean_leaf_length, na.rm = TRUE),
+                   sd_Stem_diameter = sd(Stem_diameter, na.rm = TRUE),
+                   se_Canopy_Height_cm = sd(Canopy_Height_cm, na.rm = TRUE)/sqrt(n), 
+                   se_mean_mother_width = sd(mean_width, na.rm = TRUE)/sqrt(n),
+                   se_mean_mother_elong = sd(mean_stem_elong, na.rm = TRUE)/sqrt(n),
+                   se_mean_leaf_length = sd(mean_leaf_length, na.rm = TRUE)/sqrt(n),
+                   se_Stem_diameter = sd(Stem_diameter, na.rm = TRUE)/sqrt(n))
 
 # checking format of CG data
 str(cg_2022)
