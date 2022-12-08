@@ -155,6 +155,8 @@ mother_cg_long_diam$SampleID_standard <- as.factor(mother_cg_long_diam$SampleID_
 levels(mother_cg_long_diam$treatment) <- list(Mother  = "Cutting_diameter", Child = "Stem_diameter")
 
 # 4. DATA VISUALISATION ----
+# N.B. to make figures like Gergana, create MEAN (one value) Mother height and MEAN child height (one value)
+# and then plot one line per shrub 
 
 # Heights
 (plot_mother_compare_heights <- ggplot(mother_cg_long_heights) +
@@ -244,8 +246,6 @@ levels(mother_cg_long_diam$treatment) <- list(Mother  = "Cutting_diameter", Chil
         axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
         axis.text.y = element_text(size = 15, colour = "black"))
 
-# N.B. to make figure like Gergana, create MEAN (one value) Mother height and MEAN child height (one value)
-# and plot one line per shrub 
 
 # 5. DATA ANALYSIS -----
 
