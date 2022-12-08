@@ -19,7 +19,7 @@ KP_tea_surface_2 <- read.csv("data/environment/Kluane/KP_tea_surface_2.csv", ski
 KP_tea_soil_1 <- read.csv("data/environment/Kluane/KP_tea_soil_1.csv",  skip = 14)
 KP_tea_soil_2 <- read.csv("data/environment/Kluane/KP_tea_soil_2.csv",  skip = 14)
 
-# surface temp 2017-2018
+# surface temp 2017
 KP_2017_herb_site1_1 <- read.csv("data/environment/Kluane/KP_2017_herb_site1_1.csv", skip = 14)
 KP_2017_herb_site1_2 <- read.csv("data/environment/Kluane/KP_2017_herb_site1_2.csv", skip = 14)
 KP_2017_herb_site2 <- read.csv("data/environment/Kluane/KP_2017_herb_site2.csv", skip = 14)
@@ -27,7 +27,17 @@ KP_2017_herb_site3 <- read.csv("data/environment/Kluane/KP_2017_herb_site3.csv",
 KP_herb_site3_2017 <- read.csv("data/environment/Kluane/KP_herb_site3_2017.csv", skip = 14)
 KP_herb_site2_2017 <- read.csv("data/environment/Kluane/KP_herb_site2_2017.csv", skip = 14)
 KP_herb_site1_2017 <- read.csv("data/environment/Kluane/KP_herb_site1_2017.csv", skip = 14)
- 
+
+# 2018 (different elevations)
+KP_2018_1 <- read.csv("data/environment/Kluane/Canada.Kluane.1049m.2018.08.05 11h20_a.csv", skip = 14)
+KP_2018_2 <- read_csv("data/environment/Kluane/Canada.Kluane.1049m.2018.08.05 11h20_b.csv", skip = 14)
+KP_2018_3 <- read_csv("data/environment/Kluane/Canada.Kluane.1305m.2018.08.05 15h20_a.csv", skip = 14)
+KP_2018_4 <- read_csv("data/environment/Kluane/Canada.Kluane.1305m.2018.08.05 15h20_b.csv", skip = 14)
+KP_2018_5 <- read_csv("data/environment/Kluane/Canada.Kluane.1527m.2018.08.05 17h43_a.csv", skip = 14)
+KP_2018_6 <- read_csv("data/environment/Kluane/Canada.Kluane.1527m.2018.08.05 17h43_b.csv", skip = 14)
+KP_2018_7 <- read_csv("data/environment/Kluane/Canada.Kluane.1816m.2018.08.05 20h30_a.csv", skip = 14)
+KP_2018_8 <- read_csv("data/environment/Kluane/Canada.Kluane.1816m.2018.08.05 20h30_b.csv", skip = 14)
+
 # 2022
 KP_FullTOMST_2022 <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_FullTOMST_2022.csv")
 
@@ -89,15 +99,75 @@ KP_2017_herb_site1_2$Date.Time <- as.POSIXct(KP_2017_herb_site1_1$Date.Time, for
 KP_2017_herb_site2$Date.Time <- as.POSIXct(KP_2017_herb_site2$Date.Time, format = "%d/%m/%Y")
 KP_2017_herb_site3$Date.Time <- as.POSIXct(KP_2017_herb_site3$Date.Time, format = "%d/%m/%Y")
 KP_herb_site1_2017$Date.Time <- as.POSIXct(KP_herb_site1_2017$Date.Time, format = "%d/%m/%Y")
-
+KP_herb_site2_2017$Date.Time <- as.POSIXct(KP_herb_site2_2017$Date.Time, format = "%d/%m/%Y")
+KP_herb_site3_2017$Date.Time <- as.POSIXct(KP_herb_site3_2017$Date.Time, format = "%d/%m/%Y")
 
 # converting 00 to 20 in years
 KP_2017_herb_site1_1$Date.Time <- two_dig_year_cnvt(KP_2017_herb_site1_1$Date.Time) 
 KP_2017_herb_site1_2$Date.Time <- two_dig_year_cnvt(KP_2017_herb_site1_2$Date.Time) 
 KP_2017_herb_site2$Date.Time <- two_dig_year_cnvt(KP_2017_herb_site2$Date.Time) 
 KP_2017_herb_site3$Date.Time <- two_dig_year_cnvt(KP_2017_herb_site3$Date.Time) 
+KP_herb_site1_2017$Date.Time <- two_dig_year_cnvt(KP_herb_site1_2017$Date.Time) 
+KP_herb_site2_2017$Date.Time <- two_dig_year_cnvt(KP_herb_site2_2017$Date.Time) 
+KP_herb_site3_2017$Date.Time <- two_dig_year_cnvt(KP_herb_site3_2017$Date.Time) 
 
 range(KP_2017_herb_site1_1$Date.Time) # 2 august 2017- 5 august2017
 range(KP_2017_herb_site1_2$Date.Time) # 2 august 2017- 5 august 2017
 range(KP_2017_herb_site2$Date.Time) # 2 august 2017- 5 august 2017
 range(KP_2017_herb_site3$Date.Time) # 2 august 2017- 5 august 2017
+range(KP_herb_site1_2017$Date.Time) # 3 august 2017- 4 august 2017
+range(KP_herb_site2_2017$Date.Time) # 3 august 2017- 4 august 2017
+range(KP_herb_site3_2017$Date.Time) # 3 august 2017- 4 august 2017
+
+# Exploring 2018 data
+str(KP_2018_2)
+
+KP_2018_2 <- KP_2018_2 %>%
+  rename("Date.Time" = "Date/Time")
+
+KP_2018_3 <- KP_2018_3 %>%
+  rename("Date.Time" = "Date/Time")
+
+KP_2018_4 <- KP_2018_4 %>%
+  rename("Date.Time" = "Date/Time")
+
+KP_2018_5 <- KP_2018_5 %>%
+  rename("Date.Time" = "Date/Time")
+
+KP_2018_6 <- KP_2018_6 %>%
+  rename("Date.Time" = "Date/Time")
+
+KP_2018_7 <- KP_2018_7 %>%
+  rename("Date.Time" = "Date/Time")
+
+KP_2018_8 <- KP_2018_8 %>%
+  rename("Date.Time" = "Date/Time")
+
+KP_2018_1$Date.Time <- as.POSIXct(KP_2018_1$Date.Time, format = "%d/%m/%Y")
+KP_2018_2$Date.Time  <- as.POSIXct(KP_2018_2$Date.Time, format = "%d/%m/%Y")
+KP_2018_3$Date.Time  <- as.POSIXct(KP_2018_$Date.Time, format = "%d/%m/%Y")
+KP_2018_4$Date.Time  <- as.POSIXct(KP_2018_4$Date.Time, format = "%d/%m/%Y")
+KP_2018_5$Date.Time  <- as.POSIXct(KP_2018_5$Date.Time, format = "%d/%m/%Y")
+KP_2018_6$Date.Time  <- as.POSIXct(KP_2018_6$Date.Time, format = "%d/%m/%Y")
+KP_2018_7$Date.Time  <- as.POSIXct(KP_2018_7$Date.Time, format = "%d/%m/%Y")
+KP_2018_8$Date.Time  <- as.POSIXct(KP_2018_8$Date.Time, format = "%d/%m/%Y")
+
+KP_2018_1$Date.Time <- two_dig_year_cnvt(KP_2018_1$Date.Time) 
+KP_2018_2$Date.Time  <- two_dig_year_cnvt(KP_2018_2$Date.Time ) 
+KP_2018_3$Date.Time  <- two_dig_year_cnvt(KP_2018_3$Date.Time ) 
+KP_2018_4$Date.Time  <- two_dig_year_cnvt(KP_2018_4$Date.Time ) 
+KP_2018_5$Date.Time  <- two_dig_year_cnvt(KP_2018_5$Date.Time ) 
+KP_2018_6$Date.Time  <- two_dig_year_cnvt(KP_2018_6$Date.Time ) 
+KP_2018_7$Date.Time  <- two_dig_year_cnvt(KP_2018_7$Date.Time ) 
+KP_2018_8$Date.Time  <- two_dig_year_cnvt(KP_2018_8$Date.Time ) 
+
+range(KP_2018_1$Date.Time) # 5 july 2018- 7 july 2018
+range(KP_2018_2$Date.Time) # 5 july 2018- 7 july 2018
+range(KP_2018_3$Date.Time) # 5 july 2018- 7 july 2018
+range(KP_2018_4$Date.Time) # 5 july 2018- 7 july 2018
+range(KP_2018_5$Date.Time) # 5 july 2018- 7 july 2018
+range(KP_2018_6$Date.Time) # 5 july 2018- 7 july 2018
+range(KP_2018_7$Date.Time) # 5 july 2018- 7 july 2018
+range(KP_2018_8$Date.Time) # 5 july 2018- 7 july 2018
+
+range(KP_FullTOMST_2022$Datetime_UTC) # 1 june 2022 - 15 aug 2022
