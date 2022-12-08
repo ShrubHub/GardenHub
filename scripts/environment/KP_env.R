@@ -15,6 +15,9 @@ KP_2016_ibuttons <- read_excel("data/environment/Kluane/KP_2016_ibuttons.xlsx")
 KP_tea_surface_1 <- read.csv("data/environment/Kluane/KP_tea_surface_1.csv", skip = 14)
 KP_tea_surface_2 <- read.csv("data/environment/Kluane/KP_tea_surface_2.csv", skip = 14)
 
+# soil temp 2015-2017 (1 july 2015- 1 January 2017)
+Formatted_temps <- read_csv("data/hobo/Formatted_temps.csv")
+
 # soil temp 2016-2017
 KP_tea_soil_1 <- read.csv("data/environment/Kluane/KP_tea_soil_1.csv",  skip = 14)
 KP_tea_soil_2 <- read.csv("data/environment/Kluane/KP_tea_soil_2.csv",  skip = 14)
@@ -171,3 +174,14 @@ range(KP_2018_7$Date.Time) # 5 july 2018- 7 july 2018
 range(KP_2018_8$Date.Time) # 5 july 2018- 7 july 2018
 
 range(KP_FullTOMST_2022$Datetime_UTC) # 1 june 2022 - 15 aug 2022
+
+# Merging datasets
+KP_ibuttons_all_surface_temps <- rbind(KP_tea_surface_1, KP_tea_surface_2, 
+                              KP_2017_herb_site1_1, KP_2017_herb_site1_2, 
+                              KP_2017_herb_site2, KP_2017_herb_site3,
+                              KP_herb_site1_2017, KP_herb_site2_2017,
+                              KP_herb_site3_2017,
+                              KP_2018_1, KP_2018_2, KP_2018_3, KP_2018_4,
+                              KP_2018_5, KP_2018_6, KP_2018_7, KP_2018_8)
+
+# make a year column, then group by year and calculate mean of the value
