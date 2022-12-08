@@ -237,6 +237,12 @@ levels(mother_cg_long_diam$treatment) <- list(Mother  = "Cutting_diameter", Chil
          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black"))
 
+
+# same as above but with only 2022 and mother data 
+mother_long_height_22 <- mother_cg_long_heights %>% 
+  filter(treatment == "Mother" | SampleYear == "2022")
+# 
+
 # Widths
 (plot_mother_compare_widths <- ggplot(mother_cg_long_widths) +
    geom_point(aes(x = treatment, y= Width, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.5) +
