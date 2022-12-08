@@ -72,13 +72,31 @@ mother_data_merge$Species <- as.factor(mother_data_merge$Species)
 # Means not all computing for some reason???
 mother_cg_means <- mother_data_merge %>%
   group_by(Species, Site) %>%
-  summarise(n = n(),  # Calculating sample size n
-            mean_mother_height = mean(Mother_Canopy_Height_cm),
-            mean_mother_width = mean(Mother_mean_width),
-            mean_mother_elong = mean(Mother_mean_stem_elong),
-            mean_mother_diam = mean(Cutting_diameter))
-            #SD = sd(Mother_Canopy_Height_cm))%>%  # Calculating standard deviation
-  #mutate(SE = SD / sqrt(n))  # Calculating standard  error
+  dplyr::summarise(n = n(),  # Calculating sample size n
+            mean_mother_height = mean(Mother_Canopy_Height_cm, na.rm = TRUE),
+            mean_mother_width = mean(Mother_mean_width, na.rm = TRUE),
+            mean_mother_elong = mean(Mother_mean_stem_elong, na.rm = TRUE),
+            mean_mother_diam = mean(Cutting_diameter, na.rm = TRUE), 
+            sd_mother_height = sd(Mother_Canopy_Height_cm, na.rm = TRUE),
+            sd_mother_width = sd(Mother_mean_width, na.rm = TRUE),
+            sd_mother_elong = sd(Mother_mean_stem_elong, na.rm = TRUE),
+            sd_mother_diam = sd(Cutting_diameter, na.rm = TRUE),
+            se_moether_height = sd(Mother_Canopy_Height_cm, na.rm = TRUE)/sqrt(n), 
+            se_mean_mother_width = sd(Mother_mean_width, na.rm = TRUE)/sqrt(n),
+            se_mean_mother_elong = sd(Mother_mean_stem_elong, na.rm = TRUE)/sqrt(n),
+            se_mean_mother_diam = sd(Cutting_diameter, na.rm = TRUE)/sqrt(n))
+# madi checking means a slightly way to compare values  
+mother_cg_means_MA <- mother_data_merge %>%
+  group_by(Species, Site) %>%
+  summarise_at(c("Mother_Canopy_Height_cm", "Mother_mean_width", 
+                 "Mother_mean_stem_elong", "Cutting_diameter"
+                 ), mean, na.rm = TRUE) # woohoo they match! 
+# and sd 
+mother_cg_sd_MA <-  mother_data_merge %>% 
+  group_by(Species, Site) %>%
+  summarise_at(c("Mother_Canopy_Height_cm", "Mother_mean_width", 
+                 "Mother_mean_stem_elong", "Cutting_diameter"),
+               sd, na.rm = TRUE) 
 
 # checking format of CG data
 str(cg_2022)
