@@ -1,4 +1,4 @@
-"","Bed","SampleID","Year_planted","Species","Site","Sample_Date","Month","Day","Year","Canopy_Height_cm","Width_cm","Width_2_cm","Stem_diameter","Stem_Elongation_1_mm","Stem_Elongation_2_mm","Stem_Elongation_3_mm","Length_1_mm","Length_2_mm","Length_3_mm","SampleID_standard","Sample_age","mean_stem_elong","mean_leaf_length","mean_width","treatment"
+"","Bed","SampleID","Year_planted","Species","Site","Sample_Date","Month","Day","Year","Canopy_Height_cm","Width_cm","Width_2_cm","Stem_diameter","Stem_Elongation_1_mm","Stem_Elongation_2_mm","Stem_Elongation_3_mm","Length_1_mm","Length_2_mm","Length_3_mm","SampleID_standard","Sample_age","mean_stem_elong","mean_leaf_length","mean_width","population"
 "1","IMS","HESp1",2013,"Salix pulchra","Qikiqtaruk","2015-08-15",8,15,2015,NA,NA,NA,NA,14,15,15,NA,NA,NA,"HESP1",2,14.6666666666667,NA,NA,"Northern"
 "2","CF","HESp12",2013,"Salix pulchra","Qikiqtaruk","2015-08-15",8,15,2015,NA,NA,NA,NA,13,13,11,NA,NA,NA,"HESP12",2,12.3333333333333,NA,NA,"Northern"
 "3","MG","HESp17",2013,"Salix pulchra","Qikiqtaruk","2015-08-15",8,15,2015,NA,NA,NA,NA,10,10,9,NA,NA,NA,"HESP17",2,9.66666666666667,NA,NA,"Northern"

@@ -296,7 +296,7 @@ str(all_merged_data_2022)
 
 # make treatment column that specifies whether shrubs are north or south 
 all_cg_data_2022 <-  all_merged_data_2022 %>% 
-  mutate(treatment = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
+  mutate(population = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
                               TRUE ~ "Southern")) %>% 
   select(-X) 
 # save again 
