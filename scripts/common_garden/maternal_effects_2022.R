@@ -148,7 +148,15 @@ group_by(Species, Site) %>%
  pivot_longer(cols = starts_with("mean"), names_to = "trait", names_prefix = "mean_", values_to = "mean_value") %>%
  pivot_longer(cols = starts_with("sd"), names_to = "SD_trait", names_prefix = "sd_", values_to = "sd_value") %>% 
   pivot_longer(cols = starts_with("se"), names_to = "SE_trait", names_prefix = "se_", values_to = "se_value")
-   
+# same as above but for means for mothers   
+mother_means_long <- mother_cg_means %>%
+  group_by(Species, Site) %>%              
+  pivot_longer(cols = starts_with("mean"), names_to = "trait", names_prefix = "mean_", values_to = "mean_value") %>%
+  pivot_longer(cols = starts_with("sd"), names_to = "SD_trait", names_prefix = "sd_", values_to = "sd_value") %>% 
+  pivot_longer(cols = starts_with("se"), names_to = "SE_trait", names_prefix = "se_", values_to = "se_value")
+# merge together 
+means_long_all <- rbind(mother_means_long, cg_means_2022_long) # not perfect, will fiddle with 
+
 # checking format of CG data
 str(cg_2022)
 cg_2022$Site <- as.factor(cg_2022$Site)
@@ -157,7 +165,7 @@ cg_2022$Species <- as.factor(cg_2022$Species)
 # merging means datasets and making into long format
 means_all <- rbind(cg_means_2022, mother_cg_means) 
 
-means_long <- means_all %>%
+means_long <- means_all 
   
 # merging datasets
 mother_cg <- full_join(mother_data_merge, cg_2022, 
