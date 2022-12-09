@@ -240,10 +240,19 @@ levels(mother_cg_long_diam$treatment) <- list(Mother  = "Cutting_diameter", Chil
 # N.B. to make figures like Gergana, create MEAN (one value) Mother height and MEAN child height (one value)
 # and then plot one line per shrub 
 
+# filter out means only for height 
+# but note: these means are not what the figure lines are  
+height_means <- means_long_all %>% 
+  filter(trait %in% c("mother_height", "Canopy_Height_cm")) %>% 
+  mutate(treatment = case_when(trait == "mother_height" ~ "Mother", 
+                               trait == "Canopy_Height_cm" ~ "Child"))
+  
+
+
 # Heights
 (plot_mother_compare_heights <- ggplot() +
    geom_point(aes(x = treatment, y= Height_cm, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.1, data = mother_cg_long_heights) +
-   #geom_point(aes(x = treatment, y= Height_cm, colour = Site, group = SampleID_standard), size = 3, alpha = 0.7, data = mother_cg_sd_MA) +
+   geom_point(aes(x = treatment, y= mean_value, colour = Site), size = 3, alpha = 0.7, data = height_means) +
    geom_smooth(aes(x = treatment, y= Height_cm, colour = Site, fill = Site, group = SampleID_standard), method = "lm", se = F, alpha = 0.1, data = mother_cg_long_heights)) +
   #facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
