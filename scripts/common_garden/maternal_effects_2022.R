@@ -140,7 +140,7 @@ cg_means_2022 <- all_cg_2022 %>%
                    se_Stem_diameter = sd(Stem_diameter, na.rm = TRUE)/sqrt(n))
 
 cg_means_2022$Species <- as.factor(cg_means_2022$Species)
-cg_means_2022$Site <- as.factor(cg_means_2022$Site)
+cg_means_2022$Site <- as.factor(cg_means_2022$Site) 
 
 # Erica tries to put data in long format  -----
 cg_means_2022_long <- cg_means_2022 %>%
