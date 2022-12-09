@@ -17,13 +17,13 @@ library(sjPlot)
 mother_data <- read_csv("data/source_pops/mother_data.csv")
 
 # All 2022 data from the common garden
-all_cg_2022 <- read_csv("data/common_garden_data_2022/all_merged_data_2022.csv") 
+all_cg <- read_csv("data/common_garden_data_2022/all_merged_data_2022.csv") 
 
 
 # 3. DATA WRANGLING ---- 
 
 # Match mother heights with heights in common garden
-cg_2022 <- all_cg_2022 %>%
+cg_2022 <- all_cg %>%
   select(-...1)
 
 # Making variables in right format
@@ -98,8 +98,8 @@ mother_cg_sd_MA <-  mother_data_merge %>%
 
 # same as above for common garden data 
 # note, unlike for maternal data, there are multiple years of data here
-str(all_cg_2022)
-cg_means <- all_cg_2022 %>%
+str(all_cg)
+cg_means <- all_cg %>%
   group_by(Species, Site) %>%
   dplyr::summarise(n = n(),  # Calculating sample size n
                    mean_Canopy_Height_cm = mean(Canopy_Height_cm, na.rm = TRUE),
@@ -119,7 +119,7 @@ cg_means <- all_cg_2022 %>%
                    se_Stem_diameter = sd(Stem_diameter, na.rm = TRUE)/sqrt(n))
 
 # make cg means using only 2022 data 
-cg_means_2022 <- all_cg_2022 %>%
+cg_means_2022 <- all_cg %>%
   filter(Year == "2022") %>% 
   group_by(Species, Site) %>%
   dplyr::summarise(n = n(),  # Calculating sample size n
@@ -158,16 +158,19 @@ mother_means_long <- mother_cg_means %>%
 means_long_all <- rbind(mother_means_long, cg_means_2022_long) # not perfect, will fiddle with 
 
 # checking format of CG data
-str(cg_2022)
-cg_2022$Site <- as.factor(cg_2022$Site)
-cg_2022$Species <- as.factor(cg_2022$Species)
+str(all_cg)
+all_cg$Site <- as.factor(all_cg$Site)
+all_cg$Species <- as.factor(all_cg$Species)
 
 # merging means datasets and making into long format
 means_all <- rbind(cg_means_2022, mother_cg_means) 
 
-means_long <- means_all 
-  
 # merging datasets
+
+# but first keep only 2022 data from common garden 
+cg_2022 <- all_cg %>% 
+  filter(Year == "2022")
+
 mother_cg <- full_join(mother_data_merge, cg_2022, 
                        by = c("SampleID_standard" = "SampleID_standard", 
                               "Year_planted" = "Year_planted", 
@@ -246,8 +249,6 @@ height_means <- means_long_all %>%
   filter(trait %in% c("mother_height", "Canopy_Height_cm")) %>% 
   mutate(treatment = case_when(trait == "mother_height" ~ "Mother", 
                                trait == "Canopy_Height_cm" ~ "Child"))
-  
-
 
 # Heights
 (plot_mother_compare_heights <- ggplot() +
@@ -271,12 +272,6 @@ height_means <- means_long_all %>%
          axis.title = element_text(size = 18),
          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black"))
-
-
-# same as above but with only 2022 and mother data 
-mother_long_height_22 <- mother_cg_long_heights %>% 
-  filter(treatment == "Mother" | SampleYear == "2022")
-# 
 
 # Widths
 (plot_mother_compare_widths <- ggplot(mother_cg_long_widths) +
