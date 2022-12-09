@@ -2,12 +2,23 @@
 # Script by Erica Zaja, created on 08/12/2022
 # Last updated: 08/12/2022
 
+# 90% snow free plateau from phenocams 2022
+# June 18, 15, 21, 17, 18, 19, 26, 21 --> mean = June 18th
+# setting start of summer on KP: June 18th
+# End of summer: August 31st.
+
+# Workflow
+# 1. Explore elevation, filter anything below treeline (what is the elevation of treeline on KP?)
+# 2. Explore date ranges, filter dates to: june 18-aug 31
+# 3. Merge datasets
+# 4. Make means for each year 
+
 # LIBRARIES ----
 library(MazamaCoreUtils)
 
 # LOADING DATA ----
 
-# 2016-2017
+# 2016-2017 ibuttons: record air temperature at ground level 
 PC_2016_ibuttons <- read_excel("data/environment/Kluane/PC_2016_ibuttons.xlsx")
 KP_2016_ibuttons <- read_excel("data/environment/Kluane/KP_2016_ibuttons.xlsx")
 
@@ -32,6 +43,7 @@ KP_herb_site2_2017 <- read.csv("data/environment/Kluane/KP_herb_site2_2017.csv",
 KP_herb_site1_2017 <- read.csv("data/environment/Kluane/KP_herb_site1_2017.csv", skip = 14)
 
 # 2018 (different elevations)
+# exclude KP_2018_1 and KP_2018_2 because they are in the boreal forest (1049m)
 KP_2018_1 <- read.csv("data/environment/Kluane/Canada.Kluane.1049m.2018.08.05 11h20_a.csv", skip = 14)
 KP_2018_2 <- read_csv("data/environment/Kluane/Canada.Kluane.1049m.2018.08.05 11h20_b.csv", skip = 14)
 KP_2018_3 <- read_csv("data/environment/Kluane/Canada.Kluane.1305m.2018.08.05 15h20_a.csv", skip = 14)
@@ -45,17 +57,6 @@ KP_2018_8 <- read_csv("data/environment/Kluane/Canada.Kluane.1816m.2018.08.05 20
 KP_FullTOMST_2022 <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_FullTOMST_2022.csv")
 
 # DATA WRANGLING -------
-
-# 90% snow free plateau from phenocams 2022
-# June 18, 15, 21, 17, 18, 19, 26, 21 --> mean = June 18th
-# setting start of summer on KP: June 18th
-# End of summer: August 31st.
-
-# Workflow
-# 1. Explore date ranges 
-# 2. filter dates: june 18-aug 31
-# 3. merge datasets
-# 4. make means
 
 # Exploring 2016 datasets
 str(KP_2016_ibuttons)

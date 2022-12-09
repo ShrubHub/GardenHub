@@ -82,6 +82,7 @@ mother_cg_means <- mother_data_merge %>%
             se_mean_mother_width = sd(Mother_mean_width, na.rm = TRUE)/sqrt(n),
             se_mean_mother_elong = sd(Mother_mean_stem_elong, na.rm = TRUE)/sqrt(n),
             se_mean_mother_diam = sd(Cutting_diameter, na.rm = TRUE)/sqrt(n))
+
 # madi checking means a slightly way to compare values  
 mother_cg_means_MA <- mother_data_merge %>%
   group_by(Species, Site) %>%
@@ -116,6 +117,7 @@ cg_means <- all_cg_2022 %>%
                    se_mean_mother_elong = sd(mean_stem_elong, na.rm = TRUE)/sqrt(n),
                    se_mean_leaf_length = sd(mean_leaf_length, na.rm = TRUE)/sqrt(n),
                    se_Stem_diameter = sd(Stem_diameter, na.rm = TRUE)/sqrt(n))
+
 # make cg means using only 2022 data 
 cg_means_2022 <- all_cg_2022 %>%
   filter(Year == "2022") %>% 
@@ -137,11 +139,26 @@ cg_means_2022 <- all_cg_2022 %>%
                    se_mean_leaf_length = sd(mean_leaf_length, na.rm = TRUE)/sqrt(n),
                    se_Stem_diameter = sd(Stem_diameter, na.rm = TRUE)/sqrt(n))
 
+cg_means_2022$Species <- as.factor(cg_means_2022$Species)
+cg_means_2022$Site <- as.factor(cg_means_2022$Site)
+
+# Erica tries to put data in long format  -----
+cg_means_2022_long <- cg_means_2022 %>%
+group_by(Species, Site) %>%              
+ pivot_longer(cols = starts_with("mean"), names_to = "trait", names_prefix = "mean_", values_to = "mean_value") %>%
+ pivot_longer(cols = starts_with("sd"), names_to = "SD_trait", names_prefix = "sd_", values_to = "sd_value") %>% 
+  pivot_longer(cols = starts_with("se"), names_to = "SE_trait", names_prefix = "se_", values_to = "se_value")
+   
 # checking format of CG data
 str(cg_2022)
 cg_2022$Site <- as.factor(cg_2022$Site)
 cg_2022$Species <- as.factor(cg_2022$Species)
 
+# merging means datasets and making into long format
+means_all <- rbind(cg_means_2022, mother_cg_means) 
+
+means_long <- means_all %>%
+  
 # merging datasets
 mother_cg <- full_join(mother_data_merge, cg_2022, 
                        by = c("SampleID_standard" = "SampleID_standard", 
@@ -216,9 +233,10 @@ levels(mother_cg_long_diam$treatment) <- list(Mother  = "Cutting_diameter", Chil
 # and then plot one line per shrub 
 
 # Heights
-(plot_mother_compare_heights <- ggplot(mother_cg_long_heights) +
-   geom_point(aes(x = treatment, y= Height_cm, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.1) +
-   geom_smooth(aes(x = treatment, y= Height_cm, colour = Site, fill = Site, group = SampleID_standard), method = "lm", se = F, alpha = 0.2)) +
+(plot_mother_compare_heights <- ggplot() +
+   geom_point(aes(x = treatment, y= Height_cm, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.1, data = mother_cg_long_heights) +
+   #geom_point(aes(x = treatment, y= Height_cm, colour = Site, group = SampleID_standard), size = 3, alpha = 0.7, data = mother_cg_sd_MA) +
+   geom_smooth(aes(x = treatment, y= Height_cm, colour = Site, fill = Site, group = SampleID_standard), method = "lm", se = F, alpha = 0.1, data = mother_cg_long_heights)) +
   #facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Canopy Height (cm)") +
