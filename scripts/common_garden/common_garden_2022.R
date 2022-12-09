@@ -275,8 +275,11 @@ all_merged_data_2022$Width_2_cm <- as.numeric(all_merged_data_2022$Width_2_cm)
 all_merged_data_2022$Canopy_Height_cm <- as.numeric(all_merged_data_2022$Canopy_Height_cm)
 
 str(all_merged_data_2022)
+
 # Saving all merged and formatted 2013-2022 data as csv file
 write.csv(all_merged_data_2022, 'data/common_garden_data_2022/all_merged_data_2022.csv')
+# load data 
+all_merged_data_2022 <- read.csv("data/common_garden_data_2022/all_merged_data_2022.csv")
 
 # Making variables into the right format
 all_merged_data_2022$Bed <- as.factor(as.character(all_merged_data_2022$Bed))
@@ -290,6 +293,14 @@ all_merged_data_2022$SampleDate <- as.POSIXct(all_merged_data_2022$SampleDate, f
 
 # Checking all variables are right format
 str(all_merged_data_2022)
+
+# make treatment column that specifies whether shrubs are north or south 
+all_cg_data_2022 <-  all_merged_data_2022 %>% 
+  mutate(treatment = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
+                              TRUE ~ "Southern")) %>% 
+  select(-X) 
+# save again 
+write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
 
 # 3.3. Field data from 2017 ----
 # Keeping only relevant columns
