@@ -240,8 +240,6 @@ mother_cg_long_diam$SampleID_standard <- as.factor(mother_cg_long_diam$SampleID_
 levels(mother_cg_long_diam$treatment) <- list(Mother  = "Cutting_diameter", Child = "Stem_diameter")
 
 # 4. DATA VISUALISATION ----
-# N.B. to make figures like Gergana, create MEAN (one value) Mother height and MEAN child height (one value)
-# and then plot one line per shrub 
 
 # filter out means only for height 
 # but note: these means are not what the figure lines are  
@@ -252,9 +250,9 @@ height_means <- means_long_all %>%
 
 # Heights
 (plot_mother_compare_heights <- ggplot() +
-   geom_point(aes(x = treatment, y= Height_cm, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.1, data = mother_cg_long_heights) +
-   geom_point(aes(x = treatment, y= mean_value, colour = Site), size = 3, alpha = 0.7, data = height_means) +
-   geom_smooth(aes(x = treatment, y= Height_cm, colour = Site, fill = Site, group = SampleID_standard), method = "lm", se = F, alpha = 0.1, data = mother_cg_long_heights)) +
+   geom_point(aes(x = treatment, y= Height_cm, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.1, data = mother_cg_long_heights)) +
+  geom_smooth(aes(x = treatment, y= Height_cm, colour = Site, fill = Site, group = SampleID_standard, alpha = 0.01), method = "lm", se = F, alpha = 0.01, data = mother_cg_long_heights) +
+  geom_point(aes(x = treatment, y= mean_value, colour = Site), size = 3, alpha = 0.7, data = height_means, colour = "red") +
   #facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Canopy Height (cm)") +

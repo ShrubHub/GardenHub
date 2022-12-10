@@ -9,8 +9,12 @@ library(esquisse)
 library(lubridate)
 library(gridExtra)
 
-### 2. READING DATA ----
+# Loading dataset
 
+tomst_kp <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_FullTOMST_2022.csv") 
+
+### 2. READING DATA ----
+# NB no need to run this anymore, data already wrangled
 # Using function created by Elise Gallois to read the TOMST raw data 
 read_tms4 <- function(file) {
   
@@ -106,6 +110,8 @@ KP_mean_daily_temp <- kp_data  %>%
 range(KP_mean_daily_temp$mean_temp)
 # -0.3047619 11.9635417
 # warmest: 4th July, coldest: 1st June
+mean(KP_mean_daily_temp$mean_temp)
+# 5.694995 
 
 # Save as csv
 write.csv(KP_mean_daily_temp, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_temp.csv", row.names = FALSE)
@@ -123,7 +129,21 @@ write.csv(KP_mean_daily_temp, file = "data/tomst/Kluane_Plateau_TOMST_15August20
           axis.title = element_text(size = 14),
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
-  
+
+# histogram
+(kp_mean_daily_temp_hist <- ggplot(KP_mean_daily_temp, aes(x = mean_temp)) +
+    geom_histogram(fill = "#CC9145", colour = "black", bins = 10)+ 
+    ylab("Frequency") +
+    xlab("Daily mean surface temperature (°C) (2022)") +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
 #### b. Above-surface temperature (T3: Top sensor) ----
 
 # Daily mean top sensor temperature (10cm above surface)
@@ -139,11 +159,14 @@ KP_mean_daily_top_sensor <- kp_data  %>%
 range(KP_mean_daily_top_sensor$mean_temp)
 # -0.2578869 16.6310764
 # warmest: 4th July, coldest: 1st June
+mean(KP_mean_daily_top_sensor$mean_temp)
+# 7.212346
 
 # Save as csv
 write.csv(KP_mean_daily_top_sensor, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_top_sensor.csv", row.names = FALSE)
   
 # Plot daily mean top sensor temp over summer 2022
+# time series
 (kp_mean_daily_top_sensor <- ggplot(KP_mean_daily_top_sensor, aes(x = Date, y = mean_temp)) +
     geom_line()+ 
     ylab("Daily mean above-surface temperature (°C)") +
@@ -156,7 +179,21 @@ write.csv(KP_mean_daily_top_sensor, file = "data/tomst/Kluane_Plateau_TOMST_15Au
           axis.title = element_text(size = 14),
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
-  
+
+# histogram
+(kp_mean_daily_top_sensor_hist <- ggplot(KP_mean_daily_top_sensor, aes(x = mean_temp)) +
+    geom_histogram(fill = "#CC9145", colour = "black", bins = 10)+ 
+    ylab("Frequency") +
+    xlab("Daily mean above-surface temperature (°C) (2022)") +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
 #### c. Soil temperature (T1: Soil sensor) ----
 
 # Daily mean soil temperature 
@@ -172,15 +209,32 @@ KP_mean_daily_soil_temp <- kp_data  %>%
 range(KP_mean_daily_soil_temp$mean_temp)
 # -0.4803571  5.4093424
 # warmest: 13th August, coldest: 1st June 
+mean(KP_mean_daily_soil_temp$mean_temp)
+# 2.712712
 
 # Save as csv
 write.csv(KP_mean_daily_soil_temp, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_soil_temp.csv", row.names = FALSE)
 
 # Plot daily mean soil temp over summer 2022
+# timeseries
 (kp_mean_daily_soil_temp <- ggplot(KP_mean_daily_soil_temp, aes(x = Date, y = mean_temp)) +
     geom_line()+ 
     ylab("Daily mean soil temperature (°C)") +
     xlab("Date (2022)") +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
+# histogram
+(kp_mean_daily_soil_temp_hist <- ggplot(KP_mean_daily_soil_temp, aes(x = mean_temp)) +
+    geom_histogram(fill = "#CC9145", colour = "black", bins = 10)+ 
+    ylab("Frequency") +
+    xlab("Daily mean soil temperature (°C) (2022)") +
     theme_bw() +
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(),
@@ -205,13 +259,16 @@ KP_mean_daily_soil_moist <- kp_data  %>%
 range(KP_mean_daily_soil_moist$mean_moist)
 # 1762.584 2533.140
 # driest:8th June, wettest: 2nd August
+mean(KP_mean_daily_soil_moist$mean_moist)
+# 1983.971 ? no clue about moisture unit
 
 # Save as csv
 write.csv(KP_mean_daily_soil_moist, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_soil_moist.csv", row.names = FALSE)
 
 
 # Plot daily mean soil moisture over summer 2022
-(cg_mean_daily_soil_moist <- ggplot(CG_mean_daily_soil_moist, aes(x = Date, y = mean_moist)) +
+# time series
+(kp_mean_daily_soil_moist <- ggplot(KP_mean_daily_soil_moist, aes(x = Date, y = mean_moist)) +
     geom_line()+ 
     ylab("Daily mean soil moisture") +
     xlab("Date (2022)") +
@@ -224,6 +281,25 @@ write.csv(KP_mean_daily_soil_moist, file = "data/tomst/Kluane_Plateau_TOMST_15Au
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
+# histogram
+(kp_mean_daily_soil_moist_hist <- ggplot(KP_mean_daily_soil_moist, aes(x = mean_moist)) +
+    geom_histogram(fill = "#CC9145", colour = "black", bins = 10)+ 
+    ylab("Frequency") +
+    xlab("Daily mean soil moisture (2022)") +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
 # Panel of env variables
-facet_env_CG <- grid.arrange(cg_mean_daily_soil_moist, cg_mean_daily_soil_temp, 
-                             cg_mean_daily_temp, cg_mean_daily_top_sensor, ncol=2)
+# timeseries panel
+facet_env_kp <- grid.arrange(kp_mean_daily_soil_moist, kp_mean_daily_soil_temp, 
+                             kp_mean_daily_temp, kp_mean_daily_top_sensor, ncol=2)
+
+# hist panel
+facet_env_kp_hist <- grid.arrange(kp_mean_daily_soil_moist_hist, kp_mean_daily_soil_temp_hist, 
+                             kp_mean_daily_temp_hist, kp_mean_daily_top_sensor_hist, ncol=2)
