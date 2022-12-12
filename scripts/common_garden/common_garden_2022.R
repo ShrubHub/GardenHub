@@ -592,7 +592,36 @@ sum(is.na(unique_source_mother$Species)) # success!
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(unique_source_mother, 'data/source_pops/unique_source_mother.csv')
 
-# 3.7. Sample size ----
+# 3.7 Merge source / mother / common garden data ----
+# load files 
+unique_source_mother <- read.csv('data/source_pops/unique_source_mother.csv') # all mother and source (growth, not traits -- that's a bigger problem to do after)
+all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
+
+str(unique_source_mother)
+str(all_cg_data_2022) # I'll convert variables classes after merging 
+# change Site column to be Common_garden, instead of source pop location 
+all_cg_data_2022_merge <- all_cg_data_2022 %>% 
+  select(-SampleID, -X) %>% 
+  dplyr::mutate(Site = "Common_garden") 
+
+unique_source_mother_merge <- unique_source_mother %>% 
+  select(-c(SampleID, Match, X, SampleSite, Year_measured)) %>% 
+  mutate(population = "source") # add population column to indicate source
+
+
+test_merge <- full_join(all_cg_data_2022_merge, unique_source_mother_merge, 
+                        by = c("Species", "Site", 
+                               "Sample_Date" = "SampleDate", 
+                               "Year" = "SampleYear",  
+                               "SampleID_standard", "population", "Year_planted", 
+                               "Width_cm", "Canopy_Height_cm", "Width_2_cm", 
+                               "Stem_diameter", "Stem_Elongation_1_mm", "Stem_Elongation_2_mm", 
+                               "Stem_Elongation_3_mm", "Length_1_mm", "Length_2_mm", 
+                               "Length_3_mm", "mean_stem_elong", "mean_leaf_length", "mean_width"
+                               ))
+# seems to have worked? 
+
+# 3.8. Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
 
 # How many shrubs of each type (Arctic vs Alpine?)
