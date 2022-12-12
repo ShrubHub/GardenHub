@@ -592,7 +592,7 @@ sum(is.na(unique_source_mother$Species)) # success!
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(unique_source_mother, 'data/source_pops/unique_source_mother.csv')
 
-# 3.7 Merge source / mother / common garden data ----
+# 3.7. A Merge source / mother / common garden data ----
 # load files 
 unique_source_mother <- read.csv('data/source_pops/unique_source_mother.csv') # all mother and source (growth, not traits -- that's a bigger problem to do after)
 all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
@@ -620,8 +620,56 @@ test_merge <- full_join(all_cg_data_2022_merge, unique_source_mother_merge,
                                "Length_3_mm", "mean_stem_elong", "mean_leaf_length", "mean_width"
                                ))
 # seems to have worked? 
+# if so, save away!
 
-# 3.8. Sample size ----
+# 3.7. B Merge traits from cg with source and mother data ----
+# load data 
+# SLA, LDMC, LA: 
+all_source_area_traits <- read.csv("data/source_pops/all_source_area_traits.csv")
+cg_sla <- read.csv("data/common_garden_data_2022/cg_sla_2022.csv")
+
+str(all_source_area_traits)
+str(cg_sla)
+
+# make month, day, year columns for common garden data 
+cg_sla$year <-  format(as.Date(cg_sla$date_sampled, format="%Y-%m-%d"),"%Y")
+cg_sla$month <-  format(as.Date(cg_sla$date_sampled, format="%Y-%m-%d"),"%m")
+cg_sla$DOY <-  yday(as.POSIXct(cg_sla$date_sampled, format = "%Y-%m-%d"))
+# reclass variables after merge, but need to fix date ones first 
+cg_sla$DOY <- as.factor(cg_sla$DOY)
+all_source_area_traits$DOY <- as.factor(all_source_area_traits$DOY)
+cg_sla$year <- as.factor(cg_sla$year)
+all_source_area_traits$year <- as.factor(all_source_area_traits$year)
+
+# make population column for cg_sla aka northern = QHI, southern = Kluane 
+# make site column to be common_garden instead of Kluane v QHI
+cg_sla_merge <- cg_sla %>% 
+  mutate(population = case_when(Source == "Kluane" ~ "Southern", 
+                                Source == "Qikiqtaruk" ~ "Northern")) %>% 
+  mutate(LDMC_g_g = LDMC/1000) %>% # covert LDMC from mg g-1 to g g-1
+  mutate(Site = "Common_garden") %>% 
+  select(-c(X, Source, LDMC, number_leaves, dried_leaf_sample_remarks, 
+            rehydrated_leaf_sample_remarks)) 
+
+all_source_area_traits_merge <- all_source_area_traits %>% 
+  select(-c(X, number_leaves, ValueKindName, Data_coPIs, 
+            Data_contributor, Species_sex, Seed_mass_dry_mg, 
+            Plant_height_veg_m, Plant_height_repro_m)) %>% 
+  mutate(population = "source") # add population column to indicate source
+
+# I think we can merge now? Let's just see what happens 
+test_trait_merge <- full_join(cg_sla_merge, all_source_area_traits_merge, 
+                              by = c("population", "Species", "LDMC_g_g", 
+                                     "plant_tag_id", "sample_id", 
+                                     "SLA", "Site", "LA",
+                                     "leaf_mass_per_area_g_m2", "actual_leaf_dry_matter_content_perc", 
+                                     "total_rehydrated_leaf_mass_g", "DOY", "year",
+                                     "equivalent_water_thickness_cm", 
+                                     "leaf_fresh_mass_g", 
+                                     "date_sampled"))
+# also seems to have worked   
+
+# 3.9. Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
 
 # How many shrubs of each type (Arctic vs Alpine?)
