@@ -51,8 +51,8 @@ mother_data_merge <-  mother_data %>%
   dplyr::select(-SampleID, - Site) %>%
   dplyr::mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
                           SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))%>%
-  dplyr::select(-SampleSite)
-# also drop this because it's weird inconsistent and will cause merging issues 
+  dplyr::select(-SampleSite) %>% # also drop this because it's weird inconsistent and will cause merging issues 
+  mutate(Sample_age = replicate(879, 0))
 
 # reclassing variables
 str(mother_data_merge)
@@ -176,68 +176,69 @@ mother_cg <- full_join(mother_data_merge, cg_2022,
                               "Year_planted" = "Year_planted", 
                                "SampleDate" = "Sample_Date",
                                 "Species" = "Species",
-                                "Site" = "Site"))
+                                "Site" = "Site", 
+                              "Sample_age" = "Sample_age"))
 
 # HEIGHTS: making one single column for each trait and a "treatment" column for mother/child
 mother_cg_long_heights <- mother_cg %>%
   select(SampleDate,  Year_planted, Mother_Canopy_Height_cm, Canopy_Height_cm,
          Species, SampleYear, SampleID_standard, Site, Year, Sample_age) %>%
   pivot_longer(cols=c ("Mother_Canopy_Height_cm","Canopy_Height_cm"),
-               names_to = "treatment", values_to = "Height_cm")
+               names_to = "mother_or_child", values_to = "Height_cm")
 
 
 # reclassing variables
-mother_cg_long_heights$treatment <- as.factor(mother_cg_long_heights$treatment)
+mother_cg_long_heights$mother_or_child <- as.factor(mother_cg_long_heights$mother_or_child)
 mother_cg_long_heights$Sample_age <- as.factor(mother_cg_long_heights$Sample_age)
 mother_cg_long_heights$SampleID_standard <- as.factor(mother_cg_long_heights$SampleID_standard)
 
 # renaming 
-levels(mother_cg_long_heights$treatment) <- list(Mother  = "Mother_Canopy_Height_cm", Child = "Canopy_Height_cm")
+levels(mother_cg_long_heights$mother_or_child) <- list(Mother  = "Mother_Canopy_Height_cm", Child = "Canopy_Height_cm")
 
-# WIDTHS: making one single column for each trait and a "treatment" column for mother/child
+# WIDTHS: making one single column for each trait and a "mother_or_child" column for mother/child
 mother_cg_long_widths <- mother_cg %>%
   select(SampleDate,  Year_planted, Mother_mean_width, mean_width,
          Species, SampleYear, SampleID_standard, Site, Year, Sample_age) %>%
   pivot_longer(cols=c ("Mother_mean_width","mean_width"),
-               names_to = "treatment", values_to = "Width")
+               names_to = "mother_or_child", values_to = "Width")
 
 # reclassing variables
-mother_cg_long_widths$treatment <- as.factor(mother_cg_long_heights$treatment)
+mother_cg_long_widths$mother_or_child <- as.factor(mother_cg_long_heights$mother_or_child)
 mother_cg_long_widths$Sample_age <- as.factor(mother_cg_long_heights$Sample_age)
 mother_cg_long_widths$SampleID_standard <- as.factor(mother_cg_long_heights$SampleID_standard)
 
 # renaming 
-levels(mother_cg_long_widths$treatment) <- list(Mother  = "Mother_mean_width", Child = "mean_width")
+levels(mother_cg_long_widths$mother_or_child) <- list(Mother  = "Mother_mean_width", Child = "mean_width")
 
-# ELONG: making one single column for each trait and a "treatment" column for mother/child
+# ELONG: making one single column for each trait and a "mother_or_child" column for mother/child
 mother_cg_long_elong <- mother_cg %>%
   select(SampleDate,  Year_planted, Mother_mean_stem_elong, mean_stem_elong,
          Species, SampleYear, SampleID_standard, Site, Year, Sample_age) %>%
   pivot_longer(cols=c ("Mother_mean_stem_elong","mean_stem_elong"),
-               names_to = "treatment", values_to = "Stem_elongation")
+               names_to = "mother_or_child", values_to = "Stem_elongation")
 
 # reclassing variables
-mother_cg_long_elong$treatment <- as.factor(mother_cg_long_elong$treatment)
+mother_cg_long_elong$mother_or_child <- as.factor(mother_cg_long_elong$mother_or_child)
 mother_cg_long_elong$Sample_age <- as.factor(mother_cg_long_elong$Sample_age)
 mother_cg_long_elong$SampleID_standard <- as.factor(mother_cg_long_elong$SampleID_standard)
 
 # renaming 
-levels(mother_cg_long_elong$treatment) <- list(Mother  = "Mother_mean_stem_elong", Child = "mean_stem_elong")
+levels(mother_cg_long_elong$mother_or_child) <- list(Mother  = "Mother_mean_stem_elong", Child = "mean_stem_elong")
 
-# DIAM: making one single column for each trait and a "treatment" column for mother/child
+# DIAM: making one single column for each trait and a "mother_or_child" column for mother/child
 mother_cg_long_diam <- mother_cg %>%
   select(SampleDate,  Year_planted, Cutting_diameter, Stem_diameter,
          Species, SampleYear, SampleID_standard, Site, Year, Sample_age) %>%
   pivot_longer(cols=c ("Cutting_diameter","Stem_diameter"),
-               names_to = "treatment", values_to = "Stem_diam")
+               names_to = "mother_or_child", values_to = "Stem_diam")
 
 # reclassing variables
-mother_cg_long_diam$treatment <- as.factor(mother_cg_long_diam$treatment)
+mother_cg_long_diam$mother_or_child <- as.factor(mother_cg_long_diam$mother_or_child)
 mother_cg_long_diam$Sample_age <- as.factor(mother_cg_long_diam$Sample_age)
 mother_cg_long_diam$SampleID_standard <- as.factor(mother_cg_long_diam$SampleID_standard)
 
 # renaming 
-levels(mother_cg_long_diam$treatment) <- list(Mother  = "Cutting_diameter", Child = "Stem_diameter")
+levels(mother_cg_long_diam$mother_or_child) <- list(Mother  = "Cutting_diameter", Child = "Stem_diameter")
 
 # 4. DATA VISUALISATION ----
 
@@ -245,14 +246,14 @@ levels(mother_cg_long_diam$treatment) <- list(Mother  = "Cutting_diameter", Chil
 # but note: these means are not what the figure lines are  
 height_means <- means_long_all %>% 
   filter(trait %in% c("mother_height", "Canopy_Height_cm")) %>% 
-  mutate(treatment = case_when(trait == "mother_height" ~ "Mother", 
+  mutate(mother_or_child = case_when(trait == "mother_height" ~ "Mother", 
                                trait == "Canopy_Height_cm" ~ "Child"))
 
 # Heights
 (plot_mother_compare_heights <- ggplot() +
-   geom_point(aes(x = treatment, y= Height_cm, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.1, data = mother_cg_long_heights)) +
-  geom_smooth(aes(x = treatment, y= Height_cm, colour = Site, fill = Site, group = SampleID_standard, alpha = 0.01), method = "lm", se = F, alpha = 0.01, data = mother_cg_long_heights) +
-  geom_point(aes(x = treatment, y= mean_value, colour = Site), size = 3, alpha = 0.7, data = height_means, colour = "red") +
+   geom_point(aes(x = mother_or_child, y= Height_cm, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.1, data = mother_cg_long_heights)) +
+  geom_smooth(aes(x = mother_or_child, y= Height_cm, colour = Site, fill = Site, group = SampleID_standard, alpha = 0.01), method = "lm", se = F, alpha = 0.01, data = mother_cg_long_heights) +
+  geom_point(aes(x = mother_or_child, y= mean_value, colour = Site), size = 3, alpha = 0.7, data = height_means, colour = "red") +
   #facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Canopy Height (cm)") +
@@ -271,10 +272,17 @@ height_means <- means_long_all %>%
          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black"))
 
+# width means
+width_means <- means_long_all %>% 
+  filter(trait %in% c("mother_width", "mean_width")) %>% 
+  mutate(mother_or_child = case_when(trait == "mother_width" ~ "Mother", 
+                                     trait == "mean_width" ~ "Child"))
+
 # Widths
 (plot_mother_compare_widths <- ggplot(mother_cg_long_widths) +
-   geom_point(aes(x = treatment, y= Width, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.5) +
-  geom_smooth(aes(x = treatment, y= Width, colour = Site, fill = Site, group = SampleID_standard), method = "lm", se = F, alpha = 0.2)) +
+   geom_point(aes(x = mother_or_child, y= Width, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.5)) +
+  geom_smooth(aes(x = mother_or_child, y= Width, colour = Site, fill = Site, group = SampleID_standard), method = "lm", se = F, alpha = 0.2) +
+  geom_point(aes(x = mother_or_child, y= mean_value, colour = Site), size = 3, alpha = 0.7, data = width_means, colour = "red") +
   #facet_grid(cols = vars(Species)) +
   facet_wrap(~Species, scales = "free_y") +
   ylab("Width (cm)") +
@@ -293,10 +301,17 @@ height_means <- means_long_all %>%
         axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
         axis.text.y = element_text(size = 15, colour = "black"))
 
+# elongation means
+elong_means <- means_long_all %>% 
+  filter(trait %in% c("mean_mother_elong", "mean_stem_elong")) %>% 
+  mutate(mother_or_child = case_when(trait == "mean_mother_elong" ~ "Mother", 
+                                     trait == "mean_stem_elong" ~ "Child"))
+
 # Stem elongation
 (plot_mother_compare_elong <- ggplot(mother_cg_long_elong) +
-    geom_point(aes(x = treatment, y= Stem_elongation, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.5) +
-    geom_smooth(aes(x = treatment, y= Stem_elongation, colour = Site, fill = Site, group = SampleID_standard), method = "lm", se = F, alpha = 0.2)) +
+    geom_point(aes(x = mother_or_child, y= Stem_elongation, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.5)) +
+    geom_smooth(aes(x = mother_or_child, y= Stem_elongation, colour = Site, fill = Site, group = SampleID_standard), method = "lm", se = F, alpha = 0.2) +
+  geom_point(aes(x = mother_or_child, y= mean_value, colour = Site), size = 3, alpha = 0.7, data = elong_means, colour = "red") +
   #facet_grid(cols = vars(Species)) +
   facet_wrap(~Species, scales = "free_y") +
   ylab("Stem elongation (mm)") +
@@ -315,10 +330,17 @@ height_means <- means_long_all %>%
         axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
         axis.text.y = element_text(size = 15, colour = "black"))
 
+# diameter means
+diam_means <- means_long_all %>% 
+  filter(trait %in% c("mother_diam", "Stem_diameter")) %>% 
+  mutate(mother_or_child = case_when(trait == "mother_diam" ~ "Mother", 
+                                     trait == "Stem_diameter" ~ "Child"))
+
 # Stem diameter
 (plot_mother_compare_diam <- ggplot(mother_cg_long_diam) +
-    geom_point(aes(x = treatment, y= Stem_diam, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.5) +
-    geom_smooth(aes(x = treatment, y= Stem_diam, colour = Site, fill = Site, group = SampleID_standard), method = "lm", se = F, alpha = 0.2)) +
+    geom_point(aes(x = mother_or_child, y= Stem_diam, colour = Site, group = SampleID_standard), size = 1.5, alpha = 0.5)) +
+    geom_smooth(aes(x = mother_or_child, y= Stem_diam, colour = Site, fill = Site, group = SampleID_standard), method = "lm", se = F, alpha = 0.2) +
+  geom_point(aes(x = mother_or_child, y= mean_value, colour = Site), size = 3, alpha = 0.7, data = diam_means, colour = "red") +
   #facet_grid(cols = vars(Species)) +
   facet_wrap(~Species, scales = "free_y") +
   ylab("Stem diameter (mm)") +
@@ -341,8 +363,7 @@ height_means <- means_long_all %>%
 # 5. DATA ANALYSIS -----
 
 # 1. HEIGHTS: effect of mother heights on canopy heights in the CG
-# N.B. gives me errror message when i run it with sample_age random effect
-maternal_height <- lmer(Height_cm ~ treatment + (1|Species) + (1|SampleID_standard), data = mother_cg_long_heights)
+maternal_height <- lmer(Height_cm ~ mother_or_child + (1|Species) + (1|SampleID_standard) + (1|Sample_age), data = mother_cg_long_heights)
 summary(maternal_height)
 tab_model(maternal_height)
 plot(maternal_height)
@@ -350,8 +371,8 @@ qqnorm(resid(maternal_height))
 qqline(resid(maternal_height)) 
 
 # 2. WIDTHS: effect of mother widths on widths in the CG
-# N.B. gives me error message when i run it with sample_age random effect
-maternal_width <- lmer(Width~treatment + (1|SampleID_standard) + (1|Species), data = mother_cg_long_widths)
+# N.B. boundary (singular) fit: see help('isSingular') --> not converging
+maternal_width <- lmer(Width~mother_or_child  + (1|Sample_age) + (1|Species) + (1|Sample_age), data = mother_cg_long_widths)
 summary(maternal_width )
 tab_model(maternal_width )
 plot(maternal_width )
@@ -359,8 +380,7 @@ qqnorm(resid(maternal_width ))
 qqline(resid(maternal_width )) 
 
 # 3. ELONG: effect of mother elongation on elongation in the CG
-# N.B. gives me error message when i run it with sample_age random effect
-maternal_elong<- lmer(Stem_elongation ~ treatment + (1|SampleID_standard) + (1|Species), data = mother_cg_long_elong)
+maternal_elong<- lmer(Stem_elongation ~ mother_or_child + (1|SampleID_standard) + (1|Species) + (1|Sample_age), data = mother_cg_long_elong)
 summary(maternal_elong)
 tab_model(maternal_elong)
 plot(maternal_elong)
@@ -368,7 +388,7 @@ qqnorm(resid(maternal_elong))
 qqline(resid(maternal_elong)) 
 
 # 4. DIAMETER: effect of mother diameters on diameters in the CG
-maternal_diam <- lmer(Stem_diam~treatment + (1|SampleID_standard) + (1|Species), data = mother_cg_long_diam)
+maternal_diam <- lmer(Stem_diam~mother_or_child + (1|SampleID_standard) + (1|Species), data = mother_cg_long_diam)
 summary(maternal_diam)
 tab_model(maternal_diam)
 plot(maternal_diam)
