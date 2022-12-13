@@ -133,3 +133,21 @@ tab_model(diam_method_mod_2)
 # quick arrange 
 (growth_plots <- ggarrange(height_p, width_p, elong_p, diam_p, nrow = 2, ncol = 2))
 
+
+# visualize growth by year  ---- 
+
+(height_p_year <- ggplot(unique_source_mother, aes(Site, Canopy_Height_cm)) + 
+   geom_boxplot() +
+   facet_wrap(vars(SampleYear))) # all similar, with Kluane higher canopies
+
+(width_p_year <- ggplot(unique_source_mother, aes(Site, mean_width)) + 
+    geom_boxplot() +
+    facet_wrap(vars(SampleYear))) # 2022 different than other years: Kluane higher widths
+
+(elong_p_year <- ggplot(unique_source_mother, aes(Site, mean_stem_elong)) + 
+    geom_boxplot() +
+    facet_wrap(vars(SampleYear))) # all similar with Kluane higher elongation
+
+(diam_p_year <- ggplot(unique_source_mother, aes(Site, Stem_diameter)) + 
+    geom_boxplot() +
+    facet_wrap(vars(SampleYear))) # only 2022
