@@ -116,6 +116,25 @@ mean(KP_mean_daily_temp$mean_temp)
 # Save as csv
 write.csv(KP_mean_daily_temp, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_temp.csv", row.names = FALSE)
 
+# Monthly means
+# filter out june
+june_surface_temp <- KP_mean_daily_temp %>%
+  subset(Date >= "2022-06-01" & Date <= "2022-06-30")
+
+mean(june_surface_temp$mean_temp) # 3.008875
+
+# filter out july
+july_surface_temp <- KP_mean_daily_temp %>%
+  subset(Date >= "2022-07-01" & Date <= "2022-07-31")
+
+mean(july_surface_temp$mean_temp) # 7.805064
+
+# filter out august
+aug_surface_temp <- KP_mean_daily_temp %>%
+  subset(Date >= "2022-08-01" & Date <= "2022-08-15")
+
+mean(aug_surface_temp$mean_temp) # 6.706426
+
 # Plot daily mean temp over summer 2022
 (kp_mean_daily_temp <- ggplot(KP_mean_daily_temp, aes(x = Date, y = mean_temp)) +
     geom_line()+ 
@@ -261,6 +280,25 @@ range(KP_mean_daily_soil_moist$mean_moist)
 # driest:8th June, wettest: 2nd August
 mean(KP_mean_daily_soil_moist$mean_moist)
 # 1983.971 ? no clue about moisture unit
+
+# Monthly means
+# filter out june
+june_soil_moist <- KP_mean_daily_soil_moist %>%
+  subset(Date >= "2022-06-01" & Date <= "2022-06-30")
+
+mean(june_soil_moist$mean_moist) # 2048.208
+
+# filter out july
+july_soil_moist <- KP_mean_daily_soil_moist %>%
+  subset(Date >= "2022-07-01" & Date <= "2022-07-31")
+
+mean(july_soil_moist$mean_moist) # 1948.594
+
+# filter out august
+aug_soil_moist <- KP_mean_daily_soil_moist %>%
+  subset(Date >= "2022-08-01" & Date <= "2022-08-15")
+
+mean(aug_soil_moist$mean_moist) # 1928.611
 
 # Save as csv
 write.csv(KP_mean_daily_soil_moist, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_soil_moist.csv", row.names = FALSE)
