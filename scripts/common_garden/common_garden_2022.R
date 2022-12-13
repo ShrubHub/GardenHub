@@ -608,8 +608,7 @@ unique_source_mother_merge <- unique_source_mother %>%
   select(-c(SampleID, Match, X, SampleSite, Year_measured)) %>% 
   mutate(population = "source") # add population column to indicate source
 
-
-test_merge <- full_join(all_cg_data_2022_merge, unique_source_mother_merge, 
+all_CG_source_growth <- full_join(all_cg_data_2022_merge, unique_source_mother_merge, 
                         by = c("Species", "Site", 
                                "Sample_Date" = "SampleDate", 
                                "Year" = "SampleYear",  
@@ -619,8 +618,20 @@ test_merge <- full_join(all_cg_data_2022_merge, unique_source_mother_merge,
                                "Stem_Elongation_3_mm", "Length_1_mm", "Length_2_mm", 
                                "Length_3_mm", "mean_stem_elong", "mean_leaf_length", "mean_width"
                                ))
-# seems to have worked? 
-# if so, save away!
+# checking variables
+str(all_CG_source_growth)
+unique(all_CG_source_growth$Site) # "Common_garden" "Kluane" "Qikiqtaruk"
+unique(all_CG_source_growth$population) # "Northern" "Southern" "source"  
+
+# reclassing variables
+all_CG_source_growth$Site <- as.factor(all_CG_source_growth$Site)
+all_CG_source_growth$population <- as.factor(all_CG_source_growth$population)
+all_CG_source_growth$Species <- as.factor(all_CG_source_growth$Species)
+all_CG_source_growth$Sample_Date <- as.POSIXct(all_CG_source_growth$Sample_Date, format = '%Y/%m/%d')
+
+# saving data as csv
+write.csv(all_CG_source_growth, 'data/all_CG_source_growth.csv')
+
 
 # 3.7. B Merge traits from cg with source and mother data ----
 # load data 
@@ -668,6 +679,7 @@ test_trait_merge <- full_join(cg_sla_merge, all_source_area_traits_merge,
                                      "leaf_fresh_mass_g", 
                                      "date_sampled"))
 # also seems to have worked   
+# maybe could call the dataset: all_CG_source_traits for consistency
 
 # 3.9. Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
