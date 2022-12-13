@@ -9,6 +9,7 @@
 
 # Workflow
 # 1. Explore elevation, filter anything below treeline (what is the elevation of treeline on KP?)
+# keep anything between 1300-2000m (range where cuttings taken)
 # 2. Explore date ranges, filter dates to: june 18-aug 31
 # 3. Merge datasets
 # 4. Make means for each year (average high medium and low elevations)

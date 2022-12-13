@@ -31,7 +31,8 @@ CG_HOBO_date_2 <- CG_HOBO_date %>%
   separate(date, into = c('year', 'month', 'day'))
 
 CG_HOBO_date_3 <- full_join(CG_HOBO_date, CG_HOBO_date_2)
-         
+        
+range(CG_HOBO_date_3$Date_time_GMT)
 str(CG_HOBO_date)  
 # I didn't remove / overwrite existing date column to check to make sure they were the same 
 
@@ -47,6 +48,10 @@ CG_HOBO_monthly_means <- CG_HOBO_date_3 %>%
   group_by(year, month) %>%
   slice(1) %>% # keeping only one observation from each set of year/month
   ungroup()
+
+range(CG_HOBO_monthly_means$date)
+# [1] "2018-08-24 12:00:01 UTC"
+# [2] "2021-07-01 00:00:01 UTC"
   
 # 4. DATA VISUALISATION -----
 

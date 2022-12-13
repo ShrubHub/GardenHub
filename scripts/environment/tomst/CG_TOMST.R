@@ -153,6 +153,20 @@ mean(aug_surface_temp$mean_temp) # 12.94198
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
+# histogram
+(cg_mean_daily_temp_hist <- ggplot(CG_mean_daily_temp, aes(x = mean_temp)) +
+    geom_histogram(fill = "#CC9145", colour = "black", bins = 10)+ 
+    ylab("Frequency") +
+    xlab("Daily mean surface temperature (°C) (2022)") +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
 
 # b. Above-surface temperature (T3: Top sensor) ----
 
@@ -169,12 +183,47 @@ CG_mean_daily_top_sensor <- cg_data  %>%
 range(CG_mean_daily_top_sensor$mean_temp)
 # 7.551866 21.325000
 # warmest: 1st June , coldest: 12th July
+mean(CG_mean_daily_top_sensor$mean_temp)
+# 13.42857
+
+# Monthly means
+# filter out june
+june_topsensor_temp <- CG_mean_daily_top_sensor%>%
+  subset(Date >= "2022-06-01" & Date <= "2022-06-30")
+
+mean(june_topsensor_temp$mean_temp) # 13.13366
+
+# filter out july
+july_topsensor_temp <- CG_mean_daily_top_sensor %>%
+  subset(Date >= "2022-07-01" & Date <= "2022-07-31")
+
+mean(july_topsensor_temp$mean_temp) # 14.18936
+
+# filter out august
+aug_topsensor_temp <- CG_mean_daily_top_sensor %>%
+  subset(Date >= "2022-08-01" & Date <= "2022-08-17")
+
+mean(aug_topsensor_temp$mean_temp) # 12.56167
 
 # Plot daily mean top sensor temp over summer 2022
 (cg_mean_daily_top_sensor <- ggplot(CG_mean_daily_top_sensor, aes(x = Date, y = mean_temp)) +
     geom_line()+ 
     ylab("Daily mean above-surface temperature (°C)") +
     xlab("Date (2022)") +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
+# histogram
+(cg_mean_daily_top_sensor_hist <- ggplot(CG_mean_daily_top_sensor, aes(x = mean_temp)) +
+    geom_histogram(fill = "#CC9145", colour = "black", bins = 10)+ 
+    ylab("Frequency") +
+    xlab("Daily mean above-surface temperature (°C) (2022)") +
     theme_bw() +
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(),
@@ -203,11 +252,47 @@ range(CG_mean_daily_soil_temp$mean_temp)
 # 9.492622 16.236979
 # warmest: 5th July, coldest: 14th June 
 
+mean(CG_mean_daily_soil_temp$mean_temp) 
+# 12.94467
+
+# Monthly means
+# filter out june
+june_soil_temp <- CG_mean_daily_soil_temp %>%
+  subset(Date >= "2022-06-01" & Date <= "2022-06-30")
+
+mean(june_soil_temp$mean_temp) # 12.33335
+
+# filter out july
+july_soil_temp <- CG_mean_daily_soil_temp %>%
+  subset(Date >= "2022-07-01" & Date <= "2022-07-31")
+
+mean(july_soil_temp$mean_temp) # 13.63691
+
+# filter out august
+aug_soil_temp <- CG_mean_daily_soil_temp %>%
+  subset(Date >= "2022-08-01" & Date <= "2022-08-17")
+
+mean(aug_soil_temp$mean_temp) # 12.76118
+
 # Plot daily mean soil temp over summer 2022
 (cg_mean_daily_soil_temp <- ggplot(CG_mean_daily_soil_temp, aes(x = Date, y = mean_temp)) +
     geom_line()+ 
     ylab("Daily mean soil temperature (°C)") +
     xlab("Date (2022)") +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
+# histogram
+(cg_mean_daily_soil_temp_hist <- ggplot(CG_mean_daily_soil_temp, aes(x = mean_temp)) +
+    geom_histogram(fill = "#CC9145", colour = "black", bins = 10)+ 
+    ylab("Frequency") +
+    xlab("Daily mean soil temperature (°C) (2022)") +
     theme_bw() +
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(),
@@ -235,6 +320,27 @@ CG_mean_daily_soil_moist <- cg_data  %>%
 range(CG_mean_daily_soil_moist$mean_moist)
 # 1443.976 1828.365
 # driest:10th July, wettest: 29th June 
+mean(CG_mean_daily_soil_moist$mean_moist)
+# 1637.611
+
+# Monthly means
+# filter out june
+june_soil_moist <- CG_mean_daily_soil_moist %>%
+  subset(Date >= "2022-06-01" & Date <= "2022-06-30")
+
+mean(june_soil_moist$mean_moist) # 1569.228
+
+# filter out july
+july_soil_moist <- CG_mean_daily_soil_moist %>%
+  subset(Date >= "2022-07-01" & Date <= "2022-07-31")
+
+mean(july_soil_moist$mean_moist) # 1613.545
+
+# filter out august
+aug_soil_moist <- CG_mean_daily_soil_moist %>%
+  subset(Date >= "2022-08-01" & Date <= "2022-08-17")
+
+mean(aug_soil_moist$mean_moist) # 1802.174
 
 # Saving as csv
 write.csv(CG_mean_daily_soil_moist, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_mean_daily_soil_moist.csv", row.names = FALSE)
@@ -253,7 +359,26 @@ write.csv(CG_mean_daily_soil_moist, file = "data/tomst/Common_Garden_TOMST_17Aug
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
+# histogram
+(cg_mean_daily_soil_moist_hist <- ggplot(CG_mean_daily_soil_moist, aes(x = mean_moist)) +
+    geom_histogram(fill = "#CC9145", colour = "black", bins = 10)+ 
+    ylab("Frequency") +
+    xlab("Daily mean soil moisture (2022)") +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
 # Panel of env variables
+# timeseries panel
 facet_env_KP <- grid.arrange(cg_mean_daily_soil_moist, cg_mean_daily_soil_temp, 
                              cg_mean_daily_temp, cg_mean_daily_top_sensor, ncol=2)
+
+# hist panel
+facet_env_kp_hist <- grid.arrange(cg_mean_daily_soil_moist_hist, cg_mean_daily_soil_temp_hist, 
+                                  cg_mean_daily_temp_hist, cg_mean_daily_top_sensor_hist, ncol=2)
 
