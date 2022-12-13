@@ -669,7 +669,7 @@ all_source_area_traits_merge <- all_source_area_traits %>%
   mutate(population = "source") # add population column to indicate source
 
 # I think we can merge now? Let's just see what happens 
-test_trait_merge <- full_join(cg_sla_merge, all_source_area_traits_merge, 
+all_CG_source_traits <- full_join(cg_sla_merge, all_source_area_traits_merge, 
                               by = c("population", "Species", "LDMC_g_g", 
                                      "plant_tag_id", "sample_id", 
                                      "SLA", "Site", "LA",
@@ -679,7 +679,8 @@ test_trait_merge <- full_join(cg_sla_merge, all_source_area_traits_merge,
                                      "leaf_fresh_mass_g", 
                                      "date_sampled"))
 # also seems to have worked   
-# maybe could call the dataset: all_CG_source_traits for consistency
+# save 
+write.csv(all_CG_source_traits, "data/all_CG_source_traits.csv")
 
 # 3.9. Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
