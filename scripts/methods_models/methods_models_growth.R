@@ -135,7 +135,7 @@ tab_model(diam_method_mod_2)
 
 
 # visualize growth by year  ---- 
-
+# should all be similar year to year
 (height_p_year <- ggplot(unique_source_mother, aes(Site, Canopy_Height_cm)) + 
    geom_boxplot() +
    facet_wrap(vars(SampleYear))) # all similar, with Kluane higher canopies

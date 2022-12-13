@@ -70,6 +70,9 @@ str(tomst_cg)
 # Saving as csv
 write.csv(tomst_cg, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_FullTOMST_2022.csv", row.names = FALSE)
 
+# Reading in file
+tomst_cg <- read_csv("data/tomst/Common_garden_TOMST_17August2022/CG_FullTOMST_2022.csv")
+
 ### 4. DATA VISUALISATION ----
 
 (cg_tomst_summary <- ggplot(tomst_cg, aes(x = Datetime_UTC, y = Value)) +
@@ -111,9 +114,30 @@ CG_mean_daily_temp <- cg_data %>%
 range(CG_mean_daily_temp$mean_temp)
 # 8.883898 21.582143
 # warmest: 1st June, coldest: 12th July
+mean(CG_mean_daily_temp$mean_temp)
+# 13.89118
 
 # Saving as csv
 write.csv(CG_mean_daily_temp, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_mean_daily_temp.csv", row.names = FALSE)
+
+# Monthly means
+# filter out june
+june_surface_temp <- CG_mean_daily_temp %>%
+  subset(Date >= "2022-06-01" & Date <= "2022-06-30")
+
+mean(june_surface_temp$mean_temp) # 13.74875
+
+# filter out july
+july_surface_temp <- CG_mean_daily_temp %>%
+  subset(Date >= "2022-07-01" & Date <= "2022-07-31")
+
+mean(july_surface_temp$mean_temp) # 14.54956
+
+# filter out august
+aug_surface_temp <- CG_mean_daily_temp %>%
+  subset(Date >= "2022-08-01" & Date <= "2022-08-17")
+
+mean(aug_surface_temp$mean_temp) # 12.94198
 
 # Plot daily mean temp over summer 2022
 (cg_mean_daily_temp <- ggplot(CG_mean_daily_temp, aes(x = Date, y = mean_temp)) +
@@ -128,6 +152,7 @@ write.csv(CG_mean_daily_temp, file = "data/tomst/Common_Garden_TOMST_17August202
           axis.title = element_text(size = 14),
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
+
 
 # b. Above-surface temperature (T3: Top sensor) ----
 
