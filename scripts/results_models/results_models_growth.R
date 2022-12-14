@@ -12,17 +12,17 @@
 # if triple nested structure doesn't work, next attempted structure: 
 # lmer(growth_variable ~ population*site + sample_age + (1|sample_year)+(1|species)+ (1|sample_ID))
 
-# Libraries ----
+# Loading libraries ----
 library(lme4)
 library(dplyr)
 library(sjPlot)
 library(ggplot2)
 library(ggpubr)
 
-# data ---- 
+# Loading data ---- 
 all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
 
-# Wrangling 
+# Data wrangling -----
 str(all_CG_source_growth)
 # reclassing variables
 all_CG_source_growth$Species <- as.factor(all_CG_source_growth$Species)
@@ -58,7 +58,7 @@ height_garden_growth_mod_2 <- lmer(Canopy_Height_cm ~ population + (1|Year/Speci
 # model 3 below does converge
 height_garden_growth_mod_3 <- lmer(Canopy_Height_cm ~ population + Sample_age + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth_garden_only)
 tab_model(height_garden_growth_mod_3)
-# canopy height significatly taller for southern populations
+# canopy height significatly taller for southern population
 
 # 2. Width (compare all)-----
 # trying comparison with all (CG, KP, QHI)
