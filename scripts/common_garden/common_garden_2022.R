@@ -627,7 +627,6 @@ unique(all_CG_source_growth$population) # "Northern" "Southern" "source"
 all_CG_source_growth$Site <- as.factor(all_CG_source_growth$Site)
 all_CG_source_growth$population <- as.factor(all_CG_source_growth$population)
 all_CG_source_growth$Species <- as.factor(all_CG_source_growth$Species)
-all_CG_source_growth$Sample_Date <- as.POSIXct(all_CG_source_growth$Sample_Date, format = '%Y/%m/%d')
 
 # saving data as csv
 write.csv(all_CG_source_growth, 'data/all_CG_source_growth.csv')
