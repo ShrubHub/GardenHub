@@ -5,7 +5,7 @@
 # traits: SLA, LDMC, LA? (currently not possible), leaf length  
 
 # model, where Site is Kluane or QHI 
-# lmer(TRAIT ~ population*site + sample_age + (1|sample_year/species/sample_ID))
+# lmer(TRAIT ~ population*site + (1|sample_year/species/sample_ID))
 # where population = northern or southern pop in garden and site = source QHI or KLU
 # need to make sample_year column, although not critical for leaf traits? 
 # separate nested random effects if it doesn't converge 
@@ -43,13 +43,67 @@ all_CG_source_traits$year <- as.factor(all_CG_source_traits$year)
 # currently doesn't exist! all_CG_source_traits$Sample_age <- as.factor(all_CG_source_traits$Sample_age)
 
 # SLA ----
+SLA_mod_1 <- lmer(SLA ~ population*Site + (1|year/Species/plant_tag_id), 
+                 data = all_CG_source_traits)
+# fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
+# boundary (singular) fit: see help('isSingular')
+summary(SLA_mod_1)
+tab_model(SLA_mod_1)
+
+# dropping plant_tag_id because shrubs weren't repeatedly measured either in source pop or garden
+# in 2021 and 2022, same shrubs were sampled in garden, but also diff than in 2017 
+SLA_mod_2 <- lmer(SLA ~ population*Site + (1|year/Species), 
+                  data = all_CG_source_traits)
+# fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
+summary(SLA_mod_2)
+tab_model(SLA_mod_2)
 
 # LDMC ---- 
+# same as SLA so not including plant_tag_id because shrubs weren't repeatedly measured either in source pop or garden
+# in 2021 and 2022, same shrubs were sampled in garden, but also diff than in 2017 
+LDMC_mod_1 <- lmer(LDMC_g_g ~ population*Site + (1|year/Species), 
+                  data = all_CG_source_traits)
+# fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
+summary(LDMC_mod_1)
+tab_model(LDMC_mod_1)
 
 # LA ---- 
 
 # LEAF LENGTH ---- 
+# not including sample age as fixed effect (or random) for leaf traits 
+ll_mod_1 <- lmer(mean_leaf_length ~ population*Site + (1|Year/Species/SampleID_standard), 
+               data = all_CG_source_growth)
+# fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients 
+summary(ll_mod_1)
+tab_model(ll_mod_1)
+
+# LEAF AREA 
+# data is a mess because of inconsistent unit reporting, 
+# I'm going to try to sort it out but here are just data I collected in 2021 and 2022 
+# in the common garden and source populations 
+all_CG_source_traits_2022 <- all_CG_source_traits %>% 
+  dplyr::filter(year %in% c("2021", "2022")) 
+
+# same model srtucture as above. No sample age or ID 
+# removing year as random effect because only two years worth of data 
+LA_mod_1 <- lmer(LA ~ population*Site + (1|Species), 
+                   data = all_CG_source_traits_2022)
+# fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
+# small sample size 
+summary(LA_mod_1)
+tab_model(LA_mod_1)
 
 # LMA ---- 
+# same model as SLA, LDMC, leaf length  
+LMA_mod_1 <- lmer(leaf_mass_per_area_g_m2 ~ population*Site + (1|year/Species), 
+                 data = all_CG_source_traits)
+# fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
+# boundary (singular) fit: see help('isSingular')
 
+# removing year as nested random effect:
+LMA_mod_2 <- lmer(leaf_mass_per_area_g_m2 ~ population*Site + (1|Species) + (1|year), 
+                  data = all_CG_source_traits)
+# fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
+summary(LMA_mod_2)
+tab_model(LMA_mod_2)
 
