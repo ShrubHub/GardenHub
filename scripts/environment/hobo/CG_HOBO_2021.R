@@ -55,15 +55,8 @@ range(CG_HOBO_daily_means$date)
 
 # filtering for months of interest only 
 # july and august
-CG_HOBO_daily_means_julyaug <- CG_HOBO_daily_means %>%
-  filter(month %in% c("07", "08")) 
-
-# june (any day from 18th onwards)
-CG_HOBO_daily_means_june <- CG_HOBO_daily_means %>%
-  filter(month == "06" & day >= "18") 
-
-# remerging
-CG_HOBO_daily_means_season <- rbind(CG_HOBO_daily_means_june, CG_HOBO_daily_means_julyaug)
+CG_HOBO_daily_means_season <- CG_HOBO_daily_means %>%
+  filter(month %in% c("06", "07", "08")) 
 
 # Make MONTHLY means 
 CG_HOBO_monthly_means_season <- CG_HOBO_daily_means_season %>%
@@ -85,10 +78,10 @@ write.csv(CG_HOBO_monthly_means_season, "data/hobo/CG_HOBO_monthly_means_season.
 CG_HOBO_monthly_means_june <- CG_HOBO_monthly_means_season %>%
   filter(month == "06")
 
-mean(CG_HOBO_monthly_means_june$mean_soil_moist_month) # 0.04817735
-mean(CG_HOBO_monthly_means_june$mean_ground_temp_month) # 13.40053
-mean(CG_HOBO_monthly_means_june$mean_soil_temp_month) # 13.07997
-mean(CG_HOBO_monthly_means_june$mean_air_temp_month) # 14.61648
+mean(CG_HOBO_monthly_means_june$mean_soil_moist_month) # 0.05743859
+mean(CG_HOBO_monthly_means_june$mean_ground_temp_month) # 12.64778
+mean(CG_HOBO_monthly_means_june$mean_soil_temp_month) # 11.91689
+mean(CG_HOBO_monthly_means_june$mean_air_temp_month) # 12.98225
 
 # ONE July mean value per variable
 CG_HOBO_monthly_means_july <- CG_HOBO_monthly_means_season %>%

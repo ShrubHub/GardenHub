@@ -398,3 +398,5 @@ facet_env_kp <- grid.arrange(kp_mean_daily_soil_moist, kp_mean_daily_soil_temp,
 # hist panel
 facet_env_kp_hist <- grid.arrange(kp_mean_daily_soil_moist_hist, kp_mean_daily_soil_temp_hist, 
                              kp_mean_daily_temp_hist, kp_mean_daily_top_sensor_hist, ncol=2)
+
+
