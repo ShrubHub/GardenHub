@@ -1,6 +1,6 @@
 # GardenHub
 ### A repository for the common garden experiment data analyses
-#### Last update: 14/12/2022 by Madi 
+#### Last update: 14/12/2022 by Erica
 
 ******
 
@@ -31,20 +31,23 @@ The repository is subdivided into the following folders:
     - [common_garden_2022.R](https://github.com/ShrubHub/GardenHub/blob/main/scripts/common_garden/common_garden_2022.R): all analyses ran this year i.e. up to date script
     - [maternal_effects.R](https://github.com/ShrubHub/GardenHub/blob/main/scripts/common_garden/maternal_effects_2022.R): with maternal effects analyses 
   - [source_populations](https://github.com/ShrubHub/GardenHub/tree/main/scripts/source_populations): organization and merging of data from source population trait measurements (Madi collected 2021-22 and previous TS data)
+  - [results_models](https://github.com/ShrubHub/GardenHub/tree/main/scripts/results_models): models ran to be in the results section
+    - [results_models_growth.R](https://github.com/ShrubHub/GardenHub/blob/main/scripts/results_models/results_models_growth.R)
+    - [results_models_traits.R](https://github.com/ShrubHub/GardenHub/blob/main/scripts/results_models/results_models_traits.R)
   - [methods_models](https://github.com/ShrubHub/GardenHub/tree/main/scripts/methods_models): models ran to be in the methods section
     - [methods_models_growth.R](https://github.com/ShrubHub/GardenHub/blob/main/scripts/methods_models/methods_models_growth.R)
     - [methods_models_traits.R](https://github.com/ShrubHub/GardenHub/blob/main/scripts/methods_models/methods_models_traits.R)
   - [phenology](https://github.com/ShrubHub/GardenHub/tree/main/scripts/phenology): need to add to this 
   - [environment](https://github.com/ShrubHub/GardenHub/tree/main/scripts/environment):
-    - [tomst](https://github.com/ShrubHub/GardenHub/tree/main/scripts/environment/tomst): folder with all tomst data wrangling (for CG, KP, QHI 2022)
+    - [tomst](https://github.com/ShrubHub/GardenHub/tree/main/scripts/environment/tomst): folder with all TOMST data wrangling (for CG, KP, QHI 2022)
+    - [hobo](https://github.com/ShrubHub/GardenHub/tree/main/scripts/environment/hobo): folder with HOBO data wrangling for CG
     - [KP_env.R](https://github.com/ShrubHub/GardenHub/blob/main/scripts/environment/KP_env.R): wrangling miscellaneous past environmental data
     - [QHI_env.R](https://github.com/ShrubHub/GardenHub/blob/main/scripts/environment/QHI_env.R): wrangling miscellaneous past environmental data
-  - [hobo](https://github.com/ShrubHub/GardenHub/tree/main/scripts/hobo)
   - [tomst](https://github.com/ShrubHub/GardenHub/tree/main/scripts/tomst)
   
 - #### [figures]
 
-- #### [documents](https://github.com/ShrubHub/GardenHub/tree/main/documents)
+- #### [documents](https://github.com/ShrubHub/GardenHub/tree/main/documents): planning and miscellanous docs  
 
 *****
 
