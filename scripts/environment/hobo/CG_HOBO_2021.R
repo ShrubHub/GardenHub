@@ -1,7 +1,7 @@
 #### Common garden HOBO 2021 SCRIPT
 ### Data wrangling and visualisation script
 ### By Erica Zaja and Madi Anderson, created on 20/10/2022
-## Last updated: 08/12/2022 by Madelaine 
+## Last updated: 14/12/2022 by Madelaine 
 
 # 1. LOADING LIBRARIES -----
 library(lubridate)
@@ -36,23 +36,78 @@ range(CG_HOBO_date_3$Date_time_GMT)
 str(CG_HOBO_date)  
 # I didn't remove / overwrite existing date column to check to make sure they were the same 
 
-# Make MONTHLY means 
-CG_HOBO_monthly_means <- CG_HOBO_date_3 %>%
-  group_by(year, month) %>%
+# Make DAILY means (one value per day)
+CG_HOBO_daily_means <- CG_HOBO_date_3 %>%
+  group_by(year, month, day) %>%
   mutate(mean_soil_moist = mean(Soil_moist),
          mean_ground_temp = mean(Ground_temp),
          mean_soil_temp = mean(Soil_temp),
          mean_air_temp = mean(Air_temp)) %>%
-  select(date, year, month, mean_soil_moist, mean_ground_temp, mean_soil_temp,
+  select(date, year, month, day, mean_soil_moist, mean_ground_temp, mean_soil_temp,
          mean_air_temp) %>%
+  group_by(year, month, day) %>%
+  slice(1) %>% # keeping only one observation from each set of year/month
+  ungroup()
+
+range(CG_HOBO_daily_means$date)
+# [1] "2018-08-24 12:00:01 UTC"
+# [2] "2021-07-01 00:00:01 UTC"
+
+# filtering for months of interest only 
+# july and august
+CG_HOBO_daily_means_julyaug <- CG_HOBO_daily_means %>%
+  filter(month %in% c("07", "08")) 
+
+# june (any day from 18th onwards)
+CG_HOBO_daily_means_june <- CG_HOBO_daily_means %>%
+  filter(month == "06" & day >= "18") 
+
+# remerging
+CG_HOBO_daily_means_season <- rbind(CG_HOBO_daily_means_june, CG_HOBO_daily_means_julyaug)
+
+# Make MONTHLY means 
+CG_HOBO_monthly_means_season <- CG_HOBO_daily_means_season %>%
+  group_by(year, month) %>%
+  mutate(mean_soil_moist_month = mean(mean_soil_moist),
+         mean_ground_temp_month = mean(mean_ground_temp),
+         mean_soil_temp_month = mean(mean_soil_temp),
+         mean_air_temp_month = mean(mean_air_temp)) %>%
+  select(year, month, mean_soil_moist_month, mean_ground_temp_month, mean_soil_temp_month,
+         mean_air_temp_month) %>%
   group_by(year, month) %>%
   slice(1) %>% # keeping only one observation from each set of year/month
   ungroup()
 
-range(CG_HOBO_monthly_means$date)
-# [1] "2018-08-24 12:00:01 UTC"
-# [2] "2021-07-01 00:00:01 UTC"
-  
+# saving as csv
+write.csv(CG_HOBO_monthly_means_season, "data/hobo/CG_HOBO_monthly_means_season.csv")
+
+# ONE June mean value per variable
+CG_HOBO_monthly_means_june <- CG_HOBO_monthly_means_season %>%
+  filter(month == "06")
+
+mean(CG_HOBO_monthly_means_june$mean_soil_moist_month) # 0.04817735
+mean(CG_HOBO_monthly_means_june$mean_ground_temp_month) # 13.40053
+mean(CG_HOBO_monthly_means_june$mean_soil_temp_month) # 13.07997
+mean(CG_HOBO_monthly_means_june$mean_air_temp_month) # 14.61648
+
+# ONE July mean value per variable
+CG_HOBO_monthly_means_july <- CG_HOBO_monthly_means_season %>%
+  filter(month == "07")
+
+mean(CG_HOBO_monthly_means_july$mean_soil_moist_month) # 0.05874529
+mean(CG_HOBO_monthly_means_july$mean_ground_temp_month) # 13.247
+mean(CG_HOBO_monthly_means_july$mean_soil_temp_month) # 14.17245
+mean(CG_HOBO_monthly_means_july$mean_air_temp_month) # 14.78052
+
+# ONE August mean value per variable
+CG_HOBO_monthly_means_aug <- CG_HOBO_monthly_means_season %>%
+  filter(month == "08")
+
+mean(CG_HOBO_monthly_means_aug$mean_soil_moist_month) # 0.05655967
+mean(CG_HOBO_monthly_means_aug$mean_ground_temp_month) # 10.02817
+mean(CG_HOBO_monthly_means_aug$mean_soil_temp_month) # 11.32776
+mean(CG_HOBO_monthly_means_aug$mean_air_temp_month) # 11.39708
+
 # 4. DATA VISUALISATION -----
 
 # 4.1 Time series -----
