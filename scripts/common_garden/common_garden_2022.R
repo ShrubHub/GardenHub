@@ -592,7 +592,7 @@ sum(is.na(unique_source_mother$Species)) # success!
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(unique_source_mother, 'data/source_pops/unique_source_mother.csv')
 
-# 3.7. A Merge source / mother / common garden data ----
+# 3.7.A. Merge source / mother / common garden data ----
 # load files 
 unique_source_mother <- read.csv('data/source_pops/unique_source_mother.csv') # all mother and source (growth, not traits -- that's a bigger problem to do after)
 all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
@@ -633,7 +633,7 @@ all_CG_source_growth$Sample_Date <- as.POSIXct(all_CG_source_growth$Sample_Date,
 write.csv(all_CG_source_growth, 'data/all_CG_source_growth.csv')
 
 
-# 3.7. B Merge traits from cg with source and mother data ----
+# 3.7.B. Merge traits from cg with source and mother data ----
 # load data 
 # SLA, LDMC, LA: 
 all_source_area_traits <- read.csv("data/source_pops/all_source_area_traits.csv")
