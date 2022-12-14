@@ -18,6 +18,7 @@ library(dplyr)
 library(sjPlot)
 library(ggplot2)
 library(ggpubr)
+library(corrplot)
 
 # Loading data ---- 
 all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
@@ -110,5 +111,13 @@ tab_model(diam_garden_growth_mod_3)
 # larger diameters for southern shrubs
 
 
-
+# correlation matrix ----
+# filter growth only (but maybe need to separate CG and source pops?)
+growth_variables <- all_CG_source_growth %>%
+  select(Canopy_Height_cm, Stem_diameter, mean_stem_elong,
+         mean_leaf_length, mean_width)%>%
+  na.omit()
+  
+res <- cor(growth_variables)
+round(res, 2)
 
