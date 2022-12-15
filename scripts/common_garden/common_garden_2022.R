@@ -606,8 +606,9 @@ all_cg_data_2022_merge <- all_cg_data_2022 %>%
 
 unique_source_mother_merge <- unique_source_mother %>% 
   select(-c(SampleID, Match, X, SampleSite, Year_measured)) %>% 
-  mutate(population = "source") # add population column to indicate source
-
+  mutate(population = case_when(Site == "Kluane" ~ "source_south", 
+                                Site == "Qikiqtaruk" ~ "source_north" ))  # add population column to indicate source north or south
+  
 all_CG_source_growth <- full_join(all_cg_data_2022_merge, unique_source_mother_merge, 
                         by = c("Species", "Site", 
                                "Sample_Date" = "SampleDate", 
@@ -621,7 +622,7 @@ all_CG_source_growth <- full_join(all_cg_data_2022_merge, unique_source_mother_m
 # checking variables
 str(all_CG_source_growth)
 unique(all_CG_source_growth$Site) # "Common_garden" "Kluane" "Qikiqtaruk"
-unique(all_CG_source_growth$population) # "Northern" "Southern" "source"  
+unique(all_CG_source_growth$population) # "Northern"     "Southern"     "source_south" "source_north"
 
 # reclassing variables
 all_CG_source_growth$Site <- as.factor(all_CG_source_growth$Site)
