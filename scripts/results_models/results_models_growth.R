@@ -33,6 +33,8 @@ all_CG_source_growth$Site <- as.factor(all_CG_source_growth$Site)
 all_CG_source_growth$Sample_Date <- as.POSIXct(all_CG_source_growth$Sample_Date, format = '%Y/%m/%d')
 all_CG_source_growth$Year <- as.factor(all_CG_source_growth$Year)
 all_CG_source_growth$Sample_age <- as.factor(all_CG_source_growth$Sample_age)
+unique(all_CG_source_growth$population)
+unique(all_CG_source_growth$Site)
 
 # Modelling -----
 
@@ -43,9 +45,11 @@ all_CG_source_growth$Sample_age <- as.factor(all_CG_source_growth$Sample_age)
 height_growth_mod_1 <- lmer(Canopy_Height_cm ~ population*Site + (1|Year/Species/SampleID_standard), data = all_CG_source_growth)
 # model 2 below doesn't converge: boundary (singular) fit: see help('isSingular')
 height_growth_mod_2 <- lmer(Canopy_Height_cm ~ population*Site + (1|Year/Species), data = all_CG_source_growth)
-# model 3 runs but: fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
-height_growth_mod_3 <- lmer(Canopy_Height_cm ~ population*Site + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
-tab_model(height_growth_mod_3) 
+# model 3 runs but: fixed-effect model matrix is rank deficient so dropping 8 columns / coefficient
+height_growth_mod_3 <- lmer(Canopy_Height_cm ~ population*Site + (1|Year/SampleID_standard)+ (1|Species), data = all_CG_source_growth)
+# model 4 runs but: fixed-effect model matrix is rank deficient so dropping 8 columns / coefficients
+height_growth_mod_4 <- lmer(Canopy_Height_cm ~ population*Site + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
+tab_model(height_growth_mod_4) 
 
 # 1.1. Canopy height only in garden -----
 # filter dataset to retain only population "northern" and "southern"
@@ -64,16 +68,18 @@ tab_model(height_garden_growth_mod_3)
 # 2. Width (compare all)-----
 # trying comparison with all (CG, KP, QHI)
 # nb can't include sample_age because not all the source pop shrubs have age
-# model 1 below runs but: fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
+# model 1 below runs but: fixed-effect model matrix is rank deficient so dropping 8 columns / coefficients
 width_growth_mod_1 <- lmer(mean_width ~ population*Site + (1|Year/Species/SampleID_standard), data = all_CG_source_growth)
-# model 2 runs but: fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
-width_growth_mod_2 <- lmer(mean_width ~ population*Site +  (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
-tab_model(width_growth_mod_2)
+# model 2 runs but: fixed-effect model matrix is rank deficient so dropping 8 columns / coefficients
+width_growth_mod_2 <- lmer(mean_width~ population*Site + (1|Year/SampleID_standard)+ (1|Species), data = all_CG_source_growth)
+# model 3 runs but: fixed-effect model matrix is rank deficient so dropping 8 columns / coefficients
+width_growth_mod_3 <- lmer(mean_width ~ population*Site +  (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
+tab_model(width_growth_mod_3)
 
 # 2.1. Width only in garden -----
 # model 1 below doesnt converge
 height_garden_width_mod_1 <- lmer(mean_width ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)
-# model below runs
+# model below runs with no warning
 height_garden_width_mod_2 <- lmer(mean_width ~ population + Sample_age +(1|Year)+(1|Species) + (1|SampleID_standard), data = all_CG_source_growth_garden_only)
 tab_model(height_garden_width_mod_2)
 # southern shrubs in the garden have wider canopies
@@ -81,24 +87,30 @@ tab_model(height_garden_width_mod_2)
 # 3. Stem elongation (compare all) ----
 # trying comparison with all (CG, KP, QHI)
 # nb can't include sample_age because not all the source pop shrubs have age
-# model 1 below runs but: fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
+# model 1 below runs but: fixed-effect model matrix is rank deficient so dropping 8 columns / coefficients
 elong_growth_mod_1 <- lmer(mean_stem_elong ~ population*Site + (1|Year/Species/SampleID_standard), data = all_CG_source_growth)
-# model 1 below runs but: fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
-elong_growth_mod_2 <- lmer(mean_stem_elong ~ population*Site + (1|Year)+ (1|Species) + (1|SampleID_standard) , data = all_CG_source_growth)
-tab_model(elong_growth_mod_2)
+# model 2 below runs but: fixed-effect model matrix is rank deficient so dropping 8 columns / coefficients
+elong_growth_mod_2 <- lmer(mean_stem_elong ~ population*Site + (1|Year/SampleID_standard)+ (1|Species), data = all_CG_source_growth)
+# model 3 below runs but: fixed-effect model matrix is rank deficient so dropping 8 columns / coefficients
+elong_growth_mod_3 <- lmer(mean_stem_elong ~ population*Site + (1|Year)+ (1|Species) + (1|SampleID_standard) , data = all_CG_source_growth)
+tab_model(elong_growth_mod_3)
 
 # 3.1. Stem elongation only in garden -----
 # model below converges
 elong_garden_growth_mod_1 <- lmer(mean_stem_elong ~ population + Sample_age + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)
 tab_model(elong_garden_growth_mod_1)
 # higher stem elongation for southern shrubs
+# model below converges too
+elong_garden_growth_mod_2 <- lmer(mean_stem_elong ~ population + Sample_age + (1|Year/Species) + (1|SampleID_standard), data = all_CG_source_growth_garden_only)
+
 
 # 4. Stem diameter (compare all) ----
-# model 1 below doesnt converge: boundary (singular) fit: see help('isSingular')
+# models 1 and 2 below doesnt converge: boundary (singular) fit: see help('isSingular')
 diam_growth_mod_1 <- lmer(Stem_diameter ~ population*Site + (1|Year/Species/SampleID_standard), data = all_CG_source_growth)
-# model 2 below does converge but fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
-diam_growth_mod_2 <- lmer(Stem_diameter ~ population*Site + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
-tab_model(diam_growth_mod_2)
+diam_growth_mod_2 <- lmer(Stem_diameter ~ population*Site + (1|Year/Species) + (1|SampleID_standard), data = all_CG_source_growth)
+# model 2 below does converge but fixed-effect model matrix is rank deficient so dropping 8 columns / coefficients
+diam_growth_mod_3 <- lmer(Stem_diameter ~ population*Site + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
+tab_model(diam_growth_mod_3)
 
 # 4.1. Stem diameter only in garden ----
 # model 1 below doesnt converge: boundary (singular) fit: see help('isSingular')

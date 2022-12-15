@@ -678,7 +678,15 @@ all_CG_source_traits <- full_join(cg_sla_merge, all_source_area_traits_merge,
                                      "equivalent_water_thickness_cm", 
                                      "leaf_fresh_mass_g", 
                                      "date_sampled"))
-# also seems to have worked   
+# also seems to have worked
+# reclassing
+all_CG_source_traits$Species <- as.factor(all_CG_source_traits$Species)
+all_CG_source_traits$Site <- as.factor(all_CG_source_traits$Site)
+all_CG_source_traits$population <- as.factor(all_CG_source_traits$population)
+unique(all_CG_source_traits$population) # Northern source_north source_south Southern
+unique(all_CG_source_traits$Site) # Common_garden Kluane Qikiqtaruk
+unique(all_CG_source_traits$Species) # Salix arctica Salix pulchra Salix richardsonii
+
 # save 
 write.csv(all_CG_source_traits, "data/all_CG_source_traits.csv")
 
