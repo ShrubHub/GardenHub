@@ -1,6 +1,6 @@
 ### Processing TOMST logger data from Qikiqtaruk-Hershel Island (QHI) (2022)
 ### Script by Erica Zaja, based on script by Elise Gallois
-### Last updated: 11/10/2022
+### Last updated: 15/12/2022 by Madi 
 
 ### 1. LOADING LIBRARIES -----
 library(readr)
@@ -55,6 +55,8 @@ QHI_mean_daily_temp <- qhi_data %>%
 range(QHI_mean_daily_temp$mean_temp) # with filter above running
 #  2.488281 18.893772
 # warmest: 5th August, coldest: 29th July
+mean(QHI_mean_daily_temp$mean_temp)
+# 6.888976
 
 # Saving as csv
 write.csv(QHI_mean_daily_temp, file = "data/tomst/QHI_TOMST_August2022/QHI_mean_daily_temp.csv", row.names = FALSE)
@@ -88,6 +90,8 @@ QHI_mean_daily_top_sensor <- qhi_data  %>%
 range(QHI_mean_daily_top_sensor$mean_temp)
 # 2.002572 18.769251
 # warmest: 22st Jult , coldest: 29th July
+mean(QHI_mean_daily_top_sensor$mean_temp)
+# 7.567246 
 
 # Save as csv
 write.csv(QHI_mean_daily_top_sensor, file = "data/tomst/QHI_TOMST_August2022/QHI_mean_daily_top_sensor.csv", row.names = FALSE)
@@ -121,6 +125,8 @@ QHI_mean_daily_soil_temp <- qhi_data  %>%
 range(QHI_mean_daily_soil_temp$mean_temp)
 # 2.543413 17.772561
 # warmest: 22nd July, coldest: 29th July
+mean(QHI_mean_daily_soil_temp$mean_temp)
+# 4.320375 
 
 # Save as csv
 write.csv(QHI_mean_daily_soil_temp, file = "data/tomst/QHI_TOMST_August2022/QHI_mean_daily_soil_temp.csv", row.names = FALSE)
