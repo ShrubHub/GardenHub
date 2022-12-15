@@ -12,7 +12,6 @@ library(base)
 library(lubridate)
 library(xlsx)
 library(readxl) # reads excel files if java doesn't work for (xlsx)
-require(lubridate)
 
 # 2. LOADING DATA ----
 
@@ -666,7 +665,8 @@ all_source_area_traits_merge <- all_source_area_traits %>%
   select(-c(X, number_leaves, ValueKindName, Data_coPIs, 
             Data_contributor, Species_sex, Seed_mass_dry_mg, 
             Plant_height_veg_m, Plant_height_repro_m)) %>% 
-  mutate(population = "source") # add population column to indicate source
+  mutate(population = case_when(Site == "Kluane" ~ "source_south", 
+                                Site == "Qikiqtaruk" ~ "source_north" ))  # add population column to indicate source north or south
 
 # I think we can merge now? Let's just see what happens 
 all_CG_source_traits <- full_join(cg_sla_merge, all_source_area_traits_merge, 
