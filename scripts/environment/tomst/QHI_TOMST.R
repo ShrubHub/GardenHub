@@ -146,20 +146,32 @@ write.csv(QHI_mean_daily_soil_temp, file = "data/tomst/QHI_TOMST_August2022/QHI_
           axis.text.y = element_text(size = 12, colour = "black")))
 
 #### d. Soil moisture (SoilMoistureCount) ----
+# filter to change units
+QHI_moist <- qhi_data  %>%
+  filter(Variable %in% "SoilMoistureCount") 
+
+max(QHI_moist$Value) #3800
+min(QHI_moist$Value) # 276
+mean(QHI_moist$Value) # 1879.186
+
+# making moisture into a percentage
+# formula: ((input - min) * 100) / (max - min)
+QHI_moist_percent <- QHI_moist %>%
+  mutate(moisture_percent = (Value - 276)*100/(3800-276))
 
 # Daily mean soil moisture
-QHI_mean_daily_soil_moist <- qhi_data  %>%
-  filter(Variable %in% "SoilMoistureCount") %>% 
+QHI_mean_daily_soil_moist <- QHI_moist_percent  %>%
+  #filter(Variable %in% "SoilMoistureCount") %>% 
   filter(Date > lubridate::ymd("2022-07-27")) %>% 
   group_by(Date) %>% 
-  summarise(mean_moist = mean(Value)) %>% 
+  summarise(mean_moist = mean(moisture_percent)) %>% 
   group_by(Date) %>% 
   top_n(-5, mean_moist) %>%  # see top 5 warmest days
   glimpse()
 
 range(QHI_mean_daily_soil_moist$mean_moist)
-# 930.2683 2340.4636
-# driest:24th July, wettest: 9th August
+# 49.00996 58.58296
+# driest:28th July, wettest: 9th August
 
 # Save as csv
 write.csv(QHI_mean_daily_soil_moist, file = "data/tomst/QHI_TOMST_August2022/QHI_mean_daily_soil_moist.csv", row.names = FALSE)

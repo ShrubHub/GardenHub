@@ -64,7 +64,7 @@ kp_data$Datetime_UTC <- kp_data$Datetime_UTC - hours(6)
 ### 3. DATA MANIPULATION ----
 
 tomst_kp <-  kp_data %>% 
-filter(Datetime_UTC > lubridate::ymd_hm("2022-06-01 15:00")) %>% # keeping summer 2022 values only 
+#filter(Datetime_UTC > lubridate::ymd_hm("2022-06-01 15:00")) %>% # keeping summer 2022 values only 
   pivot_longer(cols = 5:8,
                names_to = "Variable",
                values_to = "Value")
@@ -321,7 +321,7 @@ mean(aug_soil_temp$mean_temp) #  4.695168
           axis.text.y = element_text(size = 12, colour = "black")))
 
 #### d. Soil moisture (SoilMoistureCount) ----
-
+# N.B max and min values to be changed when we figure out day of water bath
 # filter to change units
 KP_moist <- kp_data  %>%
   filter(Variable %in% "SoilMoistureCount") 
@@ -329,9 +329,9 @@ KP_moist <- kp_data  %>%
 max(KP_moist$Value) #3698
 min(KP_moist$Value) # 337
 mean(KP_moist$Value) # 1986.071
-((input - min) * 100) / (max - min)
 
 # making moisture into a percentage
+# formula: ((input - min) * 100) / (max - min)
 KP_moist_percent <- KP_moist %>%
   mutate(moisture_percent = (Value - 337)*100/(3698-337))
     

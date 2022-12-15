@@ -60,7 +60,7 @@ str(cg_data)
 ### 3. DATA MANIPULATION ----
 
 tomst_cg <-  cg_data %>%  
-  filter(Datetime_UTC > lubridate::ymd_hm("2022-06-01 15:00")) %>% # keeping summer 2022 values only 
+  #filter(Datetime_UTC > lubridate::ymd_hm("2022-06-01 15:00")) %>% # keeping summer 2022 values only 
   pivot_longer(cols = 5:8,
                names_to = "Variable",
                values_to = "Value")
@@ -306,41 +306,53 @@ mean(aug_soil_temp$mean_temp) # 12.76118
 write.csv(CG_mean_daily_soil_temp, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_mean_daily_soil_temp.csv", row.names = FALSE)
 
 # d. Soil moisture (SoilMoistureCount) ----
+# N.B max and min values to be changed when we figure out day of water bath
+# filter to change units
+CG_moist <- cg_data  %>%
+  filter(Variable %in% "SoilMoistureCount") 
+
+max(CG_moist$Value) #2138
+min(CG_moist$Value) # 1198
+mean(CG_moist$Value) # 1636.912
+
+# making moisture into a percentage
+# formula: ((input - min) * 100) / (max - min)
+CG_moist_percent <- CG_moist %>%
+  mutate(moisture_percent = (Value - 1198)*100/(2138-1198))
 
 # Daily mean soil moisture
-CG_mean_daily_soil_moist <- cg_data  %>%
-  filter(Variable %in% "SoilMoistureCount") %>% 
+CG_mean_daily_soil_moist <- CG_moist_percent  %>%
   #filter(Date > lubridate::ymd("2022-07-27")) %>% 
   group_by(Date) %>% 
-  summarise(mean_moist = mean(Value)) %>% 
+  summarise(mean_moist = mean(moisture_percent)) %>% 
   group_by(Date) %>% 
   top_n(-5, mean_moist) %>%  # see top 5 warmest days
   glimpse()
 
 range(CG_mean_daily_soil_moist$mean_moist)
-# 1443.976 1828.365
-# driest:10th July, wettest: 29th June 
+# 26.16763 67.06006
+# driest:10th July, wettest: 2nd Aug
 mean(CG_mean_daily_soil_moist$mean_moist)
-# 1637.611
+# 46.76717 %
 
 # Monthly means
 # filter out june
 june_soil_moist <- CG_mean_daily_soil_moist %>%
   subset(Date >= "2022-06-01" & Date <= "2022-06-30")
 
-mean(june_soil_moist$mean_moist) # 1569.228
+mean(june_soil_moist$mean_moist) # 39.49235
 
 # filter out july
 july_soil_moist <- CG_mean_daily_soil_moist %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
-mean(july_soil_moist$mean_moist) # 1613.545
+mean(july_soil_moist$mean_moist) # 44.20692
 
 # filter out august
 aug_soil_moist <- CG_mean_daily_soil_moist %>%
   subset(Date >= "2022-08-01" & Date <= "2022-08-17")
 
-mean(aug_soil_moist$mean_moist) # 1802.174
+mean(aug_soil_moist$mean_moist) # 64.2738
 
 # Saving as csv
 write.csv(CG_mean_daily_soil_moist, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_mean_daily_soil_moist.csv", row.names = FALSE)
