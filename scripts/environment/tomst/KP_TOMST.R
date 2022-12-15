@@ -322,21 +322,33 @@ mean(aug_soil_temp$mean_temp) #  4.695168
 
 #### d. Soil moisture (SoilMoistureCount) ----
 
+# filter to change units
+KP_moist <- kp_data  %>%
+  filter(Variable %in% "SoilMoistureCount") 
+
+max(KP_moist$Value) #3698
+min(KP_moist$Value) # 337
+mean(KP_moist$Value) # 1986.071
+((input - min) * 100) / (max - min)
+
+# making moisture into a percentage
+KP_moist_percent <- KP_moist %>%
+  mutate(moisture_percent = (Value - 337)*100/(3698-337))
+    
 # Daily mean soil moisture
-KP_mean_daily_soil_moist <- kp_data  %>%
-  filter(Variable %in% "SoilMoistureCount") %>% 
+KP_mean_daily_soil_moist <- KP_moist_percent  %>%
   #filter(Date > lubridate::ymd("2022-07-27")) %>% 
   group_by(Date) %>% 
-  summarise(mean_moist = mean(Value)) %>% 
+  summarise(mean_moist = mean(moisture_percent)) %>% 
   group_by(Date) %>% 
   top_n(-5, mean_moist) %>%  # see top 5 warmest days
   glimpse()
 
 range(KP_mean_daily_soil_moist$mean_moist)
-# 1762.584 2533.140
-# driest:8th June, wettest: 2nd August
+# 42.48480 65.44199 %
+# driest:9th June, wettest: 30th June
 mean(KP_mean_daily_soil_moist$mean_moist)
-# 1983.971 ? no clue about moisture unit
+# 49.00242 
 
 # Monthly means
 # filter out june
