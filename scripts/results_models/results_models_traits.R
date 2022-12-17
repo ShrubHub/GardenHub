@@ -1,5 +1,5 @@
 # Results models for trait differences comparing northern and southern willows
-# Mad 13/12/2022
+# by Mad 13/12/2022
 # Last updated: 17/12/2022
 
 # traits: SLA, LDMC, LA, leaf length  
@@ -94,7 +94,6 @@ LMA_mod_1 <- lmer(leaf_mass_per_area_g_m2 ~ population + (1|year/Species),
 # removing year as nested random effect:
 LMA_mod_2 <- lmer(leaf_mass_per_area_g_m2 ~ population + (1|Species) + (1|year), 
                   data = all_CG_source_traits)
-# fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
 summary(LMA_mod_2)
 tab_model(LMA_mod_2)
 
