@@ -41,9 +41,8 @@ all_CG_source_traits$year <- as.factor(all_CG_source_traits$year)
 # SLA ----
 SLA_mod_1 <- lmer(SLA ~ population + (1|year/Species/plant_tag_id), 
                  data = all_CG_source_traits)
-# boundary (singular) fit: see help('isSingular')
 summary(SLA_mod_1)
-tab_model(SLA_mod_1) #test 
+tab_model(SLA_mod_1) 
 
 # dropping plant_tag_id because shrubs weren't repeatedly measured either in source pop or garden
 # in 2021 and 2022, same shrubs were sampled in garden, but also diff than in 2017 
