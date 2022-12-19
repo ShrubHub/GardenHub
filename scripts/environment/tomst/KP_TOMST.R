@@ -103,7 +103,7 @@ kp_data <- tomst_kp %>%
 # Daily mean surface temperature
 KP_mean_daily_temp <- kp_data  %>%
   filter(Variable %in% "T2: Surface sensor") %>% 
-  #filter(Date > lubridate::ymd("2022-07-27")) %>% 
+  filter(Date > lubridate::ymd("2021-07-14")) %>% # when they were deployed
   group_by(Date) %>% 
   summarise(mean_temp = mean(Value)) %>% 
   group_by(Date) %>% 
@@ -111,15 +111,23 @@ KP_mean_daily_temp <- kp_data  %>%
   glimpse()
 
 range(KP_mean_daily_temp$mean_temp)
-# -0.3047619 11.9635417
-# warmest: 4th July, coldest: 1st June
+# -3.802463 29.047526
 
-# subsetting to start the season on June 18th (post snow melt)
-season_surface_temp <- KP_mean_daily_temp %>%
+# subsetting to start the season on June 18th 2022 (post 2022 snow melt)
+season_surface_temp_2022 <- KP_mean_daily_temp %>%
   subset(Date >= "2022-06-18" & Date <= "2022-08-15")
 
-mean(season_surface_temp$mean_temp)
+mean(season_surface_temp_2022$mean_temp)
 # 7.188471
+
+# subsetting to growing seasons 2021 and 2022 
+season_surface_temp <- KP_mean_daily_temp %>%
+  subset(Date >= "2021-07-14" & Date <= "2021-08-31" | 
+         Date >= "2022-06-18" & Date <= "2022-08-15")
+
+mean(season_surface_temp$mean_temp)
+# 7.908459
+
 
 # Save as csv
 write.csv(KP_mean_daily_temp, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_temp.csv", row.names = FALSE)
