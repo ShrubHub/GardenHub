@@ -5,22 +5,22 @@ library(gridExtra)
 
 # Data
 key <-
-  read.csv('scripts/common_garden/common_garden_data_2021/all_key_2021.csv')
+  read.csv('data/common_garden_data_2021/all_key_2021.csv')
 
 survival <-
-  read.csv('scripts/common_garden/common_garden_data_2021/all_survival_2021.csv')
+  read.csv('data/common_garden_data_2021/all_survival_2021.csv')
 
 growth <-
-  read.csv('scripts/common_garden/common_garden_data_2021/all_growth_2021.csv')
+  read.csv('data/common_garden_data_2021/all_growth_2021.csv')
 
 sampleID <-
-  read.csv('scripts/common_garden/common_garden_data_2021/sample_ID.csv')
+  read.csv('data/common_garden_data_2021/sample_ID.csv')
 
 bedkey <-
-  read.csv('scripts/common_garden/common_garden_data_2021/bed_key.csv')
+  read.csv('data/common_garden_data_2021/bed_key.csv')
 
-test <- full_join(growth, bedkey)
-write.csv(test, 'scripts/common_garden/common_garden_data_2021/full_join_2021.csv')
+# test <- full_join(growth, bedkey)
+write.csv(test, 'data/common_garden_data_2021/full_join_2021.csv')
 
 data <- growth %>% 
   filter(Species != "unknown" & Species!="Betula nana" & Species!="Betula glandulosa") %>% 
@@ -39,7 +39,7 @@ str(data)
 write.csv(data, 'scripts/common_garden/common_garden_data_2021/all_merged_data_2021.csv')
 
 field_data <- 
-  read.csv('scripts/common_garden/Salix_field_trait_data.csv')
+  read.csv('data/source_pops/Salix_field_trait_data.csv')
 
 ##### Figures
 
