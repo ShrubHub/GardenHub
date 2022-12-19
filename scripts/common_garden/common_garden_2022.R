@@ -637,6 +637,25 @@ write.csv(all_CG_source_growth, 'data/all_CG_source_growth.csv')
 # SLA, LDMC, LA: 
 all_source_area_traits <- read.csv("data/source_pops/all_source_area_traits.csv")
 cg_sla <- read.csv("data/common_garden_data_2022/cg_sla_2022.csv")
+traits_2017 <- read.csv("data/common_garden_data_2021/all_growth_2021.csv")
+
+
+traits_2017$SampleID_standard <- toupper(traits_2017$SampleID) # make all uppercase characters 
+traits_2017$SampleID_standard<-gsub("-","",as.character(traits_2017$SampleID_standard)) # remove "-"
+traits_2017$SampleID_standard<-gsub(" ","",as.character(traits_2017$SampleID_standard)) # remove spaces " " 
+
+traits_2017_merge <- traits_2017 %>% 
+  select(LA, SLA, LDMC, SampleID_standard, Species, Sample_Date, Fresh_mass, Dry_mass) %>% 
+  filter(Species %in% c("Salix arctica", "Salix pulchra", "Salix richardsonii")) %>% 
+  mutate(population = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
+                                TRUE ~ "Southern")) 
+
+# make month, day, year columns for common garden data 
+traits_2017_merge$year <-  format(as.Date(traits_2017_merge$Sample_Date, format="%d/%m/%Y"),"%Y")
+traits_2017_merge$month <-  format(as.Date(traits_2017_merge$Sample_Date, format="%d/%m/%Y"),"%m")
+traits_2017_merge$DOY <-  lubridate::yday(as.POSIXct(traits_2017_merge$Sample_Date, format = "%Y-%m-%d"))
+traits_2017_merge$DOY <- as.factor(traits_2017_merge$DOY)
+traits_2017_merge$year <- as.factor(traits_2017_merge$year)
 
 str(all_source_area_traits)
 str(cg_sla)
@@ -644,7 +663,7 @@ str(cg_sla)
 # make month, day, year columns for common garden data 
 cg_sla$year <-  format(as.Date(cg_sla$date_sampled, format="%Y-%m-%d"),"%Y")
 cg_sla$month <-  format(as.Date(cg_sla$date_sampled, format="%Y-%m-%d"),"%m")
-cg_sla$DOY <-  yday(as.POSIXct(cg_sla$date_sampled, format = "%Y-%m-%d"))
+cg_sla$DOY <-  lubridate::yday(as.POSIXct(cg_sla$date_sampled, format = "%Y-%m-%d"))
 # reclass variables after merge, but need to fix date ones first 
 cg_sla$DOY <- as.factor(cg_sla$DOY)
 all_source_area_traits$DOY <- as.factor(all_source_area_traits$DOY)
@@ -668,8 +687,17 @@ all_source_area_traits_merge <- all_source_area_traits %>%
   mutate(population = case_when(Site == "Kluane" ~ "source_south", 
                                 Site == "Qikiqtaruk" ~ "source_north" ))  # add population column to indicate source north or south
 
+# TEST MERGE 
+all_CG_traits <- full_join(cg_sla_merge, traits_2017_merge, 
+                                  by = c("Species", "LDMC_g_g" = "LDMC", 
+                                         "plant_tag_id" = "SampleID_standard", 
+                                         "SLA", "LA", "population", 
+                                         "DOY", "year",
+                                         "leaf_fresh_mass_g" = "Fresh_mass", 
+                                         "month"))
+
 # I think we can merge now? Let's just see what happens 
-all_CG_source_traits <- full_join(cg_sla_merge, all_source_area_traits_merge, 
+all_CG_source_traits <- full_join(all_CG_traits, all_source_area_traits_merge, 
                               by = c("population", "Species", "LDMC_g_g", 
                                      "plant_tag_id", "sample_id", 
                                      "SLA", "Site", "LA",
