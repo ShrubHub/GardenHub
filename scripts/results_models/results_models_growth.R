@@ -1,7 +1,7 @@
 # Results models for growth differences comparing northern and southern willows
 # in the garden to their source populations
 # by Erica Zaja, created on 13/12/2022
-# Last update: 14/12/2022
+# Last update: 19/12/2022
 
 # growth: canopy height, shrub width, stem elongation, stem diameter over time 
 # attempted model structure: 
