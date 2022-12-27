@@ -135,9 +135,9 @@ mean(july_surface_temp_2022$mean_temp) # 14.54956
 
 # 2021 and 2022 july 
 july_surface_temp <- CG_mean_daily_temp %>%
-  subset(Date >= "2021-07-23" & Date <= "2021-07-31" |
+  subset(Date >= "2021-07-30" & Date <= "2021-07-31" |
            Date >= "2022-07-01" & Date <= "2022-07-31")
-mean(july_surface_temp$mean_temp) # 14.69054
+mean(july_surface_temp$mean_temp) # 14.75712
 
 # filter out august 2022
 aug_surface_temp_2022 <- CG_mean_daily_temp %>%
@@ -153,10 +153,10 @@ mean(aug_surface_temp$mean_temp) # 12.29057
 
 # subsetting growing seasons 2021 and 2022 
 season_surface_temp <- CG_mean_daily_temp %>%
-  subset(Date >= "2021-07-23" & Date <= "2021-08-31" | # 2021 growing season
+  subset(Date >= "2021-07-30" & Date <= "2021-08-31" | # 2021 growing season
            Date >= "2022-06-01" & Date <= "2022-08-17") # 2022 growing season
 mean(season_surface_temp$mean_temp)
-# 13.40576
+# 13.34453
 
 # Plot daily mean temp over full year
 (cg_mean_daily_temp <- ggplot(CG_mean_daily_temp, aes(x = Date, y = mean_temp)) +
@@ -220,9 +220,9 @@ mean(july_topsensor_temp$mean_temp) # 14.18936
 
 # 2021 and 2022 july
 july_topsensor_temp <- CG_mean_daily_top_sensor %>%
-  subset(Date >= "2021-07-23" & Date <= "2021-07-31" |
+  subset(Date >= "2021-07-30" & Date <= "2021-07-31" |
            Date >= "2022-07-01" & Date <= "2022-07-31")
-mean(july_topsensor_temp$mean_temp) # 14.39422
+mean(july_topsensor_temp$mean_temp) # 14.43845
 
 # filter out august
 aug_topsensor_temp_2022 <- CG_mean_daily_top_sensor %>%
@@ -238,9 +238,9 @@ mean(aug_topsensor_temp$mean_temp) # 11.90226
 
 # subsetting growing seasons 2021 and 2022 
 season_topsensor_temp <- CG_mean_daily_top_sensor %>%
-  subset(Date >= "2021-07-23" & Date <= "2021-08-31" | # 2021 growing season 
+  subset(Date >= "2021-07-30" & Date <= "2021-08-31" | # 2021 growing season 
            Date >= "2022-06-01" & Date <= "2022-08-17") # 2022 growing season
-mean(season_topsensor_temp$mean_temp) #12.98657
+mean(season_topsensor_temp$mean_temp) # 12.91095
 
 # Plot daily mean top sensor temp over full year
 (cg_mean_daily_top_sensor <- ggplot(CG_mean_daily_top_sensor, aes(x = Date, y = mean_temp)) +
@@ -305,11 +305,11 @@ july_soil_temp_2022 <- CG_mean_daily_soil_temp %>%
 
 mean(july_soil_temp_2022$mean_temp) # 13.63691
 
-# 2021 and 2022 august
-jult_topsensor_temp <- CG_mean_daily_top_sensor %>%
-  subset(Date >= "2021-07-23" & Date <= "2021-07-31" |
+# 2021 and 2022 july
+july_soil_temp <- CG_mean_daily_soil_temp %>%
+  subset(Date >= "2021-07-30" & Date <= "2021-07-31" |
            Date >= "2022-07-01" & Date <= "2022-07-31")
-mean(july_topsensor_temp$mean_temp) # 14.39422
+mean(july_soil_temp$mean_temp) # 13.80938
 
 # filter out august 2022
 aug_soil_temp_2022 <- CG_mean_daily_soil_temp %>%
@@ -325,9 +325,9 @@ mean(aug_soil_temp$mean_temp) # 11.90226
 
 # subsetting growing seasons 2021 and 2022 
 season_soil_temp <- CG_mean_daily_soil_temp %>%
-  subset(Date >= "2021-07-23" & Date <= "2021-08-31" | # 2021 growing season 
+  subset(Date >= "2021-07-30" & Date <= "2021-08-31" | # 2021 growing season 
            Date >= "2022-06-01" & Date <= "2022-08-17") # 2022 growing season
-mean(season_soil_temp$mean_temp) # 12.84862
+mean(season_soil_temp$mean_temp) # 12.75037
 
 # Plot daily mean soil temp over full year
 (cg_mean_daily_soil_temp <- ggplot(CG_mean_daily_soil_temp, aes(x = Date, y = mean_temp)) +
@@ -405,9 +405,9 @@ mean(july_soil_moist_2022$mean_moist) # 44.20692
 
 # 2021 and 2022 july
 july_soil_moist <- CG_mean_daily_soil_moist %>%
-  subset(Date >= "2021-07-23" & Date <= "2021-07-31" |
+  subset(Date >= "2021-07-30" & Date <= "2021-07-31" |
            Date >= "2022-07-01" & Date <= "2022-07-31")
-mean(july_soil_moist$mean_moist) # 28.57507
+mean(july_soil_moist$mean_moist) # 41.04545
 
 # filter out august
 aug_soil_moist_2022 <- CG_mean_daily_soil_moist %>%
@@ -423,9 +423,9 @@ mean(aug_soil_moist$mean_moist) # 65.83972
 
 # subsetting growing seasons 2021 and 2022 
 season_soil_moist <- CG_mean_daily_soil_moist %>%
-  subset(Date >= "2021-07-23" & Date <= "2021-08-31" | # 2021 growing season 
+  subset(Date >= "2021-07-30" & Date <= "2021-08-31" | # 2021 growing season 
            Date >= "2022-06-01" & Date <= "2022-08-17") # 2022 growing season
-mean(season_soil_moist$mean_moist) # 46.52611
+mean(season_soil_moist$mean_moist) # 51.36557
 
 # Saving as csv
 write.csv(CG_mean_daily_soil_moist, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_mean_daily_soil_moist.csv", row.names = FALSE)
@@ -469,6 +469,7 @@ facet_env_kp_hist <- grid.arrange(cg_mean_daily_soil_moist_hist, cg_mean_daily_s
                                   cg_mean_daily_temp_hist, cg_mean_daily_top_sensor_hist, ncol=2)
 
 # HOBO+TOMST ----
+
 # Making overall means using hobo (see CG_HOBO script) and tomst 
 mean_air_temp <- mean( 12.98, 14.80, 11.40) # N.B only using HOBO, 12.98
 mean_surface_temp <- mean(12.65, 13.25, 10.03, 13.75, 14.55, 12.94) 
