@@ -14,7 +14,6 @@ library(gridExtra)
 tomst_kp <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_FullTOMST_2022.csv") 
 
 ### 2. READING DATA ----
-# NB no need to run this anymore, data already wrangled
 # Using function created by Elise Gallois to read the TOMST raw data 
 read_tms4 <- function(file) {
   
@@ -69,7 +68,7 @@ tomst_kp <-  kp_data %>%
                names_to = "Variable",
                values_to = "Value") 
 # Saving as csv
-# write.csv(tomst_kp, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_FullTOMST_2022.csv", row.names = FALSE)
+write.csv(tomst_kp, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_FullTOMST_2022.csv", row.names = FALSE)
 
 # Reading in file 
 # NOTE THIS FILE ONLY HAS 2022 DATA, MUST LOAD ABOVE, FILE TOO LARGE TO COMMIT 
@@ -123,8 +122,8 @@ mean(season_surface_temp_2022$mean_temp)
 
 # subsetting to growing seasons 2021 and 2022 
 season_surface_temp <- KP_mean_daily_temp %>%
-  subset(Date >= "2021-07-28" & Date <= "2021-08-31" | 
-         Date >= "2022-06-18" & Date <= "2022-08-15")
+  subset(Date >= "2021-07-28" & Date <= "2021-08-31" | # 2021 growing season
+         Date >= "2022-06-18" & Date <= "2022-08-15") # 2022 growing season
 
 mean(season_surface_temp$mean_temp)
 # 6.695886
@@ -163,11 +162,11 @@ aug_surface_temp <- KP_mean_daily_temp %>%
 
 mean(aug_surface_temp$mean_temp) # 5.988896
 
-# Plot daily mean temp over full year 
+# Plot daily mean temp over full year
 (kp_mean_daily_temp <- ggplot(KP_mean_daily_temp, aes(x = Date, y = mean_temp)) +
     geom_line()+ 
     ylab("Daily mean surface temperature (°C)") +
-    xlab("Date (2022)") +
+    xlab("Date") +
     theme_bw() +
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(),
@@ -190,6 +189,7 @@ mean(aug_surface_temp$mean_temp) # 5.988896
           axis.title = element_text(size = 14),
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
+
 # histogram of summer temperatures 
 (kp_mean_daily_temp_hist <- ggplot(season_surface_temp, aes(x = mean_temp)) +
     geom_histogram(fill = "#CC9145", colour = "black", bins = 10)+ 
@@ -204,7 +204,7 @@ mean(aug_surface_temp$mean_temp) # 5.988896
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
-#### b. Above-surface temperature (T3: Top sensor) ----
+# b. Above-surface temperature (T3: Top sensor) ----
 
 # Daily mean top sensor temperature (10cm above surface)
 KP_mean_daily_top_sensor <- kp_data  %>%
@@ -218,7 +218,7 @@ KP_mean_daily_top_sensor <- kp_data  %>%
 
 range(KP_mean_daily_top_sensor$mean_temp)
 # for all TOMST
-# -7.625651 16.420030
+# -7.625651 16.4200304
 
 # subsetting to start the season on June 18th (post snow melt)
 season_topsensor_temp_2022 <- KP_mean_daily_top_sensor %>%
@@ -230,8 +230,8 @@ mean(season_topsensor_temp_2022$mean_temp)
 
 # 2021 and 2021 data 
 season_topsensor_temp <- KP_mean_daily_top_sensor %>%
-  subset(Date >= "2021-07-29" & Date <= "2021-08-31" | 
-           Date >= "2022-06-18" & Date <= "2022-08-15")
+  subset(Date >= "2021-07-29" & Date <= "2021-08-31" | # 2021 growing season
+           Date >= "2022-06-18" & Date <= "2022-08-15") # 2022 growing season
 mean(season_topsensor_temp$mean_temp)
 # 8.203
 
@@ -268,9 +268,23 @@ aug_topsensor_temp <- KP_mean_daily_top_sensor %>%
            Date >= "2022-08-01" & Date <= "2022-08-15")
 mean(aug_topsensor_temp$mean_temp) # 6.815827
 
-# Plot daily mean top sensor temp over summer 2022
+# Plot daily mean top sensor temp over 
 # time series
 (kp_mean_daily_top_sensor <- ggplot(KP_mean_daily_top_sensor, aes(x = Date, y = mean_temp)) +
+    geom_line()+ 
+    ylab("Daily mean above-surface temperature (°C)") +
+    xlab("Date") +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
+# over summer 2022
+(kp_mean_daily_top_sensor_2022 <- ggplot(season_topsensor_temp_2022, aes(x = Date, y = mean_temp)) +
     geom_line()+ 
     ylab("Daily mean above-surface temperature (°C)") +
     xlab("Date (2022)") +
@@ -297,7 +311,7 @@ mean(aug_topsensor_temp$mean_temp) # 6.815827
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
-#### c. Soil temperature (T1: Soil sensor) ----
+# c. Soil temperature (T1: Soil sensor) ----
 
 # Daily mean soil temperature 
 KP_mean_daily_soil_temp <- kp_data  %>%
@@ -365,12 +379,12 @@ aug_soil_temp <- KP_mean_daily_soil_temp %>%
     Date >= "2022-08-01" & Date <= "2022-08-15")
 mean(aug_soil_temp$mean_temp) #  4.314712
 
-# Plot daily mean soil temp over summer 2022
+# Plot daily mean soil temp over full year
 # timeseries
 (kp_mean_daily_soil_temp <- ggplot(KP_mean_daily_soil_temp, aes(x = Date, y = mean_temp)) +
     geom_line()+ 
     ylab("Daily mean soil temperature (°C)") +
-    xlab("Date (2022)") +
+    xlab("Date") +
     theme_bw() +
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(),
@@ -394,7 +408,7 @@ mean(aug_soil_temp$mean_temp) #  4.314712
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
-#### d. Soil moisture (SoilMoistureCount) ----
+# d. Soil moisture (SoilMoistureCount) ----
 # N.B max and min values to be changed when we figure out day of water bath
 # filter to change units
 KP_moist <- kp_data  %>%
@@ -409,23 +423,28 @@ mean(KP_moist$Value) # 1986.071
 KP_moist_percent <- KP_moist %>%
   mutate(moisture_percent = (Value - 337)*100/(3698-337))
     
-# Daily mean soil moisture for growing seasons
+# Daily mean soil moisture for all year
 KP_mean_daily_soil_moist <- KP_moist_percent  %>%
   #filter(Date > lubridate::ymd("2022-07-27")) %>% 
   group_by(Date) %>% 
   summarise(mean_moist = mean(moisture_percent)) %>% 
   group_by(Date) %>% 
-  top_n(-5, mean_moist) %>%  # see top 5 warmest days
-  glimpse() %>% 
-  filter(Date >= "2021-07-29" & Date <= "2021-08-31" |
-           Date >= "2022-06-18" & Date <= "2022-08-15") 
+  top_n(-5, mean_moist)  # see top 5 warmest days
+ # glimpse() %>% 
+  #filter(Date >= "2021-07-29" & Date <= "2021-08-31" |
+          # Date >= "2022-06-18" & Date <= "2022-08-15") 
   
 
 range(KP_mean_daily_soil_moist$mean_moist)
 # 42.48480 65.44199 % # madi didn't change this
 # driest:9th June, wettest: 30th June
 mean(KP_mean_daily_soil_moist$mean_moist)
-# 43.53843 
+# 49.79689
+
+# subsetting growing seasons 2021 and 2022 
+season_soil_moist <- KP_mean_daily_soil_moist %>%
+  subset(Date >= "2021-07-29" & Date <= "2021-08-31" |
+           Date >= "2022-06-18" & Date <= "2022-08-15")
 
 # Monthly means
 # filter june 2022
@@ -450,12 +469,12 @@ mean(aug_soil_moist$mean_moist) # 1928.611
 write.csv(KP_mean_daily_soil_moist, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_soil_moist.csv", row.names = FALSE)
 
 
-# Plot daily mean soil moisture over summer 2022
+# Plot daily mean soil moisture over full year
 # time series
 (kp_mean_daily_soil_moist <- ggplot(KP_mean_daily_soil_moist, aes(x = Date, y = mean_moist)) +
     geom_line()+ 
     ylab("Daily mean soil moisture") +
-    xlab("Date (2022)") +
+    xlab("Date") +
     theme_bw() +
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(),
@@ -466,7 +485,7 @@ write.csv(KP_mean_daily_soil_moist, file = "data/tomst/Kluane_Plateau_TOMST_15Au
           axis.text.y = element_text(size = 12, colour = "black")))
 
 # histogram
-(kp_mean_daily_soil_moist_hist <- ggplot(KP_mean_daily_soil_moist, aes(x = mean_moist)) +
+(kp_mean_daily_soil_moist_hist <- ggplot(season_soil_moist, aes(x = mean_moist)) +
     geom_histogram(fill = "#CC9145", colour = "black", bins = 10)+ 
     ylab("Frequency") +
     xlab("Daily mean soil moisture") +
@@ -479,6 +498,7 @@ write.csv(KP_mean_daily_soil_moist, file = "data/tomst/Kluane_Plateau_TOMST_15Au
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
+# PANELS ----
 # Panel of env variables
 # timeseries panel
 facet_env_kp <- grid.arrange(kp_mean_daily_soil_moist, kp_mean_daily_soil_temp, 
