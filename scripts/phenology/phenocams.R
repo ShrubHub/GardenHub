@@ -22,5 +22,7 @@ Phenocam_Datasheet_QHI <- read_excel("data/phenology/phenocam_pics/Phenocam_Data
 KP_phenocams_2022 <-KP_phenocams_2022[1:9,] # removing loads of NAs
 KP_phenocams_2021 <- KP_phenocams_2021[1:9,]
 
+# wrangle more before merging 
 # merge 2021 and 2022 kp datasets?
+KP_phenocams_2021_2022 <- rbind(KP_phenocams_2021, KP_phenocams_2022, by = "PLOT")
 
