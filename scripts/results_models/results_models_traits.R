@@ -96,3 +96,15 @@ LMA_mod_2 <- lmer(leaf_mass_per_area_g_m2 ~ population + (1|Species) + (1|year),
 summary(LMA_mod_2)
 tab_model(LMA_mod_2)
 
+# correlation matrix ----
+# filter traits in the CG
+traits_variables_CG <- all_CG_source_traits_2022 %>%
+  filter(population %in% c("Northern", "Southern")) %>%
+  select(SLA, LDMC_g_g, LA)%>%
+  na.omit()
+
+# visualise correlation matrix
+ggcorr(traits_variables_CG, method = c("everything", "pearson")) 
+
+
+

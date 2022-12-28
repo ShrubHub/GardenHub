@@ -1,19 +1,16 @@
 # Results models for growth differences comparing northern and southern willows
 # in the garden to their source populations
 # by Erica Zaja, created on 13/12/2022
-# Last update: 19/12/2022
+# Last update: 28/12/2022
 
 # growth: canopy height, shrub width, stem elongation, stem diameter over time 
 # attempted model structure: 
-# lmer(growth_variable ~ population + sample_age + (1|sample_year/species/sample_ID))
+# lmer(growth_variable ~ population + (1|Year/Species/Sample_ID))
 # population: is (a) common garden northern, (b) common garden southern, (c) source northern (QHI),
 # (d) source southern (Kluane)
 
 # if triple nested structure doesn't work, next attempted structure: 
-# lmer(growth_variable ~ population + sample_age + (1|sample_year) + (1|species) + (1|sample_ID))
-
-# growth models for common garden willows only:
-# lmer(growth_variable ~ population + (1|Year/SampleID_standard) + (1|Species))
+# lmer(growth_variable ~ population + (1|Year/SampleID_standard) + (1|species))
 
 # Loading libraries ----
 library(lme4)
@@ -22,6 +19,7 @@ library(sjPlot)
 library(ggplot2)
 library(ggpubr)
 library(corrplot)
+library(GGally)
 
 # Loading data ---- 
 all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
@@ -127,13 +125,25 @@ diam_garden_growth_mod_3 <- lmer(Stem_diameter ~ population + (1|Year) + (1|Spec
 # larger diameters for southern shrubs
 
 
-# correlation matrix ----
-# filter growth only (but maybe need to separate CG and source pops?)
-growth_variables <- all_CG_source_growth %>%
+# Correlation matrix growth ----
+
+# filter growth in the CG
+growth_variables_CG <- all_CG_source_growth %>%
+  filter(population %in% c("Northern", "Southern")) %>%
   select(Canopy_Height_cm, Stem_diameter, mean_stem_elong,
          mean_leaf_length, mean_width)%>%
   na.omit()
   
-res <- cor(growth_variables)
+res <- cor(growth_variables_CG)
 round(res, 2)
+# Visualising correlation matrix with ggcorr
+ggcorr(growth_variables_CG, method = c("everything", "pearson")) 
 
+# # Correlation matrix growth AND traits ----
+# NB traits_variables_CG created in results_models_traits.R script
+# merge growth and traits data 
+all_CG_variables <- merge(growth_variables_CG, traits_variables_CG)
+res_1 <- cor(all_CG_variables)
+round(res_1, 2)
+
+ggcorr(all_CG_variables, method = c("everything", "pearson")) 
