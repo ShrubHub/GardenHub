@@ -147,3 +147,196 @@ res_1 <- cor(all_CG_variables)
 round(res_1, 2)
 
 ggcorr(all_CG_variables, method = c("everything", "pearson")) 
+
+# Data visualisation ------
+# scatter Canopy height CG and source (2013-2022) ----
+(plot_canopy_height_all <- ggplot(all_CG_source_growth) +
+   geom_smooth(aes(x = Year, y = Canopy_Height_cm, colour = population, fill = population, group = population, method = "glm")) +
+   geom_point(aes(x = Year, y= Canopy_Height_cm, colour = population, group = population), size = 1.5, alpha = 0.5) +
+   # facet_grid(cols = vars(Species)) +
+   facet_wrap(~ Species, scales = "free_y") +
+   ylab("Canopy Height (cm)") +
+   xlab("\nYear") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
+# boxplot Canopy height CG and source (2013-2022) ----
+(plot_canopy_height_all <- ggplot(all_CG_source_growth) +
+   geom_boxplot(aes(x= population, y = Canopy_Height_cm, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+   # facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Canopy Height (cm)") +
+   xlab("\nYear") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
+# Canopy height only CG (2013-2022) ----
+(plot_canopy_height_CG <- ggplot(all_CG_source_growth_garden_only) +
+   geom_smooth(aes(x = Year, y = Canopy_Height_cm, colour = population, fill = population, group = population, method = "glm")) +
+   geom_point(aes(x = Year, y= Canopy_Height_cm, colour = population, group = population), size = 1.5, alpha = 0.5) +
+   # facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Canopy Height (cm)") +
+   xlab("\nYear") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.8) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.8) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
+# Shrub width CG + source (2013-2022) ----
+(plot_width_all <- ggplot(all_CG_source_growth) +
+     geom_boxplot(aes(x= population, y = mean_width, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+     # facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+     ylab("Width (cm)") +
+     xlab("") +
+     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+     theme_bw() +
+     theme(panel.border = element_blank(),
+           panel.grid.major = element_blank(),
+           panel.grid.minor = element_blank(),
+           strip.text = element_text(size = 15, color = "black", face = "italic"),
+           legend.title = element_text(size=15), #change legend title font size
+           legend.text = element_text(size=12),
+           axis.line = element_line(colour = "black"),
+           axis.title = element_text(size = 14),
+           axis.text.x = element_text(angle = 45, vjust = 0.5, size = 12, colour = "black"),
+           axis.text.y = element_text(size = 12, colour = "black")))
+
+# Shrub width CG only (2013-2022) ----
+(plot_width_CG <- ggplot(all_CG_source_growth_garden_only) +
+   geom_boxplot(aes(x= population, y = mean_width, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+   # facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Width (cm)") +
+   xlab("") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 14),
+         axis.text.x = element_text(angle = 45, vjust = 0.5, size = 12, colour = "black"),
+         axis.text.y = element_text(size = 12, colour = "black")))
+
+# Stem elongation CG + source (2013-2022) ----
+(plot_stem_all <- ggplot(all_CG_source_growth) +
+   geom_boxplot(aes(x= population, y = mean_stem_elong, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+   #facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Stem Elongation (mm)") +
+   xlab("\n Year") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
+# Stem elongation CG only (2013-2022) ----
+(plot_stem_CG <- ggplot(all_CG_source_growth_garden_only) +
+   geom_boxplot(aes(x= population, y = mean_stem_elong, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+   #facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Stem Elongation (mm)") +
+   xlab("\n Year") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
+# Stem diameter CG + source (2013-2022) ----
+(plot_stem_diam_all <- ggplot(all_CG_source_growth) +
+   geom_boxplot(aes(x= population, y = Stem_diameter, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+   #facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Stem Diameter (mm)") +
+   xlab("\n Year") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
+# Stem diameter CG only (2013-2022) ----
+(plot_stem_diam_CG <- ggplot(all_CG_source_growth_garden_only) +
+   geom_boxplot(aes(x= population, y = Stem_diameter, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+   #facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Stem Diameter (mm)") +
+   xlab("\n Year") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
