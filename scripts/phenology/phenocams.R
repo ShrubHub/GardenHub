@@ -82,6 +82,14 @@ KP_phenocams_2021_wrangle <- KP_phenocams_2021 %>%
 # merge 2021 and 2022 kp datasets
 KP_phenocams_2021_2022 <- bind_rows(KP_phenocams_2021_wrangle, KP_phenocams_2022_wrangle)
 
+# Divide salix pulchra and richardsonii
+KP_phenocams_2021_2022_pulchra <- KP_phenocams_2021_2022 %>%
+  select(-Salix_rich_bud_burst, -Salix_rich_first_yellow, -Salix_rich_last_yellow)
+
+KP_phenocams_2021_2022_rich <- KP_phenocams_2021_2022 %>%
+  select(-Salix_pulchra_bud_burst, -Salix_pulchra_first_yellow, -Salix_pulchra_last_yellow)
+
+
 # 3.2. QHI ----
 
 # 2022 QHI phenocams. NB only yellowing 
@@ -157,9 +165,16 @@ QHI_phenocams_2016_2022_edit <- QHI_phenocams_2016_2022 %>%
                                 Plot == ("QHI_19") ~ "19",
                                 Plot == ("QHI_20") ~ "20")) %>%
   select(Year, PhenocamID, Species, Snow_melt, All_snow_free, Snow_return_EoS, Half_snow_cover_EoS, Full_snow_cover_EoS,
-         Salix_bud_burst, Salix_first_yellow, Salix_last_yellow)
-                                
-                                
-                                
-                                
-                                
+         Salix_bud_burst, Salix_first_yellow, Salix_last_yellow)%>%
+  drop_na(Species)
+
+# dividing species
+QHI_salarc <- QHI_phenocams_2016_2022_edit %>%
+  filter(Species == "Salix arctica")
+
+QHI_salpul <- QHI_phenocams_2016_2022_edit %>%
+  filter(Species == "Salix pulchra")
+
+QHI_salric <- QHI_phenocams_2016_2022_edit %>%
+  filter(Species == "Salix richardsonii")
+# Nb Salix richardsonii only has first yellowing from 2022
