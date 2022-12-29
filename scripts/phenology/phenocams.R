@@ -129,4 +129,37 @@ QHI_phenocams_past_wrangle <- Phenocam_Datasheet_QHI %>%
 # merge 2022 and past years datasheets
 QHI_phenocams_2016_2022 <- bind_rows(QHI_phenocams_2022_wrangle, QHI_phenocams_past_wrangle)
 
+# making names consistent
+QHI_phenocams_2016_2022$Salix_spp <- as.factor(QHI_phenocams_2016_2022$Salix_spp)
 
+QHI_phenocams_2016_2022_edit <- QHI_phenocams_2016_2022 %>%
+  mutate(Species = case_when(Salix_spp %in% c("ARC", "Arctica") ~ "Salix arctica",
+                              Salix_spp %in% c("PUL", "Pulchra") ~ "Salix pulchra",
+                              Salix_spp %in% c("RIC", "Richardsonii") ~ "Salix richardsonii")) %>%
+  mutate(PhenocamID = case_when(Plot %in% c("Phenocam 1", "QHI_1") ~ "1",
+                                Plot %in% c("Phenocam 2", "QHI_2") ~ "2", 
+                                Plot %in% c("Phenocam 3", "QHI_3") ~ "3",                               
+                                Plot %in% c("Phenocam 4", "QHI_4") ~ "4",                                
+                                Plot %in% c("Phenocam 5", "QHI_5") ~ "5",                                
+                                Plot %in% c("Phenocam 6", "QHI_6") ~ "6",
+                                Plot == ("QHI_7") ~ "7",
+                                Plot == ("QHI_8") ~ "8",
+                                Plot == ("QHI_9") ~ "9",
+                                Plot == ("QHI_10") ~ "10",
+                                Plot == ("QHI_11") ~ "11",
+                                Plot == ("QHI_12") ~ "12",
+                                Plot == ("QHI_13") ~ "13",
+                                Plot == ("QHI_14") ~ "14",
+                                Plot == ("QHI_15") ~ "15",
+                                Plot == ("QHI_16") ~ "16",
+                                Plot == ("QHI_17") ~ "17",
+                                Plot == ("QHI_18") ~ "18",
+                                Plot == ("QHI_19") ~ "19",
+                                Plot == ("QHI_20") ~ "20")) %>%
+  select(Year, PhenocamID, Species, Snow_melt, All_snow_free, Snow_return_EoS, Half_snow_cover_EoS, Full_snow_cover_EoS,
+         Salix_bud_burst, Salix_first_yellow, Salix_last_yellow)
+                                
+                                
+                                
+                                
+                                
