@@ -12,7 +12,7 @@ The repository is subdivided into the following folders:
       - For all years common garden measurements: [all_merged_data_2022.csv](https://github.com/ShrubHub/GardenHub/blob/main/data/common_garden_data_2022/all_cg_data_2022csv)
   - [phenology](https://github.com/ShrubHub/GardenHub/tree/main/data/phenology): 
     - [groundtruthing_2022](https://github.com/ShrubHub/GardenHub/tree/main/data/phenology/groundtruthing_2022): ground-truthing sheets (2022)
-    - [phenocam_pics](https://github.com/ShrubHub/GardenHub/tree/main/data/phenology/phenocam_pics): **(only missing CG ones)**
+    - [phenocam_pics](https://github.com/ShrubHub/GardenHub/tree/main/data/phenology/phenocam_pics): including KP, QHI and CG (with individual shrub observations for CG shrubs)
   - [source_pops](https://github.com/ShrubHub/GardenHub/tree/main/data/source_pops): all source population data (2017-2022)
       - For all years source population SLA, LA, LDMC: [all_source_area_traits.csv](https://github.com/ShrubHub/GardenHub/blob/main/data/source_pops/all_source_area_traits.csv)
       - For all maternal population height, width, stem elongation, leaf length, stem diameter (note: no species IDs, can be found by matching Standard IDs):  [mother_data.csv](https://github.com/ShrubHub/GardenHub/blob/main/data/source_pops/mother_data.csv)

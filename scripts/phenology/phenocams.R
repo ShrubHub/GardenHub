@@ -240,19 +240,47 @@ CG_phenocams_individual_2021_2022_wrangle <- CG_phenocams_individual_2021_2022 %
          -"Certainty Index (1-5)...18") %>% 
   mutate(Species = ifelse(grepl("SA", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Salix arctica",
                           ifelse(grepl("SR", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Salix richardsonii", 
-                                 ifelse(grepl("SP", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Salix pulchra", NA)))) %>% 
-  mutate(population_1 = ifelse(grepl("HE" , CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "QHI",
+                                 ifelse(grepl("SP", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Salix pulchra", NA)))) %>%  # species col
+  mutate(population_1 = ifelse(grepl("HE" , CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "QHI", # working population col 1
                                    ifelse(grepl("KP", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", 
-                                          ifelse(grepl("PC", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", NA)))) %>%
-  mutate(population_2 = ifelse(grepl("H" , CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "QHI",
+                                          ifelse(grepl("PC", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", NA)))) %>% 
+  mutate(population_2 = ifelse(grepl("H" , CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "QHI", # working population col 1
                              ifelse(grepl("K", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", 
                                     ifelse(grepl("PP", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", NA)))) %>%
-  mutate(population = case_when(population_1 == "QHI" | population_2 == "QHI" ~ "QHI",
-                           population_1  == "Kluane" | population_2 == "Kluane" ~ "Kluane"))
+  mutate(population = case_when(population_1 == "QHI" | population_2 == "QHI" ~ "QHI", # final population col 
+                           population_1  == "Kluane" | population_2 == "Kluane" ~ "Kluane")) %>%
+  select(-population_1, -population_2)
                          
+# reclassing dates
+CG_phenocams_individual_2021_2022_wrangle$Snow_melt <- as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$Snow_melt, format = "%d/%m/%Y")
+CG_phenocams_individual_2021_2022_wrangle$Plants_first_visible_through_snow <- as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$Plants_first_visible_through_snow, format = "%d/%m/%Y")
+CG_phenocams_individual_2021_2022_wrangle$All_snow_free <- as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$All_snow_free, format = "%d/%m/%Y")
+CG_phenocams_individual_2021_2022_wrangle$Snow_return_EoS <- as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$Snow_return_EoS, format = "%d/%m/%Y")
+CG_phenocams_individual_2021_2022_wrangle$Full_snow_cover_EoS <- as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$Full_snow_cover_EoS, format = "%d/%m/%Y")
+CG_phenocams_individual_2021_2022_wrangle$First_leaf_bud_burst <- as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$First_leaf_bud_burst, format = "%d/%m/%Y")
+CG_phenocams_individual_2021_2022_wrangle$First_leaf_yellow <- as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$First_leaf_yellow, format = "%d/%m/%Y")
+CG_phenocams_individual_2021_2022_wrangle$Last_leaves_yellow <- as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$Last_leaves_yellow, format = "%d/%m/%Y")
 
-                    
-         
+# species and pop as factors
+CG_phenocams_individual_2021_2022_wrangle$Species <- as.factor(CG_phenocams_individual_2021_2022_wrangle$Species)
+CG_phenocams_individual_2021_2022_wrangle$population <- as.factor(CG_phenocams_individual_2021_2022_wrangle$population)
 
+# subsetting into species and site
+CG_KP_arctica_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
+  filter(Species == "Salix arctica" & population == "Kluane")
 
+CG_QHI_arctica_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
+  filter(Species == "Salix arctica" & population == "QHI")
+
+CG_KP_pulchra_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
+  filter(Species == "Salix pulchra" & population == "Kluane")
+
+CG_QHI_pulchra_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
+  filter(Species == "Salix pulchra" & population == "QHI")
+
+CG_KP_rich_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
+  filter(Species == "Salix richardsonii" & population == "Kluane")
+
+CG_QHI_rich_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
+  filter(Species == "Salix richardsonii" & population == "QHI")
 
