@@ -14,8 +14,8 @@ KP_phenocams_2021 <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2021.cs
 KP_phenocams_2022 <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2022.csv")
 QHI_phenocams_2022 <- read_csv("data/phenology/phenocam_pics/QHI_phenocams_2022.csv")
 Phenocam_Datasheet_QHI <- read_csv("data/phenology/phenocam_pics/Phenocam_Datasheet_QHI.csv")
-# add common garden datasheet when available
-
+CG_phenocams_individual_2021_2022 <- read_csv("data/phenology/phenocam_pics/CG_phenocams_individual_2021_2022.csv")
+# add the generic sheets too (not the individual observations)
 
 # 3. DATA WRANGLING-----
 
@@ -222,8 +222,37 @@ QHI_salric <- QHI_phenocams_2016_2022_edit_manual %>%
   filter(Species == "Salix richardsonii")
 # Nb Salix richardsonii only has first yellowing from 2022
 
+# 3.3. CG -----
+CG_phenocams_individual_2021_2022 <- CG_phenocams_individual_2021_2022[,1:18] # removing extra blank cols from csv
 
+# rename columns
+CG_phenocams_individual_2021_2022_wrangle <- CG_phenocams_individual_2021_2022 %>%
+  rename("Plants_first_visible_through_snow" = "Plants first visible through snow",
+         "Snow_melt" = "Snow Free Melt Date (>90% plot free of snow)", 
+         "All_snow_free" = "First 100% snow-free day",
+         "Snow_return_EoS" = "First snow return day - end of season",
+         "Half_snow_cover_EoS" = "50% snow coverge - end of season",
+         "Full_snow_cover_EoS" = "100% snow coverage - end of season",
+         "First_leaf_bud_burst" = "First leaf bud burst",
+         "First_leaf_yellow" = "First yellowing of leaves",
+         "Last_leaves_yellow" = "Last leaf starts turning yellow") %>%
+  select(-Shrub, -Observer,-Notes,-"Certainty Index", -"Certainty Index (1-5)...16",
+         -"Certainty Index (1-5)...18") %>% 
+  mutate(Species = ifelse(grepl("SA", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Salix arctica",
+                          ifelse(grepl("SR", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Salix richardsonii", 
+                                 ifelse(grepl("SP", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Salix pulchra", NA)))) %>% 
+  mutate(population_1 = ifelse(grepl("HE" , CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "QHI",
+                                   ifelse(grepl("KP", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", 
+                                          ifelse(grepl("PC", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", NA)))) %>%
+  mutate(population_2 = ifelse(grepl("H" , CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "QHI",
+                             ifelse(grepl("K", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", 
+                                    ifelse(grepl("PP", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", NA)))) %>%
+  mutate(population = case_when(population_1 == "QHI" | population_2 == "QHI" ~ "QHI",
+                           population_1  == "Kluane" | population_2 == "Kluane" ~ "Kluane"))
+                         
 
+                    
+         
 
 
 
