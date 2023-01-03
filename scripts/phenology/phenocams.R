@@ -15,7 +15,8 @@ KP_phenocams_2022 <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2022.cs
 QHI_phenocams_2022 <- read_csv("data/phenology/phenocam_pics/QHI_phenocams_2022.csv")
 Phenocam_Datasheet_QHI <- read_csv("data/phenology/phenocam_pics/Phenocam_Datasheet_QHI.csv")
 CG_phenocams_individual_2021_2022 <- read_csv("data/phenology/phenocam_pics/CG_phenocams_individual_2021_2022.csv")
-# add the generic sheets too (not the individual observations)
+# add the generic sheets too (not the individual observations)- but might not need them
+# CG_phenocams_2021_all, CG_phenocams_2022_all
 
 # 3. DATA WRANGLING-----
 
