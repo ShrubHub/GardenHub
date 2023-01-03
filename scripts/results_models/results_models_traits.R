@@ -1,8 +1,8 @@
 # Results models for trait differences comparing northern and southern willows
 # by Mad 13/12/2022
-# Last updated: 17/12/2022
+# Last updated: /01/2022
 
-# traits: SLA, LDMC, LA, leaf length  
+# TRAITS: SLA, LDMC, leaf area (LA), leaf length, leaf mass per area (LMA)
 
 # model, where population is CG northern, CG southern, source northern (QHI), source southern (Kluane alpine)
 # lmer(TRAIT ~ population + (1|sample_year/species/sample_ID))
@@ -10,12 +10,14 @@
 # separate nested random effects if it doesn't converge 
 
 # LIBRARIES ---- 
-
+library(plyr)
 library(dplyr)
 library(ggplot2)
 library(lme4)
 library(sjPlot)
 library(ggpubr)
+library(GGally)
+
 
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
@@ -37,6 +39,13 @@ all_CG_source_traits$population <- as.factor(all_CG_source_traits$population)
 all_CG_source_traits$date_sampled <- as.POSIXct(all_CG_source_traits$date_sampled, format = '%Y-%m-%d')
 all_CG_source_traits$year <- as.factor(all_CG_source_traits$year)
 # currently doesn't exist! all_CG_source_traits$Sample_age <- as.factor(all_CG_source_traits$Sample_age)
+
+# filter out two extreme LDMC values from 2014 
+# filter out one extreme LMA value from 2021 
+all_CG_source_traits <- all_CG_source_traits %>% 
+  filter(LDMC_g_g < 1) %>% 
+  filter(leaf_mass_per_area_g_m2 < 130) %>% 
+  filter(SLA < 24)
 
 # SLA ----
 SLA_mod_1 <- lmer(SLA ~ population + (1|year/Species/plant_tag_id), 
@@ -100,11 +109,138 @@ tab_model(LMA_mod_2)
 # filter traits in the CG
 traits_variables_CG <- all_CG_source_traits_2022 %>%
   filter(population %in% c("Northern", "Southern")) %>%
-  select(SLA, LDMC_g_g, LA)%>%
+  select(SLA, LDMC_g_g, LA, leaf_mass_per_area_g_m2)%>%
   na.omit()
 
 # visualise correlation matrix
 ggcorr(traits_variables_CG, method = c("everything", "pearson")) 
 
+# FIGURES ----
+# rename levels in garden for figures 
+all_CG_source_traits$population <- plyr::revalue(all_CG_source_traits$population, 
+                                                 c("Northern"="Northern Garden",
+                                             "Southern"="Southern Garden",
+                                             "source_south"="Southern Source",
+                                             "source_north"="Northern Source"))
+all_CG_source_traits$population <- ordered(all_CG_source_traits$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden", 
+                                                      "Southern Garden", 
+                                                      "Southern Source"))
+
+all_CG_source_traits_2022$population <- plyr::revalue(all_CG_source_traits_2022$population, 
+                                                 c("Northern"="Northern Garden",
+                                                   "Southern"="Southern Garden",
+                                                   "source_south"="Southern Source",
+                                                   "source_north"="Northern Source"))
+all_CG_source_traits_2022$population <- ordered(all_CG_source_traits_2022$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden", 
+                                                      "Southern Garden", 
+                                                      "Southern Source"))
 
 
+# SLA 
+(sla_plot <- ggplot(all_CG_source_traits) +
+geom_boxplot(aes(x= population, y = SLA, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+  # facet_grid(cols = vars(Species)) +
+  facet_wrap(~Species) +
+  ylab("Specific leaf area ()") +
+  xlab("") +
+  scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+  scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+  theme_bw() +
+  theme(panel.border = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.text = element_text(size = 15, color = "black", face = "italic"),
+        legend.title = element_text(size=15), #change legend title font size
+        legend.text = element_text(size=12),
+        axis.line = element_line(colour = "black"),
+        axis.title = element_text(size = 14),
+        axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
+        axis.text.y = element_text(size = 12, colour = "black")))
+
+# LDMC
+(ldmc_plot <- ggplot(all_CG_source_traits) +
+    geom_boxplot(aes(x= population, y = LDMC_g_g, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species) +
+    ylab("leaf dry matter content ()") +
+    xlab("") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
+# LMA
+(lma_plot <- ggplot(all_CG_source_traits) +
+    geom_boxplot(aes(x= population, y = leaf_mass_per_area_g_m2, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species) +
+    ylab("leaf mass per area (g/m2)") +
+    xlab("") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
+# LA - need to fix values post merge 
+(la_plot <- ggplot(all_CG_source_traits_2022) +
+    geom_boxplot(aes(x= population, y = LA, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species) +
+    ylab("leaf area ()") +
+    xlab("") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
+# leaf length - also need to fix units 
+(ll_plot <- ggplot(all_CG_source_growth) +
+    geom_boxplot(aes(x= population, y = mean_leaf_length, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species) +
+    ylab("leaf area ()") +
+    xlab("") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
