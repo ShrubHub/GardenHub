@@ -649,7 +649,7 @@ traits_2017_merge <- traits_2017 %>%
   filter(Species %in% c("Salix arctica", "Salix pulchra", "Salix richardsonii")) %>% 
   mutate(population = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
                                 TRUE ~ "Southern")) %>% 
-  mutate(Site = "Common_garen") %>% 
+  mutate(Site = "Common_garden") %>% 
   filter(SLA < 35) # filter out NAs
 
 # make month, day, year columns for common garden data 
