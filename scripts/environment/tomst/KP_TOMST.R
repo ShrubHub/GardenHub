@@ -132,7 +132,7 @@ mean(season_surface_temp$mean_temp)
 write.csv(KP_mean_daily_temp, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_temp.csv", row.names = FALSE)
 
 # Monthly means
-# filter out june 2022
+# filter out june 2022, only 2022 because tomst wasnt in place in June 2021
 june_surface_temp_2022 <- KP_mean_daily_temp %>%
   subset(Date >= "2022-06-18" & Date <= "2022-06-30")
 
@@ -409,71 +409,91 @@ mean(aug_soil_temp$mean_temp) #  4.314712
           axis.text.y = element_text(size = 12, colour = "black")))
 
 # d. Soil moisture (SoilMoistureCount) ----
-# N.B max and min values to be changed when we figure out day of water bath
-# filter to change units
-KP_moist <- kp_data  %>%
-  filter(Variable %in% "SoilMoistureCount") 
+
+# filter the full dataset to start from date of water bath
+KP_moist <- tomst_kp %>% 
+  mutate(Date = lubridate::date(Datetime_UTC)) %>% 
+  filter(Date >= '2021-07-23') %>% # date of water bath 23rd July
+  filter(Variable %in% "SoilMoistureCount")
 
 max(KP_moist$Value) #3698
-min(KP_moist$Value) # 337
-mean(KP_moist$Value) # 1986.071
+min(KP_moist$Value) # 301
+mean(KP_moist$Value) # 1535.597
 
 # making moisture into a percentage
 # formula: ((input - min) * 100) / (max - min)
 KP_moist_percent <- KP_moist %>%
-  mutate(moisture_percent = (Value - 337)*100/(3698-337))
-    
+  mutate(moisture_percent = (Value - 301)*100/(3698-301))
+
+max(KP_moist_percent$moisture_percent) # 100%
+min(KP_moist_percent$moisture_percent) # 0%
+mean(KP_moist_percent$moisture_percent) # 36.34373 %
+
 # Daily mean soil moisture for all year
 KP_mean_daily_soil_moist <- KP_moist_percent  %>%
-  #filter(Date > lubridate::ymd("2022-07-27")) %>% 
+  filter(Date > lubridate::ymd("2021-07-29")) %>% # date when tomst deployed
   group_by(Date) %>% 
   summarise(mean_moist = mean(moisture_percent)) %>% 
   group_by(Date) %>% 
-  top_n(-5, mean_moist)  # see top 5 warmest days
- # glimpse() %>% 
+  top_n(-5, mean_moist) %>%  # see top 5 warmest days
+ glimpse() 
   #filter(Date >= "2021-07-29" & Date <= "2021-08-31" |
           # Date >= "2022-06-18" & Date <= "2022-08-15") 
   
-
 range(KP_mean_daily_soil_moist$mean_moist)
-# 42.48480 65.44199 % # madi didn't change this
-# driest:9th June, wettest: 30th June
+# 25.60355 65.80822
+# driest: 20 march 2022, wettest: 30th june 2022
 mean(KP_mean_daily_soil_moist$mean_moist)
-# 49.79689
+# 36.84612
 
 # subsetting growing seasons 2021 and 2022 
 season_soil_moist <- KP_mean_daily_soil_moist %>%
   subset(Date >= "2021-07-29" & Date <= "2021-08-31" |
            Date >= "2022-06-18" & Date <= "2022-08-15")
 
+mean(season_soil_moist$mean_moist) # 50.54856
+
 # Monthly means
 # filter june 2022
 june_soil_moist <- KP_mean_daily_soil_moist %>%
   subset(Date >= "2022-06-01" & Date <= "2022-06-30")
 
-mean(june_soil_moist$mean_moist) # 2048.208
+mean(june_soil_moist$mean_moist) #  51.43146
 
 # filter july 2022
-july_soil_moist <- KP_mean_daily_soil_moist %>%
+july_soil_moist_2022 <- KP_mean_daily_soil_moist %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
-mean(july_soil_moist$mean_moist) # 1948.594
+mean(july_soil_moist$mean_moist) # 48.50145
 
-# filteraugust 2022
-aug_soil_moist <- KP_mean_daily_soil_moist %>%
+# 2021 and 2022 july 
+july_soil_moist <- KP_mean_daily_soil_moist %>%
+  subset(Date >= "2021-07-29" & Date <= "2021-07-31" |
+           Date >= "2022-07-01" & Date <= "2022-07-31")
+
+mean(july_soil_moist$mean_moist)
+
+# filter august 2022
+aug_soil_moist_2022 <- KP_mean_daily_soil_moist %>%
   subset(Date >= "2022-08-01" & Date <= "2022-08-15")
 
-mean(aug_soil_moist$mean_moist) # 1928.611
+mean(aug_soil_moist_2022$mean_moist) # 47.91319
+
+# filter 2022 and 2021 aug
+aug_soil_moist <- KP_mean_daily_soil_moist %>%
+  subset(Date >= "2021-08-01" & Date <= "2021-08-31" |
+           Date >= "2022-08-01" & Date <= "2022-08-15")
+
+mean(aug_soil_moist$mean_moist) #  49.41268
 
 # Save as csv
 write.csv(KP_mean_daily_soil_moist, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_soil_moist.csv", row.names = FALSE)
-
 
 # Plot daily mean soil moisture over full year
 # time series
 (kp_mean_daily_soil_moist <- ggplot(KP_mean_daily_soil_moist, aes(x = Date, y = mean_moist)) +
     geom_line()+ 
-    ylab("Daily mean soil moisture") +
+    ylab("Daily mean soil moisture (%)") +
     xlab("Date") +
     theme_bw() +
     theme(panel.border = element_blank(),
@@ -488,7 +508,7 @@ write.csv(KP_mean_daily_soil_moist, file = "data/tomst/Kluane_Plateau_TOMST_15Au
 (kp_mean_daily_soil_moist_hist <- ggplot(season_soil_moist, aes(x = mean_moist)) +
     geom_histogram(fill = "#CC9145", colour = "black", bins = 10)+ 
     ylab("Frequency") +
-    xlab("Daily mean soil moisture") +
+    xlab("Daily mean soil moisture (%)") +
     theme_bw() +
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(),
