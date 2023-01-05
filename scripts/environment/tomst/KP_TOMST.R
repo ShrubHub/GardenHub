@@ -412,8 +412,8 @@ mean(aug_soil_temp$mean_temp) #  4.314712
 
 # filter the full dataset to start from date of water bath
 KP_moist <- tomst_kp %>% 
-  mutate(Date = lubridate::date(Datetime_UTC)) %>% 
-  filter(Date >= '2021-07-23') %>% # date of water bath 23rd July
+  mutate(Date = lubridate::date(Datetime_UTC)) %>%  
+  filter(Date >= '2021-07-23') %>% # date of water bath 23rd July 2021
   filter(Variable %in% "SoilMoistureCount")
 
 max(KP_moist$Value) #3698

@@ -361,71 +361,74 @@ mean(season_soil_temp$mean_temp) # 12.75037
 write.csv(CG_mean_daily_soil_temp, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_mean_daily_soil_temp.csv", row.names = FALSE)
 
 # d. Soil moisture (SoilMoistureCount) ----
-# N.B max and min values to be changed when we figure out day of water bath
-# filter to change units
-CG_moist <- cg_data  %>%
-  filter(Variable %in% "SoilMoistureCount") 
 
-max(CG_moist$Value) #2138
-min(CG_moist$Value) # 1198
-mean(CG_moist$Value) # 1636.912
+# filter the full dataset to start from date of water bath
+CG_moist <- tomst_cg %>% 
+  mutate(Date = lubridate::date(Datetime_UTC)) %>% 
+  filter(Date >= '2021-07-23') %>% # date of water bath 23rd July 2021
+  filter(Variable %in% "SoilMoistureCount")
+
+max(CG_moist$Value) #3522
+min(CG_moist$Value) # 339
+mean(CG_moist$Value) # 1438.297
 
 # making moisture into a percentage
 # formula: ((input - min) * 100) / (max - min)
 CG_moist_percent <- CG_moist %>%
-  mutate(moisture_percent = (Value - 1198)*100/(2138-1198))
+  mutate(moisture_percent = (Value - 339)*100/(3522-339))
+
+max(CG_moist_percent$moisture_percent) # 100%
+min(CG_moist_percent$moisture_percent) # 0%
+mean(CG_moist_percent$moisture_percent) # 34.53652 %
 
 # Daily mean soil moisture
 CG_mean_daily_soil_moist <- CG_moist_percent  %>%
-  #filter(Date > lubridate::ymd("2022-07-27")) %>% 
+  filter(Date > lubridate::ymd("2021-07-29")) %>% # date when tomst deployed 
   group_by(Date) %>% 
-  summarise(mean_moist = mean(moisture_percent)) %>% 
-  group_by(Date) %>% 
-  top_n(-5, mean_moist) %>%  # see top 5 warmest days
-  glimpse()
+  summarise(mean_moist = mean(moisture_percent))
 
 range(CG_mean_daily_soil_moist$mean_moist)
-# 26.16763 67.06006
-# driest:10th July, wettest: 2nd Aug
+# 19.92748 60.06235
+# driest:30th July 2021, wettest: 29th april 2022
 mean(CG_mean_daily_soil_moist$mean_moist)
-# 46.76717 %
+# 34.84954
 
 # Monthly means
 # filter out june
 june_soil_moist <- CG_mean_daily_soil_moist %>%
   subset(Date >= "2022-06-01" & Date <= "2022-06-30")
 
-mean(june_soil_moist$mean_moist) # 39.49235
+mean(june_soil_moist$mean_moist) # 38.66966
 
 # filter out july
 july_soil_moist_2022 <- CG_mean_daily_soil_moist %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
-mean(july_soil_moist_2022$mean_moist) # 44.20692
+mean(july_soil_moist_2022$mean_moist) # 40.04226
 
 # 2021 and 2022 july
 july_soil_moist <- CG_mean_daily_soil_moist %>%
   subset(Date >= "2021-07-30" & Date <= "2021-07-31" |
            Date >= "2022-07-01" & Date <= "2022-07-31")
-mean(july_soil_moist$mean_moist) # 41.04545
+mean(july_soil_moist$mean_moist) #  39.10862
 
 # filter out august
 aug_soil_moist_2022 <- CG_mean_daily_soil_moist %>%
   subset(Date >= "2022-08-01" & Date <= "2022-08-17")
 
-mean(aug_soil_moist_2022$mean_moist) # 64.2738
+mean(aug_soil_moist_2022$mean_moist) #  45.96839
 
 # 2021 and 2022 august
 aug_soil_moist <- CG_mean_daily_soil_moist %>%
   subset(Date >= "2021-08-01" & Date <= "2021-08-31" |
            Date >= "2022-08-01" & Date <= "2022-08-17")
-mean(aug_soil_moist$mean_moist) # 65.83972
+mean(aug_soil_moist$mean_moist) # 46.43083
 
 # subsetting growing seasons 2021 and 2022 
 season_soil_moist <- CG_mean_daily_soil_moist %>%
   subset(Date >= "2021-07-30" & Date <= "2021-08-31" | # 2021 growing season 
            Date >= "2022-06-01" & Date <= "2022-08-17") # 2022 growing season
-mean(season_soil_moist$mean_moist) # 51.36557
+mean(season_soil_moist$mean_moist) # 42.15634
 
 # Saving as csv
 write.csv(CG_mean_daily_soil_moist, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_mean_daily_soil_moist.csv", row.names = FALSE)
@@ -433,7 +436,7 @@ write.csv(CG_mean_daily_soil_moist, file = "data/tomst/Common_Garden_TOMST_17Aug
 # Plot daily mean soil moisture over full year
 (cg_mean_daily_soil_moist <- ggplot(CG_mean_daily_soil_moist, aes(x = Date, y = mean_moist)) +
     geom_line()+ 
-    ylab("Daily mean soil moisture") +
+    ylab("Daily mean soil moisture (%)") +
     xlab("Date") +
     theme_bw() +
     theme(panel.border = element_blank(),
@@ -448,7 +451,7 @@ write.csv(CG_mean_daily_soil_moist, file = "data/tomst/Common_Garden_TOMST_17Aug
 (cg_mean_daily_soil_moist_hist <- ggplot(season_soil_moist, aes(x = mean_moist)) +
     geom_histogram(fill = "#CC9145", colour = "black", bins = 10)+ 
     ylab("Frequency") +
-    xlab("Daily mean soil moisture (2021-22)") +
+    xlab("Daily mean soil moisture (%)") +
     theme_bw() +
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(),
@@ -471,7 +474,9 @@ facet_env_kp_hist <- grid.arrange(cg_mean_daily_soil_moist_hist, cg_mean_daily_s
 # HOBO+TOMST ----
 
 # Making overall means using hobo (see CG_HOBO script) and tomst 
-mean_air_temp <- mean( 12.98, 14.80, 11.40) # N.B only using HOBO, 12.98
+# i.e. means of hobo june, july, august and tomst june, july, august
+mean_air_temp <- mean(12.98, 14.80, 11.40) # N.B only using HOBO, because tomst doesnt have it
 mean_surface_temp <- mean(12.65, 13.25, 10.03, 13.75, 14.55, 12.94) 
 mean_soil_temp <- mean( 11.91, 14.17, 11.32,  12.33, 13.46, 12.76)
-# missing soil moisture and top sensor
+mean_soil_moist <- mean()
+# missing top sensor: average the top sensor with the surface temp
