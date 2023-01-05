@@ -1,7 +1,7 @@
 # Results models for growth differences comparing northern and southern willows
 # in the garden to their source populations
 # by Erica Zaja, created on 13/12/2022
-# Last update: 28/12/2022
+# Last update: 05/01/2023 by Madi 
 
 # growth: canopy height, shrub width, stem elongation, stem diameter over time 
 # attempted model structure: 
@@ -130,8 +130,7 @@ diam_garden_growth_mod_3 <- lmer(Stem_diameter ~ population + (1|Year) + (1|Spec
 # filter growth in the CG
 growth_variables_CG <- all_CG_source_growth %>%
   filter(population %in% c("Northern", "Southern")) %>%
-  select(Canopy_Height_cm, Stem_diameter, mean_stem_elong,
-         mean_leaf_length, mean_width)%>%
+  select(Canopy_Height_cm, Stem_diameter, mean_stem_elong, mean_width)%>%
   na.omit()
   
 res <- cor(growth_variables_CG)
@@ -140,6 +139,19 @@ round(res, 2)
 ggcorr(growth_variables_CG, method = c("everything", "pearson")) 
 
 # # Correlation matrix growth AND traits ----
+# import trait data 
+all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
+all_CG_source_traits$Species <- as.factor(all_CG_source_traits$Species)
+all_CG_source_traits$plant_tag_id <- as.factor(all_CG_source_traits$plant_tag_id)
+all_CG_source_traits$population <- as.factor(all_CG_source_traits$population)
+all_CG_source_traits$date_sampled <- as.POSIXct(all_CG_source_traits$date_sampled, format = '%Y-%m-%d')
+all_CG_source_traits$year <- as.factor(all_CG_source_traits$year)
+
+traits_variables_CG <- all_CG_source_traits %>%
+  filter(population %in% c("Northern", "Southern")) %>%
+  select(SLA, LDMC_g_g, leaf_mass_per_area_g_m2)%>%
+  na.omit()
+
 # NB traits_variables_CG created in results_models_traits.R script
 # merge growth and traits data 
 all_CG_variables <- merge(growth_variables_CG, traits_variables_CG)

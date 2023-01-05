@@ -648,7 +648,8 @@ traits_2017_merge <- traits_2017 %>%
   select(LA, SLA, LDMC, SampleID_standard, Species, Sample_Date, Fresh_mass, Dry_mass) %>% 
   filter(Species %in% c("Salix arctica", "Salix pulchra", "Salix richardsonii")) %>% 
   mutate(population = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
-                                TRUE ~ "Southern")) 
+                                TRUE ~ "Southern")) %>% 
+  mutate(Site = "Common_garden")
 
 # make month, day, year columns for common garden data 
 traits_2017_merge$year <-  format(as.Date(traits_2017_merge$Sample_Date, format="%d/%m/%Y"),"%Y")
@@ -695,7 +696,7 @@ all_CG_traits <- full_join(cg_sla_merge, traits_2017_merge,
                                          "SLA", "LA", "population", 
                                          "DOY", "year",
                                          "leaf_fresh_mass_g" = "Fresh_mass", 
-                                         "month"))
+                                         "month", "Site"))
 
 # I think we can merge now? Let's just see what happens 
 all_CG_source_traits <- full_join(all_CG_traits, all_source_area_traits_merge, 
@@ -718,6 +719,30 @@ unique(all_CG_source_traits$Species) # Salix arctica Salix pulchra Salix richard
 
 # save 
 write.csv(all_CG_source_traits, "data/all_CG_source_traits.csv")
+
+# merge ALL data (traits and growth) into one data frame 
+all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") 
+all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv")
+
+# standard id column for traits 
+all_CG_source_traits$SampleID_standard <- toupper(all_CG_source_traits$plant_tag_id) # make all uppercase characters 
+all_CG_source_traits$SampleID_standard<-gsub("-","",as.character(all_CG_source_traits$SampleID_standard)) # remove "-"
+all_CG_source_traits$SampleID_standard<-gsub(" ","",as.character(all_CG_source_traits$SampleID_standard)) # remove spaces " " 
+# get rid of date columns 
+all_CG_source_traits_merge <- all_CG_source_traits %>% 
+  select(-c(month, DOY, Sample_Date, date_sampled, sample_id))
+all_CG_source_growth_merge <- all_CG_source_growth %>% 
+  select(-c(Month, Sample_Date, Day))
+
+all_cg_data <- full_join(all_CG_source_growth_merge, all_CG_source_traits_merge, 
+                         by = c("X", "Site",
+                                "population", "Species", 
+                                "Year" = "year", 
+                                "Elevation" = "Elevation_m",
+                                "SampleID_standard",
+                                "Latitude" = "Lat",
+                                "Longitude" = "Lon"))
+# hasn't worked yet, will return to this later 
 
 # 3.9. Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
