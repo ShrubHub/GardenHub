@@ -45,14 +45,17 @@ all_CG_source_traits$year <- as.factor(all_CG_source_traits$year)
 all_CG_source_traits <- all_CG_source_traits %>% 
   filter(LDMC_g_g < 1) %>% 
   filter(leaf_mass_per_area_g_m2 < 130) %>% 
-  filter(SLA < 24)
+  filter(SLA < 24) 
+# somethig weird is happening with leaf length where some CG values are increased by a factor of 10, omiit for now 
+
+all_CG_source_growth <- all_CG_source_growth %>% 
+  filter(mean_leaf_length < 110)
 
 # SLA ----
 SLA_mod_1 <- lmer(SLA ~ population + (1|year/Species/plant_tag_id), 
                  data = all_CG_source_traits)
 summary(SLA_mod_1)
 tab_model(SLA_mod_1) 
-
 # dropping plant_tag_id because shrubs weren't repeatedly measured either in source pop or garden
 # in 2021 and 2022, same shrubs were sampled in garden, but also diff than in 2017 
 SLA_mod_2 <- lmer(SLA ~ population + (1|year/Species), 
@@ -69,8 +72,6 @@ LDMC_mod_1 <- lmer(LDMC_g_g ~ population + (1|year/Species),
 summary(LDMC_mod_1)
 tab_model(LDMC_mod_1)
 
-# LA ---- 
-
 # LEAF LENGTH ---- 
 # not including sample age as fixed effect (or random) for leaf traits 
 ll_mod_1 <- lmer(mean_leaf_length ~ population + (1|Year/Species/SampleID_standard), 
@@ -78,7 +79,7 @@ ll_mod_1 <- lmer(mean_leaf_length ~ population + (1|Year/Species/SampleID_standa
 summary(ll_mod_1)
 tab_model(ll_mod_1)
 
-# LEAF AREA 
+# LEAF AREA ----
 # data is a mess because of inconsistent unit reporting, 
 # I'm going to try to sort it out but here are just data I collected in 2021 and 2022 
 # in the common garden and source populations 
