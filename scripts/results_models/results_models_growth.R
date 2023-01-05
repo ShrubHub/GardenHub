@@ -172,9 +172,12 @@ ggcorr(all_CG_variables, method = c("everything", "pearson"))
          axis.text.y = element_text(size = 15, colour = "black")))
 
 # boxplot Canopy height CG and source (2013-2022) ----
+all_CG_source_growth <-all_CG_source_growth %>%
+  mutate(population =fct_reorder(population, Canopy_Height_cm)) # doesn't reorder...?
+
 (plot_canopy_height_all <- ggplot(all_CG_source_growth) +
-   geom_boxplot(aes(x= population, y = Canopy_Height_cm, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
-   # facet_grid(cols = vars(Species)) +
+   geom_boxplot(aes(x = population, y = Canopy_Height_cm, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+   # facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Canopy Height (cm)") +
    xlab("\nYear") +
