@@ -677,6 +677,7 @@ cg_sla_merge <- cg_sla %>%
                                 Source == "Qikiqtaruk" ~ "Northern")) %>% 
   mutate(LDMC_g_g = LDMC/1000) %>% # covert LDMC from mg g-1 to g g-1
   mutate(Site = "Common_garden") %>% 
+  mutate(LA = LA*100) %>%  #convert leaf area to mm2 instead of cm2
   select(-c(X, Source, LDMC, number_leaves, dried_leaf_sample_remarks, 
             rehydrated_leaf_sample_remarks)) 
 
