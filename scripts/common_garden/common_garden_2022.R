@@ -649,7 +649,8 @@ traits_2017_merge <- traits_2017 %>%
   filter(Species %in% c("Salix arctica", "Salix pulchra", "Salix richardsonii")) %>% 
   mutate(population = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
                                 TRUE ~ "Southern")) %>% 
-  mutate(Site = "Common_garden")
+  mutate(Site = "Common_garen") %>% 
+  filter(SLA < 35) # filter out NAs
 
 # make month, day, year columns for common garden data 
 traits_2017_merge$year <-  format(as.Date(traits_2017_merge$Sample_Date, format="%d/%m/%Y"),"%Y")
@@ -694,15 +695,15 @@ all_CG_traits <- full_join(cg_sla_merge, traits_2017_merge,
                                   by = c("Species", "LDMC_g_g" = "LDMC", 
                                          "plant_tag_id" = "SampleID_standard", 
                                          "SLA", "LA", "population", 
-                                         "DOY", "year",
+                                         "DOY", "year", "Site",
                                          "leaf_fresh_mass_g" = "Fresh_mass", 
-                                         "month", "Site"))
+                                         "month"))
 
 # I think we can merge now? Let's just see what happens 
 all_CG_source_traits <- full_join(all_CG_traits, all_source_area_traits_merge, 
                               by = c("population", "Species", "LDMC_g_g", 
                                      "plant_tag_id", "sample_id", 
-                                     "SLA", "Site", "LA",
+                                     "SLA", "LA", "Site",
                                      "leaf_mass_per_area_g_m2", "actual_leaf_dry_matter_content_perc", 
                                      "total_rehydrated_leaf_mass_g", "DOY", "year",
                                      "equivalent_water_thickness_cm", 
