@@ -205,7 +205,7 @@ all_CG_source_growth <- all_CG_source_growth %>%
    # facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Canopy Height (cm)") +
-   xlab("\nYear") +
+   xlab("\n") +
    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
    theme_bw() +
@@ -227,7 +227,7 @@ all_CG_source_growth <- all_CG_source_growth %>%
    # facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Canopy Height (cm)") +
-   xlab("\nYear") +
+   xlab("\n Year") +
    scale_colour_viridis_d(begin = 0.1, end = 0.8) +
    scale_fill_viridis_d(begin = 0.1, end = 0.8) +
    theme_bw() +
@@ -290,7 +290,7 @@ all_CG_source_growth <- all_CG_source_growth %>%
    #facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Stem Elongation (mm)") +
-   xlab("\n Year") +
+   xlab("\n") +
    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
    theme_bw() +
@@ -332,7 +332,7 @@ all_CG_source_growth <- all_CG_source_growth %>%
    #facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Stem Diameter (mm)") +
-   xlab("\n Year") +
+   xlab("\n ") +
    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
    theme_bw() +
