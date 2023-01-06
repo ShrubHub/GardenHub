@@ -161,6 +161,19 @@ round(res_1, 2)
 ggcorr(all_CG_variables, method = c("everything", "pearson")) 
 
 # Data visualisation ------
+# ordering levels so source and garden populations side by side
+all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
+                                                 c("Northern"="Northern Garden",
+                                                   "Southern"="Southern Garden",
+                                                   "source_south"="Southern Source",
+                                                   "source_north"="Northern Source"))
+
+all_CG_source_growth$population <- ordered(all_CG_source_growth$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden", 
+                                                      "Southern Garden", 
+                                                      "Southern Source"))
+
 # scatter Canopy height CG and source (2013-2022) ----
 (plot_canopy_height_all <- ggplot(all_CG_source_growth) +
    geom_smooth(aes(x = Year, y = Canopy_Height_cm, colour = population, fill = population, group = population, method = "glm")) +
@@ -184,7 +197,7 @@ ggcorr(all_CG_variables, method = c("everything", "pearson"))
          axis.text.y = element_text(size = 15, colour = "black")))
 
 # boxplot Canopy height CG and source (2013-2022) ----
-all_CG_source_growth <-all_CG_source_growth %>%
+all_CG_source_growth <- all_CG_source_growth %>%
   mutate(population =fct_reorder(population, Canopy_Height_cm)) # doesn't reorder...?
 
 (plot_canopy_height_all <- ggplot(all_CG_source_growth) +
