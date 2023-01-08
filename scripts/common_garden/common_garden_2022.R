@@ -668,8 +668,8 @@ traits_2017_merge_1 <- traits_2017_merge %>%
          mean_Dry_mass = mean(Dry_mass)) %>% 
   ungroup() 
 traits_2017_merge_2 <- traits_2017_merge_1 %>% 
-  select(-c(SLA, LA, LDMC, Fresh_mass, Dry_mass)) %>% 
-  rename(SLA = mean_SLA, LA = mean_LA, LDMC = mean_LDMC, 
+  dplyr::select(-c(SLA, LA, LDMC, Fresh_mass, Dry_mass)) %>% 
+  dplyr::rename(SLA = mean_SLA, LA = mean_LA, LDMC = mean_LDMC, 
          Fresh_mass = mean_Fresh_mass, Dry_mass = mean_Dry_mass) %>% 
   distinct()
 

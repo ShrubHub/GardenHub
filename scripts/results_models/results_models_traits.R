@@ -18,7 +18,6 @@ library(sjPlot)
 library(ggpubr)
 library(GGally)
 
-
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
 all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv") # leaf length
@@ -48,8 +47,8 @@ all_CG_source_traits <- all_CG_source_traits %>%
   filter(SLA > 2 | is.na(SLA))
 # somethig weird is happening with leaf length where some CG values are increased by a factor of 10, omiit for now 
 
-all_CG_source_growth <- all_CG_source_growth %>% 
-  filter(mean_leaf_length < 110)
+# all_CG_source_growth <- all_CG_source_growth %>% 
+#  filter(mean_leaf_length < 110)
 
 # SLA ----
 SLA_mod_1 <- lmer(SLA ~ population + (1|year/Species/plant_tag_id), 
@@ -64,13 +63,31 @@ SLA_mod_2 <- lmer(SLA ~ population + (1|year/Species),
 summary(SLA_mod_2)
 tab_model(SLA_mod_2)
 
-# LDMC ---- 
+# LDMC ----
+
 # same as SLA so not including plant_tag_id because shrubs weren't repeatedly measured either in source pop or garden
 # in 2021 and 2022, same shrubs were sampled in garden, but also diff than in 2017 
 LDMC_mod_1 <- lmer(LDMC_g_g ~ population + (1|year/Species), 
                   data = all_CG_source_traits)
 summary(LDMC_mod_1)
 tab_model(LDMC_mod_1)
+
+# try separate models for separate species 
+pulchra <- all_CG_source_traits %>% 
+  filter(Species == "Salix pulchra")
+LDMC_mod_pulchra <- lmer(LDMC_g_g ~ population + (1|year), 
+                   data = pulchra)
+
+summary(LDMC_mod_pulchra)
+tab_model(LDMC_mod_pulchra)
+
+richardsonii <- all_CG_source_traits %>% 
+  filter(Species == "Salix richardsonii")
+LDMC_mod_rich <- lmer(LDMC_g_g ~ population + (1|year), 
+                         data = richardsonii)
+
+summary(LDMC_mod_rich)
+tab_model(LDMC_mod_rich)
 
 # LEAF LENGTH ---- 
 # not including sample age as fixed effect (or random) for leaf traits 
@@ -100,8 +117,8 @@ LMA_mod_1 <- lmer(leaf_mass_per_area_g_m2 ~ population + (1|year/Species),
                  data = all_CG_source_traits)
 # boundary (singular) fit: see help('isSingular')
 
-# removing year as nested random effect:
-LMA_mod_2 <- lmer(leaf_mass_per_area_g_m2 ~ population + (1|Species) + (1|year), 
+# removing year as random effect because only 2 years worth of data:
+LMA_mod_2 <- lmer(leaf_mass_per_area_g_m2 ~ population + (1|Species), 
                   data = all_CG_source_traits)
 summary(LMA_mod_2)
 tab_model(LMA_mod_2)
