@@ -2,7 +2,7 @@
 ### Data wrangling and visualisation script
 ### By Erica Zaja, created on 30/09/2022
 ## Adapted from Madelaine Anderson's common_garden_2021.R 
-## Last updated: 05/01/2023 by Madelaine and Erica
+## Last updated: 08/01/2023 by Madelaine 
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -639,7 +639,6 @@ all_source_area_traits <- read.csv("data/source_pops/all_source_area_traits.csv"
 cg_sla <- read.csv("data/common_garden_data_2022/cg_sla_2022.csv")
 traits_2017 <- read.csv("data/common_garden_data_2021/all_growth_2021.csv")
 
-
 traits_2017$SampleID_standard <- toupper(traits_2017$SampleID) # make all uppercase characters 
 traits_2017$SampleID_standard<-gsub("-","",as.character(traits_2017$SampleID_standard)) # remove "-"
 traits_2017$SampleID_standard<-gsub(" ","",as.character(traits_2017$SampleID_standard)) # remove spaces " " 
@@ -650,7 +649,7 @@ traits_2017_merge <- traits_2017 %>%
   mutate(population = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
                                 TRUE ~ "Southern")) %>% 
   mutate(Site = "Common_garden") %>% 
-  filter(SLA < 35) # filter out NAs
+  filter(SLA < 35)  # filter out NAs
 
 # make month, day, year columns for common garden data 
 traits_2017_merge$year <-  format(as.Date(traits_2017_merge$Sample_Date, format="%d/%m/%Y"),"%Y")
@@ -658,6 +657,21 @@ traits_2017_merge$month <-  format(as.Date(traits_2017_merge$Sample_Date, format
 traits_2017_merge$DOY <-  lubridate::yday(as.POSIXct(traits_2017_merge$Sample_Date, format = "%Y-%m-%d"))
 traits_2017_merge$DOY <- as.factor(traits_2017_merge$DOY)
 traits_2017_merge$year <- as.factor(traits_2017_merge$year)
+
+traits_2017_merge_1 <- traits_2017_merge %>% 
+  filter(month == "07") %>% # keep only July values
+  group_by(SampleID_standard) %>% # take mean of july values 
+  mutate(mean_SLA = mean(SLA), 
+         mean_LA = mean(LA), 
+         mean_LDMC = mean(LDMC), 
+         mean_Fresh_mass = mean(Fresh_mass), 
+         mean_Dry_mass = mean(Dry_mass)) %>% 
+  ungroup() 
+traits_2017_merge_2 <- traits_2017_merge_1 %>% 
+  select(-c(SLA, LA, LDMC, Fresh_mass, Dry_mass)) %>% 
+  rename(SLA = mean_SLA, LA = mean_LA, LDMC = mean_LDMC, 
+         Fresh_mass = mean_Fresh_mass, Dry_mass = mean_Dry_mass) %>% 
+  distinct()
 
 str(all_source_area_traits)
 str(cg_sla)
@@ -681,7 +695,8 @@ cg_sla_merge <- cg_sla %>%
   mutate(Site = "Common_garden") %>% 
   mutate(LA = LA*100) %>%  #convert leaf area to mm2 instead of cm2
   select(-c(X, Source, LDMC, number_leaves, dried_leaf_sample_remarks, 
-            rehydrated_leaf_sample_remarks)) 
+            rehydrated_leaf_sample_remarks)) %>% 
+  filter(month == "06") #only keep june 2021 and 2022 observations
 
 all_source_area_traits_merge <- all_source_area_traits %>% 
   select(-c(X, number_leaves, ValueKindName, Data_coPIs, 
@@ -691,7 +706,7 @@ all_source_area_traits_merge <- all_source_area_traits %>%
                                 Site == "Qikiqtaruk" ~ "source_north" ))  # add population column to indicate source north or south
 
 # TEST MERGE 
-all_CG_traits <- full_join(cg_sla_merge, traits_2017_merge, 
+all_CG_traits <- full_join(cg_sla_merge, traits_2017_merge_2, 
                                   by = c("Species", "LDMC_g_g" = "LDMC", 
                                          "plant_tag_id" = "SampleID_standard", 
                                          "SLA", "LA", "population", 
@@ -721,6 +736,7 @@ unique(all_CG_source_traits$Species) # Salix arctica Salix pulchra Salix richard
 # save 
 write.csv(all_CG_source_traits, "data/all_CG_source_traits.csv")
 
+# 3.8 merge all data ----
 # merge ALL data (traits and growth) into one data frame 
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") 
 all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv")
@@ -731,12 +747,12 @@ all_CG_source_traits$SampleID_standard<-gsub("-","",as.character(all_CG_source_t
 all_CG_source_traits$SampleID_standard<-gsub(" ","",as.character(all_CG_source_traits$SampleID_standard)) # remove spaces " " 
 # get rid of date columns 
 all_CG_source_traits_merge <- all_CG_source_traits %>% 
-  select(-c(month, DOY, Sample_Date, date_sampled, sample_id))
+  select(-c(month, DOY, Sample_Date, date_sampled, sample_id, X, MONTH, date))
 all_CG_source_growth_merge <- all_CG_source_growth %>% 
-  select(-c(Month, Sample_Date, Day))
+  select(-c(Month, Sample_Date, Day, X))
 
 all_cg_data <- full_join(all_CG_source_growth_merge, all_CG_source_traits_merge, 
-                         by = c("X", "Site",
+                         by = c( "Site",
                                 "population", "Species", 
                                 "Year" = "year", 
                                 "Elevation" = "Elevation_m",
