@@ -45,10 +45,6 @@ all_CG_source_traits <- all_CG_source_traits %>%
   filter(LDMC_g_g < 1 | is.na(LDMC_g_g)) %>% 
   filter(leaf_mass_per_area_g_m2 < 130 | is.na(leaf_mass_per_area_g_m2)) %>% 
   filter(SLA > 2 | is.na(SLA))
-# somethig weird is happening with leaf length where some CG values are increased by a factor of 10, omiit for now 
-
-# all_CG_source_growth <- all_CG_source_growth %>% 
-#  filter(mean_leaf_length < 110)
 
 # SLA ----
 SLA_mod_1 <- lmer(SLA ~ population + (1|year/Species/plant_tag_id), 
@@ -90,9 +86,16 @@ summary(LDMC_mod_rich)
 tab_model(LDMC_mod_rich)
 
 # LEAF LENGTH ---- 
+
+# somethig weird is happening with leaf length where some CG values are increased by a factor of 10, omiit for now 
+# filter only last two years to run models on 
+CG_source_growth_ll <- all_CG_source_growth %>% 
+  filter(Year %in% c(2021, 2022))
+
 # not including sample age as fixed effect (or random) for leaf traits 
-ll_mod_1 <- lmer(mean_leaf_length ~ population + (1|Year/Species/SampleID_standard), 
-               data = all_CG_source_growth)
+# unsure about including year because only one year for source populations 
+ll_mod_1 <- lmer(mean_leaf_length ~ population + (1|Species), 
+               data = CG_source_growth_ll)
 summary(ll_mod_1)
 tab_model(ll_mod_1)
 
@@ -157,6 +160,16 @@ all_CG_source_traits_2022$population <- ordered(all_CG_source_traits_2022$popula
                                                       "Southern Garden", 
                                                       "Southern Source"))
 
+CG_source_growth_ll$population <- plyr::revalue(CG_source_growth_ll$population, 
+                                                      c("Northern"="Northern Garden",
+                                                        "Southern"="Southern Garden",
+                                                        "source_south"="Southern Source",
+                                                        "source_north"="Northern Source"))
+CG_source_growth_ll$population <- ordered(CG_source_growth_ll$population, 
+                                                levels = c("Northern Source", 
+                                                           "Northern Garden", 
+                                                           "Southern Garden", 
+                                                           "Southern Source"))
 
 # SLA 
 (sla_plot <- ggplot(all_CG_source_traits) +
@@ -243,11 +256,11 @@ geom_boxplot(aes(x= population, y = SLA, colour = population, fill = population,
           axis.text.y = element_text(size = 12, colour = "black")))
 
 # leaf length - also need to fix units 
-(ll_plot <- ggplot(all_CG_source_growth) +
+(ll_plot <- ggplot(CG_source_growth_ll) +
     geom_boxplot(aes(x= population, y = mean_leaf_length, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
     # facet_grid(cols = vars(Species)) +
     facet_wrap(~Species) +
-    ylab("leaf area ()") +
+    ylab("leaf length (mm)") +
     xlab("") +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
