@@ -1,6 +1,6 @@
 ### QHI environmental conditions
 # Script by Madi 08/12/2022
-# last updated: 14/12/2022
+# last updated: 13/01/2023
 
 # LIBRARIES ---- 
 
@@ -44,4 +44,17 @@ hobo_mean_temp_2022 <- hobo_clean_2022 %>%
 
 mean(hobo_mean_temp_2022$mean_temp) # 9.853633
 
+# QHI 2015-16 ----
+# data from phenology ridge HOBO station 
+# summarized by Haydn Thomas 
 
+Haydn_summary <- read.csv("data/environment/Formatted_temps_shrubhub.csv")
+
+unique(Haydn_summary$Plotcode)
+
+# filter only QHI data 
+
+QHI_hobo_pheno_2015 <- Haydn_summary %>% 
+  dplyr::filter(Plotcode == "QHI_phenology_plot") %>% 
+  dplyr::select(-X) # drop sort column 
+  
