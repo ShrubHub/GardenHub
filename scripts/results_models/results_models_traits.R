@@ -1,6 +1,6 @@
 # Results models for trait differences comparing northern and southern willows
-# by Mad 13/12/2022
-# Last updated: /01/2022
+# by Madi 13/12/2022
+# Last updated: 16/01/2022
 
 # TRAITS: SLA, LDMC, leaf area (LA), leaf length, leaf mass per area (LMA)
 
@@ -275,3 +275,13 @@ geom_boxplot(aes(x= population, y = SLA, colour = population, fill = population,
           axis.title = element_text(size = 14),
           axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
+
+# panel figures 
+
+(traits_panel <- ggarrange(sla_plot, ldmc_plot, la_plot, ll_plot, 
+                          labels = c("A", "B", "C", "D"), common.legend = TRUE, legend = "bottom",
+                          ncol = 2, nrow = 2))
+  
+  
+  
+  
