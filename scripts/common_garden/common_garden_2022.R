@@ -2,7 +2,7 @@
 ### Data wrangling and visualisation script
 ### By Erica Zaja, created on 30/09/2022
 ## Adapted from Madelaine Anderson's common_garden_2021.R 
-## Last updated: 08/01/2023 by Madelaine 
+## Last updated: 16/01/2023 by Madelaine 
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -299,7 +299,32 @@ all_cg_data_2022 <-  all_merged_data_2022 %>%
                               TRUE ~ "Southern")) %>% 
   select(-X) 
 # save again 
-write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
+# write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
+
+# LL SE swap ----
+# fix 2013-2020 data from CG where leaf length and stem elongation values are swapped 
+# load data 
+all_cg_data_2022 <-  read.csv("data/common_garden_data_2022/all_cg_data_2022.csv")
+# filter out 2021 and 22 data (those values are already correct)
+# doing this in small steps so it's easy to follow / not mix myself up 
+cg_data_2020 <- all_cg_data_2022 %>% 
+  filter(Year != "2021" & Year != "2022") 
+str(cg_data_2020)
+# now rename variables 
+cg_data_2020_renamed <- cg_data_2020 %>% 
+  dplyr::rename("Length_1_mm" = "Stem_Elongation_1_mm", 
+                "Length_2_mm" = "Stem_Elongation_2_mm", 
+                "Length_3_mm" = "Stem_Elongation_3_mm", 
+                "Stem_Elongation_1_mm" = "Length_1_mm", 
+                "Stem_Elongation_2_mm" = "Length_2_mm", 
+                "Stem_Elongation_3_mm" = "Length_3_mm")
+# this is correct! now add in 2021 and 2022 data 
+cg_data_2022 <- all_cg_data_2022 %>% 
+  filter(Year %in% c("2021", "2022"))
+# merge two data frames 
+all_cg_data_2022 <- bind_rows(cg_data_2020_renamed, cg_data_2022)
+# looks like it worked, save once you have a look! 
+# write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
 
 # 3.3. Field data from 2017 ----
 # Keeping only relevant columns
