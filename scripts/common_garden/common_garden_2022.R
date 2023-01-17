@@ -2,7 +2,7 @@
 ### Data wrangling and visualisation script
 ### By Erica Zaja, created on 30/09/2022
 ## Adapted from Madelaine Anderson's common_garden_2021.R 
-## Last updated: 16/01/2023 by Madelaine 
+## Last updated: 17/01/2023 by Madelaine 
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -774,19 +774,28 @@ all_CG_source_traits$SampleID_standard<-gsub("-","",as.character(all_CG_source_t
 all_CG_source_traits$SampleID_standard<-gsub(" ","",as.character(all_CG_source_traits$SampleID_standard)) # remove spaces " " 
 # get rid of date columns 
 all_CG_source_traits_merge <- all_CG_source_traits %>% 
-  dplyr::select(-c(month, DOY, Sample_Date, date_sampled, sample_id, X, MONTH, date))
+  dplyr::select(-c(month, DOY, Sample_Date, date_sampled, sample_id, site_id, X, MONTH, date, plant_tag_id)) %>% 
+  dplyr::rename("Year" = "year")
 all_CG_source_growth_merge <- all_CG_source_growth %>% 
-  dplyr::select(-c(Month, Sample_Date, Day, X))
+  dplyr::select(-c(Month, Sample_Date, Day, X, X.5, X.2, X.1, X.3, X.4))
+
+all_CG_source_growth_merge$Year <- as.factor(all_CG_source_growth_merge$Year)
+all_CG_source_traits_merge$year <- as.factor(all_CG_source_traits_merge$year)
+
 
 all_cg_data <- full_join(all_CG_source_growth_merge, all_CG_source_traits_merge, 
                          by = c( "Site",
                                 "population", "Species", 
-                                "Year" = "year", 
+                                "Year", 
                                 "Elevation" = "Elevation_m",
                                 "SampleID_standard",
                                 "Latitude" = "Lat",
                                 "Longitude" = "Lon"))
-# hasn't worked yet, will return to this later 
+all_cg_data_1 <- right_join(all_CG_source_growth_merge, all_CG_source_traits_merge)
+
+NROW(na.omit(all_CG_source_traits$SLA))
+NROW(na.omit(all_cg_data$SLA))
+length(unique(all_CG_source_traits$SLA))
 
 # 3.9. Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
