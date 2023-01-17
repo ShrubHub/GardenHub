@@ -783,7 +783,7 @@ all_CG_source_growth_merge$Year <- as.factor(all_CG_source_growth_merge$Year)
 all_CG_source_traits_merge$year <- as.factor(all_CG_source_traits_merge$year)
 
 
-all_cg_data <- full_join(all_CG_source_growth_merge, all_CG_source_traits_merge, 
+all_data <- full_join(all_CG_source_growth_merge, all_CG_source_traits_merge, 
                          by = c( "Site",
                                 "population", "Species", 
                                 "Year", 
@@ -791,11 +791,24 @@ all_cg_data <- full_join(all_CG_source_growth_merge, all_CG_source_traits_merge,
                                 "SampleID_standard",
                                 "Latitude" = "Lat",
                                 "Longitude" = "Lon"))
-all_cg_data_1 <- right_join(all_CG_source_growth_merge, all_CG_source_traits_merge)
-
 NROW(na.omit(all_CG_source_traits$SLA))
 NROW(na.omit(all_cg_data$SLA))
 length(unique(all_CG_source_traits$SLA))
+# problem because some now are repeated 
+# only merging CG data now 
+all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
+all_cg_data_2022_merge <- all_cg_data_2022 %>% 
+  dplyr::select(-c(Month, Sample_Date, Day, X, X.5, X.2, X.1, X.3, X.4))
+
+all_cg_data_merge <- full_join(all_cg_data_2022_merge, all_CG_source_traits_merge, 
+                      by = c( "Site",
+                              "population", "Species", 
+                              "Year"))
+all_cg_data <- all_cg_data_merge %>% 
+  dplyr::filter(population %in% c("Northern", "Southern"))
+# save 
+write.csv(all_cg_data, "data/all_cg_growth__traits_data.csv")
+
 
 # 3.9. Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
