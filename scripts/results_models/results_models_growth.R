@@ -39,17 +39,25 @@ unique(all_CG_source_growth$Site)
 view(all_CG_source_growth)
 
 # check heights of arctica in sources 
+# QHI 
 all_CG_source_growth_arctica_QHI <- all_CG_source_growth %>%
   filter(population == "Northern Source" & Species == "Salix arctica")
 view(all_CG_source_growth_arctica_QHI)
 range(all_CG_source_growth_arctica_QHI$Canopy_Height_cm)
-# 2.5 - 39.0
+# 2.5 - 39.0 cm
+tall_arctica_QHI <- all_CG_source_growth_arctica_QHI %>%
+  filter(Canopy_Height_cm > 15) # filtering anything above 15cm as arcticas are rarely taller than that
+view(tall_arctica_QHI) # seems like smth happened in 2015...
 
+# KP
 all_CG_source_growth_arctica_KP <- all_CG_source_growth %>%
   filter(population == "Southern Source" & Species == "Salix arctica")
 view(all_CG_source_growth_arctica_KP)
 range(all_CG_source_growth_arctica_KP$Canopy_Height_cm)
-# 1.9 34.0
+# 1.9 - 34.0 cm
+tall_arctica_KP <- all_CG_source_growth_arctica_KP %>%
+  filter(Canopy_Height_cm > 15) # filtering anything above 15cm as arcticas are rarely taller than that
+view(tall_arctica_KP) # seems like smth happened in 2015...
 
 # Modelling -----
 
