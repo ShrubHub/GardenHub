@@ -36,6 +36,20 @@ all_CG_source_growth$Year <- as.factor(all_CG_source_growth$Year)
 all_CG_source_growth$Sample_age <- as.factor(all_CG_source_growth$Sample_age)
 unique(all_CG_source_growth$population)
 unique(all_CG_source_growth$Site)
+view(all_CG_source_growth)
+
+# check heights of arctica in sources 
+all_CG_source_growth_arctica_QHI <- all_CG_source_growth %>%
+  filter(population == "Northern Source" & Species == "Salix arctica")
+view(all_CG_source_growth_arctica_QHI)
+range(all_CG_source_growth_arctica_QHI$Canopy_Height_cm)
+# 2.5 - 39.0
+
+all_CG_source_growth_arctica_KP <- all_CG_source_growth %>%
+  filter(population == "Southern Source" & Species == "Salix arctica")
+view(all_CG_source_growth_arctica_KP)
+range(all_CG_source_growth_arctica_KP$Canopy_Height_cm)
+# 1.9 34.0
 
 # Modelling -----
 
@@ -243,6 +257,27 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
          axis.text.x = element_text(angle = 0, vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black")))
 
+# Canopy height CG only (2013-2022) ----
+(plot_height_box_CG <- ggplot(all_CG_source_growth_garden_only) +
+   geom_boxplot(aes(x= population, y = Canopy_Height_cm, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+   # facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Canopy Height (cm)") +
+   xlab("") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 14),
+         axis.text.x = element_text(angle = 45, vjust = 0.5, size = 12, colour = "black"),
+         axis.text.y = element_text(size = 12, colour = "black")))
+
 # Shrub width CG + source (2013-2022) ----
 (plot_width_all <- ggplot(all_CG_source_growth) +
      geom_boxplot(aes(x= population, y = mean_width, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
@@ -284,6 +319,28 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
          axis.title = element_text(size = 14),
          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 12, colour = "black"),
          axis.text.y = element_text(size = 12, colour = "black")))
+
+# Shrub width only CG (2013-2022) ----
+(scatter_width_CG <- ggplot(all_CG_source_growth_garden_only) +
+   geom_smooth(aes(x = Sample_age, y = mean_width, colour = population, fill = population, group = population, method = "glm")) +
+   geom_point(aes(x = Sample_age, y= mean_width, colour = population, group = population), size = 1.5, alpha = 0.5) +
+   # facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Canopy Width (cm)") +
+   xlab("\n Sample age (n years)") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.8) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.8) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(angle = 0, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
 
 # Stem elongation CG + source (2013-2022) ----
 (plot_stem_all <- ggplot(all_CG_source_growth) +
@@ -327,6 +384,28 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black")))
 
+# Stem elong only CG (2013-2022) ----
+(scatter_elong_CG <- ggplot(all_CG_source_growth_garden_only) +
+   geom_smooth(aes(x = Sample_age, y = mean_stem_elong, colour = population, fill = population, group = population, method = "glm")) +
+   geom_point(aes(x = Sample_age, y= mean_stem_elong, colour = population, group = population), size = 1.5, alpha = 0.5) +
+   # facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Stem Elongation (mm)") +
+   xlab("\n Sample age (n years)") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.8) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.8) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(angle = 0, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
 # Stem diameter CG + source (2013-2022) ----
 (plot_stem_diam_all <- ggplot(all_CG_source_growth) +
    geom_boxplot(aes(x= population, y = Stem_diameter, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
@@ -367,5 +446,27 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
          axis.line = element_line(colour = "black"),
          axis.title = element_text(size = 18),
          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
+# Stem diam only CG (2013-2022) ----
+(scatter_diam_CG <- ggplot(all_CG_source_growth_garden_only) +
+   geom_smooth(aes(x = Sample_age, y = Stem_diameter, colour = population, fill = population, group = population, method = "glm")) +
+   geom_point(aes(x = Sample_age, y= Stem_diameter, colour = population, group = population), size = 1.5, alpha = 0.5) +
+   # facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Stem diameter (mm)") +
+   xlab("\n Sample age (n years)") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.8) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.8) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(angle = 0, vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black")))
 
