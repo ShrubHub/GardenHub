@@ -1,6 +1,6 @@
 # Results models for trait differences comparing northern and southern willows
 # by Madi 13/12/2022
-# Last updated: 16/01/2022
+# Last updated: 17/01/2022
 
 # TRAITS: SLA, LDMC, leaf area (LA), leaf length, leaf mass per area (LMA)
 
@@ -99,6 +99,14 @@ ll_mod_1 <- lmer(mean_leaf_length ~ population + (1|Species),
 summary(ll_mod_1)
 tab_model(ll_mod_1)
 
+# rerunning model with all years data now that dataset is fixed 
+
+
+ll_mod_2 <- lmer(mean_leaf_length ~ population + (1|Species) + (1|Year), 
+                 data = all_CG_source_growth)
+summary(ll_mod_2)
+tab_model(ll_mod_2)
+
 # LEAF AREA ----
 # data is a mess because of inconsistent unit reporting, 
 # I'm going to try to sort it out but here are just data I collected in 2021 and 2022 
@@ -170,6 +178,18 @@ CG_source_growth_ll$population <- ordered(CG_source_growth_ll$population,
                                                            "Northern Garden", 
                                                            "Southern Garden", 
                                                            "Southern Source"))
+
+all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
+                                                c("Northern"="Northern Garden",
+                                                  "Southern"="Southern Garden",
+                                                  "source_south"="Southern Source",
+                                                  "source_north"="Northern Source"))
+all_CG_source_growth$population <- ordered(all_CG_source_growth$population, 
+                                          levels = c("Northern Source", 
+                                                     "Northern Garden", 
+                                                     "Southern Garden", 
+                                                     "Southern Source"))
+
 
 # SLA 
 (sla_plot <- ggplot(all_CG_source_traits) +
@@ -256,7 +276,7 @@ geom_boxplot(aes(x= population, y = SLA, colour = population, fill = population,
           axis.text.y = element_text(size = 12, colour = "black")))
 
 # leaf length - also need to fix units 
-(ll_plot <- ggplot(CG_source_growth_ll) +
+(ll_plot <- ggplot(all_CG_source_growth) +
     geom_boxplot(aes(x= population, y = mean_leaf_length, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
     # facet_grid(cols = vars(Species)) +
     facet_wrap(~Species) +
