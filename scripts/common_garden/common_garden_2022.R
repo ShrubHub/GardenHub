@@ -10,7 +10,7 @@ library(viridis)
 library(readr)
 library(base)
 library(lubridate)
-library(xlsx)
+# library(xlsx)
 library(readxl) # reads excel files if java doesn't work for (xlsx)
 
 # 2. LOADING DATA ----

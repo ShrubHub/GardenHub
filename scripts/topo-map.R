@@ -51,15 +51,45 @@ sessionInfo()
 # shapefile of Canada borders from Statistics Canada
 # read borders
 canada_geo <- read_sf("data/map/lpr_000b21a_e.shp")
+class(canada_geo) #"sf"         "tbl_df"     "tbl"        "data.frame"
 projection(canada_geo)
 #  "+proj=lcc +lat_0=63.390675 +lon_0=-91.8666666666667 +lat_1=49 +lat_2=77 +x_0=6200000 +y_0=3000000 +datum=NAD83 +units=m +no_defs"
+st_bbox(canada_geo) 
+#  xmin    ymin    xmax    ymax 
+# 3689321  659305 9015751 5242009 
+crs(canada_geo)
 
 # and topographic map from University of Texas Austin
 # read in raster of relief
 relief <- raster("data/map/stanford-xs501gm7232-geotiff.tif") # check CRS
+class(relief) #"RasterLayer"
+#attr(,"package")
+#[1] "raster"
+res(relief) # 0.08788799 0.08791060
+st_bbox(relief) 
+#   xmin        ymin        xmax        ymax 
+# -180.000000    3.094146  179.989216   86.257578 
+projection(relief) # NA
+crs(relief)
+
+relief_crop <- crop(relief, extent(canada_geo))
+
+(relief_plot <- ggplot(relief) +
+    geom_raster(aes(x = x, y = y, fill = value)) +
+    # value is the specific value (of reflectance) each pixel is associated with
+    #scale_fill_viridis_c(rescaler = function(x, to = c(0, 1), from = NULL) {
+    #  ifelse(x<500, scales::rescale(x, to = to, from = c(min(x, na.rm = TRUE), 500)),1)}, na.value="white") +
+    coord_quickmap()+
+    theme_shrub() +  
+    xlab("\nLongitude") +
+    ylab("Latitude\n") +
+   # ggtitle("Shrub biomass cover (kg/m2) of the PCH alaskan range\n") +
+    theme(plot.title = element_text(hjust = 0.5),     # centres plot title
+          text = element_text(size=15),		       	    # font size
+          axis.text.x = element_text(angle = 30, hjust = 1)))  # rotates x axis text
 
 %>%
-  # hide relief outside of Switzerland by masking with country borders
+  # hide relief outside of Canada by masking with country borders
   mask(canada_geo) 
 
 

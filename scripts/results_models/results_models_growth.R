@@ -56,11 +56,12 @@ tab_model(height_growth_mod_3)
 # filter dataset to retain only population "northern" and "southern"
 all_CG_source_growth_garden_only <- all_CG_source_growth %>%
   filter(population %in% c("Northern", "Southern"))
+str(all_CG_source_growth_garden_only)
 
 # model 1 below doesn't converge: boundary (singular) fit: see help('isSingular')
 height_garden_growth_mod_1 <- lmer(Canopy_Height_cm ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)
 # model 2 below converges
-height_garden_growth_mod_2 <- lmer(Canopy_Height_cm ~ population + (1|Year/SampleID_standard) + (1|Species), data = all_CG_source_growth_garden_only)
+height_garden_growth_mod_2 <- lmer(Canopy_Height_cm ~ population + (1|Year/SampleID_standard) + (1|Species/Sample_age), data = all_CG_source_growth_garden_only)
 tab_model(height_garden_growth_mod_2)
 # model 3 below does converge but keeping model 2
 # height_garden_growth_mod_3 <- lmer(Canopy_Height_cm ~ population + Sample_age + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth_garden_only)
@@ -81,7 +82,7 @@ tab_model(width_growth_mod_2)
 # model 1 below doesnt converge: boundary (singular) fit: see help('isSingular')
 width_garden_growth_mod_1 <- lmer(mean_width ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)
 # model below runs 
-width_garden_growth_mod_2 <- lmer(mean_width ~ population + (1|Year/SampleID_standard) + (1|Species), data = all_CG_source_growth_garden_only)
+width_garden_growth_mod_2 <- lmer(mean_width ~ population + (1|Year/SampleID_standard) + (1|Species/Sample_age), data = all_CG_source_growth_garden_only)
 tab_model(width_garden_growth_mod_2 )
 # southern shrubs in the garden have wider canopies
 
@@ -100,7 +101,7 @@ tab_model(elong_growth_mod_2)
 # model below converges but not using for consistency?
 elong_garden_growth_mod_1 <- lmer(mean_stem_elong ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)
 # model below converges 
-elong_garden_growth_mod_2 <- lmer(mean_stem_elong ~ population  + (1|Year/SampleID_standard) + (1|Species), data = all_CG_source_growth_garden_only)
+elong_garden_growth_mod_2 <- lmer(mean_stem_elong ~ population  + (1|Year/SampleID_standard) + (1|Species/Sample_age), data = all_CG_source_growth_garden_only)
 tab_model(elong_garden_growth_mod_2)
 # higher stem elongation for southern shrubs in garden
 
@@ -117,11 +118,11 @@ diam_growth_mod_3 <- lmer(Stem_diameter ~ population + (1|Year) + (1|Species) + 
 # 4.1. Stem diameter only in garden ----
 # model 1 below doesnt converge: boundary (singular) fit: see help('isSingular')
 diam_garden_growth_mod_1 <- lmer(Stem_diameter ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)
-# model 2 below runs
+# model 2 below runs (doens't converge if I add sample age)
 diam_garden_growth_mod_2 <- lmer(Stem_diameter ~ population + (1|Year/SampleID_standard) + (1|Species), data = all_CG_source_growth_garden_only)
 tab_model(diam_garden_growth_mod_2)
 # model 3 below does converge but not using 
-diam_garden_growth_mod_3 <- lmer(Stem_diameter ~ population + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth_garden_only)
+# diam_garden_growth_mod_3 <- lmer(Stem_diameter ~ population + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth_garden_only)
 # larger diameters for southern shrubs
 
 
@@ -130,8 +131,9 @@ diam_garden_growth_mod_3 <- lmer(Stem_diameter ~ population + (1|Year) + (1|Spec
 # filter growth in the CG
 growth_variables_CG <- all_CG_source_growth %>%
   filter(population %in% c("Northern", "Southern")) %>%
-  select(Canopy_Height_cm, Stem_diameter, mean_stem_elong, mean_width)%>%
+  dplyr::select(Canopy_Height_cm, Stem_diameter, mean_stem_elong, mean_width)%>%
   na.omit()
+view(growth_variables_CG)
   
 res <- cor(growth_variables_CG)
 round(res, 2)
@@ -149,8 +151,10 @@ all_CG_source_traits$year <- as.factor(all_CG_source_traits$year)
 
 traits_variables_CG <- all_CG_source_traits %>%
   filter(population %in% c("Northern", "Southern")) %>%
-  select(SLA, LDMC_g_g, leaf_mass_per_area_g_m2)%>%
+  dplyr::select(SLA, LDMC_g_g, leaf_mass_per_area_g_m2)%>%
   na.omit()
+
+view(traits_variables_CG)
 
 # NB traits_variables_CG created in results_models_traits.R script
 # merge growth and traits data 
@@ -197,9 +201,6 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
          axis.text.y = element_text(size = 15, colour = "black")))
 
 # boxplot Canopy height CG and source (2013-2022) ----
-all_CG_source_growth <- all_CG_source_growth %>%
-  mutate(population =fct_reorder(population, Canopy_Height_cm)) # doesn't reorder...?
-
 (plot_canopy_height_all <- ggplot(all_CG_source_growth) +
    geom_boxplot(aes(x = population, y = Canopy_Height_cm, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
    # facet_grid(cols = vars(Species)) +
@@ -222,12 +223,12 @@ all_CG_source_growth <- all_CG_source_growth %>%
 
 # Canopy height only CG (2013-2022) ----
 (plot_canopy_height_CG <- ggplot(all_CG_source_growth_garden_only) +
-   geom_smooth(aes(x = Year, y = Canopy_Height_cm, colour = population, fill = population, group = population, method = "glm")) +
-   geom_point(aes(x = Year, y= Canopy_Height_cm, colour = population, group = population), size = 1.5, alpha = 0.5) +
+   geom_smooth(aes(x = Sample_age, y = Canopy_Height_cm, colour = population, fill = population, group = population, method = "glm")) +
+   geom_point(aes(x = Sample_age, y= Canopy_Height_cm, colour = population, group = population), size = 1.5, alpha = 0.5) +
    # facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Canopy Height (cm)") +
-   xlab("\n Year") +
+   xlab("\n Sample age (n years)") +
    scale_colour_viridis_d(begin = 0.1, end = 0.8) +
    scale_fill_viridis_d(begin = 0.1, end = 0.8) +
    theme_bw() +
@@ -239,7 +240,7 @@ all_CG_source_growth <- all_CG_source_growth %>%
          legend.text = element_text(size=12),
          axis.line = element_line(colour = "black"),
          axis.title = element_text(size = 18),
-         axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.x = element_text(angle = 0, vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black")))
 
 # Shrub width CG + source (2013-2022) ----
@@ -311,7 +312,7 @@ all_CG_source_growth <- all_CG_source_growth %>%
    #facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free_y") +
    ylab("Stem Elongation (mm)") +
-   xlab("\n Year") +
+   xlab("\n") +
    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
    theme_bw() +

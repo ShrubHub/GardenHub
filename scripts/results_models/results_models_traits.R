@@ -138,7 +138,7 @@ tab_model(LMA_mod_2)
 # filter traits in the CG
 traits_variables_CG <- all_CG_source_traits_2022 %>%
   filter(population %in% c("Northern Garden", "Southern Garden")) %>%
-  select(SLA, LDMC_g_g, LA, leaf_mass_per_area_g_m2)%>%
+  dplyr::select(SLA, LDMC_g_g, LA, leaf_mass_per_area_g_m2)%>%
   na.omit()
 
 # visualise correlation matrix
