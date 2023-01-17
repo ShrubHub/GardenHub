@@ -60,7 +60,7 @@ kluane_source_pop_2022 <- kluane_source_pop_2022 %>%
   mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
          mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
          mean_width = ((Width_cm + Width_2_cm)/2)) %>% 
- select(- Stem_diameter_2, - Stem_diameter_3) # stem diam 2 and 3 were taken for sal ret
+ dplyr::select(- Stem_diameter_2, - Stem_diameter_3) # stem diam 2 and 3 were taken for sal ret
         
 # reclassing stem diam
 kluane_source_pop_2022$Stem_diameter <- as.numeric(kluane_source_pop_2022$Stem_diameter)
@@ -113,7 +113,7 @@ growth_2022$Length_3_mm <- as.numeric(growth_2022$Length_3_mm)
 #filter out July observations and only keep sampleID (to match) and growth variables 
 july <- growth_2022 %>% 
   filter(Month == "7") %>% 
-  select(SampleID, Canopy_Height_cm, Width_cm, Width_2_cm, 
+  dplyr::select(SampleID, Canopy_Height_cm, Width_cm, Width_2_cm, 
          Stem_diameter, Stem_Elongation_1_mm, Stem_Elongation_2_mm, 
          Stem_Elongation_3_mm, Length_1_mm, Length_2_mm, Length_3_mm) %>% 
   rename("jul_height" = "Canopy_Height_cm", # rename all to july values 
@@ -159,7 +159,7 @@ july_aug <- left_join(aug, july, by = "SampleID")  %>%
          Length_1_mm = coalesce(aug_length_1_mm, jul_length_1_mm), 
          Length_2_mm = coalesce(aug_length_2_mm, jul_length_2_mm), 
          Length_3_mm = coalesce(aug_length_3_mm, jul_length_3_mm)) %>%
-  select(- Sample_Date)
+  dplyr::select(- Sample_Date)
 
 sum(is.na(july_aug$aug_height)) # 76 NAs
 sum(is.na(july_aug$jul_height)) # 44 NAs
@@ -288,7 +288,7 @@ all_merged_data_2022$Site <- as.factor(as.character(all_merged_data_2022$Site))
 all_merged_data_2022$Month <- as.numeric(all_merged_data_2022$Month)
 all_merged_data_2022$Day <- as.numeric(all_merged_data_2022$Day)
 all_merged_data_2022$Canopy_Height_cm <- as.numeric(all_merged_data_2022$Canopy_Height_cm)
-all_merged_data_2022$SampleDate <- as.POSIXct(all_merged_data_2022$SampleDate, format = "%d/%m/%Y")
+all_merged_data_2022$Sample_Date <- as.POSIXct(all_merged_data_2022$Sample_Date, format = "%Y-%m-%d")
 
 # Checking all variables are right format
 str(all_merged_data_2022)
@@ -297,7 +297,7 @@ str(all_merged_data_2022)
 all_cg_data_2022 <-  all_merged_data_2022 %>% 
   mutate(population = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
                               TRUE ~ "Southern")) %>% 
-  select(-X) 
+  dplyr::select(-X) 
 # save again 
 # write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
 
@@ -324,7 +324,7 @@ cg_data_2022 <- all_cg_data_2022 %>%
 # merge two data frames 
 all_cg_data_2022 <- bind_rows(cg_data_2020_renamed, cg_data_2022)
 # looks like it worked, save once you have a look! 
-# write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
+write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
 
 # 3.3. Field data from 2017 ----
 # Keeping only relevant columns
