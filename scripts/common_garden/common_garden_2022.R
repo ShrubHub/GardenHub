@@ -317,13 +317,15 @@ cg_data_2020_renamed <- cg_data_2020 %>%
                 "Length_3_mm" = "Stem_Elongation_3_mm", 
                 "Stem_Elongation_1_mm" = "Length_1_mm", 
                 "Stem_Elongation_2_mm" = "Length_2_mm", 
-                "Stem_Elongation_3_mm" = "Length_3_mm")
+                "Stem_Elongation_3_mm" = "Length_3_mm") %>%
+  mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
+         mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3))
+view(cg_data_2020_renamed)
 # this is correct! now add in 2021 and 2022 data 
 cg_data_2022 <- all_cg_data_2022 %>% 
   filter(Year %in% c("2021", "2022"))
 # merge two data frames 
 all_cg_data_2022 <- bind_rows(cg_data_2020_renamed, cg_data_2022)
-# looks like it worked, save once you have a look! 
 write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
 
 # 3.3. Field data from 2017 ----
