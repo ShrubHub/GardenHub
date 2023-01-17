@@ -338,7 +338,7 @@ field_data$Site <- as.factor(field_data$Site)
 # multiplying by 100 to get height in cm
 field_source_pop <- field_data %>%
   mutate(Canopy_Height_cm = Plant_height_veg_m*100) %>%
-  select(-Plant_height_veg_m)%>%
+  dplyr::select(-Plant_height_veg_m)%>%
   na.omit()
 
 # write.csv(field_source_pop, 'data/source_pops/field_source_pop.csv')
@@ -382,7 +382,7 @@ field_source_pop_new$Species <- as.factor(field_source_pop_new$Species)
 # 3.4. Mother data -----
 # only keeping relevant columns of mother data
 mother_data <- Common_garden_2017 %>%
-  select(Sample_ID, Match, Sample_location, Date_sampled,
+  dplyr::select(Sample_ID, Match, Sample_location, Date_sampled,
          Date_propagated, Date_planted, Year_planted, Mother_height,
          Mother_CW_1, Mother_CW_2, Mother_LS, Mother_LL1, Mother_LL2, 
          Mother_LL3, Mother_SE1, Mother_SE2, Mother_SE3, Cutting_length, 
@@ -479,7 +479,7 @@ all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_m
 # making a year column
 all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
   mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y")) %>%
-  select(-Year_measured,- `2022 Notes`)
+  dplyr::select(-Year_measured,- `2022 Notes`)
 
 # variables in right format
 str(all_source_pop_plus_mother)
@@ -573,7 +573,7 @@ length(unique(july_source_pop_plus_mother$SampleID)) # how many unique sampleIDs
 # major issue here is a lack of consistency between uppercase, lowercase, dashes, etc. 
 # pull sample_ids and species list from common garden samples 
 cg_ids <- all_merged_data_2022 %>% 
-  select(SampleID, Species) %>% 
+  dplyr::select(SampleID, Species) %>% 
   distinct(SampleID, Species) %>% # keep each sample ID once 
   rename("Species2" = "Species") %>% # for matching 
   rename("SampleID_standard" = "SampleID")
@@ -608,10 +608,10 @@ sum(is.na(unique_source_mother_check$spp_3)) # 0 baby!
 
 # drop old Species columns and rename spp_3 column to Species
 unique_source_mother <- unique_source_mother_check %>% 
-  select(-c(spp_test, Species, Species2, spp)) %>% 
+  dplyr::select(-c(spp_test, Species, Species2, spp)) %>% 
   rename("Species" = "spp_3")
 # check to make sure we still have no NAs for species 
-sum(is.na(unique_source_mother$Species)) # success! 
+sum(is.na(unique_source_mother$Species)) # 0, success! 
 
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(unique_source_mother, 'data/source_pops/unique_source_mother.csv')
@@ -625,11 +625,11 @@ str(unique_source_mother)
 str(all_cg_data_2022) # I'll convert variables classes after merging 
 # change Site column to be Common_garden, instead of source pop location 
 all_cg_data_2022_merge <- all_cg_data_2022 %>% 
-  select(-SampleID, -X) %>% 
+  dplyr::select(-SampleID, -X) %>% 
   dplyr::mutate(Site = "Common_garden") 
 
 unique_source_mother_merge <- unique_source_mother %>% 
-  select(-c(SampleID, Match, X, SampleSite, Year_measured)) %>% 
+  dplyr::select(-c(SampleID, Match, X, SampleSite, Year_measured)) %>% 
   mutate(population = case_when(Site == "Kluane" ~ "source_south", 
                                 Site == "Qikiqtaruk" ~ "source_north" ))  # add population column to indicate source north or south
   
@@ -669,7 +669,7 @@ traits_2017$SampleID_standard<-gsub("-","",as.character(traits_2017$SampleID_sta
 traits_2017$SampleID_standard<-gsub(" ","",as.character(traits_2017$SampleID_standard)) # remove spaces " " 
 
 traits_2017_merge <- traits_2017 %>% 
-  select(LA, SLA, LDMC, SampleID_standard, Species, Sample_Date, Fresh_mass, Dry_mass) %>% 
+  dplyr::select(LA, SLA, LDMC, SampleID_standard, Species, Sample_Date, Fresh_mass, Dry_mass) %>% 
   filter(Species %in% c("Salix arctica", "Salix pulchra", "Salix richardsonii")) %>% 
   mutate(population = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
                                 TRUE ~ "Southern")) %>% 
@@ -719,12 +719,12 @@ cg_sla_merge <- cg_sla %>%
   mutate(LDMC_g_g = LDMC/1000) %>% # covert LDMC from mg g-1 to g g-1
   mutate(Site = "Common_garden") %>% 
   mutate(LA = LA*100) %>%  #convert leaf area to mm2 instead of cm2
-  select(-c(X, Source, LDMC, number_leaves, dried_leaf_sample_remarks, 
+  dplyr::select(-c(X, Source, LDMC, number_leaves, dried_leaf_sample_remarks, 
             rehydrated_leaf_sample_remarks)) %>% 
   filter(month == "06") #only keep june 2021 and 2022 observations
 
 all_source_area_traits_merge <- all_source_area_traits %>% 
-  select(-c(X, number_leaves, ValueKindName, Data_coPIs, 
+  dplyr::select(-c(X, number_leaves, ValueKindName, Data_coPIs, 
             Data_contributor, Species_sex, Seed_mass_dry_mg, 
             Plant_height_veg_m, Plant_height_repro_m)) %>% 
   mutate(population = case_when(Site == "Kluane" ~ "source_south", 
@@ -772,9 +772,9 @@ all_CG_source_traits$SampleID_standard<-gsub("-","",as.character(all_CG_source_t
 all_CG_source_traits$SampleID_standard<-gsub(" ","",as.character(all_CG_source_traits$SampleID_standard)) # remove spaces " " 
 # get rid of date columns 
 all_CG_source_traits_merge <- all_CG_source_traits %>% 
-  select(-c(month, DOY, Sample_Date, date_sampled, sample_id, X, MONTH, date))
+  dplyr::select(-c(month, DOY, Sample_Date, date_sampled, sample_id, X, MONTH, date))
 all_CG_source_growth_merge <- all_CG_source_growth %>% 
-  select(-c(Month, Sample_Date, Day, X))
+  dplyr::select(-c(Month, Sample_Date, Day, X))
 
 all_cg_data <- full_join(all_CG_source_growth_merge, all_CG_source_traits_merge, 
                          by = c( "Site",
@@ -896,7 +896,8 @@ count_salarct_kluane <- growth_2022 %>%
 (plot_diameter_2022 <- ggplot(all_merged_data_2022) +
     geom_smooth(aes(x = Sample_age, y = Stem_diameter, colour = Site, fill = Site, group = Site, method = "glm")) +
     geom_point(aes(x = Sample_age, y= Stem_diameter, colour = Site, group = Site), size = 1.5, alpha = 0.5) +
-    facet_grid(cols = vars(Species)) +
+    #facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
     ylab("Stem diameter (mm)") +
     xlab("\nAge (years)") +
    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
@@ -916,8 +917,9 @@ count_salarct_kluane <- growth_2022 %>%
 # d. Shrub width (2013-2022) ----
 (plot_width_2022 <- ggplot(all_merged_data_2022) +
     geom_boxplot(aes(x= Site, y = mean_width, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
-    facet_grid(cols = vars(Species)) +
-    ylab("Width (cm)") +
+    #facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Width (cm)") +
     xlab("") +
    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
@@ -940,7 +942,8 @@ facet_traits <- grid.arrange(plot_canopy_2022, plot_stem_2022, plot_diameter_202
 
 (plot_leaf_2022 <- ggplot(all_merged_data_2022) +
     geom_boxplot(aes(x = Site, y = mean_leaf_length, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
-    facet_grid(cols = vars(Species)) +
+    #facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
     ylab("Leaf Length (mm)") +
     xlab("") +
    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
@@ -984,7 +987,8 @@ data_leaf_2022 <- all_merged_data_2022 %>% filter(Year == 2022)
 
 (plot_leaf_2022_only <- ggplot(data_leaf_2022) +
     geom_boxplot(aes(x = Site, y = mean_leaf_length, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
-    facet_grid(cols = vars(Species)) +
+    #facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
     ylab("Leaf Length (mm)") +
     xlab("") +
     scale_colour_viridis_d(begin = 0.3, end = 0.9) +
