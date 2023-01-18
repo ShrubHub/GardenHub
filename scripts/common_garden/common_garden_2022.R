@@ -803,7 +803,8 @@ all_cg_data_2022_merge <- all_cg_data_2022 %>%
 all_cg_data_merge <- full_join(all_cg_data_2022_merge, all_CG_source_traits_merge, 
                       by = c( "Site",
                               "population", "Species", 
-                              "Year"))
+                              "Year", "SampleID_standard")) # Erica: added the sampleId to merge too
+
 all_cg_data <- all_cg_data_merge %>% 
   dplyr::filter(population %in% c("Northern", "Southern"))
 # save 

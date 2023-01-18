@@ -147,6 +147,9 @@ tab_model(diam_garden_growth_mod_2)
 # diam_garden_growth_mod_3 <- lmer(Stem_diameter ~ population + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth_garden_only)
 # larger diameters for southern shrubs
 
+# where is arctica 2020 data?
+arctica_2020 <- all_CG_source_growth %>%
+  filter(Species == "Salix arctica" & Year == "2020") # all NAs
 
 # Correlation matrix growth ----
 
@@ -163,30 +166,26 @@ round(res, 2)
 ggcorr(growth_variables_CG, method = c("everything", "pearson")) 
 
 # # Correlation matrix growth AND traits ----
-# import trait data 
-all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
-all_CG_source_traits$Species <- as.factor(all_CG_source_traits$Species)
-all_CG_source_traits$plant_tag_id <- as.factor(all_CG_source_traits$plant_tag_id)
-all_CG_source_traits$population <- as.factor(all_CG_source_traits$population)
-all_CG_source_traits$date_sampled <- as.POSIXct(all_CG_source_traits$date_sampled, format = '%Y-%m-%d')
-all_CG_source_traits$year <- as.factor(all_CG_source_traits$year)
+# import all data (CG growth + traits)
+all_cg_growth_traits_data <- read_csv("data/all_cg_growth__traits_data.csv")
+view(all_cg_growth_traits_data)
 
-traits_variables_CG <- all_CG_source_traits %>%
-  filter(population %in% c("Northern", "Southern")) %>%
-  dplyr::select(SLA, LDMC_g_g, leaf_mass_per_area_g_m2)%>%
+# keep columns of interest for correlation
+all_corr_variables_CG <- all_cg_growth_traits_data %>%
+  dplyr::select(-"...1",- Bed, -SampleID, -Year_planted, -Species, -Site, -Year,
+                - SampleID_standard, - Sample_age, - population, - Lat,-Lon, 
+                -Elevation_m, -Width_cm, -Width_2_cm,
+                -Length_1_mm, -Length_2_mm, -Length_3_mm, -Stem_Elongation_1_mm,
+                -Stem_Elongation_2_mm, -Stem_Elongation_3_mm) %>%
   na.omit()
 
-view(traits_variables_CG)
-
-# NB traits_variables_CG created in results_models_traits.R script
-# merge growth and traits data 
-all_CG_variables <- merge(growth_variables_CG, traits_variables_CG)
-res_1 <- cor(all_CG_variables)
+res_1 <- cor(all_corr_variables_CG)
 round(res_1, 2)
 
-ggcorr(all_CG_variables, method = c("everything", "pearson")) 
+ggcorr(all_corr_variables_CG, method = c("everything", "pearson")) 
 
 # Data visualisation ------
+
 # ordering levels so source and garden populations side by side
 all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
                                                  c("Northern"="Northern Garden",
