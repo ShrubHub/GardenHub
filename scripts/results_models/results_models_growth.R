@@ -165,7 +165,7 @@ round(res, 2)
 # Visualising correlation matrix with ggcorr
 ggcorr(growth_variables_CG, method = c("everything", "pearson")) 
 
-# # Correlation matrix growth AND traits ----
+# Correlation matrix growth AND traits ----
 # import all data (CG growth + traits)
 all_cg_growth_traits_data <- read_csv("data/all_cg_growth__traits_data.csv")
 view(all_cg_growth_traits_data)
@@ -176,13 +176,13 @@ all_corr_variables_CG <- all_cg_growth_traits_data %>%
                 - SampleID_standard, - Sample_age, - population, - Lat,-Lon, 
                 -Elevation_m, -Width_cm, -Width_2_cm,
                 -Length_1_mm, -Length_2_mm, -Length_3_mm, -Stem_Elongation_1_mm,
-                -Stem_Elongation_2_mm, -Stem_Elongation_3_mm) %>%
-  na.omit()
+                -Stem_Elongation_2_mm, -Stem_Elongation_3_mm)
 
 res_1 <- cor(all_corr_variables_CG)
 round(res_1, 2)
 
 ggcorr(all_corr_variables_CG, method = c("everything", "pearson")) 
+# NAs...! 
 
 # Data visualisation ------
 
