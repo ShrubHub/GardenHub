@@ -810,8 +810,24 @@ all_cg_data <- all_cg_data_merge %>%
 # save 
 write.csv(all_cg_data, "data/all_cg_growth__traits_data.csv")
 
+# 3.9 MAX VALUES ---- 
+# finding max height valuesfrom common garden over the years 
+all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
 
-# 3.9. Sample size ----
+# check how many unique sample IDs 
+length(unique(all_cg_data_2022$SampleID_standard))
+
+# out of curiosity how many of these are NAs?
+sum(is.na(all_cg_data_2022$Canopy_Height_cm)) # 1755 wow, quite a few 
+
+# extract max value for height per sample bc samples have been trimmed over the years 
+all_cg_data_2022_max <- all_cg_data_2022 %>% 
+  group_by(SampleID_standard) %>%
+  slice(which.max(Canopy_Height_cm)) %>% 
+  select(-c(X, X.1, X.2, X.3, X.4, X.5))
+
+
+# 3.9.1 Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
 
 # How many shrubs of each type (Arctic vs Alpine?)
