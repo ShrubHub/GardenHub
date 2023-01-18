@@ -815,16 +815,30 @@ write.csv(all_cg_data, "data/all_cg_growth__traits_data.csv")
 all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
 
 # check how many unique sample IDs 
-length(unique(all_cg_data_2022$SampleID_standard))
+length(unique(all_cg_data_2022$SampleID_standard)
 
 # out of curiosity how many of these are NAs?
 sum(is.na(all_cg_data_2022$Canopy_Height_cm)) # 1755 wow, quite a few 
 
+# drop unnecessary columns 
+max_cg_extractions <-  all_cg_data_2022 %>% 
+  select(-c(X, X.1, X.2, X.3, X.4, X.5, SampleID))
+
 # extract max value for height per sample bc samples have been trimmed over the years 
-all_cg_data_2022_max <- all_cg_data_2022 %>% 
+max_cg_heights <- all_cg_data_2022 %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(Canopy_Height_cm)) %>% 
-  select(-c(X, X.1, X.2, X.3, X.4, X.5))
+  rename("max_canopy_height_cm" = "Canopy_Height_cm")
+
+# do same for widths (use average width value)
+max_cg_widths <- all_cg_data_2022 %>% 
+  group_by(SampleID_standard) %>%
+  slice(which.max(mean_width)) %>% 
+  rename("max_mean_width_cm" = "mean_width")
+
+# save 
+write.csv(max_cg_heights, "data/common_garden_data_2022/max_heights_cg.csv")
+write.csv(max_cg_widths, "data/common_garden_data_2022/max_widths_cg.csv")
 
 
 # 3.9.1 Sample size ----
