@@ -1,7 +1,7 @@
 #### Common garden HOBO 2021 SCRIPT
 ### Data wrangling and visualisation script
 ### By Erica Zaja and Madi Anderson, created on 20/10/2022
-## Last updated: 14/12/2022 by Madelaine 
+## Last updated: 18/01/2023 by Madelaine 
 
 # 1. LOADING LIBRARIES -----
 library(lubridate)
@@ -11,16 +11,31 @@ library(dplyr)
 library(gridExtra)
 
 # 2. LOADING DATA ----
-HOBO_Common_garden_12Aug2021 <- read.csv(file = "data/hobo/HOBO_Common_garden_12Aug2021.csv")
+HOBO_Common_garden_12Aug2021 <- read.csv(file = "data/hobo/HOBO_Common_garden_12Aug2021.csv") # 2018-21
+HOBO_Common_garden_2017 <-  read.csv2("data/hobo/common_garden/Kluane_hobo_Common_garden_2017.csv", sep=",") #2015-17
 
 # 3. DATA WRANGLING ----
+# 2017 
+str(HOBO_Common_garden_2017)
+CG_HOBO_2017 <- HOBO_Common_garden_2017 %>%
+  rename("Soil_moist" = "Water.Content..m..m...LGR.S.N..10742708..SEN.S.N..10736284..LBL..Soil.moisture.",
+         "Ground_temp" = "Temp...C..LGR.S.N..10742708..SEN.S.N..10736450..LBL..Ground.temp.",
+         "Air_temp" ="Temp...C..LGR.S.N..10742708..SEN.S.N..10736452..LBL..Air.temp.",
+         "Soil_temp" = "Temp...C..LGR.S.N..10742708..SEN.S.N..10736453..LBL..Soil.temp.", 
+         "Date_time_GMT" = "Date.Time..GMT.06.00") %>% 
+  select(-X.)
 
-CG_HOBO <- HOBO_Common_garden_12Aug2021 %>%
+# 2021 
+CG_HOBO_2021 <- HOBO_Common_garden_12Aug2021 %>%
   rename("Soil_moist" = "Water.Content_.m..m..",
          "Ground_temp" = "Ground_temp_..C.",
          "Air_temp" ="Air_temp_..C.",
          "Soil_temp" = "Soil_Temp_..C.", 
-         "Date_time_GMT" = "Date.Time..GMT.07.00") 
+         "Date_time_GMT" = "Date.Time..GMT.07.00") %>% 
+  select(-X.)
+
+# merge dataframes together 
+CG_HOBO <- rbind(CG_HOBO_2017, CG_HOBO_2021)
 
 # convert date/time variation to 24h format aka drop AM & PM 
 CG_HOBO_date <- CG_HOBO %>% 
