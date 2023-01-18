@@ -1,6 +1,6 @@
 #### PHENOCAMS: common garden, Kluane and QHI
 #### Script by Erica Zaja, created 14/12/22
-### Last updated: 14/12/22
+### Last updated: 18/01/23 by Madi 
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -19,6 +19,9 @@ CG_phenocams_individual_2021_2022 <- read_csv("data/phenology/phenocam_pics/CG_p
 # CG_phenocams_2021_all, CG_phenocams_2022_all
 
 # 3. DATA WRANGLING-----
+
+# to make DOY column: 
+df$DOY <-  lubridate::yday(as.POSIXct(df$Date, format = "%Y-%m-%d"))
 
 # 3.1. KP ------
 KP_phenocams_2022 <-KP_phenocams_2022[1:9,] # removing loads of NAs
@@ -83,6 +86,7 @@ KP_phenocams_2021_wrangle <- KP_phenocams_2021 %>%
 # merge 2021 and 2022 kp datasets
 KP_phenocams_2021_2022 <- bind_rows(KP_phenocams_2021_wrangle, KP_phenocams_2022_wrangle)
 
+KP_phenocams_2021_2022.csv
 # write csv
 write.csv(KP_phenocams_2021_2022, "data/phenology/phenocam_pics/working_data/KP_phenocams_2021_2022.csv")
 # dates are A MESS. Easier/quicker to edit manually.
@@ -108,6 +112,10 @@ KP_phenocams_2021_2022_manual$Salix_rich_bud_burst <- as.POSIXct(KP_phenocams_20
 KP_phenocams_2021_2022_manual$Salix_rich_first_yellow <- as.POSIXct(KP_phenocams_2021_2022_manual$Salix_rich_first_yellow, format = "%d/%m/%Y")
 KP_phenocams_2021_2022_manual$Salix_rich_last_yellow <- as.POSIXct(KP_phenocams_2021_2022_manual$Salix_rich_last_yellow, format = "%d/%m/%Y")
 KP_phenocams_2021_2022_manual$First_greening <- as.POSIXct(KP_phenocams_2021_2022_manual$First_greening, format = "%d/%m/%Y")
+
+# add DOY column 
+KP_phenocams_2021_2022_manual$Snow_melt_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$Snow_melt, format = "%Y-%m-%d"))
+
 
 # Divide salix pulchra and richardsonii
 KP_phenocams_2021_2022_pulchra <- KP_phenocams_2021_2022_manual %>%
