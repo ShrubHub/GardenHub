@@ -116,14 +116,31 @@ KP_phenocams_2021_2022_manual$First_greening <- as.POSIXct(KP_phenocams_2021_202
 
 # add DOY column 
 KP_phenocams_2021_2022_manual$Snow_melt_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$Snow_melt, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$All_snow_free_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$All_snow_free, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$Snow_return_EoS_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$Snow_return_EoS, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$First_leaf_bud_burst_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$First_leaf_bud_burst, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$Half_leaves_green_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$Half_leaves_green, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$All_leaves_green_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$All_leaves_green, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$First_leaf_yellow_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$First_leaf_yellow, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$Half_leaves_yellow_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$Half_leaves_yellow, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$All_leaves_yellow_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$All_leaves_yellow, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$Salix_pulchra_bud_burst_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$Salix_pulchra_bud_burst, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$Salix_pulchra_first_yellow_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$Salix_pulchra_first_yellow, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$Salix_pulchra_last_yellow_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$Salix_pulchra_last_yellow, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$Salix_rich_bud_burst_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$Salix_rich_bud_burst, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$Salix_rich_first_yellow_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$Salix_rich_first_yellow, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$Salix_rich_last_yellow_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$Salix_rich_last_yellow, format = "%Y-%m-%d"))
+KP_phenocams_2021_2022_manual$First_greening_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$First_greening, format = "%Y-%m-%d"))
 
 
 # Divide salix pulchra and richardsonii
 KP_phenocams_2021_2022_pulchra <- KP_phenocams_2021_2022_manual %>%
-  select(-Salix_rich_bud_burst, -Salix_rich_first_yellow, -Salix_rich_last_yellow)
+  select(-Salix_rich_bud_burst, -Salix_rich_first_yellow, -Salix_rich_last_yellow, 
+         Salix_rich_bud_burst_DOY, Salix_rich_first_yellow_DOY, Salix_rich_last_yellow_DOY)
 
 KP_phenocams_2021_2022_rich <- KP_phenocams_2021_2022_manual %>%
-  select(-Salix_pulchra_bud_burst, -Salix_pulchra_first_yellow, -Salix_pulchra_last_yellow)
+  select(-Salix_pulchra_bud_burst, -Salix_pulchra_first_yellow, -Salix_pulchra_last_yellow,
+         Salix_pulchra_bud_burst_DOY, Salix_pulchra_first_yellow_DOY, Salix_pulchra_last_yellow_DOY)
 
 
 # 3.2. QHI ----
