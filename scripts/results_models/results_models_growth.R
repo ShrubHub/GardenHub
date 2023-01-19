@@ -26,6 +26,7 @@ all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
 
 # Data wrangling -----
 str(all_CG_source_growth)
+
 # reclassing variables
 all_CG_source_growth$Species <- as.factor(all_CG_source_growth$Species)
 all_CG_source_growth$SampleID_standard <- as.factor(all_CG_source_growth$SampleID_standard)
@@ -46,7 +47,7 @@ view(all_CG_source_growth_arctica_QHI)
 range(all_CG_source_growth_arctica_QHI$Canopy_Height_cm)
 # 2.5 - 39.0 cm
 tall_arctica_QHI <- all_CG_source_growth_arctica_QHI %>%
-  filter(Canopy_Height_cm > 15) # filtering anything above 15cm as arcticas are rarely taller than that
+  filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
 view(tall_arctica_QHI) # seems like smth happened in 2015...
 
 # KP
@@ -56,9 +57,18 @@ view(all_CG_source_growth_arctica_KP)
 range(all_CG_source_growth_arctica_KP$Canopy_Height_cm)
 # 1.9 - 34.0 cm
 tall_arctica_KP <- all_CG_source_growth_arctica_KP %>%
-  filter(Canopy_Height_cm > 15) # filtering anything above 15cm as arcticas are rarely taller than that
+  filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
 view(tall_arctica_KP) # seems like smth happened in 2015...
 
+# filter out strange arctica values 
+all_CG_source_growth_edit_1 <- all_CG_source_growth %>%
+  subset(Species != "Salix arctica")
+
+all_CG_source_growth_edit_2 <- all_CG_source_growth %>%
+ subset(Species == "Salix arctica" & Canopy_Height_cm < 25.0)
+
+all_CG_source_growth <- rbind(all_CG_source_growth_edit_1, all_CG_source_growth_edit_2)
+view(all_CG_source_growth)
 # Modelling -----
 
 # 1. Canopy height (compare all) -----
@@ -454,6 +464,7 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
          axis.title = element_text(size = 18),
          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black")))
+
 
 # Stem diam only CG (2013-2022) ----
 (scatter_diam_CG <- ggplot(all_CG_source_growth_garden_only) +
