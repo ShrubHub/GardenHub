@@ -204,9 +204,6 @@ mother_cg <- full_join(mother_data_merge_1, max_cg_heights_merge,
 maternal_height_mod <-  lmer(Mother_Canopy_Height_cm ~ max_canopy_height_cm + (1|Species), data = mother_cg)
 summary(maternal_height_mod)
 
-scatterplot(Mother_Canopy_Height_cm ~ max_canopy_height_cm | Species, data = mother_cg, 
-            smoother = FALSE, grid = FALSE, frame = FALSE)
-
 ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, color = Species)) + geom_point()
 
 
