@@ -62,13 +62,20 @@ view(tall_arctica_KP) # seems like smth happened in 2015...
 
 # filter out strange arctica values 
 all_CG_source_growth_edit_1 <- all_CG_source_growth %>%
-  subset(Species != "Salix arctica")
+  subset(Species != "Salix arctica") # remove all arctica from main dataset
 
 all_CG_source_growth_edit_2 <- all_CG_source_growth %>%
- subset(Species == "Salix arctica" & Canopy_Height_cm < 25.0)
+ subset(Species == "Salix arctica" & Canopy_Height_cm <= 25.0) # filter out arcticas shorter than 25cm
 
+# remerge datasets
 all_CG_source_growth <- rbind(all_CG_source_growth_edit_1, all_CG_source_growth_edit_2)
 view(all_CG_source_growth)
+str(all_CG_source_growth)
+
+# checking it worked
+tall_arctica <- all_CG_source_growth %>%
+  filter(Species == "Salix arctica" & Canopy_Height_cm > 25) # 0! 
+
 # Modelling -----
 
 # 1. Canopy height (compare all) -----
@@ -88,7 +95,9 @@ tab_model(height_growth_mod_3)
 # filter dataset to retain only population "northern" and "southern"
 all_CG_source_growth_garden_only <- all_CG_source_growth %>%
   filter(population %in% c("Northern", "Southern"))
+
 str(all_CG_source_growth_garden_only)
+view(all_CG_source_growth_garden_only)
 
 # model 1 below doesn't converge: boundary (singular) fit: see help('isSingular')
 height_garden_growth_mod_1 <- lmer(Canopy_Height_cm ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)

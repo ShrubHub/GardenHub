@@ -23,6 +23,18 @@ unique_source_mother$SampleYear <- as.factor(unique_source_mother$SampleYear)
 unique_source_mother$Species <- as.factor(unique_source_mother$Species)
 unique_source_mother$Site <- as.factor(unique_source_mother$Site)
 unique(unique_source_mother$SampleYear)
+view(unique_source_mother)
+# filter out strange arctica values 
+unique_source_mother_edit_1 <- unique_source_mother %>%
+  subset(Species != "Salix arctica") # remove all arctica from main dataset
+
+unique_source_mother_edit_2 <- unique_source_mother %>%
+  subset(Species == "Salix arctica" & Canopy_Height_cm <= 25.0) # filter out arcticas shorter than 25cm
+
+# remerge datasets
+unique_source_mother <- rbind(unique_source_mother_edit_1, unique_source_mother_edit_2)
+view(unique_source_mother)
+str(unique_source_mother)
 
 # 4. Modelling ----
 
@@ -41,6 +53,26 @@ tab_model(height_method_mod)
     geom_boxplot() +
     facet_wrap(vars(Species))+
     ylim (0,250)) # to remove outliers
+
+(plot_canopy_height_source <- ggplot(unique_source_mother) +
+    geom_boxplot(aes(x = Site, y = Canopy_Height_cm, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("Canopy Height (cm)") +
+    xlab("\n") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
 
 # Height lmer with species random effect
 height_method_mod_2 <- lmer(Canopy_Height_cm ~ Site + (1|Species) + (1|SampleYear), data = unique_source_mother)
@@ -76,6 +108,26 @@ tab_model(stem_elong_method_mod_2)
     geom_boxplot() +
     facet_wrap(vars(Species))) 
   
+(plot_stem_elong_source <- ggplot(unique_source_mother) +
+    geom_boxplot(aes(x = Site, y = mean_stem_elong, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("Canopy Height (cm)") +
+    xlab("\n") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
 # c. Width---- 
 
 # Width lmer with species interacting
