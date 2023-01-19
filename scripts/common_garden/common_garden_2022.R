@@ -845,14 +845,14 @@ max_cg_heights$Species <- as.factor(max_cg_heights$Species)
 max_cg_widths$Species <- as.factor(max_cg_heights$Species)
 class(max_cg_heights$max_canopy_height_cm)
 
-# mean max height per species
+# mean max height per population and species
 max_cg_heights_spp <- max_cg_heights %>%
- group_by(Species) %>%
+ group_by(population,Species) %>%
   summarise(mean_max_height_cm = mean(max_canopy_height_cm))
 
-# mean max width per species
+# mean max width per population and species
 max_cg_width_spp <- max_cg_widths %>%
-  group_by(Species) %>%
+  group_by(population,Species) %>%
   summarise(mean_max_width_cm = mean(max_mean_width_cm))
 
 # 3.9.1 Sample size ----
