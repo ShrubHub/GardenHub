@@ -870,6 +870,12 @@ max_source_mother_widths<- unique_source_mother %>%
   slice(which.max(mean_width)) %>% 
   rename("max_mean_width_cm" = "mean_width")
 
+# do same for stem elongation (use average value)
+max_source_mother_stem_elong <- unique_source_mother %>% 
+  group_by(SampleID_standard) %>%
+  slice(which.max(mean_stem_elong)) %>% 
+  rename("max_mean_stem_elong_cm" = "mean_stem_elong")
+
 # save 
 write.csv(max_source_mother_heights, "data/source_pops/max_source_mother_heights.csv")
 write.csv(max_source_mother_widths, "data/source_pops/max_source_mother_widths.csv")
@@ -879,6 +885,8 @@ max_source_mother_heights$Species <- as.factor(max_source_mother_heights$Species
 max_source_mother_widths$Species <- as.factor(max_source_mother_widths$Species)
 max_source_mother_heights$Site <- as.factor(max_source_mother_heights$Site)
 max_source_mother_widths$Site <- as.factor(max_source_mother_widths$Site)
+max_source_mother_stem_elong$Species <- as.factor(max_source_mother_stem_elong$Species)
+max_source_mother_stem_elong$Site <- as.factor(max_source_mother_stem_elong$Site)
 
 # mean max height per population and species
 max_source_mother_heights_spp <- max_source_mother_heights %>%
@@ -889,6 +897,15 @@ max_source_mother_heights_spp <- max_source_mother_heights %>%
 max_source_mother_width_spp <- max_source_mother_widths %>%
   group_by(Site,Species) %>%
   summarise(mean_max_width_cm = mean(max_mean_width_cm))
+# Kluane Salix arctica 60.24694
+# Qikiqtaruk Salix arctica 45.37174
+
+# mean max elong per population and species
+max_source_mother_stem_elong_spp <- max_source_mother_stem_elong %>%
+  group_by(Site,Species) %>%
+  summarise(mean_max_stem_elong_cm = mean(max_mean_stem_elong_cm))
+# Qikiqtaruk Salix arctica 29.16506
+# no data for stem elong arctica in Kluane
 
 # 3.9.3 Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs

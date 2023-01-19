@@ -60,21 +60,14 @@ tall_arctica_KP <- all_CG_source_growth_arctica_KP %>%
   filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
 view(tall_arctica_KP) # seems like smth happened in 2015...
 
-# filter out strange arctica values 
-all_CG_source_growth_edit_1 <- all_CG_source_growth %>%
-  subset(Species != "Salix arctica") # remove all arctica from main dataset
+# MADI HELP -----
+# filter out strange arctica values -- all the below don't work like i want them to! 
+all_CG_source_growth[all_CG_source_growth$Species == "Salix arctica" & all_CG_source_growth$Canopy_Height_cm > 25.0, ]
 
 all_CG_source_growth_edit_2 <- all_CG_source_growth %>%
- subset(Species == "Salix arctica" & Canopy_Height_cm <= 25.0) # filter out arcticas shorter than 25cm
+ filter(Species == "Salix arctica" & Canopy_Height_cm <= 25.0) # filter out arcticas shorter than 25cm
 
-# remerge datasets
-all_CG_source_growth <- rbind(all_CG_source_growth_edit_1, all_CG_source_growth_edit_2)
-view(all_CG_source_growth)
-str(all_CG_source_growth)
-
-# checking it worked
-tall_arctica <- all_CG_source_growth %>%
-  filter(Species == "Salix arctica" & Canopy_Height_cm > 25) # 0! 
+test <- subset(all_CG_source_growth, all_CG_source_growth$Species == "Salix arctica" & all_CG_source_growth$Canopy_Height_cm < 25.0)
 
 # Modelling -----
 

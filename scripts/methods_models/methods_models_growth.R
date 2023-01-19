@@ -24,17 +24,11 @@ unique_source_mother$Species <- as.factor(unique_source_mother$Species)
 unique_source_mother$Site <- as.factor(unique_source_mother$Site)
 unique(unique_source_mother$SampleYear)
 view(unique_source_mother)
-# filter out strange arctica values 
-unique_source_mother_edit_1 <- unique_source_mother %>%
-  subset(Species != "Salix arctica") # remove all arctica from main dataset
 
+# filter out strange arctica values 
 unique_source_mother_edit_2 <- unique_source_mother %>%
   subset(Species == "Salix arctica" & Canopy_Height_cm <= 25.0) # filter out arcticas shorter than 25cm
 
-# remerge datasets
-unique_source_mother <- rbind(unique_source_mother_edit_1, unique_source_mother_edit_2)
-view(unique_source_mother)
-str(unique_source_mother)
 
 # 4. Modelling ----
 
