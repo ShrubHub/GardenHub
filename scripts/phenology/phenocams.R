@@ -15,13 +15,15 @@ KP_phenocams_2022 <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2022.cs
 QHI_phenocams_2022 <- read_csv("data/phenology/phenocam_pics/QHI_phenocams_2022.csv")
 Phenocam_Datasheet_QHI <- read_csv("data/phenology/phenocam_pics/Phenocam_Datasheet_QHI.csv")
 CG_phenocams_individual_2021_2022 <- read_csv("data/phenology/phenocam_pics/CG_phenocams_individual_2021_2022.csv")
+QHI_observations_2016_19 <- read_excel("data/phenology/phenocam_pics/QHI_observations_2016-19.xlsx")
+
 # add the generic sheets too (not the individual observations)- but might not need them
 # CG_phenocams_2021_all, CG_phenocams_2022_all
 
 # 3. DATA WRANGLING-----
 
 # to make DOY column: 
-df$DOY <-  lubridate::yday(as.POSIXct(df$Date, format = "%Y-%m-%d"))
+#df$DOY <-  lubridate::yday(as.POSIXct(df$Date, format = "%Y-%m-%d"))
 
 # 3.1. KP ------
 KP_phenocams_2022 <-KP_phenocams_2022[1:9,] # removing loads of NAs
@@ -49,7 +51,7 @@ KP_phenocams_2022_wrangle <- KP_phenocams_2022 %>%
          "Salix_rich_bud_burst" = "Salix richardsonii First Leaf Bud Burst",
          "Salix_rich_first_yellow" = "Salix richardsonii First Yellowing of Leaves",
          "Salix_rich_last_yellow" = "Salix richardsonii Last Leaf Turns Yellow") %>%
-  select(Plot, Year, Viewshed, NOTES, Snow_melt, All_snow_free, First_greening, Snow_return_EoS,
+  dplyr::select(Plot, Year, Viewshed, NOTES, Snow_melt, All_snow_free, First_greening, Snow_return_EoS,
          Half_snow_cover_EoS, Full_snow_cover_EoS, First_leaf_bud_burst, 
          Half_leaves_green, All_leaves_green, First_leaf_yellow, Half_leaves_yellow, 
          All_leaves_yellow, Salix_pulchra_bud_burst, Salix_pulchra_first_yellow, 
@@ -76,7 +78,7 @@ KP_phenocams_2021_wrangle <- KP_phenocams_2021 %>%
          "Salix_rich_bud_burst" = "Salix richardsonii First Leaf Bud Burst",
          "Salix_rich_first_yellow" = "Salix richardsonii First Yellowing of Leaves",
          "Salix_rich_last_yellow" = "Salix richardsonii Last Leaf Turns Yellow") %>%
-  select(Plot, Year, Viewshed, NOTES, Snow_melt, All_snow_free, Snow_return_EoS,
+  dplyr::select(Plot, Year, Viewshed, NOTES, Snow_melt, All_snow_free, Snow_return_EoS,
          Half_snow_cover_EoS, Full_snow_cover_EoS, First_leaf_bud_burst, 
          Half_leaves_green, All_leaves_green, First_leaf_yellow, Half_leaves_yellow, 
          All_leaves_yellow, Salix_pulchra_bud_burst, Salix_pulchra_first_yellow, 
@@ -86,7 +88,6 @@ KP_phenocams_2021_wrangle <- KP_phenocams_2021 %>%
 # merge 2021 and 2022 kp datasets
 KP_phenocams_2021_2022 <- bind_rows(KP_phenocams_2021_wrangle, KP_phenocams_2022_wrangle)
 
-KP_phenocams_2021_2022.csv
 # write csv
 write.csv(KP_phenocams_2021_2022, "data/phenology/phenocam_pics/working_data/KP_phenocams_2021_2022.csv")
 # dates are A MESS. Easier/quicker to edit manually.

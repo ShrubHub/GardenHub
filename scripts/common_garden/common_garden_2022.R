@@ -811,18 +811,18 @@ all_cg_data <- all_cg_data_merge %>%
 write.csv(all_cg_data, "data/all_cg_growth__traits_data.csv")
 
 # 3.9 MAX VALUES ---- 
-# finding max height valuesfrom common garden over the years 
+# finding max height values from common garden over the years 
 all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
 
 # check how many unique sample IDs 
-length(unique(all_cg_data_2022$SampleID_standard)
+length(unique(all_cg_data_2022$SampleID_standard)) # 827
 
 # out of curiosity how many of these are NAs?
 sum(is.na(all_cg_data_2022$Canopy_Height_cm)) # 1755 wow, quite a few 
 
 # drop unnecessary columns 
 max_cg_extractions <-  all_cg_data_2022 %>% 
-  select(-c(X, X.1, X.2, X.3, X.4, X.5, SampleID))
+  dplyr::select(-c(X, X.1, X.2, X.3, X.4, X.5, SampleID))
 
 # extract max value for height per sample bc samples have been trimmed over the years 
 max_cg_heights <- all_cg_data_2022 %>% 
@@ -840,6 +840,20 @@ max_cg_widths <- all_cg_data_2022 %>%
 write.csv(max_cg_heights, "data/common_garden_data_2022/max_heights_cg.csv")
 write.csv(max_cg_widths, "data/common_garden_data_2022/max_widths_cg.csv")
 
+# reclassing Species as factor
+max_cg_heights$Species <- as.factor(max_cg_heights$Species)
+max_cg_widths$Species <- as.factor(max_cg_heights$Species)
+class(max_cg_heights$max_canopy_height_cm)
+
+# mean max height per species
+max_cg_heights_spp <- max_cg_heights %>%
+ group_by(Species) %>%
+  summarise(mean_max_height_cm = mean(max_canopy_height_cm))
+
+# mean max width per species
+max_cg_width_spp <- max_cg_widths %>%
+  group_by(Species) %>%
+  summarise(mean_max_width_cm = mean(max_mean_width_cm))
 
 # 3.9.1 Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
