@@ -1,7 +1,7 @@
 #### MATERNAL EFFECTS SCRIPT 
 ### Data wrangling and visualisation script
 ### By Erica Zaja, created on 31/10/2022
-## Last updated: 08/12/2022 by Madi
+## Last updated: 19/01/2023 by Madi
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -47,7 +47,7 @@ mother_data_merge <-  mother_data %>%
          "Mother_mean_stem_elong" = "mean_stem_elong",
          "Mother_mean_leaf_length" = "mean_leaf_length",
          "Mother_mean_width" = "mean_width") %>% 
-  dplyr::select(-Match, -...1, -...2) %>%   # these columns are useless and will only cause anger and pain
+ # dplyr::select(-Match, -...1, -...2) %>%   # these columns are useless and will only cause anger and pain
   dplyr::select(-SampleID, - Site) %>%
   dplyr::mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
                           SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))%>%
@@ -168,16 +168,47 @@ means_all <- rbind(cg_means_2022, mother_cg_means)
 # merging datasets
 
 # but first keep only 2022 data from common garden 
-cg_2022 <- all_cg %>% 
-  filter(Year == "2022")
+# cg_2022 <- all_cg %>% 
+#  filter(Year == "2022")
 
-mother_cg <- full_join(mother_data_merge, cg_2022, 
-                       by = c("SampleID_standard" = "SampleID_standard", 
-                              "Year_planted" = "Year_planted", 
-                               "SampleDate" = "Sample_Date",
-                                "Species" = "Species",
-                                "Site" = "Site", 
-                              "Sample_age" = "Sample_age"))
+# mother_cg <- full_join(mother_data_merge, cg_2022, 
+#                       by = c("SampleID_standard" = "SampleID_standard", 
+ #                             "Year_planted" = "Year_planted", 
+  #                             "SampleDate" = "Sample_Date",
+   #                             "Species" = "Species",
+    #                            "Site" = "Site", 
+     #                         "Sample_age" = "Sample_age"))
+
+# MERGE with max height ====
+# instead of taking only 2022 data, use max height data 
+max_cg_heights <- read.csv("data/common_garden_data_2022/max_heights_cg.csv")
+str(max_cg_heights)
+
+max_cg_heights_merge <- max_cg_heights %>% 
+  select(c(Species, max_canopy_height_cm, population, Site, SampleID_standard))
+
+mother_data_merge_1 <- mother_data_merge %>% 
+  dplyr::select(-c(SampleDate, Date_propagated)) %>% 
+  filter(Mother_Canopy_Height_cm < 600) #get rid of one obscene shrub over 6 m??
+
+
+mother_cg <- full_join(mother_data_merge_1, max_cg_heights_merge, 
+                      by = c("SampleID_standard" = "SampleID_standard", 
+                             "Species" = "Species",
+                            "Site" = "Site"))
+
+# model structure we want:
+#lmer(mother_height ~ child_height + (1|species))
+
+# TEST MODEL :
+maternal_height_mod <-  lmer(Mother_Canopy_Height_cm ~ max_canopy_height_cm + (1|Species), data = mother_cg)
+summary(maternal_height_mod)
+
+scatterplot(Mother_Canopy_Height_cm ~ max_canopy_height_cm | Species, data = mother_cg, 
+            smoother = FALSE, grid = FALSE, frame = FALSE)
+
+ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, color = Species)) + geom_point()
+
 
 # HEIGHTS: making one single column for each trait and a "treatment" column for mother/child
 mother_cg_long_heights <- mother_cg %>%
