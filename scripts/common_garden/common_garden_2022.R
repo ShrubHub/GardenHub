@@ -301,7 +301,7 @@ all_cg_data_2022 <-  all_merged_data_2022 %>%
 # save again 
 # write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
 
-# LL SE swap ----
+# 3.2.1. Leaf length - Stem elongation swap ----
 # fix 2013-2020 data from CG where leaf length and stem elongation values are swapped 
 # load data 
 all_cg_data_2022 <-  read.csv("data/common_garden_data_2022/all_cg_data_2022.csv")
@@ -618,7 +618,7 @@ sum(is.na(unique_source_mother$Species)) # 0, success!
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(unique_source_mother, 'data/source_pops/unique_source_mother.csv')
 
-# 3.7.A. Merge source / mother / common garden data ----
+# 3.7.1. Merge source / mother / common garden data ----
 # load files 
 unique_source_mother <- read.csv('data/source_pops/unique_source_mother.csv') # all mother and source (growth, not traits -- that's a bigger problem to do after)
 all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
@@ -659,7 +659,7 @@ all_CG_source_growth$Species <- as.factor(all_CG_source_growth$Species)
 write.csv(all_CG_source_growth, 'data/all_CG_source_growth.csv')
 
 
-# 3.7.B. Merge traits from cg with source and mother data ----
+# 3.7.2. Merge traits from cg with source and mother data ----
 # load data 
 # SLA, LDMC, LA: 
 all_source_area_traits <- read.csv("data/source_pops/all_source_area_traits.csv")
@@ -763,7 +763,7 @@ unique(all_CG_source_traits$Species) # Salix arctica Salix pulchra Salix richard
 # save 
 write.csv(all_CG_source_traits, "data/all_CG_source_traits.csv")
 
-# 3.8 merge all data ----
+# 3.8 Merge all data ----
 # merge ALL data (traits and growth) into one data frame 
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") 
 all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv")
@@ -810,7 +810,9 @@ all_cg_data <- all_cg_data_merge %>%
 # save 
 write.csv(all_cg_data, "data/all_cg_growth__traits_data.csv")
 
-# 3.9 MAX VALUES ---- 
+# 3.9 Max heights and widths ---- 
+
+# 3.9.1 Common garden max heights and widths  -----
 # finding max height values from common garden over the years 
 all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
 
@@ -855,7 +857,40 @@ max_cg_width_spp <- max_cg_widths %>%
   group_by(population,Species) %>%
   summarise(mean_max_width_cm = mean(max_mean_width_cm))
 
-# 3.9.1 Sample size ----
+# 3.9.2 Source populations max heights and widths -----
+# extract max value for height per sample bc samples have been trimmed over the years 
+max_source_mother_heights <- unique_source_mother %>% 
+  group_by(SampleID_standard) %>%
+  slice(which.max(Canopy_Height_cm)) %>% 
+  rename("max_canopy_height_cm" = "Canopy_Height_cm")
+
+# do same for widths (use average width value)
+max_source_mother_widths<- unique_source_mother %>% 
+  group_by(SampleID_standard) %>%
+  slice(which.max(mean_width)) %>% 
+  rename("max_mean_width_cm" = "mean_width")
+
+# save 
+write.csv(max_source_mother_heights, "data/source_pops/max_source_mother_heights.csv")
+write.csv(max_source_mother_widths, "data/source_pops/max_source_mother_widths.csv")
+
+# reclassing Species as factor
+max_source_mother_heights$Species <- as.factor(max_source_mother_heights$Species)
+max_source_mother_widths$Species <- as.factor(max_source_mother_widths$Species)
+max_source_mother_heights$Site <- as.factor(max_source_mother_heights$Site)
+max_source_mother_widths$Site <- as.factor(max_source_mother_widths$Site)
+
+# mean max height per population and species
+max_source_mother_heights_spp <- max_source_mother_heights %>%
+  group_by(Site, Species) %>%
+  summarise(mean_max_height_cm = mean(max_canopy_height_cm))
+
+# mean max width per population and species
+max_source_mother_width_spp <- max_source_mother_widths %>%
+  group_by(Site,Species) %>%
+  summarise(mean_max_width_cm = mean(max_mean_width_cm))
+
+# 3.9.3 Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
 
 # How many shrubs of each type (Arctic vs Alpine?)
