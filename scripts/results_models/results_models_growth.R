@@ -62,12 +62,13 @@ view(tall_arctica_KP) # seems like smth happened in 2015...
 
 # filter out strange arctica values 
 all_CG_source_growth_edit_1 <- all_CG_source_growth %>%
-  filter(Species != "Salix arctica")
+  filter(Species != "Salix arctica") # remove all arctica data from full dataset
 
 all_CG_source_growth_edit_2 <- all_CG_source_growth %>%
   filter(Species == "Salix arctica") %>%
   subset(Canopy_Height_cm <= 25.0) %>% # based on literature
   subset(mean_stem_elong <= 29.0) # based on mean max values from previous years
+view(all_CG_source_growth_edit_2)
 
 # based on mean max values from previous years
 all_CG_source_growth_edit_2 <- all_CG_source_growth_edit_2[!(all_CG_source_growth_edit_2$Site=="Qikiqtaruk" & 
@@ -79,7 +80,7 @@ all_CG_source_growth_edit_2 <- all_CG_source_growth_edit_2[!(all_CG_source_growt
 all_CG_source_growth <- rbind(all_CG_source_growth_edit_1, 
                                    all_CG_source_growth_edit_2)
 
-view(all_CG_source_growth) # all goood
+view(all_CG_source_growth)
 
 # MADI CHECK ---- 
 # code above and then we can overwrite the all_souce_CG_growth dataset

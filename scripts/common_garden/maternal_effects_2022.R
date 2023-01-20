@@ -24,7 +24,7 @@ all_cg <- read_csv("data/common_garden_data_2022/all_merged_data_2022.csv")
 
 # Match mother heights with heights in common garden
 cg_2022 <- all_cg %>%
-  select(-...1)
+  dplyr::select(-...1)
 
 # Making variables in right format
 str(mother_data)
@@ -185,7 +185,9 @@ max_cg_heights <- read.csv("data/common_garden_data_2022/max_heights_cg.csv")
 str(max_cg_heights)
 
 max_cg_heights_merge <- max_cg_heights %>% 
-  select(c(Species, max_canopy_height_cm, population, Site, SampleID_standard))
+  dplyr::select(c(Species, max_canopy_height_cm, population, Site, SampleID_standard))
+
+view(mother_data_merge_1)
 
 mother_data_merge_1 <- mother_data_merge %>% 
   dplyr::select(-c(SampleDate, Date_propagated)) %>% 
