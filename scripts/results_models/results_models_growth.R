@@ -60,7 +60,7 @@ tall_arctica_KP <- all_CG_source_growth_arctica_KP %>%
   filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
 view(tall_arctica_KP) # seems like smth happened in 2015...
 
-# filter out strange arctica values -- all the below don't work like i want them to! 
+# filter out strange arctica values 
 all_CG_source_growth_edit_1 <- all_CG_source_growth %>%
   filter(Species != "Salix arctica")
 
@@ -80,6 +80,10 @@ all_CG_source_growth <- rbind(all_CG_source_growth_edit_1,
                                    all_CG_source_growth_edit_2)
 
 view(all_CG_source_growth) # all goood
+
+# MADI CHECK ---- 
+# code above and then we can overwrite the all_souce_CG_growth dataset
+write.csv()
 
 # Modelling -----
 

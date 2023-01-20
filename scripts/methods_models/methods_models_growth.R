@@ -15,6 +15,7 @@ library(ggpubr)
 
 # 2. Loading data ---- 
 unique_source_mother <- read_csv("data/source_pops/unique_source_mother.csv")
+view(unique_source_mother)
 
 # 3. Wrangling ----
 # variables in right format
@@ -26,9 +27,23 @@ unique(unique_source_mother$SampleYear)
 view(unique_source_mother)
 
 # filter out strange arctica values 
-unique_source_mother_edit_2 <- unique_source_mother %>%
-  subset(Species == "Salix arctica" & Canopy_Height_cm <= 25.0) # filter out arcticas shorter than 25cm
+unique_source_mother_edit_a <- unique_source_mother %>%
+  filter(Species != "Salix arctica")
 
+unique_source_mother_edit_b <- unique_source_mother %>%
+  filter(Species == "Salix arctica") %>%
+  subset(Canopy_Height_cm <= 25.0) %>% # based on literature
+  subset(mean_stem_elong <= 29.0) # based on mean max values from previous years
+                                                            unique_source_mother_edit_2$mean_width<= 60.0),]
+# remerge all data
+unique_source_mother <- rbind(unique_source_mother_edit_a, 
+                              unique_source_mother_edit_b)
+
+view(unique_source_mother) # all goood
+
+# MADI CHECK --- 
+# code above and if you're happy with it we can overwrite the unique_source_mother dataset
+write(csv)
 
 # 4. Modelling ----
 
