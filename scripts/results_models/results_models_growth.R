@@ -60,14 +60,26 @@ tall_arctica_KP <- all_CG_source_growth_arctica_KP %>%
   filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
 view(tall_arctica_KP) # seems like smth happened in 2015...
 
-# MADI HELP -----
 # filter out strange arctica values -- all the below don't work like i want them to! 
-all_CG_source_growth[all_CG_source_growth$Species == "Salix arctica" & all_CG_source_growth$Canopy_Height_cm > 25.0, ]
+all_CG_source_growth_edit_1 <- all_CG_source_growth %>%
+  filter(Species != "Salix arctica")
 
 all_CG_source_growth_edit_2 <- all_CG_source_growth %>%
- filter(Species == "Salix arctica" & Canopy_Height_cm <= 25.0) # filter out arcticas shorter than 25cm
+  filter(Species == "Salix arctica") %>%
+  subset(Canopy_Height_cm <= 25.0) %>% # based on literature
+  subset(mean_stem_elong <= 29.0) # based on mean max values from previous years
 
-test <- subset(all_CG_source_growth, all_CG_source_growth$Species == "Salix arctica" & all_CG_source_growth$Canopy_Height_cm < 25.0)
+# based on mean max values from previous years
+all_CG_source_growth_edit_2 <- all_CG_source_growth_edit_2[!(all_CG_source_growth_edit_2$Site=="Qikiqtaruk" & 
+                                                              all_CG_source_growth_edit_2$mean_width<= 45.0),]
+# based on mean max values from previous years
+all_CG_source_growth_edit_2 <- all_CG_source_growth_edit_2[!(all_CG_source_growth_edit_2$Site=="Kluane" & 
+                                                               all_CG_source_growth_edit_2$mean_width<= 60.0),]
+# remerge all data
+all_CG_source_growth <- rbind(all_CG_source_growth_edit_1, 
+                                   all_CG_source_growth_edit_2)
+
+view(all_CG_source_growth) # all goood
 
 # Modelling -----
 
