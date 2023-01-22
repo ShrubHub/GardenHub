@@ -154,8 +154,8 @@ all_CG_source_traits$population <- plyr::revalue(all_CG_source_traits$population
 all_CG_source_traits$population <- ordered(all_CG_source_traits$population, 
                                            levels = c("Northern Source", 
                                                       "Northern Garden", 
-                                                      "Southern Garden", 
-                                                      "Southern Source"))
+                                                      "Southern Source",
+                                                      "Southern Garden"))
 
 all_CG_source_traits_2022$population <- plyr::revalue(all_CG_source_traits_2022$population, 
                                                  c("Northern"="Northern Garden",
@@ -164,9 +164,9 @@ all_CG_source_traits_2022$population <- plyr::revalue(all_CG_source_traits_2022$
                                                    "source_north"="Northern Source"))
 all_CG_source_traits_2022$population <- ordered(all_CG_source_traits_2022$population, 
                                            levels = c("Northern Source", 
-                                                      "Northern Garden", 
-                                                      "Southern Garden", 
-                                                      "Southern Source"))
+                                                      "Northern Garden",
+                                                      "Southern Source", 
+                                                      "Southern Garden"))
 
 CG_source_growth_ll$population <- plyr::revalue(CG_source_growth_ll$population, 
                                                       c("Northern"="Northern Garden",
@@ -175,9 +175,9 @@ CG_source_growth_ll$population <- plyr::revalue(CG_source_growth_ll$population,
                                                         "source_north"="Northern Source"))
 CG_source_growth_ll$population <- ordered(CG_source_growth_ll$population, 
                                                 levels = c("Northern Source", 
-                                                           "Northern Garden", 
-                                                           "Southern Garden", 
-                                                           "Southern Source"))
+                                                           "Northern Garden",
+                                                           "Southern Source", 
+                                                           "Southern Garden"))
 
 all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
                                                 c("Northern"="Northern Garden",
@@ -186,9 +186,9 @@ all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population
                                                   "source_north"="Northern Source"))
 all_CG_source_growth$population <- ordered(all_CG_source_growth$population, 
                                           levels = c("Northern Source", 
-                                                     "Northern Garden", 
-                                                     "Southern Garden", 
-                                                     "Southern Source"))
+                                                     "Northern Garden",
+                                                     "Southern Source", 
+                                                     "Southern Garden"))
 
 
 # SLA 
