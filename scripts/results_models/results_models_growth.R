@@ -37,28 +37,29 @@ all_CG_source_growth$Year <- as.factor(all_CG_source_growth$Year)
 all_CG_source_growth$Sample_age <- as.factor(all_CG_source_growth$Sample_age)
 unique(all_CG_source_growth$population)
 unique(all_CG_source_growth$Site)
-view(all_CG_source_growth)
+unique(all_CG_source_growth$Species)
+#view(all_CG_source_growth)
 
 # check heights of arctica in sources 
 # QHI 
 all_CG_source_growth_arctica_QHI <- all_CG_source_growth %>%
-  filter(population == "Northern Source" & Species == "Salix arctica")
-view(all_CG_source_growth_arctica_QHI)
+  filter(population == "source_north" & Species == "Salix arctica")
+# view(all_CG_source_growth_arctica_QHI)
 range(all_CG_source_growth_arctica_QHI$Canopy_Height_cm)
 # 2.5 - 39.0 cm
 tall_arctica_QHI <- all_CG_source_growth_arctica_QHI %>%
   filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
-view(tall_arctica_QHI) # seems like smth happened in 2015...
+# view(tall_arctica_QHI) # seems like smth happened in 2015...
 
 # KP
 all_CG_source_growth_arctica_KP <- all_CG_source_growth %>%
-  filter(population == "Southern Source" & Species == "Salix arctica")
-view(all_CG_source_growth_arctica_KP)
+  filter(population == "source_south" & Species == "Salix arctica")
+# view(all_CG_source_growth_arctica_KP)
 range(all_CG_source_growth_arctica_KP$Canopy_Height_cm)
 # 1.9 - 34.0 cm
 tall_arctica_KP <- all_CG_source_growth_arctica_KP %>%
   filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
-view(tall_arctica_KP) # seems like smth happened in 2015...
+# view(tall_arctica_KP) # seems like smth happened in 2015...
 
 # filter out strange arctica values 
 all_CG_source_growth_edit_1 <- all_CG_source_growth %>%
@@ -68,13 +69,16 @@ all_CG_source_growth_edit_2 <- all_CG_source_growth %>%
   filter(Species == "Salix arctica") %>%
   subset(Canopy_Height_cm <= 25.0) %>% # based on literature
   subset(mean_stem_elong <= 29.0) # based on mean max values from previous years
+
+unique(all_CG_source_growth_edit_2$Site)
 view(all_CG_source_growth_edit_2)
 
 # based on mean max values from previous years
-all_CG_source_growth_edit_2 <- all_CG_source_growth_edit_2[!(all_CG_source_growth_edit_2$Site=="Qikiqtaruk" & 
+# THIS INTRODUCES NAs AND I DON'T THINK IS NEEDED: 
+# all_CG_source_growth_edit_2 <- all_CG_source_growth_edit_2[!(all_CG_source_growth_edit_2$Site=="Qikiqtaruk" & 
                                                               all_CG_source_growth_edit_2$mean_width<= 45.0),]
 # based on mean max values from previous years
-all_CG_source_growth_edit_2 <- all_CG_source_growth_edit_2[!(all_CG_source_growth_edit_2$Site=="Kluane" & 
+# all_CG_source_growth_edit_2 <- all_CG_source_growth_edit_2[!(all_CG_source_growth_edit_2$Site=="Kluane" & 
                                                                all_CG_source_growth_edit_2$mean_width<= 60.0),]
 # remerge all data
 all_CG_source_growth <- rbind(all_CG_source_growth_edit_1, 
