@@ -59,6 +59,10 @@ st_bbox(canada_geo)
 # 3689321  659305 9015751 5242009 
 crs(canada_geo)
 
+(canada_geo_map <- ggplot() + 
+    geom_sf(data = canada_geo, size = 0.5, color = "black", fill = "white"))  
+    #ggtitle("PCH core range 2016")) 
+
 # and topographic map from University of Texas Austin
 # read in raster of relief
 relief <- raster("data/map/stanford-xs501gm7232-geotiff.tif") # check CRS

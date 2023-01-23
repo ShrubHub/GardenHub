@@ -23,7 +23,7 @@ CG_HOBO_2017 <- HOBO_Common_garden_2017 %>%
          "Air_temp" ="Temp...C..LGR.S.N..10742708..SEN.S.N..10736452..LBL..Air.temp.",
          "Soil_temp" = "Temp...C..LGR.S.N..10742708..SEN.S.N..10736453..LBL..Soil.temp.", 
          "Date_time_GMT" = "Date.Time..GMT.06.00") %>% 
-  select(-X.)
+  dplyr::select(-X.)
 
 # 2021 
 CG_HOBO_2021 <- HOBO_Common_garden_12Aug2021 %>%
@@ -32,7 +32,7 @@ CG_HOBO_2021 <- HOBO_Common_garden_12Aug2021 %>%
          "Air_temp" ="Air_temp_..C.",
          "Soil_temp" = "Soil_Temp_..C.", 
          "Date_time_GMT" = "Date.Time..GMT.07.00") %>% 
-  select(-X.)
+  dplyr::select(-X.)
 
 # merge dataframes together 
 CG_HOBO <- rbind(CG_HOBO_2017, CG_HOBO_2021)

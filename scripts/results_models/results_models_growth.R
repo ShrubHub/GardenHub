@@ -20,11 +20,12 @@ library(ggplot2)
 library(ggpubr)
 library(corrplot)
 library(GGally)
+library(readr)
 
 # Loading data ---- 
 all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
 
-# Data wrangling -----
+# 1. DATA WRANGLING -----
 str(all_CG_source_growth)
 
 # reclassing variables
@@ -40,57 +41,7 @@ unique(all_CG_source_growth$Site)
 unique(all_CG_source_growth$Species)
 #view(all_CG_source_growth)
 
-# check heights of arctica in sources 
-# QHI 
-all_CG_source_growth_arctica_QHI <- all_CG_source_growth %>%
-  filter(population == "source_north" & Species == "Salix arctica")
-# view(all_CG_source_growth_arctica_QHI)
-range(all_CG_source_growth_arctica_QHI$Canopy_Height_cm)
-# 2.5 - 39.0 cm
-tall_arctica_QHI <- all_CG_source_growth_arctica_QHI %>%
-  filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
-# view(tall_arctica_QHI) # seems like smth happened in 2015...
-
-# KP
-all_CG_source_growth_arctica_KP <- all_CG_source_growth %>%
-  filter(population == "source_south" & Species == "Salix arctica")
-# view(all_CG_source_growth_arctica_KP)
-range(all_CG_source_growth_arctica_KP$Canopy_Height_cm)
-# 1.9 - 34.0 cm
-tall_arctica_KP <- all_CG_source_growth_arctica_KP %>%
-  filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
-# view(tall_arctica_KP) # seems like smth happened in 2015...
-
-# filter out strange arctica values 
-all_CG_source_growth_edit_1 <- all_CG_source_growth %>%
-  filter(Species != "Salix arctica") # remove all arctica data from full dataset
-
-all_CG_source_growth_edit_2 <- all_CG_source_growth %>%
-  filter(Species == "Salix arctica") %>%
-  subset(Canopy_Height_cm <= 25.0) %>% # based on literature
-  subset(mean_stem_elong <= 29.0) # based on mean max values from previous years
-
-unique(all_CG_source_growth_edit_2$Site)
-view(all_CG_source_growth_edit_2)
-
-# based on mean max values from previous years
-# THIS INTRODUCES NAs AND I DON'T THINK IS NEEDED: 
-# all_CG_source_growth_edit_2 <- all_CG_source_growth_edit_2[!(all_CG_source_growth_edit_2$Site=="Qikiqtaruk" & 
-                                                              all_CG_source_growth_edit_2$mean_width<= 45.0),]
-# based on mean max values from previous years
-# all_CG_source_growth_edit_2 <- all_CG_source_growth_edit_2[!(all_CG_source_growth_edit_2$Site=="Kluane" & 
-                                                               all_CG_source_growth_edit_2$mean_width<= 60.0),]
-# remerge all data
-all_CG_source_growth <- rbind(all_CG_source_growth_edit_1, 
-                                   all_CG_source_growth_edit_2)
-
-view(all_CG_source_growth)
-
-# MADI CHECK ---- 
-# code above and then we can overwrite the all_souce_CG_growth dataset
-write.csv()
-
-# Modelling -----
+# 2. MODELLING -----
 
 # 1. Canopy height (compare all) -----
 # trying comparison with all (CG, KP, QHI)
@@ -184,6 +135,7 @@ tab_model(diam_garden_growth_mod_2)
 arctica_2020 <- all_CG_source_growth %>%
   filter(Species == "Salix arctica" & Year == "2020") # all NAs
 
+# 3. CORRELATION -----
 # Correlation matrix growth ----
 
 # filter growth in the CG
@@ -217,7 +169,7 @@ round(res_1, 2)
 ggcorr(all_corr_variables_CG, method = c("everything", "pearson")) 
 # NAs...! 
 
-# Data visualisation ------
+# 4. DATA VISUALISATION ------
 
 # ordering levels so source and garden populations side by side
 all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
