@@ -102,7 +102,7 @@ tab_model(stem_elong_method_mod_2)
     geom_boxplot(aes(x = Site, y = mean_stem_elong, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
     # facet_grid(cols = vars(Species)) +
     facet_wrap(~Species, scales = "free_y") +
-    ylab("Canopy Height (cm)") +
+    ylab("Stem elongation (mm)") +
     xlab("\n") +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -145,6 +145,26 @@ tab_model(width_method_mod_2 )
     geom_boxplot() +
     facet_wrap(vars(Species))) 
     
+(plot_width_source <- ggplot(unique_source_mother) +
+    geom_boxplot(aes(x = Site, y = mean_width, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("Width (cm)") +
+    xlab("\n") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
 # d. Stem diameter -----
 
 # Diameter lmer with species interacting
@@ -170,10 +190,36 @@ tab_model(diam_method_mod_2)
 
 (diam_p <- ggplot(unique_source_mother, aes(Site, Stem_diameter)) +
     geom_boxplot() +
-    facet_wrap(vars(Species))) 
+    facet_wrap(vars(Species)))
+
+(plot_diam_source <- ggplot(unique_source_mother) +
+    geom_boxplot(aes(x = Site, y = Stem_diameter, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("Stem diameter (mm)") +
+    xlab("\n") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
 
 # quick arrange 
 (growth_plots <- ggarrange(height_p, width_p, elong_p, diam_p, nrow = 2, ncol = 2))
+(growth_ggplots <- ggarrange(plot_canopy_height_source,
+                             plot_width_source,
+                             plot_stem_elong_source,
+                             plot_diam_source,
+                             nrow = 2, ncol = 2))
 
 
 # visualize growth by year  ---- 
