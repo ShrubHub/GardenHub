@@ -179,7 +179,7 @@ means_all <- rbind(cg_means_2022, mother_cg_means)
     #                            "Site" = "Site", 
      #                         "Sample_age" = "Sample_age"))
 
-# MERGE with max height ====
+# MERGE with max height -----
 # instead of taking only 2022 data, use max height data 
 max_cg_heights <- read.csv("data/common_garden_data_2022/max_heights_cg.csv")
 str(max_cg_heights)
@@ -205,8 +205,27 @@ mother_cg <- full_join(mother_data_merge_1, max_cg_heights_merge,
 # TEST MODEL :
 maternal_height_mod <-  lmer(Mother_Canopy_Height_cm ~ max_canopy_height_cm + (1|Species), data = mother_cg)
 summary(maternal_height_mod)
+tab_model(maternal_height_mod)
 
-ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, color = Species)) + geom_point()
+ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, color = Species)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+(plot_mother_height_model <- ggplot() +
+    geom_point(aes(x = max_canopy_height_cm, y= Mother_Canopy_Height_cm, color = Species), size = 3, alpha = 0.5, data = mother_cg) +
+    geom_smooth(aes(x = max_canopy_height_cm, y= Mother_Canopy_Height_cm, colour = Species), method = "lm", data = mother_cg) +
+    facet_wrap(~Species, scales = "free") +
+    ylab("Mother shrub canopy height in sources (cm)") +
+    xlab("\nMax child canopy height in common garden (cm)") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black"))) 
 
 
 # HEIGHTS: making one single column for each trait and a "treatment" column for mother/child
