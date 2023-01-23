@@ -49,12 +49,26 @@ mean(hobo_mean_temp_2022$mean_temp) # 9.853633
 # summarized by Haydn Thomas 
 
 Haydn_summary <- read.csv("data/environment/Formatted_temps_shrubhub.csv")
+metadata_summary <-  read.csv("data/environment/metadata_shrubhub.csv")
 
-unique(Haydn_summary$Plotcode)
-
+# match metadata & enviro data
+summary <- full_join(Haydn_summary, metadata_summary, by = "Plotcode")
 # filter only QHI data 
-
-QHI_hobo_pheno_2015 <- Haydn_summary %>% 
-  dplyr::filter(Plotcode == "QHI_phenology_plot") %>% 
+unique(summary$Plotcode)
+# mix of HOBO and iButton - combine for now 
+QHI_enviro_summary <- summary %>% 
+  dplyr::filter(Plotcode %in% c("QHI_phenology_plot", "HH_1", "HH_2", "HK_1", "HK_2", 
+                                "HR_1", "HR_2", "HS_1", "HS_2", "HV_1", "HV_2")) %>% 
   dplyr::select(-X) # drop sort column 
-  
+
+july_QHI_enviro <- QHI_enviro_summary %>% 
+  filter(Month == "7")
+july_QHI_enviro_mean <- july_QHI_enviro  %>%
+  group_by(Year) %>% 
+  summarise(mean_temp = mean(Temperature))
+
+# 2015: 9.05
+# 2016: 6.79
+
+
+
