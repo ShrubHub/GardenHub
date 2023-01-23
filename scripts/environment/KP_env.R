@@ -1,6 +1,6 @@
 # KP environmental 
 # Script by Erica Zaja, created on 08/12/2022
-# Last updated: 08/12/2022
+# Last updated: 23/01/2023
 
 # 90% snow free plateau from phenocams 2022
 # June 18, 15, 21, 17, 18, 19, 26, 21 --> mean = June 18th
@@ -10,13 +10,8 @@
 # Workflow
 # 1. Explore elevation, filter anything below treeline (what is the elevation of treeline on KP?)
 # keep anything between 1300-2000m (range where cuttings taken)
-# 2. Explore date ranges, filter dates to: june 18-aug 31
-# 3. Merge datasets
-# 4. Make means for each year (average high medium and low elevations)
-
-# ---> write means here:
-# KP 2016 July (4-6): 15.3 
-# PC 2016 June-July (28-2): 12.6 
+# 2. Explore date ranges, filter dates to: JULY 
+# 4. Make means for each year 
 
 # LIBRARIES ----
 library(MazamaCoreUtils)
@@ -26,6 +21,46 @@ library(tidyverse)
 
 # LOADING DATA ----
 
+# soil temp 2015-2017 (1 july 2015- 1 January 2017)
+# Formatted_temps <- read_csv("data/hobo/Formatted_temps.csv")
+
+# 2022
+KP_FullTOMST_2022 <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_FullTOMST_2022.csv")
+
+# data HOBO station summarized by Haydn Thomas 
+Haydn_summary <- read.csv("data/environment/Formatted_temps_shrubhub.csv")
+
+# DATA WRANGLING -------
+unique(Haydn_summary$Plotcode)
+unique(Haydn_summary$Year) # [1] 2015 2016 2017
+# filter only KP data 
+str(Haydn_summary)
+alpine <- c("Kluane_Plateau_1", "Kluane_Plateau_2", 
+            "PC16_1","PC16_2", "PP16_1", "PP16_2", 
+            "Kluane_10", "Kluane_5", "Kluane_6",
+            "Kluane_7", "Kluane_8")
+
+KP_hobo_pheno_2017 <- Haydn_summary %>% 
+  filter(Plotcode %in% alpine )  %>% 
+  dplyr::select(-X) # drop sort column 
+
+unique(KP_hobo_pheno_2017$Plotcode)
+unique(KP_hobo_pheno_2017$Year)
+
+range(KP_FullTOMST_2022$Datetime_UTC) # 1 june 2022 - 15 aug 2022
+
+# Monthly means 
+
+# Daily mean surface temperature
+KP_mean_monthly_temp_hobo <- KP_hobo_pheno_2017  %>%
+  group_by(Year, Month) %>% 
+  summarise(mean_temp = mean(Temperature))
+
+KP_july_temp_hobo <- KP_mean_monthly_temp_hobo %>%
+  filter(Month == 7) 
+# DONE ! 
+
+# SPORADIC IBUTTONS (NOT USING) ----- 
 # 2016-2017 ibuttons: record air temperature at ground level 
 PC_2016_ibuttons <- read_excel("data/environment/Kluane/PC_2016_ibuttons.xlsx")
 KP_2016_ibuttons <- read_excel("data/environment/Kluane/KP_2016_ibuttons.xlsx")
@@ -33,10 +68,6 @@ KP_2016_ibuttons <- read_excel("data/environment/Kluane/KP_2016_ibuttons.xlsx")
 # surface temp 2016-2017 ?? Need to check with Haydn what these are
 KP_tea_surface_1 <- read.csv("data/environment/Kluane/KP_tea_surface_1.csv", skip = 14)
 KP_tea_surface_2 <- read.csv("data/environment/Kluane/KP_tea_surface_2.csv", skip = 14)
-
-# soil temp 2015-2017 (1 july 2015- 1 January 2017)
-Formatted_temps <- read_csv("data/hobo/Formatted_temps.csv")
-
 # soil temp 2016-2017 Need to check with Haydn what these are
 KP_tea_soil_1 <- read.csv("data/environment/Kluane/KP_tea_soil_1.csv",  skip = 14)
 KP_tea_soil_2 <- read.csv("data/environment/Kluane/KP_tea_soil_2.csv",  skip = 14)
@@ -63,11 +94,6 @@ KP_2018_mid2 <- read_csv("data/environment/Kluane/Canada.Kluane.1527m.2018.08.05
 KP_2018_high1 <- read_csv("data/environment/Kluane/Canada.Kluane.1816m.2018.08.05 20h30_a.csv", skip = 14)
 KP_2018_high2 <- read_csv("data/environment/Kluane/Canada.Kluane.1816m.2018.08.05 20h30_b.csv", skip = 14)
 
-# 2022
-KP_FullTOMST_2022 <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_FullTOMST_2022.csv")
-
-
-# DATA WRANGLING -------
 # in chronological order: 
 
 # Exploring 2016 datasets
@@ -87,11 +113,11 @@ KP_2016_ibuttons_ele <- KP_2016_ibuttons %>%
 
 # renaming ibutton columns to elevations
 PC_2016_ibuttons_ele <- PC_2016_ibuttons %>%
-rename("Site 1" = "iButton 33E9AE21" ,# elevation:1049 m - will exclude
-        "Site 2" = "iButton 38244121",# elevation:1305 m
-        "Site 3"= "iButton 38274121",# elevation:1527 m
-       "Site 4" = "iButton 38188921")# elevation:1835 m
-                  
+  rename("Site 1" = "iButton 33E9AE21" ,# elevation:1049 m - will exclude
+         "Site 2" = "iButton 38244121",# elevation:1305 m
+         "Site 3"= "iButton 38274121",# elevation:1527 m
+         "Site 4" = "iButton 38188921")# elevation:1835 m
+
 # filtering to keep right elevations
 # KP
 KP_2016_low <- KP_2016_ibuttons_ele %>%
@@ -222,11 +248,3 @@ range(KP_2018_mid1$Date.Time) # 5 july 2018- 7 july 2018
 range(KP_2018_mid2$Date.Time) # 5 july 2018- 7 july 2018
 range(KP_2018_high1$Date.Time) # 5 july 2018- 7 july 2018
 range(KP_2018_high2$Date.Time) # 5 july 2018- 7 july 2018
-
-range(KP_FullTOMST_2022$Datetime_UTC) # 1 june 2022 - 15 aug 2022
-
-# Merging datasets
-KP_ibuttons_low <-
-KP_ibuttons_mid <- 
-KP_ibuttons_high <- 
-# make a year column, then group by year and calculate mean of the value

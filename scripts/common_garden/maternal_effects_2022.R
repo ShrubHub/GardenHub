@@ -203,7 +203,7 @@ mother_cg <- full_join(mother_data_merge_1, max_cg_heights_merge,
 #lmer(mother_height ~ child_height + (1|species))
 
 # TEST MODEL :
-maternal_height_mod <-  lmer(Mother_Canopy_Height_cm ~ max_canopy_height_cm + (1|Species), data = mother_cg)
+maternal_height_mod <-  lmer(Mother_Canopy_Height_cm ~ max_canopy_height_cm + Site + (1|Species), data = mother_cg)
 summary(maternal_height_mod)
 tab_model(maternal_height_mod)
 

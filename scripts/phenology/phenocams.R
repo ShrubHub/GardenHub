@@ -13,9 +13,8 @@ library(gridExtra)
 KP_phenocams_2021 <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2021.csv")
 KP_phenocams_2022 <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2022.csv")
 QHI_phenocams_2022 <- read_csv("data/phenology/phenocam_pics/QHI_phenocams_2022.csv")
-Phenocam_Datasheet_QHI <- read_csv("data/phenology/phenocam_pics/Phenocam_Datasheet_QHI.csv")
 CG_phenocams_individual_2021_2022 <- read_csv("data/phenology/phenocam_pics/CG_phenocams_individual_2021_2022.csv")
-QHI_observations_2016_19 <- read_excel("data/phenology/phenocam_pics/QHI_observations_2016-19.xlsx")
+phenocams_19012022.csv <-read_csv("data/phenology/phenocam_pics/phenocams_19012022.csv") # NEWEST QHI phenology sheet. Needs to be wrangled
 
 # add the generic sheets too (not the individual observations)- but might not need them
 # CG_phenocams_2021_all, CG_phenocams_2022_all
@@ -168,8 +167,8 @@ QHI_phenocams_2022_wrangle <- QHI_phenocams_2022 %>%
          All_leaves_yellow, Salix_spp, Salix_bud_burst, Salix_first_yellow, 
          Salix_last_yellow)
 
-# past years QHI 
-Phenocam_Datasheet_QHI <- Phenocam_Datasheet_QHI[1:21,] # removing loads of NAs
+# past years QHI  - modify this with the newest sheet ------
+# Phenocam_Datasheet_QHI <- Phenocam_Datasheet_QHI[1:21,] # removing loads of NAs
 
 QHI_phenocams_past_wrangle <- Phenocam_Datasheet_QHI %>%
   rename("Plot" = "PLOT", "Plants_first_visible_through_snow" = "Plants first visible through snow",

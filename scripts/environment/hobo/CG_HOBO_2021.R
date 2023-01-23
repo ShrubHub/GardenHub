@@ -191,7 +191,7 @@ facet_HOBO_timeseries <- grid.arrange(plot_HOBO_air_temp,plot_HOBO_ground_temp,
 # 4.2. Monthly time series ----
 
 # a. Monthly ground temperature ----
-(plot_HOBO_ground_temp_monthly <- ggplot(CG_HOBO_monthly_means, aes(x = date, y = mean_ground_temp)) +
+(plot_HOBO_ground_temp_monthly <- ggplot(CG_HOBO_monthly_means_season, aes(x = date, y = mean_ground_temp_month)) +
    geom_line() + 
    #geom_smooth(method = "lm", colour = "black") +
    ylab("Monthly ground temperature (°C)") +
