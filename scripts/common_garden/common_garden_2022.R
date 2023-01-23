@@ -79,7 +79,7 @@ all_source_pop_2022$SampleDate <- as.POSIXct(all_source_pop_2022$SampleDate, for
 all_source_pop_2022$Stem_diameter <- as.numeric(all_source_pop_2022$Stem_diameter)
 
 # saving source pop 2022 data as csv
-write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
+# write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
 
 # 3.2. CG growth 2022 ----
 # Keeping only relevant columns of 2022 common garden data
@@ -468,6 +468,10 @@ write.csv(mother_data, 'data/source_pops/mother_data.csv')
 
 # 3.5. Merging source pop plus mother ----
 # Merging wrangled versions of salix_field_data, all_source_pop_2022, common_garden_2017
+field_source_pop_new <- read_csv("data/source_pops/field_source_pop_new.csv")
+all_source_pop_2022 <- read_csv("data/source_pops/all_source_pop_2022.csv")
+mother_data <- read_csv("data/source_pops/mother_data.csv")
+
 all_source_pop_plus_mother <- bind_rows(field_source_pop_new, all_source_pop_2022,
                         mother_data)
 
@@ -614,6 +618,20 @@ unique_source_mother <- unique_source_mother_check %>%
 # check to make sure we still have no NAs for species 
 sum(is.na(unique_source_mother$Species)) # 0, success! 
 
+# filter out strange arctica values 
+unique_source_mother_edit_1 <- unique_source_mother %>%
+  filter(Species != "Salix arctica")
+
+unique_source_mother_edit_2 <- unique_source_mother %>%
+  filter(Species == "Salix arctica") %>%
+  subset(Canopy_Height_cm <= 25.0) %>% # based on literature
+  subset(mean_stem_elong <= 29.0) # based on mean max values from previous years
+
+# remerge all data
+unique_source_mother <- rbind(unique_source_mother_edit_1, 
+                              unique_source_mother_edit_2)
+
+view(unique_source_mother) # all goood
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(unique_source_mother, 'data/source_pops/unique_source_mother.csv')
 
