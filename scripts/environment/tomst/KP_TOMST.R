@@ -328,7 +328,7 @@ mean(aug_topsensor_temp$mean_temp) # 6.815827
 # Daily mean soil temperature 
 KP_mean_daily_soil_temp <- kp_data  %>%
   filter(Variable %in% "T1: Soil sensor") %>% 
-  #filter(Date > lubridate::ymd("2022-07-27")) %>% 
+  filter(Date > lubridate::ymd("2021-07-29"))   %>% 
   group_by(Date) %>% 
   summarise(mean_temp = mean(Value)) %>% 
   group_by(Date) %>% 
@@ -337,7 +337,7 @@ KP_mean_daily_soil_temp <- kp_data  %>%
 
 range(KP_mean_daily_soil_temp$mean_temp)
 # for all dates 
-# -2.632107 13.279976
+# -2.632107 6.825955
 
 
 # subsetting to start the season on June 18th (post snow melt)
@@ -377,7 +377,7 @@ july_soil_temp <- KP_mean_daily_soil_temp %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31" |
     Date >= "2022-07-01" & Date <= "2022-07-31")
 
-mean(july_soil_temp$mean_temp) # 4.107419
+mean(july_soil_temp$mean_temp) # 3.968206
 
 # filter aug
 aug_soil_temp_2022 <- KP_mean_daily_soil_temp %>%
@@ -483,7 +483,7 @@ july_soil_moist <- KP_mean_daily_soil_moist %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31" |
            Date >= "2022-07-01" & Date <= "2022-07-31")
 
-mean(july_soil_moist$mean_moist)
+mean(july_soil_moist$mean_moist) # 48.29849
 
 # filter august 2022
 aug_soil_moist_2022 <- KP_mean_daily_soil_moist %>%

@@ -21,9 +21,7 @@ library(tidyverse)
 
 # LOADING DATA ----
 
-# soil temp 2015-2017 (1 july 2015- 1 January 2017)
-# Formatted_temps <- read_csv("data/hobo/Formatted_temps.csv")
-
+# 1. SURFACE TEMP -----
 # data HOBO station summarized by Haydn Thomas 
 Haydn_summary <- read.csv("data/environment/Formatted_temps_shrubhub.csv")
 
@@ -67,3 +65,10 @@ KP_july_temp_hobo <- KP_mean_monthly_temp_hobo %>%
 # July mean temperatures (average of top sensor, surface temp) (TOMST):
 # 2021 = mean(11.20757, 8.504422) = 9.855996
 # 2022 = mean(9.465119, 7.805064) = 8.635091
+
+# Overall mean (2015-2022):
+# mean(4.568919, 8.252268, 4.763441, 9.855996, 8.635091)
+# 7.215143  
+
+# DONE 
+
