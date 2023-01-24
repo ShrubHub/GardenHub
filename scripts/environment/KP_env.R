@@ -5,7 +5,8 @@
 # 90% snow free plateau from phenocams 2022
 # June 18, 15, 21, 17, 18, 19, 26, 21 --> mean = June 18th
 # setting start of summer on KP: June 18th
-# End of summer: ??? look at snow return date 
+# End of summer: August 28th 
+# Growing season length =71 days
 
 # Workflow
 # 1. Explore elevation, filter anything below treeline 

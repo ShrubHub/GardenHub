@@ -14,7 +14,7 @@ KP_phenocams_2021 <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2021.cs
 KP_phenocams_2022 <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2022.csv")
 QHI_phenocams_2022 <- read_csv("data/phenology/phenocam_pics/QHI_phenocams_2022.csv")
 CG_phenocams_individual_2021_2022 <- read_csv("data/phenology/phenocam_pics/CG_phenocams_individual_2021_2022.csv")
-phenocams_19012022.csv <-read_csv("data/phenology/phenocam_pics/phenocams_19012022.csv") # NEWEST QHI phenology sheet. Needs to be wrangled
+QHI_phenocams <-read_csv("data/phenology/phenocam_pics/phenocams_19012022.csv") # NEWEST QHI phenology sheet. Needs to be wrangled
 
 # add the generic sheets too (not the individual observations)- but might not need them
 # CG_phenocams_2021_all, CG_phenocams_2022_all
@@ -131,6 +131,7 @@ KP_phenocams_2021_2022_manual$Salix_rich_first_yellow_DOY <-  lubridate::yday(as
 KP_phenocams_2021_2022_manual$Salix_rich_last_yellow_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$Salix_rich_last_yellow, format = "%Y-%m-%d"))
 KP_phenocams_2021_2022_manual$First_greening_DOY <-  lubridate::yday(as.POSIXct(KP_phenocams_2021_2022_manual$First_greening, format = "%Y-%m-%d"))
 
+view(KP_phenocams_2021_2022_manual)
 
 # Divide salix pulchra and richardsonii
 KP_phenocams_2021_2022_pulchra <- KP_phenocams_2021_2022_manual %>%
@@ -144,47 +145,31 @@ KP_phenocams_2021_2022_rich <- KP_phenocams_2021_2022_manual %>%
 
 # 3.2. QHI ----
 
-# 2022 QHI phenocams. NB only yellowing 
-QHI_phenocams_2022_wrangle <- QHI_phenocams_2022 %>%
-  rename("Plot" = "PLOT", "Plants_first_visible_through_snow" = "Plants first visible through snow",
-         "Snow_melt" = "Snow Free Melt Date (>90% plot free of snow)", 
-         "All_snow_free" = "First 100% snow-free day",
-         "Snow_return_EoS" = "First snow return day - end of season",
-         "Half_snow_cover_EoS" = "50% snow coverge - end of season",
-         "Full_snow_cover_EoS" = "100% snow coverage - end of season",
-         "First_leaf_bud_burst" = "First leaf bud burst",
-         "Half_leaves_green" ="50% Leaves Green",
-         "All_leaves_green" = "100% Leaves Green",
-         "Half_leaves_yellow" = "50% Leaves Yellow",
-         "All_leaves_yellow" = "100% Leaves Yellow",
-         "Salix_spp" = "SALIX SPP",
-         "Salix_bud_burst" = "Salix First Leaf Bud Burst",
-         "Salix_first_yellow"= "Salix First Yellowing of Leaves",
-         "Salix_last_yellow" = "Salix Last Leaf Turns Yellow") %>%
-  select(Plot, Year, Viewshed, NOTES, Snow_melt, All_snow_free, Snow_return_EoS,
-         Half_snow_cover_EoS, Full_snow_cover_EoS, First_leaf_bud_burst, 
-         Half_leaves_green, All_leaves_green, Half_leaves_yellow, 
-         All_leaves_yellow, Salix_spp, Salix_bud_burst, Salix_first_yellow, 
-         Salix_last_yellow)
+# all QHI phenocams (2016-2022). NB only yellowing in 2022
+QHI_phenocams_2022_wrangle <- QHI_phenocams %>%
+  filter(Site == "QHI")%>%
+  dplyr::select(-Observer, -NOTES)
 
-# past years QHI  - modify this with the newest sheet ------
-# Phenocam_Datasheet_QHI <- Phenocam_Datasheet_QHI[1:21,] # removing loads of NAs
-
-QHI_phenocams_past_wrangle <- Phenocam_Datasheet_QHI %>%
-  rename("Plot" = "PLOT", "Plants_first_visible_through_snow" = "Plants first visible through snow",
-         "Snow_melt" = "Snow Free Melt Date (>90% plot free of snow)", 
-         "All_snow_free" = "First 100% snow-free day",
-         "Snow_return_EoS" = "First snow return day - end of season",
-         "Half_snow_cover_EoS" = "50% snow coverge - end of season",
-         "Full_snow_cover_EoS" = "100% snow coverage - end of season",
-         "Salix_spp" = "Salix spp (ARC, PUL, or RIC)",
-         "Salix_bud_burst" = "Salix First Leaf Bud Burst",
-         "Salix_first_yellow"= "Salix First Yellowing of Leaves",
-         "Salix_last_yellow" = "Salix Last Leaf Turns Yellow") %>%
-  select(Plot, Year, NOTES, Snow_melt, All_snow_free, Snow_return_EoS,
-         Half_snow_cover_EoS, Full_snow_cover_EoS, 
-         Salix_spp, Salix_bud_burst, Salix_first_yellow, 
-         Salix_last_yellow)
+# rename("Plot" = "PLOT", "Plants_first_visible_through_snow" = "plant_first_vis",
+        # "Snow_melt" = "spring_90snowfree)", 
+        # "All_snow_free" = "first_100snowfree",
+        # "Snow_return_EoS" = "First snow return day - end of season",
+         #"Half_snow_cover_EoS" = "50% snow coverge - end of season",
+         #"Full_snow_cover_EoS" = "100% snow coverage - end of season",
+         #"First_leaf_bud_burst" = "First leaf bud burst",
+         #"Half_leaves_green" ="50% Leaves Green",
+         #"All_leaves_green" = "100% Leaves Green",
+         #"Half_leaves_yellow" = "50% Leaves Yellow",
+         #"All_leaves_yellow" = "100% Leaves Yellow",
+         #"Salix_spp" = "SALIX SPP",
+         #"Salix_bud_burst" = "Salix First Leaf Bud Burst",
+         #"Salix_first_yellow"= "Salix First Yellowing of Leaves",
+         ##"Salix_last_yellow" = "Salix Last Leaf Turns Yellow") %>%
+  #select(Plot, Year, Viewshed, NOTES, Snow_melt, All_snow_free, Snow_return_EoS,
+      #   Half_snow_cover_EoS, Full_snow_cover_EoS, First_leaf_bud_burst, 
+       #  Half_leaves_green, All_leaves_green, Half_leaves_yellow, 
+        # All_leaves_yellow, Salix_spp, Salix_bud_burst, Salix_first_yellow, 
+        # Salix_last_yellow)
 
 # merge 2022 and past years datasheets
 QHI_phenocams_2016_2022 <- bind_rows(QHI_phenocams_2022_wrangle, QHI_phenocams_past_wrangle)
