@@ -125,6 +125,8 @@ KP_phenocams_2021_2022_manual$First_greening_DOY <-  lubridate::yday(as.POSIXct(
 
 view(KP_phenocams_2021_2022_manual)
 
+write.csv(KP_phenocams_2021_2022_manual, "data/phenology/phenocam_pics/KP_phenocams_2021_2022_wrangle.csv")
+
 # Divide salix pulchra and richardsonii
 KP_phenocams_2021_2022_pulchra <- KP_phenocams_2021_2022_manual %>%
   filter(Species == "Salix pulchra")
@@ -178,6 +180,8 @@ QHI_phenocams_2022_wrangle$Salix_first_bud_burst_DOY <-  lubridate::yday(as.POSI
 QHI_phenocams_2022_wrangle$Salix_first_yellow_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$Salix_first_yellow, format = "%Y-%m-%d"))
 QHI_phenocams_2022_wrangle$Salix_last_yellow_DOY <- lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$Salix_last_yellow, format = "%Y-%m-%d"))
 
+write.csv(QHI_phenocams_2022_wrangle, "data/phenology/phenocam_pics/QHI_phenocams_2022_wrangle.csv")
+
 # dividing species
 QHI_salarc_pheno <- QHI_phenocams_2022_wrangle %>%
   filter(Species == "Salix arctica")
@@ -203,17 +207,17 @@ CG_phenocams_individual_2021_2022_wrangle <- CG_phenocams_individual_2021_2022 %
          "First_leaf_bud_burst" = "First leaf bud burst",
          "First_leaf_yellow" = "First yellowing of leaves",
          "Last_leaves_yellow" = "Last leaf starts turning yellow") %>%
-  select(-Shrub, -Observer,-Notes,-"Certainty Index", -"Certainty Index (1-5)...16",
+  dplyr::select(-Shrub, -Observer,-Notes,-"Certainty Index", -"Certainty Index (1-5)...16",
          -"Certainty Index (1-5)...18") %>% 
-  mutate(Species = ifelse(grepl("SA", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Salix arctica",
-                          ifelse(grepl("SR", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Salix richardsonii", 
-                                 ifelse(grepl("SP", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Salix pulchra", NA)))) %>%  # species col
-  mutate(population_1 = ifelse(grepl("HE" , CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "QHI", # working population col 1
-                                   ifelse(grepl("KP", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", 
-                                          ifelse(grepl("PC", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", NA)))) %>% 
-  mutate(population_2 = ifelse(grepl("H" , CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "QHI", # working population col 1
-                             ifelse(grepl("K", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", 
-                                    ifelse(grepl("PP", CG_phenocams_individual_2021_2022_wrangle$ShrubID_Standard), "Kluane", NA)))) %>%
+  mutate(Species = ifelse(grepl("SA", CG_phenocams_individual_2021_2022$ShrubID_Standard), "Salix arctica",
+                          ifelse(grepl("SR", CG_phenocams_individual_2021_2022$ShrubID_Standard), "Salix richardsonii", 
+                                 ifelse(grepl("SP", CG_phenocams_individual_2021_2022$ShrubID_Standard), "Salix pulchra", NA)))) %>%  # species col
+  mutate(population_1 = ifelse(grepl("HE" , CG_phenocams_individual_2021_2022$ShrubID_Standard), "QHI", # working population col 1
+                                   ifelse(grepl("KP", CG_phenocams_individual_2021_2022$ShrubID_Standard), "Kluane", 
+                                          ifelse(grepl("PC", CG_phenocams_individual_2021_2022$ShrubID_Standard), "Kluane", NA)))) %>% 
+  mutate(population_2 = ifelse(grepl("H" , CG_phenocams_individual_2021_2022$ShrubID_Standard), "QHI", # working population col 1
+                             ifelse(grepl("K", CG_phenocams_individual_2021_2022$ShrubID_Standard), "Kluane", 
+                                    ifelse(grepl("PP", CG_phenocams_individual_2021_2022$ShrubID_Standard), "Kluane", NA)))) %>%
   mutate(population = case_when(population_1 == "QHI" | population_2 == "QHI" ~ "QHI", # final population col 
                            population_1  == "Kluane" | population_2 == "Kluane" ~ "Kluane")) %>%
   select(-population_1, -population_2)
@@ -238,10 +242,11 @@ CG_phenocams_individual_2021_2022_wrangle$First_leaf_bud_burst_DOY <-  lubridate
 CG_phenocams_individual_2021_2022_wrangle$First_leaf_yellow_DOY <-  lubridate::yday(as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$First_leaf_yellow, format = "%Y-%m-%d"))
 CG_phenocams_individual_2021_2022_wrangle$Half_leaves_yellow_DOY <-  lubridate::yday(as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$Half_leaves_yellow, format = "%Y-%m-%d"))
 
-
 # species and pop as factors
 CG_phenocams_individual_2021_2022_wrangle$Species <- as.factor(CG_phenocams_individual_2021_2022_wrangle$Species)
 CG_phenocams_individual_2021_2022_wrangle$population <- as.factor(CG_phenocams_individual_2021_2022_wrangle$population)
+
+write.csv(CG_phenocams_individual_2021_2022_wrangle, "data/phenology/phenocam_pics/CG_phenocams_individual_2021_2022_wrangle.csv")
 
 # subsetting into species and site
 CG_KP_arctica_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
