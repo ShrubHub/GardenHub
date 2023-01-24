@@ -44,7 +44,7 @@ hobo_mean_temp_2022 <- hobo_clean_2022 %>%
 
 mean(hobo_mean_temp_2022$mean_temp) # 9.853633
 
-# QHI 2015-16 ----
+# QHI soil temp 2015-16 ----
 # data from phenology ridge HOBO station 
 # summarized by Haydn Thomas 
 
