@@ -541,3 +541,7 @@ facet_env_kp_hist <- grid.arrange(kp_mean_daily_soil_moist_hist, kp_mean_daily_s
                              kp_mean_daily_temp_hist, kp_mean_daily_top_sensor_hist, ncol=2)
 
 
+# SUMMARY DATA -----
+# July mean temperatures (average of top sensor, surface temp) (TOMST):
+# 2021 = mean(11.20757, 8.504422) = 9.855996
+# 2022 = mean(9.465119, 7.805064) = 8.635091

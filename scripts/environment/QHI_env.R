@@ -48,7 +48,7 @@ mean(hobo_mean_temp_2022$mean_temp) # 9.853633
 # data from phenology ridge HOBO station 
 # summarized by Haydn Thomas 
 
-Haydn_summary <- read.csv("data/environment/Formatted_temps_shrubhub.csv")
+Haydn_summary <- read.csv("data/environment/Formatted_temps_shrubhub.csv") # NB THIS IS SOIL DATA
 metadata_summary <-  read.csv("data/environment/metadata_shrubhub.csv")
 
 # match metadata & enviro data
