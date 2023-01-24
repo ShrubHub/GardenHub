@@ -62,15 +62,7 @@ KP_july_temp_hobo <- KP_mean_monthly_temp_hobo %>%
 # 2016 = 8.252268
 # 2017 = 4.763441
 
-# SUMMARY MEANS with TOMST -----
-# FIX THESE. SOME IS SOIL DATA
-# July mean temperatures (average of top sensor, surface temp) (TOMST):
-# 2021 = mean(11.20757, 8.504422) = 9.855996
-# 2022 = mean(9.465119, 7.805064) = 8.635091
+# SUMMARY MEANS with TOMST soil data -----
 
-# Overall mean (2015-2022):
-# mean(4.568919, 8.252268, 4.763441, 9.855996, 8.635091)
-# 7.215143  
 
-# DONE 
 
