@@ -13,28 +13,67 @@ library(gridExtra)
 # 2. LOADING DATA ----
 HOBO_Common_garden_12Aug2021 <- read.csv(file = "data/hobo/HOBO_Common_garden_12Aug2021.csv") # 2018-21
 HOBO_Common_garden_2017 <-  read.csv2("data/hobo/common_garden/Kluane_hobo_Common_garden_2017.csv", sep=",") #2015-17
-
+str(HOBO_Common_garden_2017)
 # 3. DATA WRANGLING ----
 # 2017 
 str(HOBO_Common_garden_2017)
 # normal dates 
-HOBO_Common_garden_2017_wrangle <- HOBO_Common_garden_2017 %>% 
+HOBO_Common_garden_2017_wrangle_good <- HOBO_Common_garden_2017 %>% 
   filter(Date.Time..GMT.06.00 <= "12/31/16" )
 # wrong dates 
 HOBO_Common_garden_2017_wrangle_bad <- HOBO_Common_garden_2017 %>% 
   filter(Date.Time..GMT.06.00 >= "12/31/16" ) 
+
+HOBO_Common_garden_2017_wrangle_bad$Date.Time..GMT.06.00 <- ymd_hm(HOBO_Common_garden_2017_wrangle_bad$Date.Time..GMT.06.00)
+HOBO_Common_garden_2017_wrangle_bad$day <- month(as.POSIXlt(HOBO_Common_garden_2017_wrangle_bad$Date.Time..GMT.06.00, format="%Y-%m-%d %H:%M"))
+HOBO_Common_garden_2017_wrangle_bad$month_wrong <- year(as.POSIXlt(HOBO_Common_garden_2017_wrangle_bad$Date.Time..GMT.06.00, format="%Y-%m-%d %H:%M"))
+HOBO_Common_garden_2017_wrangle_bad$year <- day(as.POSIXlt(HOBO_Common_garden_2017_wrangle_bad$Date.Time..GMT.06.00, format="%Y-%m-%d %H:%M"))
+# subtract 2000 from this value to get correct month value 
+HOBO_Common_garden_2017_wrangle_bad_1  <- HOBO_Common_garden_2017_wrangle_bad %>% 
+  mutate(Month = month_wrong - 2000) %>% 
+  select(-c(X., month_wrong)) 
+
+HOBO_Common_garden_2017_wrangle_bad_1$date <- as.Date(with(HOBO_Common_garden_2017_wrangle_bad_1, paste(year, Month, day,sep="/")), "%m/%d/%Y")
+
+HOBO_Common_garden_2017_wrangle_bad_1$date <- paste(HOBO_Common_garden_2017_wrangle_bad_1$Month,
+                                                    HOBO_Common_garden_2017_wrangle_bad_1$day, 
+                                                    HOBO_Common_garden_2017_wrangle_bad_1$year,
+                                                    sep="/") %>% mdy() %>% 
+  as.Date()
+
+HOBO_Common_garden_2017_wrangle_bad_1$date_new <- format(as.Date(HOBO_Common_garden_2017_wrangle_bad_1$date, format = "%m-%d-%Y"), "%m/%d/%y")
+# drop confusing old columns
+HOBO_Common_garden_2017_wrangle_bad_2 <- HOBO_Common_garden_2017_wrangle_bad_1 %>% 
+  select(-c(Date.Time..GMT.06.00, day, Month, year, date))
+
+#FINALLY 
+# reclass date to drop H:M and rename good dataframe 
+HOBO_Common_garden_2017_wrangle_good$new_date_1 <-  parse_date_time(HOBO_Common_garden_2017_wrangle_good$Date.Time..GMT.06.00, "%m/%d/%y %I:%M:%S %p")
+         
+HOBO_Common_garden_2017_wrangle_good$date_new <- format(as.Date(HOBO_Common_garden_2017_wrangle_good$new_date_1, format = "%m-%d-%Y %I:%M:%S %p"), "%m/%d/%y")
+
+HOBO_Common_garden_2017_wrangle_good_1 <- HOBO_Common_garden_2017_wrangle_good %>% 
+  select(-c(X., Date.Time..GMT.06.00, new_date_1))
+
+# merge good and reformatted 
+HOBO_Common_garden_2017_wrangle_solve <- left_join(HOBO_Common_garden_2017_wrangle_bad_2, 
+                                                   HOBO_Common_garden_2017_wrangle_good_1, 
+                                                   by = c("date_new", 
+                                                          "Water.Content..m..m...LGR.S.N..10742708..SEN.S.N..10736284..LBL..Soil.moisture.", 
+                                                          "Temp...C..LGR.S.N..10742708..SEN.S.N..10736450..LBL..Ground.temp.", 
+                                                          "Temp...C..LGR.S.N..10742708..SEN.S.N..10736453..LBL..Soil.temp.", 
+                                                          "Temp...C..LGR.S.N..10742708..SEN.S.N..10736452..LBL..Air.temp."))
+
+
 # make dates manually, month column: 
 # not fixed yet just have to go to lab meeting
-HOBO_Common_garden_2017_wrangle_bad$month <- as.POSIXlt(HOBO_Common_garden_2017_wrangle_bad$Date.Time..GMT.06.00, format="%Y-%m-%d")
 
-
-CG_HOBO_2017 <- HOBO_Common_garden_2017 %>%
+CG_HOBO_2017 <- HOBO_Common_garden_2017_wrangle_solve %>%
   rename("Soil_moist" = "Water.Content..m..m...LGR.S.N..10742708..SEN.S.N..10736284..LBL..Soil.moisture.",
          "Ground_temp" = "Temp...C..LGR.S.N..10742708..SEN.S.N..10736450..LBL..Ground.temp.",
          "Air_temp" ="Temp...C..LGR.S.N..10742708..SEN.S.N..10736452..LBL..Air.temp.",
          "Soil_temp" = "Temp...C..LGR.S.N..10742708..SEN.S.N..10736453..LBL..Soil.temp.", 
-         "Date_time_GMT" = "Date.Time..GMT.06.00") %>% 
-  dplyr::select(-X.)
+         "Date" = "date_new") 
 
 # 2021 
 CG_HOBO_2021 <- HOBO_Common_garden_12Aug2021 %>%
@@ -44,21 +83,22 @@ CG_HOBO_2021 <- HOBO_Common_garden_12Aug2021 %>%
          "Soil_temp" = "Soil_Temp_..C.", 
          "Date_time_GMT" = "Date.Time..GMT.07.00") %>% 
   dplyr::select(-X.)
+CG_HOBO_2021$date <- mdy_hms(CG_HOBO_2021$Date_time_GMT)
+CG_HOBO_2021$Date <- format(as.Date(CG_HOBO_2021$date, format = "%m-%d-%Y %I:%M:%S %p"), "%m/%d/%y")
+CG_HOBO_2021_test <- CG_HOBO_2021 %>% 
+  select(-c(date, Date_time_GMT))
 
+# reclass variables 
+str(CG_HOBO_2017)
+CG_HOBO_2017$Soil_moist <- as.numeric(CG_HOBO_2017$Soil_moist)
+CG_HOBO_2017$Ground_temp <- as.numeric(CG_HOBO_2017$Ground_temp)
+CG_HOBO_2017$Air_temp <- as.numeric(CG_HOBO_2017$Air_temp)
+CG_HOBO_2017$Soil_temp <- as.numeric(CG_HOBO_2017$Soil_temp)
+str(CG_HOBO_2021)
 # merge dataframes together 
-CG_HOBO <- rbind(CG_HOBO_2017, CG_HOBO_2021)
+CG_HOBO <- rbind(CG_HOBO_2017, CG_HOBO_2021_test)
 
-# convert date/time variation to 24h format aka drop AM & PM 
-CG_HOBO_date <- CG_HOBO %>% 
-  mutate(date = parse_date_time(CG_HOBO$Date_time_GMT,    #  make new column called date with no AM/PM
-                                "%m/%d/%y %I:%M:%S %p")) 
 
-CG_HOBO_date_2 <- CG_HOBO_date %>% 
-  separate(date, into = c('year', 'month', 'day'))
-
-CG_HOBO_date_3 <- full_join(CG_HOBO_date, CG_HOBO_date_2)
-        
-range(CG_HOBO_date_3$Date_time_GMT)
 str(CG_HOBO_date)  
 # I didn't remove / overwrite existing date column to check to make sure they were the same 
 
