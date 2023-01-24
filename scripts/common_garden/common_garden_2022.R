@@ -896,6 +896,8 @@ max_cg_widths <- all_cg_data_2022 %>%
 # save 
 write.csv(max_cg_heights, "data/common_garden_data_2022/max_heights_cg.csv")
 write.csv(max_cg_widths, "data/common_garden_data_2022/max_widths_cg.csv")
+max_cg_widths <- read_csv("data/common_garden_data_2022/max_widths_cg.csv")
+max_cg_heights <- read_csv("data/common_garden_data_2022/max_heights_cg.csv")
 
 # reclassing Species as factor
 max_cg_heights$Species <- as.factor(max_cg_heights$Species)
@@ -906,14 +908,18 @@ class(max_cg_heights$max_canopy_height_cm)
 max_cg_heights_spp <- max_cg_heights %>%
  group_by(population,Species) %>%
   summarise(mean_max_height_cm = mean(max_canopy_height_cm))
+range(max_cg_heights_spp$mean_max_height_cm)# 4.263636 52.472549
 
 # mean max width per population and species
 max_cg_width_spp <- max_cg_widths %>%
   group_by(population,Species) %>%
   summarise(mean_max_width_cm = mean(max_mean_width_cm))
+range(max_cg_width_spp$mean_max_width_cm)# 10.75625 67.72791
 
 # 3.9.2 Source populations max heights and widths -----
 # extract max value for height per sample bc samples have been trimmed over the years 
+unique_source_mother <- read_csv("data/source_pops/unique_source_mother.csv")
+
 max_source_mother_heights <- unique_source_mother %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(Canopy_Height_cm)) %>% 
@@ -952,6 +958,8 @@ max_source_mother_heights_spp <- max_source_mother_heights %>%
 max_source_mother_width_spp <- max_source_mother_widths %>%
   group_by(Site,Species) %>%
   summarise(mean_max_width_cm = mean(max_mean_width_cm))
+# MADI ------
+# Kluane salix arctica isnt in this dataset anymore? 
 # Kluane Salix arctica 60.24694
 # Qikiqtaruk Salix arctica 45.37174
 
