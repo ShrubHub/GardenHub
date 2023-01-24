@@ -152,37 +152,40 @@ QHI_phenocams_2022_wrangle$All_snow_free <- as.POSIXct(QHI_phenocams_2022_wrangl
 QHI_phenocams_2022_wrangle$Snow_return_EoS <- as.POSIXct(QHI_phenocams_2022_wrangle$Snow_return_EoS, format = "%d/%m/%Y")
 QHI_phenocams_2022_wrangle$Half_snow_cover_EoS <- as.POSIXct(QHI_phenocams_2022_wrangle$Half_snow_cover_EoS, format = "%d/%m/%Y")
 QHI_phenocams_2022_wrangle$Full_snow_cover_EoS <- as.POSIXct(QHI_phenocams_2022_wrangle$Full_snow_cover_EoS, format = "%d/%m/%Y")
+QHI_phenocams_2022_wrangle$First_leaf_bud_burst <- as.POSIXct(QHI_phenocams_2022_wrangle$First_leaf_bud_burst, format = "%d/%m/%Y")
+QHI_phenocams_2022_wrangle$Half_leaves_green <- as.POSIXct(QHI_phenocams_2022_wrangle$Half_leaves_green, format = "%d/%m/%Y")
+QHI_phenocams_2022_wrangle$All_leaves_green <- as.POSIXct(QHI_phenocams_2022_wrangle$All_leaves_green, format = "%d/%m/%Y")
+QHI_phenocams_2022_wrangle$First_leaf_yellow <- as.POSIXct(QHI_phenocams_2022_wrangle$First_leaf_yellow, format = "%d/%m/%Y")
+QHI_phenocams_2022_wrangle$Half_leaves_yellow <- as.POSIXct(QHI_phenocams_2022_wrangle$Half_leaves_yellow, format = "%d/%m/%Y")
+QHI_phenocams_2022_wrangle$All_leaves_yellow <- as.POSIXct(QHI_phenocams_2022_wrangle$All_leaves_yellow, format = "%d/%m/%Y")
 QHI_phenocams_2022_wrangle$Salix_bud_burst <- as.POSIXct(QHI_phenocams_2022_wrangle$Salix_bud_burst, format = "%d/%m/%Y")
 QHI_phenocams_2022_wrangle$Salix_first_yellow <- as.POSIXct(QHI_phenocams_2022_wrangle$Salix_first_yellow, format = "%d/%m/%Y")
 QHI_phenocams_2022_wrangle$Salix_last_yellow <- as.POSIXct(QHI_phenocams_2022_wrangle$Salix_last_yellow, format = "%d/%m/%Y")
 
 # add DOY column 
-QHI_phenocams_2022_wrangle$Snow_melt_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$Snow_melt, format = "%Y-%m-%d"))
-QHI_phenocams_2022_wrangle$All_snow_free_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$All_snow_free, format = "%Y-%m-%d"))
-QHI_phenocams_2022_wrangle$Snow_return_EoS_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$Snow_return_EoS, format = "%Y-%m-%d"))
-QHI_phenocams_2022_wrangle$First_leaf_bud_burst_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$First_leaf_bud_burst, format = "%Y-%m-%d"))
-QHI_phenocams_2022_wrangle$Half_leaves_green_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$Half_leaves_green, format = "%Y-%m-%d"))
-QHI_phenocams_2022_wrangle$All_leaves_green_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$All_leaves_green, format = "%Y-%m-%d"))
-QHI_phenocams_2022_wrangle$First_leaf_yellow_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$First_leaf_yellow, format = "%Y-%m-%d"))
-QHI_phenocams_2022_wrangle$Half_leaves_yellow_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$Half_leaves_yellow, format = "%Y-%m-%d"))
-QHI_phenocams_2022_wrangle$All_leaves_yellow_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$All_leaves_yellow, format = "%Y-%m-%d"))
-QHI_phenocams_2022_wrangle$Salix_pulchra_bud_burst_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$Salix_pulchra_bud_burst, format = "%Y-%m-%d"))
-QHI_phenocams_2022_wrangle$Salix_pulchra_first_yellow_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$Salix_pulchra_first_yellow, format = "%Y-%m-%d"))
-KP_phenocams_2021_2022_manual$Salix_pulchra_last_yellow_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$Salix_pulchra_last_yellow, format = "%Y-%m-%d"))
-QHI_phenocams_2016_2022_edit_manual$Salix_rich_bud_burst_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$Salix_rich_bud_burst, format = "%Y-%m-%d"))
-QHI_phenocams_2016_2022_edit_manual$Salix_rich_first_yellow_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$Salix_rich_first_yellow, format = "%Y-%m-%d"))
-QHI_phenocams_2016_2022_edit_manual$Salix_rich_last_yellow_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$Salix_rich_last_yellow, format = "%Y-%m-%d"))
-QHI_phenocams_2016_2022_edit_manual$First_greening_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2016_2022_edit_manual$First_greening, format = "%Y-%m-%d"))
-
+QHI_phenocams_2022_wrangle$Snow_melt_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$Snow_melt, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$All_snow_free_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$All_snow_free, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$Snow_return_EoS_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$Snow_return_EoS, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$Half_snow_cover_EoS_DOY <- lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$Half_snow_cover_EoS, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$Full_snow_cover_EoS_DOY <- lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$Full_snow_cover_EoS, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$First_leaf_bud_burst_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$First_leaf_bud_burst, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$Half_leaves_green_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$Half_leaves_green, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$All_leaves_green_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$All_leaves_green, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$First_leaf_yellow_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$First_leaf_yellow, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$Half_leaves_yellow_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$Half_leaves_yellow, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$All_leaves_yellow_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$All_leaves_yellow, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$Salix_first_bud_burst_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$Salix_bud_burst, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$Salix_first_yellow_DOY <-  lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$Salix_first_yellow, format = "%Y-%m-%d"))
+QHI_phenocams_2022_wrangle$Salix_last_yellow_DOY <- lubridate::yday(as.POSIXct(QHI_phenocams_2022_wrangle$Salix_last_yellow, format = "%Y-%m-%d"))
 
 # dividing species
-QHI_salarc <- QHI_phenocams_2016_2022_edit_manual %>%
+QHI_salarc_pheno <- QHI_phenocams_2022_wrangle %>%
   filter(Species == "Salix arctica")
 
-QHI_salpul <- QHI_phenocams_2016_2022_edit_manual %>%
+QHI_salpul_pheno <- QHI_phenocams_2022_wrangle %>%
   filter(Species == "Salix pulchra")
 
-QHI_salric <- QHI_phenocams_2016_2022_edit_manual %>%
+QHI_salric_pheno <- QHI_phenocams_2022_wrangle %>%
   filter(Species == "Salix richardsonii")
 # Nb Salix richardsonii only has first yellowing from 2022
 
