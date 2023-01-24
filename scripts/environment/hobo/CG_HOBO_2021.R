@@ -17,6 +17,17 @@ HOBO_Common_garden_2017 <-  read.csv2("data/hobo/common_garden/Kluane_hobo_Commo
 # 3. DATA WRANGLING ----
 # 2017 
 str(HOBO_Common_garden_2017)
+# normal dates 
+HOBO_Common_garden_2017_wrangle <- HOBO_Common_garden_2017 %>% 
+  filter(Date.Time..GMT.06.00 <= "12/31/16" )
+# wrong dates 
+HOBO_Common_garden_2017_wrangle_bad <- HOBO_Common_garden_2017 %>% 
+  filter(Date.Time..GMT.06.00 >= "12/31/16" ) 
+# make dates manually, month column: 
+# not fixed yet just have to go to lab meeting
+HOBO_Common_garden_2017_wrangle_bad$month <- as.POSIXlt(HOBO_Common_garden_2017_wrangle_bad$Date.Time..GMT.06.00, format="%Y-%m-%d")
+
+
 CG_HOBO_2017 <- HOBO_Common_garden_2017 %>%
   rename("Soil_moist" = "Water.Content..m..m...LGR.S.N..10742708..SEN.S.N..10736284..LBL..Soil.moisture.",
          "Ground_temp" = "Temp...C..LGR.S.N..10742708..SEN.S.N..10736450..LBL..Ground.temp.",
