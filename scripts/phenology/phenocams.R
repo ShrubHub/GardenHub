@@ -144,8 +144,7 @@ KP_phenocams_2021_2022_rich <- KP_phenocams_2021_2022_manual %>%
 # 3.2. QHI ----
 
 # all QHI phenocams (2016-2022). NB only yellowing in 2022
-QHI_phenocams_2022_wrangle <- QHI_phenocams %>%
-  filter(Site == "QHI")%>%
+QHI_phenocams_2022_wrangle <- QHI_phenocams_all_final %>%
   dplyr::select(-Observer, -NOTES)
 
 # rename("Plot" = "PLOT", "Plants_first_visible_through_snow" = "plant_first_vis",
