@@ -12,10 +12,8 @@ library(gridExtra)
 # 2. LOADING DATA ----
 KP_phenocams_2021 <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2021.csv")
 KP_phenocams_2022 <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2022.csv")
-QHI_phenocams_2022 <- read_csv("data/phenology/phenocam_pics/QHI_phenocams_2022.csv")
 CG_phenocams_individual_2021_2022 <- read_csv("data/phenology/phenocam_pics/CG_phenocams_individual_2021_2022.csv")
-QHI_phenocams <-read_csv("data/phenology/phenocam_pics/phenocams_19012022.csv") # NEWEST QHI phenology sheet. Needs to be wrangled
-
+QHI_phenocams_all_final <- read_excel("data/phenology/phenocam_pics/QHI_phenocams_all_final.xlsx")
 # add the generic sheets too (not the individual observations)- but might not need them
 # CG_phenocams_2021_all, CG_phenocams_2022_all
 
