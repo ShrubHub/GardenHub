@@ -70,5 +70,7 @@ july_QHI_enviro_mean <- july_QHI_enviro  %>%
 # 2015: 9.05
 # 2016: 6.79
 
+# SUMMARY MEANS with TOMST -----
+
 
 

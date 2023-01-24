@@ -130,6 +130,7 @@ mean(season_surface_temp$mean_temp)
 
 # Save as csv
 write.csv(KP_mean_daily_temp, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_temp.csv", row.names = FALSE)
+KP_mean_daily_temp <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_temp.csv")
 
 # Monthly means
 # filter out june 2022, only 2022 because tomst wasnt in place in June 2021
@@ -143,6 +144,11 @@ july_surface_temp_2022 <- KP_mean_daily_temp %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
 mean(july_surface_temp_2022$mean_temp) # 7.805064
+
+july_surface_temp_2021 <- KP_mean_daily_temp %>%
+  subset(Date >= "2021-07-29" & Date <= "2021-07-31")
+
+mean(july_surface_temp_2021$mean_temp) # 8.504422
 
 july_surface_temp <- KP_mean_daily_temp %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31" | # sensor deployed midway through month
@@ -209,7 +215,7 @@ mean(aug_surface_temp$mean_temp) # 5.988896
 # Daily mean top sensor temperature (10cm above surface)
 KP_mean_daily_top_sensor <- kp_data  %>%
   filter(Variable %in% "T3: Top sensor") %>% 
-  #filter(Date > lubridate::ymd("2022-07-27")) %>% 
+  filter(Date > lubridate::ymd("2021-07-29"))   %>% 
   group_by(Date) %>% 
   summarise(mean_temp = mean(Value)) %>% 
   group_by(Date) %>% 
@@ -237,6 +243,7 @@ mean(season_topsensor_temp$mean_temp)
 
 # Save as csv
 write.csv(KP_mean_daily_top_sensor, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_top_sensor.csv", row.names = FALSE)
+KP_mean_daily_top_sensor <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_top_sensor.csv")
 
 # Monthly means
 # filter out june 2022
@@ -251,11 +258,16 @@ july_topsensor_temp_2022 <- KP_mean_daily_top_sensor %>%
 
 mean(july_topsensor_temp_2022$mean_temp) # 9.465119
 
+july_topsensor_temp_2021 <- KP_mean_daily_top_sensor %>%
+  subset(Date >= "2021-07-29" & Date <= "2021-07-31")
+
+mean(july_topsensor_temp_2021$mean_temp) # 11.20757
+
 july_topsensor_temp <- KP_mean_daily_top_sensor %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31" |
     Date >= "2022-07-01" & Date <= "2022-07-31")
 
-mean(july_topsensor_temp$mean_temp) # 9.800824
+mean(july_topsensor_temp$mean_temp) # 9.570722
 
 # filter out august 2022
 aug_topsensor_temp_2022 <- KP_mean_daily_top_sensor %>%
