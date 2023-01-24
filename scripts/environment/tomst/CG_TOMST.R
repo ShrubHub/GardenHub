@@ -104,7 +104,7 @@ str(cg_data)
 # see top 5 warmest days
 CG_mean_daily_temp <- cg_data %>%
   filter(Variable %in% "T2: Surface sensor") %>% 
-  # filter(Date > lubridate::ymd("2022-06-01")) %>% 
+  filter(Date > lubridate::ymd("2021-07-29")) %>% 
   group_by(Date) %>% 
   summarise(mean_temp = mean(Value)) %>% 
   group_by(Date) %>% 
@@ -112,13 +112,14 @@ CG_mean_daily_temp <- cg_data %>%
   glimpse()
 
 range(CG_mean_daily_temp$mean_temp)
-# -14.46593  29.23589
+# -14.46593  19.01866
 # warmest: 1st June, coldest: 12th July
 mean(CG_mean_daily_temp$mean_temp)
 # 3.968781
 
 # Saving as csv
 write.csv(CG_mean_daily_temp, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_mean_daily_temp.csv", row.names = FALSE)
+CG_mean_daily_temp <- read_csv("data/tomst/Common_garden_TOMST_17August2022/CG_mean_daily_temp.csv")
 
 # Monthly means
 # filter out june 2022
@@ -132,6 +133,11 @@ july_surface_temp_2022 <- CG_mean_daily_temp %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
 mean(july_surface_temp_2022$mean_temp) # 14.54956
+
+july_surface_temp_2021 <- CG_mean_daily_temp %>%
+  subset(Date >= "2021-07-30" & Date <= "2021-07-31")
+
+mean(july_surface_temp_2021$mean_temp) # 17.97439
 
 # 2021 and 2022 july 
 july_surface_temp <- CG_mean_daily_temp %>%
@@ -192,7 +198,7 @@ mean(season_surface_temp$mean_temp)
 # Daily mean top sensor temperature (10cm above surface)
 CG_mean_daily_top_sensor <- cg_data  %>%
   filter(Variable %in% "T3: Top sensor") %>% 
-  #filter(Date > lubridate::ymd("2022-07-27")) %>% 
+  filter(Date > lubridate::ymd("2021-07-29")) %>% 
   group_by(Date) %>% 
   summarise(mean_temp = mean(Value)) %>% 
   group_by(Date) %>% 
@@ -200,7 +206,7 @@ CG_mean_daily_top_sensor <- cg_data  %>%
   glimpse()
 
 range(CG_mean_daily_top_sensor$mean_temp)
-# 7.551866 21.325000
+#  -31.73025  19.67491
 # warmest: 1st June , coldest: 12th July
 mean(CG_mean_daily_top_sensor$mean_temp)
 # 13.42857
@@ -216,7 +222,12 @@ mean(june_topsensor_temp$mean_temp) # 12.8446
 july_topsensor_temp_2022 <- CG_mean_daily_top_sensor %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
-mean(july_topsensor_temp$mean_temp) # 14.18936
+mean(july_topsensor_temp$mean_temp) # 9.570722
+
+july_topsensor_temp_2021 <- CG_mean_daily_top_sensor %>%
+  subset(Date >= "2021-07-30" & Date <= "2021-07-31")
+
+mean(july_topsensor_temp_2021$mean_temp) # 18.29926
 
 # 2021 and 2022 july
 july_topsensor_temp <- CG_mean_daily_top_sensor %>%

@@ -87,7 +87,10 @@ CG_HOBO_monthly_means_season <- CG_HOBO_daily_means_season %>%
   ungroup()
 
 # saving as csv
+# MADI ----
+# did you save and push the dataset below? Because for me it only has 2018-2021 data
 write.csv(CG_HOBO_monthly_means_season, "data/hobo/CG_HOBO_monthly_means_season.csv")
+CG_HOBO_monthly_means_season <- read_csv("data/hobo/CG_HOBO_monthly_means_season.csv")
 
 # ONE June mean value per variable
 CG_HOBO_monthly_means_june <- CG_HOBO_monthly_means_season %>%
