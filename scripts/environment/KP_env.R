@@ -22,7 +22,7 @@ library(tidyverse)
 
 # LOADING DATA ----
 
-# 1. SURFACE TEMP -----
+# 1. SOIL TEMP -----
 # data HOBO station summarized by Haydn Thomas  NB THIS IS SOIL DATA
 Haydn_summary <- read.csv("data/environment/Formatted_temps_shrubhub.csv")
 
@@ -64,5 +64,10 @@ KP_july_temp_hobo <- KP_mean_monthly_temp_hobo %>%
 
 # SUMMARY MEANS with TOMST soil data -----
 
+# TOMST SOIL JULY MEANS
+# 2022: 3.925377
+# 2021: 4.632053
 
-
+# MEAN JULY SOIL TEMP (HOBO - TOMST across 2015-2022)
+soil_temp_KP <- c(4.568919,8.252268,4.763441,3.925377,4.632053)
+mean(soil_temp_KP)# 5.228412

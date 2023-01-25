@@ -72,5 +72,9 @@ july_QHI_enviro_mean <- july_QHI_enviro  %>%
 
 # SUMMARY MEANS with TOMST -----
 
+# TOMST 2022 mean soil temp 
+# 2022: 3.323774
 
-
+# HOBO + TOMST mean soil temp july 
+soil_temp_QHI <- c(9.05,6.79, 3.323774)
+mean(soil_temp_QHI)# 6.387925

@@ -372,6 +372,11 @@ july_soil_temp_2022 <- KP_mean_daily_soil_temp %>%
 
 mean(july_soil_temp_2022$mean_temp) # 3.925377
 
+july_soil_temp_2021 <- KP_mean_daily_soil_temp %>%
+  subset(Date >= "2021-07-29" & Date <= "2021-07-31")
+
+mean(july_soil_temp_2021$mean_temp) # 4.632053
+
 # 2021 and 2022 july 
 july_soil_temp <- KP_mean_daily_soil_temp %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31" |

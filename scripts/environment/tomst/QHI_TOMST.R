@@ -128,6 +128,13 @@ range(QHI_mean_daily_soil_temp$mean_temp)
 mean(QHI_mean_daily_soil_temp$mean_temp)
 # 4.320375 
 
+# filter out july 2022 
+july_soil_temp_2022 <- QHI_mean_daily_soil_temp %>%
+  subset(Date >= "2022-07-01" & Date <= "2022-07-31")
+
+mean(july_soil_temp_2022$mean_temp) # 3.323774
+
+
 # Save as csv
 write.csv(QHI_mean_daily_soil_temp, file = "data/tomst/QHI_TOMST_August2022/QHI_mean_daily_soil_temp.csv", row.names = FALSE)
 
@@ -172,6 +179,12 @@ QHI_mean_daily_soil_moist <- QHI_moist_percent  %>%
 range(QHI_mean_daily_soil_moist$mean_moist)
 # 49.00996 58.58296
 # driest:28th July, wettest: 9th August
+
+# filter july 2022
+july_soil_moist <- QHI_mean_daily_soil_moist %>%
+  subset(Date >= "2022-07-27" & Date <= "2022-07-31")
+
+mean(july_soil_moist$mean_moist) #  53.75361
 
 # Save as csv
 write.csv(QHI_mean_daily_soil_moist, file = "data/tomst/QHI_TOMST_August2022/QHI_mean_daily_soil_moist.csv", row.names = FALSE)
