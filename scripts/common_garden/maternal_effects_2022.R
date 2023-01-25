@@ -1,7 +1,7 @@
 #### MATERNAL EFFECTS SCRIPT 
 ### Data wrangling and visualisation script
 ### By Erica Zaja, created on 31/10/2022
-## Last updated: 19/01/2023 by Madi
+## Last updated: 25/01/2023 by Madi
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -187,8 +187,6 @@ str(max_cg_heights)
 max_cg_heights_merge <- max_cg_heights %>% 
   dplyr::select(c(Species, max_canopy_height_cm, population, Site, SampleID_standard))
 
-view(mother_data_merge_1)
-
 mother_data_merge_1 <- mother_data_merge %>% 
   dplyr::select(-c(SampleDate, Date_propagated)) %>% 
   filter(Mother_Canopy_Height_cm < 600) #get rid of one obscene shrub over 6 m??
@@ -198,11 +196,11 @@ mother_cg <- full_join(mother_data_merge_1, max_cg_heights_merge,
                       by = c("SampleID_standard" = "SampleID_standard", 
                              "Species" = "Species",
                             "Site" = "Site"))
-
+# MODELS -----
 # model structure we want:
-#lmer(mother_height ~ child_height + (1|species))
+#lmer(mother_height ~ child_height + Site + (1|species))
 
-# TEST MODEL :
+# HEIGHt MODEL 
 maternal_height_mod <-  lmer(Mother_Canopy_Height_cm ~ max_canopy_height_cm + Site + (1|Species), data = mother_cg)
 summary(maternal_height_mod)
 tab_model(maternal_height_mod)
@@ -226,6 +224,29 @@ ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, col
           axis.title = element_text(size = 14),
           axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black"))) 
+
+# width 
+# import width data 
+
+max_cg_widths <- read.csv("data/common_garden_data_2022/max_widths_cg.csv")
+str(max_cg_widths)
+max_cg_widths_merge <- max_cg_widths %>% 
+  dplyr::select(c(Species, max_mean_width_cm, population, Site, SampleID_standard))
+
+mother_cg <- full_join(mother_data_merge_1, max_cg_widths_merge, 
+                       by = c("SampleID_standard" = "SampleID_standard", 
+                              "Species" = "Species",
+                              "Site" = "Site"))
+
+maternal_width_mod <-  lmer(Mother_mean_width ~ max_mean_width_cm + Site + (1|Species), data = mother_cg)
+summary(maternal_width_mod)
+tab_model(maternal_width_mod)
+
+# PROPOGATION DATA MODELS ----
+cutting_length_mod <-  lmer(Cutting_length ~ max_canopy_height_cm + Site + (1|Species), data = mother_cg)
+summary(cutting_length_mod)
+tab_model(cutting_length_mod)
+
 
 
 # HEIGHTS: making one single column for each trait and a "treatment" column for mother/child
@@ -409,40 +430,40 @@ diam_means <- means_long_all %>%
         axis.text.y = element_text(size = 15, colour = "black"))
 
 
-# 5. DATA ANALYSIS -----
-
+# 5. DATA ANALYSIS 
+# old ----
 # 1. HEIGHTS: effect of mother heights on canopy heights in the CG
-maternal_height <- lmer(Height_cm ~ mother_or_child + (1|Species) + (1|SampleID_standard) + (1|Sample_age), data = mother_cg_long_heights)
-summary(maternal_height)
-tab_model(maternal_height)
-plot(maternal_height)
-qqnorm(resid(maternal_height))
-qqline(resid(maternal_height)) 
+#maternal_height <- lmer(Height_cm ~ mother_or_child + (1|Species) + (1|SampleID_standard) + (1|Sample_age), data = mother_cg_long_heights)
+#summary(maternal_height)
+#tab_model(maternal_height)
+#plot(maternal_height)
+#qqnorm(resid(maternal_height))
+#qqline(resid(maternal_height)) 
 
 # 2. WIDTHS: effect of mother widths on widths in the CG
 # N.B. boundary (singular) fit: see help('isSingular') --> not converging
-maternal_width <- lmer(Width~mother_or_child  + (1|Sample_age) + (1|Species) + (1|Sample_age), data = mother_cg_long_widths)
-summary(maternal_width )
-tab_model(maternal_width )
-plot(maternal_width )
-qqnorm(resid(maternal_width ))
-qqline(resid(maternal_width )) 
+#maternal_width <- lmer(Width~mother_or_child  + (1|Sample_age) + (1|Species) + (1|Sample_age), data = mother_cg_long_widths)
+#summary(maternal_width )
+#tab_model(maternal_width )
+#plot(maternal_width )
+#qqnorm(resid(maternal_width ))
+#qqline(resid(maternal_width )) 
 
 # 3. ELONG: effect of mother elongation on elongation in the CG
-maternal_elong<- lmer(Stem_elongation ~ mother_or_child + (1|SampleID_standard) + (1|Species) + (1|Sample_age), data = mother_cg_long_elong)
-summary(maternal_elong)
-tab_model(maternal_elong)
-plot(maternal_elong)
-qqnorm(resid(maternal_elong))
-qqline(resid(maternal_elong)) 
+#maternal_elong<- lmer(Stem_elongation ~ mother_or_child + (1|SampleID_standard) + (1|Species) + (1|Sample_age), data = mother_cg_long_elong)
+#summary(maternal_elong)
+#tab_model(maternal_elong)
+#plot(maternal_elong)
+#qqnorm(resid(maternal_elong))
+#qqline(resid(maternal_elong)) 
 
 # 4. DIAMETER: effect of mother diameters on diameters in the CG
-maternal_diam <- lmer(Stem_diam~mother_or_child + (1|SampleID_standard) + (1|Species), data = mother_cg_long_diam)
-summary(maternal_diam)
-tab_model(maternal_diam)
-plot(maternal_diam)
-qqnorm(resid(maternal_diam))
-qqline(resid(maternal_diam)) 
+#maternal_diam <- lmer(Stem_diam~mother_or_child + (1|SampleID_standard) + (1|Species), data = mother_cg_long_diam)
+#summary(maternal_diam)
+#tab_model(maternal_diam)
+#plot(maternal_diam)
+#qqnorm(resid(maternal_diam))
+#qqline(resid(maternal_diam)) 
 
 
 
