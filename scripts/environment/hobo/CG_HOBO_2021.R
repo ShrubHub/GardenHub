@@ -32,7 +32,8 @@ HOBO_Common_garden_2017_wrangle_bad$year <- day(as.POSIXlt(HOBO_Common_garden_20
 # subtract 2000 from this value to get correct month value 
 HOBO_Common_garden_2017_wrangle_bad_1  <- HOBO_Common_garden_2017_wrangle_bad %>% 
   mutate(Month = month_wrong - 2000) %>% 
-  select(-c(X., month_wrong)) 
+  select(-c(X., month_wrong)) %>% 
+  mutate(year = year + 2000)
 
 HOBO_Common_garden_2017_wrangle_bad_1$date <- as.Date(with(HOBO_Common_garden_2017_wrangle_bad_1, paste(year, Month, day,sep="/")), "%m/%d/%Y")
 
@@ -45,7 +46,7 @@ HOBO_Common_garden_2017_wrangle_bad_1$date <- paste(HOBO_Common_garden_2017_wran
 HOBO_Common_garden_2017_wrangle_bad_1$date_new <- format(as.Date(HOBO_Common_garden_2017_wrangle_bad_1$date, format = "%m-%d-%Y"), "%m/%d/%y")
 # drop confusing old columns
 HOBO_Common_garden_2017_wrangle_bad_2 <- HOBO_Common_garden_2017_wrangle_bad_1 %>% 
-  select(-c(Date.Time..GMT.06.00, day, Month, year, date))
+  select(-c(Date.Time..GMT.06.00, date))
 
 #FINALLY 
 # reclass date to drop H:M and rename good dataframe 
@@ -65,10 +66,6 @@ HOBO_Common_garden_2017_wrangle_solve <- left_join(HOBO_Common_garden_2017_wrang
                                                           "Temp...C..LGR.S.N..10742708..SEN.S.N..10736453..LBL..Soil.temp.", 
                                                           "Temp...C..LGR.S.N..10742708..SEN.S.N..10736452..LBL..Air.temp."))
 
-
-# make dates manually, month column: 
-# not fixed yet just have to go to lab meeting
-
 CG_HOBO_2017 <- HOBO_Common_garden_2017_wrangle_solve %>%
   rename("Soil_moist" = "Water.Content..m..m...LGR.S.N..10742708..SEN.S.N..10736284..LBL..Soil.moisture.",
          "Ground_temp" = "Temp...C..LGR.S.N..10742708..SEN.S.N..10736450..LBL..Ground.temp.",
@@ -85,9 +82,15 @@ CG_HOBO_2021 <- HOBO_Common_garden_12Aug2021 %>%
          "Date_time_GMT" = "Date.Time..GMT.07.00") %>% 
   dplyr::select(-X.)
 CG_HOBO_2021$date <- mdy_hms(CG_HOBO_2021$Date_time_GMT)
-CG_HOBO_2021$Date <- format(as.Date(CG_HOBO_2021$date, format = "%m-%d-%Y %I:%M:%S %p"), "%m/%d/%y")
+
+CG_HOBO_2021$day <- day(as.POSIXlt(CG_HOBO_2021$date, format="%Y-%m-%d %H:%M:S"))
+CG_HOBO_2021$Month <- month(as.POSIXlt(CG_HOBO_2021$date, format="%Y-%m-%d %H:%M:S"))
+CG_HOBO_2021$year <- year(as.POSIXlt(CG_HOBO_2021$date, format="%Y-%m-%d %H:%M:S"))
+
 CG_HOBO_2021_test <- CG_HOBO_2021 %>% 
-  select(-c(date, Date_time_GMT))
+  select(-Date_time_GMT)
+
+CG_HOBO_2021_test$Date <- format(as.POSIXct(CG_HOBO_2021_test$date,format='%m/%d/%Y %H:%M:%S'),format='%m/%d/%y')
 
 # reclass variables 
 str(CG_HOBO_2017)
@@ -96,29 +99,32 @@ CG_HOBO_2017$Ground_temp <- as.numeric(CG_HOBO_2017$Ground_temp)
 CG_HOBO_2017$Air_temp <- as.numeric(CG_HOBO_2017$Air_temp)
 CG_HOBO_2017$Soil_temp <- as.numeric(CG_HOBO_2017$Soil_temp)
 str(CG_HOBO_2021)
+# drop old date column sorry this is so convoluted 
+CG_HOBO_2021_test_1 <- CG_HOBO_2021_test %>% 
+  select(-date)
+  
 # merge dataframes together 
-CG_HOBO <- rbind(CG_HOBO_2017, CG_HOBO_2021_test)
+CG_HOBO <- rbind(CG_HOBO_2017, CG_HOBO_2021_test_1)
 
+str(CG_HOBO)  
 
-str(CG_HOBO_date)  
-# I didn't remove / overwrite existing date column to check to make sure they were the same 
+CG_HOBO$Date <- mdy(CG_HOBO$Date)
+
 
 # Make DAILY means (one value per day)
-CG_HOBO_daily_means <- CG_HOBO_date_3 %>%
-  group_by(year, month, day) %>%
+CG_HOBO_daily_means <- CG_HOBO %>%
+  group_by(year, Month, day) %>%
   mutate(mean_soil_moist = mean(Soil_moist),
          mean_ground_temp = mean(Ground_temp),
          mean_soil_temp = mean(Soil_temp),
          mean_air_temp = mean(Air_temp)) %>%
-  select(date, year, month, day, mean_soil_moist, mean_ground_temp, mean_soil_temp,
+  select(Date, year, Month, day, mean_soil_moist, mean_ground_temp, mean_soil_temp,
          mean_air_temp) %>%
-  group_by(year, month, day) %>%
+  group_by(year, Month, day) %>%
   slice(1) %>% # keeping only one observation from each set of year/month
   ungroup()
 
-range(CG_HOBO_daily_means$date)
-# [1] "2018-08-24 12:00:01 UTC"
-# [2] "2021-07-01 00:00:01 UTC"
+range(CG_HOBO_daily_means$Date)
 
 # filtering for months of interest only 
 # july and august
