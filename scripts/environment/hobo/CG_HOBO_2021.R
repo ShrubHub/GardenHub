@@ -14,6 +14,7 @@ library(gridExtra)
 HOBO_Common_garden_12Aug2021 <- read.csv(file = "data/hobo/HOBO_Common_garden_12Aug2021.csv") # 2018-21
 HOBO_Common_garden_2017 <-  read.csv2("data/hobo/common_garden/Kluane_hobo_Common_garden_2017.csv", sep=",") #2015-17
 str(HOBO_Common_garden_2017)
+
 # 3. DATA WRANGLING ----
 # 2017 
 str(HOBO_Common_garden_2017)

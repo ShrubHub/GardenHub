@@ -135,6 +135,16 @@ KP_phenocams_2021_2022_pulchra <- KP_phenocams_2021_2022_manual %>%
 KP_phenocams_2021_2022_rich <- KP_phenocams_2021_2022_manual %>%
   filter(Species == "Salix richardsonii")
 
+# Mean 90% snow melt DOY
+mean(KP_phenocams_2021_2022_manual$Snow_melt_DOY, na.rm=TRUE)
+# 170.375
+
+# Mean snow return DOY
+mean(KP_phenocams_2021_2022_manual$Snow_return_EoS_DOY, na.rm=TRUE)
+# 240
+
+# Growing season length KP
+# 240 - 170 = 70 days
 
 # 3.2. QHI ----
 
@@ -192,6 +202,17 @@ QHI_salpul_pheno <- QHI_phenocams_2022_wrangle %>%
 QHI_salric_pheno <- QHI_phenocams_2022_wrangle %>%
   filter(Species == "Salix richardsonii")
 # Nb Salix richardsonii only has first yellowing from 2022
+
+# Mean DOY of 90% snow melt
+mean(QHI_phenocams_2022_wrangle$Snow_melt_DOY, na.rm=TRUE) 
+# 155.4
+
+# Mean DOY of snow return
+mean(QHI_phenocams_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE) 
+# 243.5
+
+# Growing season length on QHI 
+# 243 - 155 = 88 days
 
 # 3.3. CG -----
 CG_phenocams_individual_2021_2022 <- CG_phenocams_individual_2021_2022[,1:18] # removing extra blank cols from csv
@@ -267,3 +288,13 @@ CG_KP_rich_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
 CG_QHI_rich_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix richardsonii" & population == "QHI")
 
+# Mean DOY of 90% snow melt
+mean(CG_phenocams_individual_2021_2022_wrangle$Snow_melt_DOY, na.rm=TRUE) 
+# 113.4658
+
+# Mean DOY of snow return
+mean(CG_phenocams_individual_2021_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE) 
+# 270.1905
+
+# Growing season length on QHI 
+# 270 - 113 = 157 days
