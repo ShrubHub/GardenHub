@@ -131,9 +131,20 @@ write.csv(KP_phenocams_2021_2022_manual, "data/phenology/phenocam_pics/KP_phenoc
 KP_phenocams_2021_2022_pulchra <- KP_phenocams_2021_2022_manual %>%
   filter(Species == "Salix pulchra")
 
+# range of green up and senescence DOY
+range(KP_phenocams_2021_2022_pulchra$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# 170- 175
+range(KP_phenocams_2021_2022_pulchra$First_leaf_yellow_DOY, na.rm=TRUE)
+# 170- 175
 
 KP_phenocams_2021_2022_rich <- KP_phenocams_2021_2022_manual %>%
   filter(Species == "Salix richardsonii")
+
+# range of green up and senescence DOY
+range(KP_phenocams_2021_2022_rich$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# 168 - 177
+range(KP_phenocams_2021_2022_rich$First_leaf_yellow_DOY, na.rm=TRUE)
+#199- 227
 
 # Mean 90% snow melt DOY
 mean(KP_phenocams_2021_2022_manual$Snow_melt_DOY, na.rm=TRUE)
@@ -196,12 +207,30 @@ write.csv(QHI_phenocams_2022_wrangle, "data/phenology/phenocam_pics/QHI_phenocam
 QHI_salarc_pheno <- QHI_phenocams_2022_wrangle %>%
   filter(Species == "Salix arctica")
 
+# range of green up and senescence DOY
+range(QHI_salarc_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# 157 - 167
+range(QHI_salarc_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
+# 197 - 216
+
 QHI_salpul_pheno <- QHI_phenocams_2022_wrangle %>%
   filter(Species == "Salix pulchra")
+
+# range of green up and senescence DOY
+range(QHI_salpul_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# 158- 168
+range(QHI_salpul_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
+# 202 - 214
 
 QHI_salric_pheno <- QHI_phenocams_2022_wrangle %>%
   filter(Species == "Salix richardsonii")
 # Nb Salix richardsonii only has first yellowing from 2022
+
+# range of green up and senescence DOY
+range(QHI_salric_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# 162- 175
+range(QHI_salric_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
+# 205 - 219
 
 # Mean DOY of 90% snow melt
 mean(QHI_phenocams_2022_wrangle$Snow_melt_DOY, na.rm=TRUE) 
@@ -273,20 +302,56 @@ write.csv(CG_phenocams_individual_2021_2022_wrangle, "data/phenology/phenocam_pi
 CG_KP_arctica_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix arctica" & population == "Kluane")
 
+# range of green up and senescence DOY
+range(CG_KP_arctica_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# 133 - 140
+range(CG_KP_arctica_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
+# 178 - 227
+
 CG_QHI_arctica_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix arctica" & population == "QHI")
+
+# range of green up and senescence DOY
+range(CG_QHI_arctica_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# 129 132
+range(CG_QHI_arctica_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
+# 172- 217
 
 CG_KP_pulchra_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix pulchra" & population == "Kluane")
 
+# range of green up and senescence DOY
+range(CG_KP_pulchra_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# 135- 147
+range(CG_KP_pulchra_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
+# 197 - 228
+
 CG_QHI_pulchra_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix pulchra" & population == "QHI")
+
+# range of green up and senescence DOY
+range(CG_QHI_pulchra_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# 128 - 140
+range(CG_QHI_pulchra_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
+# 174 - 224
 
 CG_KP_rich_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix richardsonii" & population == "Kluane")
 
+# range of green up and senescence DOY
+range(CG_KP_rich_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# 129- 142
+range(CG_KP_rich_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
+# 191- 242
+
 CG_QHI_rich_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix richardsonii" & population == "QHI")
+
+# range of green up and senescence DOY
+range(CG_QHI_rich_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# 126 - 142
+range(CG_QHI_rich_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
+# 170- 218
 
 # Mean DOY of 90% snow melt
 mean(CG_phenocams_individual_2021_2022_wrangle$Snow_melt_DOY, na.rm=TRUE) 
