@@ -58,6 +58,12 @@ range(QHI_mean_daily_temp$mean_temp) # with filter above running
 mean(QHI_mean_daily_temp$mean_temp)
 # 6.888976
 
+# filter july 2022
+july_surface_temp <- QHI_mean_daily_temp %>%
+  subset(Date >= "2022-07-27" & Date <= "2022-07-31")
+
+mean(july_surface_temp$mean_temp) #  5.01368
+
 # Saving as csv
 write.csv(QHI_mean_daily_temp, file = "data/tomst/QHI_TOMST_August2022/QHI_mean_daily_temp.csv", row.names = FALSE)
 
@@ -92,6 +98,15 @@ range(QHI_mean_daily_top_sensor$mean_temp)
 # warmest: 22st Jult , coldest: 29th July
 mean(QHI_mean_daily_top_sensor$mean_temp)
 # 7.567246 
+
+# filter july 2022
+july_top_sensor_temp <- QHI_mean_daily_top_sensor%>%
+  subset(Date >= "2022-07-27" & Date <= "2022-07-31")
+
+mean(july_top_sensor_temp$mean_temp) #  4.912379
+
+# mean of top sensor and surface temp
+# (4.912379+5.01368)/2 = 4.963029
 
 # Save as csv
 write.csv(QHI_mean_daily_top_sensor, file = "data/tomst/QHI_TOMST_August2022/QHI_mean_daily_top_sensor.csv", row.names = FALSE)
