@@ -19,9 +19,64 @@ library(corrplot)
 library(Hmisc)
 
 # Climate data from CHELSA 2022
-temp <- raster("datasets/climate_data/CHELSA_bio10_10.tif") 
+temp <- raster("data/environment/CHELSA/CHELSA_bio10_10.tif") 
 # Temperature climatologies: mean daily mean air temperatures of the warmest quarter (bio10) (°C). Offset -273.15
 
-precip <- raster("datasets/climate_data/CHELSA_bio10_18.tif")
+precip <- raster("data/environment/CHELSA/CHELSA_bio10_18.tif")
 # Precipitation climatologies: mean monthly precipitation amount of the warmest quarter (bio18) (kg m-2)
 
+# DATA EXPLORATION -----
+# checking resolution of rasters
+res(temp)
+res(precip)
+# [1] 0.008333333 0.008333333
+# The spatial resolution of a raster refers the size of each cell in meters. 
+# This size in turn relates to the area on the ground that the pixel represents.
+# The higher the resolution for the same extent the crisper the image (and the larger the file size) 
+
+# Visualising climate rasters
+plot(temp, main = "Mean daily mean air temperatures of the warmest quarter (°C)")
+plot(precip, main = "Mean monthly precipitation of the warmest quarter (kg m-2)")
+precip_raster <- levelplot(precip)
+temp_raster <- levelplot(temp)
+
+# EXTRACTION (to be filled in) ------
+# Loading the coordinates of the sites of interest
+coords <- read.csv("") %>% 
+  dplyr::select(longitude, latitude) # keeping lat and long
+
+# Creating SpatialPoints (sp) object of unique coordinates
+coords_sp <- SpatialPoints(coords)
+
+# creating raster stack
+chelsa.stack <- stack(precip, temp)
+
+# Extracting variables values for each pair of coordinates
+chelsa.extract <- raster::extract(chelsa.stack, coords_sp, df = TRUE) # extract coords 
+
+# Combining dataframes:
+# Converting the SpatialPoints (sp) object into a dataframe 
+coord.df <- as.data.frame(coords_sp)
+
+# Reassigning the 'ID' to the coordinates dataframe
+coord.df$ID <- row.names(coord.df)
+coord.df$ID <- as.numeric(coord.df$ID) # Make numeric
+
+# Merging the two dataframes: extracted CHELSA variables and the coordinates
+coord.chelsa.combo.a <- left_join(chelsa.extract, coord.df, by = c("ID" = "ID"))
+
+# Modifying some of the variables to more useful values
+coord.chelsa.combo.b <- coord.chelsa.combo.a %>% 
+  mutate(CHELSA_bio10_10 = CHELSA_bio10_10/10) # Divide by 10 to get to degC
+
+# Renaming the variables to shorter column headings
+coord.chelsa.combo.c <- coord.chelsa.combo.b %>% 
+  rename(CH_TempMeanSummer = CHELSA_bio10_10,
+         CH_PrecipMeanSummer = CHELSA_bio10_18) %>% na.omit()
+
+unique(coord.chelsa.combo.c$CH_TempMeanSummer)
+
+# Exporting the dataframe to csv
+# write.csv(coord.chelsa.combo.c, "data/environment/CHELSA/coord_chelsa_combo_new.csv")
+
+################################################################## ÉND -----
