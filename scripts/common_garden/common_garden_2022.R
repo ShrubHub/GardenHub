@@ -2,7 +2,7 @@
 ### Data wrangling and visualisation script
 ### By Erica Zaja and Madelaine Anderson, created on 30/09/2022
 ## Adapted from Madelaine Anderson's common_garden_2021.R 
-## Last updated: 17/01/2023 by Madelaine 
+## Last updated: 26/01/2023 by Madelaine 
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -399,7 +399,9 @@ mother_data <- Common_garden_2017 %>%
          "Width_cm" = "Mother_CW_1",
          "Width_2_cm" = "Mother_CW_2", 
          "Site" = "Sample_location",
-         "SampleDate" = "Date_sampled")
+         "SampleDate" = "Date_sampled") %>% 
+  filter(Canopy_Height_cm < 600) %>% 
+  filter(Width_cm < 700)
 
 str(mother_data)
 
