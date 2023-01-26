@@ -9,6 +9,7 @@ library(tidyverse)
 library(ggplot2)
 library(dplyr)
 library(gridExtra)
+library(readr)
 
 # 2. LOADING DATA ----
 HOBO_Common_garden_12Aug2021 <- read.csv(file = "data/hobo/HOBO_Common_garden_12Aug2021.csv") # 2018-21
@@ -124,65 +125,67 @@ CG_HOBO_daily_means <- CG_HOBO %>%
   slice(1) %>% # keeping only one observation from each set of year/month
   ungroup()
 
-range(CG_HOBO_daily_means$Date)
+max(CG_HOBO_daily_means$Date)
 
 # filtering for months of interest only 
 # july and august
 CG_HOBO_daily_means_season <- CG_HOBO_daily_means %>%
-  filter(month %in% c("06", "07", "08")) 
+  filter(Month %in% c("6", "7", "8")) 
 
 # Make MONTHLY means 
 CG_HOBO_monthly_means_season <- CG_HOBO_daily_means_season %>%
-  group_by(year, month) %>%
+  group_by(year, Month) %>%
   mutate(mean_soil_moist_month = mean(mean_soil_moist),
          mean_ground_temp_month = mean(mean_ground_temp),
          mean_soil_temp_month = mean(mean_soil_temp),
          mean_air_temp_month = mean(mean_air_temp)) %>%
-  select(year, month, mean_soil_moist_month, mean_ground_temp_month, mean_soil_temp_month,
+  dplyr::select(year, Month, mean_soil_moist_month, mean_ground_temp_month, mean_soil_temp_month,
          mean_air_temp_month) %>%
-  group_by(year, month) %>%
+  group_by(year, Month) %>%
   slice(1) %>% # keeping only one observation from each set of year/month
-  ungroup()
+  ungroup() %>%
+  rename("month"="Month")
+
+# NB 2016 only has sept-oct-nov months so it gets filtered out when only
+# keeping months of interest
 
 # saving as csv
-# MADI ----
-# did you save and push the dataset below? Because for me it only has 2018-2021 data
 write.csv(CG_HOBO_monthly_means_season, "data/hobo/CG_HOBO_monthly_means_season.csv")
 CG_HOBO_monthly_means_season <- read_csv("data/hobo/CG_HOBO_monthly_means_season.csv")
 
 # ONE June mean value per variable
 CG_HOBO_monthly_means_june <- CG_HOBO_monthly_means_season %>%
-  filter(month == "06")
+  filter(month == "6")
 
-mean(CG_HOBO_monthly_means_june$mean_soil_moist_month) # 0.05743859
-mean(CG_HOBO_monthly_means_june$mean_ground_temp_month) # 12.64778
-mean(CG_HOBO_monthly_means_june$mean_soil_temp_month) # 11.91689
-mean(CG_HOBO_monthly_means_june$mean_air_temp_month) # 12.98225
+mean(CG_HOBO_monthly_means_june$mean_soil_moist_month) # 0.05757273
+mean(CG_HOBO_monthly_means_june$mean_ground_temp_month) # 12.53025
+mean(CG_HOBO_monthly_means_june$mean_soil_temp_month) # 11.20712
+mean(CG_HOBO_monthly_means_june$mean_air_temp_month) # 12.54286
 
 # ONE July mean value per variable
 CG_HOBO_monthly_means_july <- CG_HOBO_monthly_means_season %>%
-  filter(month == "07")
+  filter(month == "7")
 
-mean(CG_HOBO_monthly_means_july$mean_soil_moist_month) # 0.05874529
-mean(CG_HOBO_monthly_means_july$mean_ground_temp_month) # 13.247
-mean(CG_HOBO_monthly_means_july$mean_soil_temp_month) # 14.17245
-mean(CG_HOBO_monthly_means_july$mean_air_temp_month) # 14.78052
+mean(CG_HOBO_monthly_means_july$mean_soil_moist_month) # 0.05968028
+mean(CG_HOBO_monthly_means_july$mean_ground_temp_month) # 13.11494
+mean(CG_HOBO_monthly_means_july$mean_soil_temp_month) # 13.64918
+mean(CG_HOBO_monthly_means_july$mean_air_temp_month) # 14.01731
 
 # ONE August mean value per variable
 CG_HOBO_monthly_means_aug <- CG_HOBO_monthly_means_season %>%
-  filter(month == "08")
+  filter(month == "8")
 
-mean(CG_HOBO_monthly_means_aug$mean_soil_moist_month) # 0.05655967
-mean(CG_HOBO_monthly_means_aug$mean_ground_temp_month) # 10.02817
-mean(CG_HOBO_monthly_means_aug$mean_soil_temp_month) # 11.32776
-mean(CG_HOBO_monthly_means_aug$mean_air_temp_month) # 11.39708
+mean(CG_HOBO_monthly_means_aug$mean_soil_moist_month) # 0.06137545
+mean(CG_HOBO_monthly_means_aug$mean_ground_temp_month) # 11.57838
+mean(CG_HOBO_monthly_means_aug$mean_soil_temp_month) # 11.98366
+mean(CG_HOBO_monthly_means_aug$mean_air_temp_month) # 12.42648
 
 # 4. DATA VISUALISATION -----
 
 # 4.1 Time series -----
 
 # a. Ground temperature ----
-(plot_HOBO_ground_temp <- ggplot(CG_HOBO_date, aes(x = date, y = Ground_temp)) +
+(plot_HOBO_ground_temp <- ggplot(CG_HOBO, aes(x = Date, y = Ground_temp)) +
    geom_line() + 
    #geom_smooth(method = "lm", colour = "black") +
    ylab("Ground temperature (°C)") +
@@ -198,7 +201,7 @@ mean(CG_HOBO_monthly_means_aug$mean_air_temp_month) # 11.39708
          axis.text.y = element_text(size = 12, colour = "black")))
 
 # b. Soil moisture ----
-(plot_HOBO_soil_moist <- ggplot(CG_HOBO_date, aes(x = date, y = Soil_moist)) +
+(plot_HOBO_soil_moist <- ggplot(CG_HOBO, aes(x = Date, y = Soil_moist)) +
    geom_line() + 
    #geom_smooth(method="lm", colour = "black")+
    ylab("Soil moisture ()") +
@@ -214,7 +217,7 @@ mean(CG_HOBO_monthly_means_aug$mean_air_temp_month) # 11.39708
          axis.text.y = element_text(size = 12, colour = "black")))
 
 # c. Soil temperature ----
-(plot_HOBO_soil_temp <- ggplot(CG_HOBO_date, aes(x = date, y = Soil_temp)) +
+(plot_HOBO_soil_temp <- ggplot(CG_HOBO, aes(x = Date, y = Soil_temp)) +
    geom_line()+
    #geom_smooth(method="lm", colour = "black") + 
    ylab("Soil temperature (°C)") +
@@ -230,7 +233,7 @@ mean(CG_HOBO_monthly_means_aug$mean_air_temp_month) # 11.39708
          axis.text.y = element_text(size = 12, colour = "black")))
 
 # d. Air temperature -----
-(plot_HOBO_air_temp <- ggplot(CG_HOBO_date, aes(x = date, y = Air_temp)) +
+(plot_HOBO_air_temp <- ggplot(CG_HOBO, aes(x = Date, y = Air_temp)) +
    geom_line() + 
     #geom_smooth(method = "lm", colour = "black")+
     ylab("Air temperature (°C)") +
