@@ -264,6 +264,23 @@ cutting_length_mod <-  lmer(Cutting_length ~ max_canopy_height_cm + Site + (1|Sp
 summary(cutting_length_mod)
 tab_model(cutting_length_mod)
 
+(plot_cutting_length_model <- ggplot() +
+    geom_point(aes(x = max_canopy_height_cm, y= Cutting_length, color = Species), size = 3, alpha = 0.5, data = mother_cg) +
+    geom_smooth(aes(x = max_canopy_height_cm, y= Cutting_length, colour = Species), method = "lm", data = mother_cg) +
+    facet_wrap(~Species, scales = "free") +
+    ylab("Cutting length (cm)") +
+    xlab("\nMax child canopy height in common garden (cm)") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black"))) 
+
+
 
 
 # HEIGHTS: making one single column for each trait and a "treatment" column for mother/child
