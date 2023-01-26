@@ -281,8 +281,6 @@ tab_model(cutting_length_mod)
           axis.text.y = element_text(size = 12, colour = "black"))) 
 
 
-
-
 # HEIGHTS: making one single column for each trait and a "treatment" column for mother/child
 mother_cg_long_heights <- mother_cg %>%
   select(SampleDate,  Year_planted, Mother_Canopy_Height_cm, Canopy_Height_cm,
