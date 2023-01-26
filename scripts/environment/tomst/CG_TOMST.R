@@ -482,12 +482,3 @@ facet_env_KP <- grid.arrange(cg_mean_daily_soil_moist, cg_mean_daily_soil_temp,
 facet_env_kp_hist <- grid.arrange(cg_mean_daily_soil_moist_hist, cg_mean_daily_soil_temp_hist, 
                                   cg_mean_daily_temp_hist, cg_mean_daily_top_sensor_hist, ncol=2)
 
-# HOBO+TOMST ----
-
-# Making overall means using hobo (see CG_HOBO script) and tomst 
-# i.e. means of hobo june, july, august and tomst june, july, august
-mean_air_temp <- mean(12.98, 14.80, 11.40) # N.B only using HOBO, because tomst doesnt have it
-mean_surface_temp <- mean(12.65, 13.25, 10.03, 13.75, 14.55, 12.94) 
-mean_soil_temp <- mean( 11.91, 14.17, 11.32,  12.33, 13.46, 12.76)
-mean_soil_moist <- mean()
-# missing top sensor: average the top sensor with the surface temp
