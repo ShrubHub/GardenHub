@@ -363,3 +363,33 @@ mean(CG_phenocams_individual_2021_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE)
 
 # Growing season length on QHI 
 # 270 - 113 = 157 days
+
+# MODELS -----
+# load all data 
+CG_phenocams_individual_2021_2022_wrangle <- read_csv("data/phenology/phenocam_pics/CG_phenocams_individual_2021_2022_wrangle.csv")
+QHI_phenocams_2022_wrangle <- read_csv("data/phenology/phenocam_pics/QHI_phenocams_2022_wrangle.csv")
+KP_phenocams_2021_2022_wrangle <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2021_2022_wrangle.csv")
+
+# Wrangling to allow merge
+KP_phenocams_2021_2022_wrangle <- KP_phenocams_2021_2022_wrangle[, - c(1:2)]
+KP_phenocams_2021_2022_wrangle <- KP_phenocams_2021_2022_wrangle %>%
+  dplyr::select(- Viewshed, - NOTES, - Greening_notes) %>%
+  mutate(population = rep("Southern_source"),
+         Plants_first_visible_through_snow = rep(NA)) %>%
+  rename("PhenocamID" = "Plot")
+
+CG_phenocams_individual_2021_2022_wrangle <- CG_phenocams_individual_2021_2022_wrangle[, - 1]
+CG_phenocams_individual_2021_2022_wrangle <- CG_phenocams_individual_2021_2022_wrangle %>%
+  dplyr::select(- ShrubID_Standard)
+
+QHI_phenocams_2022_wrangle <- QHI_phenocams_2022_wrangle[, -1]
+QHI_phenocams_2022_wrangle <- QHI_phenocams_2022_wrangle %>%
+  rename("Plants_first_visible_through_snow" = "plant_first_vis") %>%
+  mutate(population = rep("Northern_source"))
+         
+# merge all 
+
+all_phenocam_data <- rbind(QHI_phenocams_2022_wrangle, CG_phenocams_individual_2021_2022_wrangle,
+                           KP_phenocams_2021_2022_wrangle) # doesnt work yet
+
+
