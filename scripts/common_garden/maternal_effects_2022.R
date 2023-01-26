@@ -200,7 +200,7 @@ mother_cg <- full_join(mother_data_merge_1, max_cg_heights_merge,
 # model structure we want:
 #lmer(mother_height ~ child_height + Site + (1|species))
 
-# HEIGHt MODEL 
+# HEIGHT MODEL ------
 maternal_height_mod <-  lmer(Mother_Canopy_Height_cm ~ max_canopy_height_cm + Site + (1|Species), data = mother_cg)
 summary(maternal_height_mod)
 tab_model(maternal_height_mod)
@@ -225,7 +225,7 @@ ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, col
           axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black"))) 
 
-# width 
+# WIDTH MODEL  -----
 # import width data 
 
 max_cg_widths <- read.csv("data/common_garden_data_2022/max_widths_cg.csv")
@@ -241,6 +241,23 @@ mother_cg <- full_join(mother_data_merge_1, max_cg_widths_merge,
 maternal_width_mod <-  lmer(Mother_mean_width ~ max_mean_width_cm + Site + (1|Species), data = mother_cg)
 summary(maternal_width_mod)
 tab_model(maternal_width_mod)
+
+(plot_mother_width_model <- ggplot() +
+    geom_point(aes(x = max_mean_width_cm, y= Mother_mean_width, color = Species), size = 3, alpha = 0.5, data = mother_cg) +
+    geom_smooth(aes(x = max_mean_width_cm, y= Mother_mean_width, colour = Species), method = "lm", data = mother_cg) +
+    facet_wrap(~Species, scales = "free") +
+    ylab("Mother shrub width in sources (cm)") +
+    xlab("\nMax child width in common garden (cm)") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black"))) 
+
 
 # PROPOGATION DATA MODELS ----
 cutting_length_mod <-  lmer(Cutting_length ~ max_canopy_height_cm + Site + (1|Species), data = mother_cg)
