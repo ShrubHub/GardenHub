@@ -188,8 +188,7 @@ max_cg_heights_merge <- max_cg_heights %>%
   dplyr::select(c(Species, max_canopy_height_cm, population, Site, SampleID_standard))
 
 mother_data_merge_1 <- mother_data_merge %>% 
-  dplyr::select(-c(SampleDate, Date_propagated)) %>% 
-  filter(Mother_Canopy_Height_cm < 600) #get rid of one obscene shrub over 6 m??
+  dplyr::select(-c(SampleDate, Date_propagated))
 
 
 mother_cg <- full_join(mother_data_merge_1, max_cg_heights_merge, 
