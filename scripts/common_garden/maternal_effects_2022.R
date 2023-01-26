@@ -17,7 +17,10 @@ library(sjPlot)
 mother_data <- read_csv("data/source_pops/mother_data.csv")
 
 # All 2022 data from the common garden
-all_cg <- read_csv("data/common_garden_data_2022/all_merged_data_2022.csv") 
+# all_cg <- read_csv("data/common_garden_data_2022/all_merged_data_2022.csv") 
+# maximum height and width data from CG 2013-2022 
+max_cg_heights <- read.csv("data/common_garden_data_2022/max_heights_cg.csv")
+max_cg_widths <- read.csv("data/common_garden_data_2022/max_widths_cg.csv")
 
 
 # 3. DATA WRANGLING ---- 
@@ -119,51 +122,51 @@ cg_means <- all_cg %>%
                    se_Stem_diameter = sd(Stem_diameter, na.rm = TRUE)/sqrt(n))
 
 # make cg means using only 2022 data 
-cg_means_2022 <- all_cg %>%
-  filter(Year == "2022") %>% 
-  group_by(Species, Site) %>%
-  dplyr::summarise(n = n(),  # Calculating sample size n
-                   mean_Canopy_Height_cm = mean(Canopy_Height_cm, na.rm = TRUE),
-                   mean_mean_width = mean(mean_width, na.rm = TRUE),
-                   mean_mean_stem_elong = mean(mean_stem_elong, na.rm = TRUE),
-                   mean_Stem_diameter = mean(Stem_diameter, na.rm = TRUE), 
-                   mean_mean_leaf_length = mean(mean_leaf_length, na.rm = TRUE), 
-                   sd_Canopy_Height_cm = sd(Canopy_Height_cm, na.rm = TRUE),
-                   sd_width = sd(mean_width, na.rm = TRUE),
-                   sd_stem_elong = sd(mean_stem_elong, na.rm = TRUE),
-                   sd_leaf_length = sd(mean_leaf_length, na.rm = TRUE),
-                   sd_Stem_diameter = sd(Stem_diameter, na.rm = TRUE),
-                   se_Canopy_Height_cm = sd(Canopy_Height_cm, na.rm = TRUE)/sqrt(n), 
-                   se_mean_mother_width = sd(mean_width, na.rm = TRUE)/sqrt(n),
-                   se_mean_mother_elong = sd(mean_stem_elong, na.rm = TRUE)/sqrt(n),
-                   se_mean_leaf_length = sd(mean_leaf_length, na.rm = TRUE)/sqrt(n),
-                   se_Stem_diameter = sd(Stem_diameter, na.rm = TRUE)/sqrt(n))
+#cg_means_2022 <- all_cg %>%
+#  filter(Year == "2022") %>% 
+#  group_by(Species, Site) %>%
+#  dplyr::summarise(n = n(),  # Calculating sample size n
+               #    mean_Canopy_Height_cm = mean(Canopy_Height_cm, na.rm = TRUE),
+              #     mean_mean_width = mean(mean_width, na.rm = TRUE),
+             #      mean_mean_stem_elong = mean(mean_stem_elong, na.rm = TRUE),
+            #       mean_Stem_diameter = mean(Stem_diameter, na.rm = TRUE), 
+           #        mean_mean_leaf_length = mean(mean_leaf_length, na.rm = TRUE), 
+          #         sd_Canopy_Height_cm = sd(Canopy_Height_cm, na.rm = TRUE),
+         #          sd_width = sd(mean_width, na.rm = TRUE),
+        #           sd_stem_elong = sd(mean_stem_elong, na.rm = TRUE),
+       #            sd_leaf_length = sd(mean_leaf_length, na.rm = TRUE),
+      #             sd_Stem_diameter = sd(Stem_diameter, na.rm = TRUE),
+     #              se_Canopy_Height_cm = sd(Canopy_Height_cm, na.rm = TRUE)/sqrt(n), 
+    #               se_mean_mother_width = sd(mean_width, na.rm = TRUE)/sqrt(n),
+   #                se_mean_mother_elong = sd(mean_stem_elong, na.rm = TRUE)/sqrt(n),
+  #                 se_mean_leaf_length = sd(mean_leaf_length, na.rm = TRUE)/sqrt(n),
+ #                  se_Stem_diameter = sd(Stem_diameter, na.rm = TRUE)/sqrt(n))
 
-cg_means_2022$Species <- as.factor(cg_means_2022$Species)
-cg_means_2022$Site <- as.factor(cg_means_2022$Site) 
+#cg_means_2022$Species <- as.factor(cg_means_2022$Species)
+#cg_means_2022$Site <- as.factor(cg_means_2022$Site) 
 
 # Erica tries to put data in long format  -----
-cg_means_2022_long <- cg_means_2022 %>%
-group_by(Species, Site) %>%              
- pivot_longer(cols = starts_with("mean"), names_to = "trait", names_prefix = "mean_", values_to = "mean_value") %>%
- pivot_longer(cols = starts_with("sd"), names_to = "SD_trait", names_prefix = "sd_", values_to = "sd_value") %>% 
-  pivot_longer(cols = starts_with("se"), names_to = "SE_trait", names_prefix = "se_", values_to = "se_value")
+#cg_means_2022_long <- cg_means_2022 %>%
+#group_by(Species, Site) %>%              
+# pivot_longer(cols = starts_with("mean"), names_to = "trait", names_prefix = "mean_", values_to = "mean_value") %>%
+# pivot_longer(cols = starts_with("sd"), names_to = "SD_trait", names_prefix = "sd_", values_to = "sd_value") %>% 
+#  pivot_longer(cols = starts_with("se"), names_to = "SE_trait", names_prefix = "se_", values_to = "se_value")
 # same as above but for means for mothers   
-mother_means_long <- mother_cg_means %>%
-  group_by(Species, Site) %>%              
-  pivot_longer(cols = starts_with("mean"), names_to = "trait", names_prefix = "mean_", values_to = "mean_value") %>%
-  pivot_longer(cols = starts_with("sd"), names_to = "SD_trait", names_prefix = "sd_", values_to = "sd_value") %>% 
-  pivot_longer(cols = starts_with("se"), names_to = "SE_trait", names_prefix = "se_", values_to = "se_value")
+# mother_means_long <- mother_cg_means %>%
+#  group_by(Species, Site) %>%              
+#  pivot_longer(cols = starts_with("mean"), names_to = "trait", names_prefix = "mean_", values_to = "mean_value") %>%
+#  pivot_longer(cols = starts_with("sd"), names_to = "SD_trait", names_prefix = "sd_", values_to = "sd_value") %>% 
+#  pivot_longer(cols = starts_with("se"), names_to = "SE_trait", names_prefix = "se_", values_to = "se_value")
 # merge together 
-means_long_all <- rbind(mother_means_long, cg_means_2022_long) # not perfect, will fiddle with 
+#means_long_all <- rbind(mother_means_long, cg_means_2022_long) # not perfect, will fiddle with 
 
 # checking format of CG data
-str(all_cg)
-all_cg$Site <- as.factor(all_cg$Site)
-all_cg$Species <- as.factor(all_cg$Species)
+#str(all_cg)
+#all_cg$Site <- as.factor(all_cg$Site)
+#all_cg$Species <- as.factor(all_cg$Species)
 
 # merging means datasets and making into long format
-means_all <- rbind(cg_means_2022, mother_cg_means) 
+# means_all <- rbind(cg_means_2022, mother_cg_means) 
 
 # merging datasets
 
@@ -179,9 +182,8 @@ means_all <- rbind(cg_means_2022, mother_cg_means)
     #                            "Site" = "Site", 
      #                         "Sample_age" = "Sample_age"))
 
-# MERGE with max height -----
+# merge mother data with max height -----
 # instead of taking only 2022 data, use max height data 
-max_cg_heights <- read.csv("data/common_garden_data_2022/max_heights_cg.csv")
 str(max_cg_heights)
 
 max_cg_heights_merge <- max_cg_heights %>% 
@@ -225,10 +227,8 @@ ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, col
           axis.text.y = element_text(size = 12, colour = "black"))) 
 
 # WIDTH MODEL  -----
-# import width data 
-
-max_cg_widths <- read.csv("data/common_garden_data_2022/max_widths_cg.csv")
 str(max_cg_widths)
+
 max_cg_widths_merge <- max_cg_widths %>% 
   dplyr::select(c(Species, max_mean_width_cm, population, Site, SampleID_standard))
 
