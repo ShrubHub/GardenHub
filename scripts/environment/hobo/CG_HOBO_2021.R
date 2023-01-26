@@ -1,7 +1,7 @@
 #### Common garden HOBO 2021 SCRIPT
 ### Data wrangling and visualisation script
 ### By Erica Zaja and Madi Anderson, created on 20/10/2022
-## Last updated: 18/01/2023 by Madelaine 
+## Last updated: 26/01/2023 by Madelaine 
 
 # 1. LOADING LIBRARIES -----
 library(lubridate)
@@ -111,7 +111,10 @@ str(CG_HOBO)
 
 CG_HOBO$Date <- mdy(CG_HOBO$Date)
 
+# save all CG hobo merged together 
+write.csv(CG_HOBO, "data/hobo/all_CG_HOBO.csv")
 
+str(CG_HOBO)
 # Make DAILY means (one value per day)
 CG_HOBO_daily_means <- CG_HOBO %>%
   group_by(year, Month, day) %>%
