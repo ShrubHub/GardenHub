@@ -291,6 +291,7 @@ CG_phenocams_individual_2021_2022_wrangle$Full_snow_cover_EoS_DOY <-  lubridate:
 CG_phenocams_individual_2021_2022_wrangle$First_leaf_bud_burst_DOY <-  lubridate::yday(as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$First_leaf_bud_burst, format = "%Y-%m-%d"))
 CG_phenocams_individual_2021_2022_wrangle$First_leaf_yellow_DOY <-  lubridate::yday(as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$First_leaf_yellow, format = "%Y-%m-%d"))
 CG_phenocams_individual_2021_2022_wrangle$Half_leaves_yellow_DOY <-  lubridate::yday(as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$Half_leaves_yellow, format = "%Y-%m-%d"))
+CG_phenocams_individual_2021_2022_wrangle$Last_leaves_yellow_DOY <-  lubridate::yday(as.POSIXct(CG_phenocams_individual_2021_2022_wrangle$Last_leaves_yellow, format = "%Y-%m-%d"))
 
 # species and pop as factors
 CG_phenocams_individual_2021_2022_wrangle$Species <- as.factor(CG_phenocams_individual_2021_2022_wrangle$Species)
@@ -370,26 +371,56 @@ CG_phenocams_individual_2021_2022_wrangle <- read_csv("data/phenology/phenocam_p
 QHI_phenocams_2022_wrangle <- read_csv("data/phenology/phenocam_pics/QHI_phenocams_2022_wrangle.csv")
 KP_phenocams_2021_2022_wrangle <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2021_2022_wrangle.csv")
 
-# Wrangling to allow merge
+# Wrangling to allow merge for salix phenophase comparison
 KP_phenocams_2021_2022_wrangle <- KP_phenocams_2021_2022_wrangle[, - c(1:2)]
-KP_phenocams_2021_2022_wrangle <- KP_phenocams_2021_2022_wrangle %>%
-  dplyr::select(- Viewshed, - NOTES, - Greening_notes) %>%
-  mutate(population = rep("Southern_source"),
-         Plants_first_visible_through_snow = rep(NA)) %>%
-  rename("PhenocamID" = "Plot")
+KP_phenocams_2021_2022_merge <- KP_phenocams_2021_2022_wrangle %>%
+  dplyr::select(Plot, Year, Species, Salix_bud_burst, Salix_first_yellow,
+                Salix_last_yellow, Salixbud_burst_DOY, Salix_first_yellow_DOY,
+                Salix_last_yellow_DOY) %>%
+  mutate(population = rep("Southern_source")) %>%
+  rename("PhenocamID" = "Plot", 
+          "First_bud_burst" ="Salix_bud_burst"  , 
+        "First_leaf_yellow" = "Salix_first_yellow" ,
+         "All_leaves_yellow" = "Salix_last_yellow" , 
+          "First_bud_burst_DOY" ="Salixbud_burst_DOY", 
+         "First_leaf_yellow_DOY" = "Salix_first_yellow_DOY"  ,
+         "All_leaves_yellow_DOY" = "Salix_last_yellow_DOY")
 
 CG_phenocams_individual_2021_2022_wrangle <- CG_phenocams_individual_2021_2022_wrangle[, - 1]
-CG_phenocams_individual_2021_2022_wrangle <- CG_phenocams_individual_2021_2022_wrangle %>%
-  dplyr::select(- ShrubID_Standard)
+CG_phenocams_individual_2021_2022_merge <- CG_phenocams_individual_2021_2022_wrangle %>%
+  dplyr::select(PhenocamID, Year, Species, First_leaf_bud_burst, First_leaf_yellow,
+                Last_leaves_yellow, First_leaf_bud_burst_DOY, First_leaf_yellow_DOY,
+                Last_leaves_yellow_DOY, population) %>% 
+  rename("All_leaves_yellow" = "Last_leaves_yellow",
+         "All_leaves_yellow_DOY" = "Last_leaves_yellow_DOY",
+         "First_bud_burst" = "First_leaf_bud_burst",
+         "First_bud_burst_DOY" = "First_leaf_bud_burst_DOY")
 
 QHI_phenocams_2022_wrangle <- QHI_phenocams_2022_wrangle[, -1]
-QHI_phenocams_2022_wrangle <- QHI_phenocams_2022_wrangle %>%
-  rename("Plants_first_visible_through_snow" = "plant_first_vis") %>%
-  mutate(population = rep("Northern_source"))
+QHI_phenocams_2022_merge <- QHI_phenocams_2022_wrangle %>%
+  dplyr::select(PhenocamID, Year, Species, Salix_bud_burst, Salix_first_yellow,
+                Salix_last_yellow, Salix_first_bud_burst_DOY, Salix_first_yellow_DOY,
+                Salix_last_yellow_DOY) %>%
+  mutate(population = rep("Northern_source")) %>%
+  rename( "First_bud_burst" ="Salix_bud_burst"  , 
+         "First_leaf_yellow" = "Salix_first_yellow" ,
+         "All_leaves_yellow" = "Salix_last_yellow" , 
+         "First_bud_burst_DOY" ="Salix_first_bud_burst_DOY", 
+         "First_leaf_yellow_DOY" = "Salix_first_yellow_DOY"  ,
+         "All_leaves_yellow_DOY" = "Salix_last_yellow_DOY")
          
 # merge all 
 
-all_phenocam_data <- rbind(QHI_phenocams_2022_wrangle, CG_phenocams_individual_2021_2022_wrangle,
-                           KP_phenocams_2021_2022_wrangle) # doesnt work yet
+all_phenocam_data_salix <- rbind(QHI_phenocams_2022_merge, CG_phenocams_individual_2021_2022_merge,
+                           KP_phenocams_2021_2022_merge) 
 
+all_phenocam_data_salix$Species <- as.factor(all_phenocam_data_salix$Species)
+all_phenocam_data_salix$population <- as.factor(all_phenocam_data_salix$population)
 
+# model bud burst doy
+bud_burst_mod <- lmer(First_bud_burst_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_salix)
+tab_model(bud_burst_mod)
+
+# model first yellow leaf doy
+yellow_mod <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_salix)
+tab_model(yellow_mod)
