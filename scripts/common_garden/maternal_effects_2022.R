@@ -52,8 +52,7 @@ mother_data_merge <-  mother_data %>%
   dplyr::select(-SampleID, - Site) %>%
   dplyr::mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
                           SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))%>%
-  dplyr::select(-SampleSite) %>% # also drop this because it's weird inconsistent and will cause merging issues 
-  mutate(Sample_age = replicate(603, 0))
+  dplyr::select(-SampleSite) # also drop this because it's weird inconsistent and will cause merging issues 
 
 # reclassing variables
 str(mother_data_merge)
