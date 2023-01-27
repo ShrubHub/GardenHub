@@ -424,3 +424,23 @@ tab_model(bud_burst_mod)
 # model first yellow leaf doy
 yellow_mod <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_salix)
 tab_model(yellow_mod)
+
+# common garden only models 
+all_phenocam_data_cg <- all_phenocam_data_salix %>% 
+  filter(population %in% c("Kluane", "QHI"))
+
+# model bud burst doy common garden
+bud_burst_cg_mod <- lmer(First_bud_burst_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_cg)
+tab_model(bud_burst_cg_mod)
+# boundary (singular) fit: see help('isSingular')
+# omit year: 
+bud_burst_cg_mod_1 <- lmer(First_bud_burst_DOY ~ population + (1|Species), data = all_phenocam_data_cg)
+tab_model(bud_burst_cg_mod_1)
+
+# model first yellow leaf doy common garden 
+yellow_cg_mod <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_cg)
+tab_model(yellow_cg_mod)
+# boundary (singular) fit: see help('isSingular')
+# omit year: 
+yellow_cg_mod_1 <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) , data = all_phenocam_data_cg)
+tab_model(yellow_cg_mod_1)
