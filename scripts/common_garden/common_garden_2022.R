@@ -814,8 +814,7 @@ all_source_area_traits_merge <- all_source_area_traits %>%
             Plant_height_veg_m, Plant_height_repro_m)) %>% 
   mutate(population = case_when(Site == "Kluane" ~ "source_south", 
                                 Site == "Qikiqtaruk" ~ "source_north" ))  # add population column to indicate source north or south
-
-# TEST MERGE 
+# initial merge
 all_CG_traits <- full_join(cg_sla_merge, traits_2017_merge_2, 
                                   by = c("Species", "LDMC_g_g" = "LDMC", 
                                          "plant_tag_id" = "SampleID_standard", 
@@ -823,8 +822,7 @@ all_CG_traits <- full_join(cg_sla_merge, traits_2017_merge_2,
                                          "DOY", "year", "Site",
                                          "leaf_fresh_mass_g" = "Fresh_mass", 
                                          "month"))
-
-# I think we can merge now? Let's just see what happens 
+# merge all 
 all_CG_source_traits <- full_join(all_CG_traits, all_source_area_traits_merge, 
                               by = c("population", "Species", "LDMC_g_g", 
                                      "plant_tag_id", "sample_id", 
@@ -995,64 +993,6 @@ max_source_mother_stem_elong_spp <- max_source_mother_stem_elong %>%
   summarise(mean_max_stem_elong_cm = mean(max_mean_stem_elong_cm))
 # Qikiqtaruk Salix arctica 29.16506
 # no data for stem elong arctica in Kluane
-
-# 3.9.3 Sample size ----
-# Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
-
-# How many shrubs of each type (Arctic vs Alpine?)
-count_alpine_shrubs <- growth_2022 %>%
-  filter(Sample_Date == "17/08/2022", 
-         Site == "Kluane")
-# n = 134
-
-count_arctic_shrubs <- growth_2022 %>%
-  filter(Sample_Date == "17/08/2022", 
-         Site == "Qikiqtaruk")
-# n = 126
-# total n = 260
-
-# How many Salix richardsonii from Kluane?
-count_salric_kluane <- growth_2022 %>%
-  filter(Sample_Date == "17/08/2022", 
-         Site == "Kluane",
-         Species == "Salix richardsonii")
-# n = 44 -3 NA rows = 41
-
-# How many Salix richardsonii from QHI?
-count_salric_QHI <- growth_2022 %>%
-  filter(Sample_Date == "17/08/2022", 
-         Site == "Qikiqtaruk",
-         Species == "Salix richardsonii")
-# n = 39 -6 NA rows = 33
-
-# How many Salix pulchra from Kluane?
-count_salpul_kluane <- growth_2022 %>%
-  filter(Sample_Date == "17/08/2022", 
-         Site == "Kluane",
-         Species == "Salix pulchra")
-# n = 60
-
-# How many Salix pulchra from QHI?
-count_salpul_QHI <- growth_2022 %>%
-  filter(Sample_Date == "17/08/2022", 
-         Site == "Qikiqtaruk",
-         Species == "Salix pulchra")
-# n = 56
-
-# How many Salix arctica from QHI?
-count_salarct_QHI <- growth_2022 %>%
-  filter(Sample_Date == "17/08/2022", 
-         Site == "Qikiqtaruk",
-         Species == "Salix arctica")
-# n = 31
-
-# How many Salix arctica from Kluane?
-count_salarct_kluane <- growth_2022 %>%
-  filter(Sample_Date == "17/08/2022", 
-         Site == "Kluane",
-         Species == "Salix arctica")
-# n = 30
-
 
 # 4. DATA VISUALISATION ----
 

@@ -2,6 +2,68 @@
 # code from working scripts that was removed because no longer needed, but keeping for good measure 
 # omitting from working scripts to make easier to read/run 
 
+# common_garden_2022 ----
+# aka BIG FAT SCRIPT 
+
+# Sample size ----
+# Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
+
+# How many shrubs of each type (Arctic vs Alpine?)
+count_alpine_shrubs <- growth_2022 %>%
+  filter(Sample_Date == "17/08/2022", 
+         Site == "Kluane")
+# n = 134
+
+count_arctic_shrubs <- growth_2022 %>%
+  filter(Sample_Date == "17/08/2022", 
+         Site == "Qikiqtaruk")
+# n = 126
+# total n = 260
+
+# How many Salix richardsonii from Kluane?
+count_salric_kluane <- growth_2022 %>%
+  filter(Sample_Date == "17/08/2022", 
+         Site == "Kluane",
+         Species == "Salix richardsonii")
+# n = 44 -3 NA rows = 41
+
+# How many Salix richardsonii from QHI?
+count_salric_QHI <- growth_2022 %>%
+  filter(Sample_Date == "17/08/2022", 
+         Site == "Qikiqtaruk",
+         Species == "Salix richardsonii")
+# n = 39 -6 NA rows = 33
+
+# How many Salix pulchra from Kluane?
+count_salpul_kluane <- growth_2022 %>%
+  filter(Sample_Date == "17/08/2022", 
+         Site == "Kluane",
+         Species == "Salix pulchra")
+# n = 60
+
+# How many Salix pulchra from QHI?
+count_salpul_QHI <- growth_2022 %>%
+  filter(Sample_Date == "17/08/2022", 
+         Site == "Qikiqtaruk",
+         Species == "Salix pulchra")
+# n = 56
+
+# How many Salix arctica from QHI?
+count_salarct_QHI <- growth_2022 %>%
+  filter(Sample_Date == "17/08/2022", 
+         Site == "Qikiqtaruk",
+         Species == "Salix arctica")
+# n = 31
+
+# How many Salix arctica from Kluane?
+count_salarct_kluane <- growth_2022 %>%
+  filter(Sample_Date == "17/08/2022", 
+         Site == "Kluane",
+         Species == "Salix arctica")
+# n = 30
+
+
+
 # MATERNAL EFFECTS ---- 
 
 # previous data manipulation when using only 2022 values, replaced by using max height/widths
