@@ -634,8 +634,11 @@ unique_source_mother_tall_arcticas <- unique_source_mother %>%
 # tall arcticas: no arcticas above 25 cm according to literature
 # Weird heights 34.0, 30.0, 28.1, 26.0, 25.0
 # IDs: HE16SA1, K15PSA11, K15PSA12, K15PSA6,K15PSA9
+# Weird widths (above 58, from previous years max values) IDs: KP16SA19, PC16CESA5,
+# PC16PVSA3, PC16PVSA2,KP16SA10,PC17SA5,KP16SA7,
+# KP16SA2,PC17SA6,PC17SA1, HE16SA9,HE16SA3, PC17SA10, HE16SA5,PC16PVSA4
 
-# removing those values from the main dataframe using their sample IDs
+# removing TALL heights values from the main dataframe using their sample IDs
 unique_source_mother_edit_1_1 <- unique_source_mother[ !(unique_source_mother$SampleID_standard %in% 
                                                            c("HE16SA1", "K15PSA11", "K15PSA12", 
                                                              "K15PSA6","K15PSA9")), ]
@@ -657,6 +660,25 @@ unique_source_mother <- rbind(unique_source_mother_edit_1_1,
                               unique_source_mother_edit_1_2)
 
 view(unique_source_mother) # all goood
+
+# removing WIDE width values from the main dataframe using their sample IDs
+unique_source_mother_edit_1_3 <- unique_source_mother[ !(unique_source_mother$SampleID_standard %in% 
+                                                           c("KP16SA19", "PC16CESA5",
+                                                             "PC16PVSA3", "PC16PVSA2","KP16SA10","PC17SA5","KP16SA7",
+                                                             "KP16SA2","PC17SA6","PC17SA1", "HE16SA9","HE16SA3", "PC17SA10", "HE16SA5","PC16PVSA4"
+                                                           )), ]
+
+unique_source_mother_edit_1_4 <- unique_source_mother %>%
+  subset(SampleID_standard  %in% 
+           c("KP16SA19", "PC16CESA5",
+              "PC16PVSA3", "PC16PVSA2","KP16SA10","PC17SA5","KP16SA7",
+              "KP16SA2","PC17SA6","PC17SA1", "HE16SA9","HE16SA3", "PC17SA10", "HE16SA5","PC16PVSA4")) %>%
+  mutate(mean_width = mean_width/10) # convert to cm by dividing by 10
+
+# remerge all data
+unique_source_mother <- rbind(unique_source_mother_edit_1_3, 
+                              unique_source_mother_edit_1_4)
+
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(unique_source_mother, 'data/source_pops/unique_source_mother.csv')
 
@@ -703,41 +725,23 @@ all_CG_source_growth_arctica_QHI <- all_CG_source_growth %>%
   filter(population == "source_north" & Species == "Salix arctica")
 # view(all_CG_source_growth_arctica_QHI)
 range(all_CG_source_growth_arctica_QHI$Canopy_Height_cm)
-# 2.5 - 39.0 cm
-tall_arctica_QHI <- all_CG_source_growth_arctica_QHI %>%
-  filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
-# view(tall_arctica_QHI) # seems like smth happened in 2015...
+# 2.5 - 19.8 cm
+#tall_arctica_QHI <- all_CG_source_growth_arctica_QHI %>%
+ # filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
+# view(tall_arctica_QHI) # 0! 
 
 # KP
 all_CG_source_growth_arctica_KP <- all_CG_source_growth %>%
   filter(population == "source_south" & Species == "Salix arctica")
 # view(all_CG_source_growth_arctica_KP)
 range(all_CG_source_growth_arctica_KP$Canopy_Height_cm)
-# 1.9 - 34.0 cm
-tall_arctica_KP <- all_CG_source_growth_arctica_KP %>%
-  filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
-# view(tall_arctica_KP) # seems like smth happened in 2015...
-
-# Filter out strange arctica values (likely tyopos made in 2015) 
-all_CG_source_growth_edit_1 <- all_CG_source_growth %>%
-  filter(Species != "Salix arctica") # remove all arctica data from full dataset
-
-all_CG_source_growth_edit_2 <- all_CG_source_growth %>%
-  filter(Species == "Salix arctica") %>%
-  subset(Canopy_Height_cm <= 25.0) %>% # based on literature
-  subset(mean_stem_elong <= 29.0) # based on mean max values from previous years
-
-unique(all_CG_source_growth_edit_2$Site)
-view(all_CG_source_growth_edit_2)
-
-# remerge all data
-all_CG_source_growth <- rbind(all_CG_source_growth_edit_1, 
-                              all_CG_source_growth_edit_2)
-
+# 1.9 23.5 cm
+#tall_arctica_KP <- all_CG_source_growth_arctica_KP %>%
+ # filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
+#view(tall_arctica_KP) # 0! 
 
 # saving data as csv
-write.csv(all_CG_source_growth, 'data/all_CG_source_growth.csv')
-
+# write.csv(all_CG_source_growth, 'data/all_CG_source_growth.csv')
 
 # 3.7.2. Merge traits from cg with source and mother data ----
 # load data 
@@ -841,7 +845,7 @@ unique(all_CG_source_traits$Site) # Common_garden Kluane Qikiqtaruk
 unique(all_CG_source_traits$Species) # Salix arctica Salix pulchra Salix richardsonii
 
 # save 
-write.csv(all_CG_source_traits, "data/all_CG_source_traits.csv")
+# write.csv(all_CG_source_traits, "data/all_CG_source_traits.csv")
 
 # 3.8 Merge all data ----
 # merge ALL data (traits and growth) into one data frame 
@@ -939,7 +943,7 @@ range(max_cg_heights_spp$mean_max_height_cm)# 4.263636 52.472549
 max_cg_width_spp <- max_cg_widths %>%
   group_by(population,Species) %>%
   summarise(mean_max_width_cm = mean(max_mean_width_cm))
-range(max_cg_width_spp$mean_max_width_cm)# 10.75625 67.72791
+range(max_cg_width_spp$mean_max_width_cm)# 4.263636 52.472549
 
 # 3.9.2 Source populations max heights and widths -----
 # extract max value for height per sample bc samples have been trimmed over the years 
@@ -984,9 +988,8 @@ max_source_mother_width_spp <- max_source_mother_widths %>%
   group_by(Site,Species) %>%
   summarise(mean_max_width_cm = mean(max_mean_width_cm))
 # MADI ------
-# Kluane salix arctica isnt in this dataset anymore? 
-# Kluane Salix arctica 60.24694
-# Qikiqtaruk Salix arctica 45.37174
+# Kluane Salix arctica 58.1 
+# Qikiqtaruk Salix arctica 45.55
 
 # mean max elong per population and species
 max_source_mother_stem_elong_spp <- max_source_mother_stem_elong %>%
@@ -1229,28 +1232,4 @@ data_leaf_2022 <- all_merged_data_2022 %>% filter(Year == 2022)
          axis.title = element_text(size = 14),
          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
          axis.text.y = element_text(size = 12, colour = "black")))
-
-# 4.2. FIELD VS GARDEN ----
-
-# a. Canopy height (m) 
-(plot_height_compare <- ggplot() +
-   geom_boxplot(data = heights_all_source_pop, aes(x = Site, y = Canopy_Height_cm, fill = Site, group = Site), colour = "lightgrey", size = 0.5, alpha = 0.3) +
-   #geom_boxplot(data = all_merged_data_2022, aes(x = Site, y = (Canopy_Height_cm), fill = Site, group = Site), colour = "black", size = 0.5, alpha = 0.8) +
-   facet_wrap(~Species, scales = "free_y") +
-   ylab("Canopy height (cm)") +
-   xlab("") +
-   scale_colour_viridis_d(begin = 0.85, end = 0.4) +
-   scale_fill_viridis_d(begin = 0.85, end = 0.4) +
-  # ylim(-0.01, 2.0) +
-   theme_bw() +
-   theme(panel.border = element_blank(),
-         panel.grid.major = element_blank(),
-         panel.grid.minor = element_blank(),
-         axis.line = element_line(colour = "black"),
-         axis.title = element_text(size = 14),
-         axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
-         axis.text.y = element_text(size = 12, colour = "black")))
-
-
-
 
