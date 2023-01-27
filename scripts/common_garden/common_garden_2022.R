@@ -364,8 +364,7 @@ field_source_pop_new <- field_source_pop_new %>%
   rename("SampleDate" = "date", 
          "Latitude" = "Lat",
          "Longitude" = "Lon", 
-         "Elevation" = "Elevation_m", 
-         "SampleSite" = "Site")
+         "Elevation" = "Elevation_m")
 
 # making site column
 field_source_pop_new <- field_source_pop_new %>%
@@ -373,8 +372,8 @@ field_source_pop_new <- field_source_pop_new %>%
                           SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))
 
 # date into the right format
-field_source_pop_new$SampleDate <- format(as.POSIXct(field_source_pop_new$SampleDate,
-                                                           format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
+#field_source_pop_new$SampleDate <- format(as.POSIXct(field_source_pop_new$SampleDate,
+  #                                                         format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
 
 # making a year column
 field_source_pop_new <- field_source_pop_new %>%
@@ -383,9 +382,9 @@ field_source_pop_new <- field_source_pop_new %>%
 # variables into right format
 field_source_pop_new$SampleDate <- as.POSIXct(field_source_pop_new$SampleDate, format = "%d/%m/%Y")
 field_source_pop_new$SampleYear <- as.numeric(field_source_pop_new$SampleYear)
-field_source_pop_new$SampleSite <- as.factor(field_source_pop_new$SampleSite)
+field_source_pop_new$Site <- as.factor(field_source_pop_new$Site)
 field_source_pop_new$Species <- as.factor(field_source_pop_new$Species)
-str(field_source_pop_new$SampleSite)
+str(field_source_pop_new$Site)
 
 # 3.4. Mother data -----
 # only keeping relevant columns of mother data
@@ -483,7 +482,6 @@ mother_data <- read_csv("data/source_pops/mother_data.csv")
 
 all_source_pop_plus_mother <- bind_rows(field_source_pop_new, all_source_pop_2022,
                         mother_data)
-
 # formatting variables
 str(all_source_pop_plus_mother$SampleDate)
 unique(all_source_pop_plus_mother$SampleDate)
@@ -682,7 +680,7 @@ unique_source_mother <- rbind(unique_source_mother_edit_1_3,
 
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(unique_source_mother, 'data/source_pops/unique_source_mother.csv')
-
+view(unique_source_mother)
 # 3.7.1. Merge source / mother / common garden data ----
 # load files 
 unique_source_mother <- read.csv('data/source_pops/unique_source_mother.csv') # all mother and source (growth, not traits -- that's a bigger problem to do after)
@@ -726,7 +724,7 @@ all_CG_source_growth_arctica_QHI <- all_CG_source_growth %>%
   filter(population == "source_north" & Species == "Salix arctica")
 # view(all_CG_source_growth_arctica_QHI)
 range(all_CG_source_growth_arctica_QHI$Canopy_Height_cm)
-# 2.5 - 19.8 cm
+# 2.5 - 19.8 cm all good
 #tall_arctica_QHI <- all_CG_source_growth_arctica_QHI %>%
  # filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
 # view(tall_arctica_QHI) # 0! 
@@ -736,7 +734,7 @@ all_CG_source_growth_arctica_KP <- all_CG_source_growth %>%
   filter(population == "source_south" & Species == "Salix arctica")
 # view(all_CG_source_growth_arctica_KP)
 range(all_CG_source_growth_arctica_KP$Canopy_Height_cm)
-# 1.9 23.5 cm
+# 1.9 23.5 cm all good
 #tall_arctica_KP <- all_CG_source_growth_arctica_KP %>%
  # filter(Canopy_Height_cm > 25) # filtering anything above 25cm as arcticas are rarely taller than that
 #view(tall_arctica_KP) # 0! 
