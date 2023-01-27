@@ -75,11 +75,18 @@ str(all_source_pop_2022)
 # making variables right format
 all_source_pop_2022$Species <- as.factor(all_source_pop_2022$Species)
 all_source_pop_2022$Site <- as.factor(all_source_pop_2022$Site)
-all_source_pop_2022$SampleDate <- as.POSIXct(all_source_pop_2022$SampleDate, format = "%d/%m/%Y")
 all_source_pop_2022$Stem_diameter <- as.numeric(all_source_pop_2022$Stem_diameter)
+all_source_pop_2022$SampleDate  <- format(as.POSIXct(all_source_pop_2022$SampleDate,format='%d/%m/%Y %H:%M:%S'),format='%d-%m-%Y')
+all_source_pop_2022$SampleDate <- as.POSIXct(all_source_pop_2022$SampleDate, format = "%Y-%m-%d")
+str(all_source_pop_2022$SampleDate)
+
+# making a year column
+all_source_pop_2022 <- all_source_pop_2022 %>%
+  mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y"))
+all_source_pop_2022$SampleYear <- as.numeric(all_source_pop_2022$SampleYear)
 
 # saving source pop 2022 data as csv
-# write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
+write.csv(all_source_pop_2022, 'data/source_pops/all_source_pop_2022.csv')
 
 # 3.2. CG growth 2022 ----
 # Keeping only relevant columns of 2022 common garden data
@@ -379,6 +386,7 @@ field_source_pop_new$SampleDate <- as.POSIXct(field_source_pop_new$SampleDate, f
 field_source_pop_new$SampleYear <- as.numeric(field_source_pop_new$SampleYear)
 field_source_pop_new$Site <- as.factor(field_source_pop_new$Site)
 field_source_pop_new$Species <- as.factor(field_source_pop_new$Species)
+str(field_source_pop_new$SampleDate)
 
 # 3.4. Mother data -----
 # only keeping relevant columns of mother data
@@ -480,8 +488,8 @@ all_source_pop_plus_mother <- bind_rows(field_source_pop_new, all_source_pop_202
 # formatting variables
 str(all_source_pop_plus_mother$SampleDate)
 unique(all_source_pop_plus_mother$SampleDate)
-all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_mother$SampleDate,
-                                                           format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
+#all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_mother$SampleDate,
+                                                         # format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
 
 # making a year column
 all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
@@ -602,7 +610,7 @@ unique_source_mother_working_merge <- unique_source_mother_working %>%
                          Species == "Salix pulchra" | Species2 == "Salix pulchra" ~ "Salix pulchra", 
                          Species == "Salix richardsonii" | Species2 == "Salix richardsonii" ~ "Salix richardsonii"))
 
-sum(is.na(unique_source_mother_working_merge$spp)) # 170, 
+sum(is.na(unique_source_mother_working_merge$spp)) # 101, 
 unique_source_mother_working_merge$spp_test <- ifelse(grepl("SA", unique_source_mother_working_merge$SampleID_standard), "Salix arctica",
                                   ifelse(grepl("SR", unique_source_mother_working_merge$SampleID_standard), "Salix richardsonii", 
                                          ifelse(grepl("SP", unique_source_mother_working_merge$SampleID_standard), "Salix pulchra", NA)))
@@ -620,18 +628,33 @@ unique_source_mother <- unique_source_mother_check %>%
 # check to make sure we still have no NAs for species 
 sum(is.na(unique_source_mother$Species)) # 0, success! 
 
-# filter out strange arctica values 
-unique_source_mother_edit_1 <- unique_source_mother %>%
-  filter(Species != "Salix arctica")
+# investigating strange arctica values 
+unique_source_mother_tall_arcticas <- unique_source_mother %>%
+  filter(Species == "Salix arctica")
+# tall arcticas: no arcticas above 25 cm according to literature
+# Weird heights 34.0, 30.0, 28.1, 26.0, 25.0
+# IDs: HE16SA1, K15PSA11, K15PSA12, K15PSA6,K15PSA9
 
-unique_source_mother_edit_2 <- unique_source_mother %>%
-  filter(Species == "Salix arctica") %>%
-  subset(Canopy_Height_cm <= 25.0) %>% # based on literature
-  subset(mean_stem_elong <= 29.0) # based on mean max values from previous years
+# removing those values from the main dataframe using their sample IDs
+unique_source_mother_edit_1_1 <- unique_source_mother[ !(unique_source_mother$SampleID_standard %in% 
+                                                           c("HE16SA1", "K15PSA11", "K15PSA12", 
+                                                             "K15PSA6","K15PSA9")), ]
+
+unique_source_mother_edit_1_2 <- unique_source_mother %>%
+  subset(SampleID_standard  %in% 
+           c("HE16SA1", "K15PSA11", "K15PSA12", 
+                                    "K15PSA6","K15PSA9"))%>%
+  mutate(Canopy_Height_cm = Canopy_Height_cm/10) # convert to cm by dividing by 10
+
+# code below to filter values out: not using it!
+# unique_source_mother_edit_2 <- unique_source_mother %>%
+ #filter(Species == "Salix arctica") %>%
+ #subset(Canopy_Height_cm <= 25.0) %>% # based on literature
+ #subset(mean_stem_elong <= 29.0) # based on mean max values from previous years
 
 # remerge all data
-unique_source_mother <- rbind(unique_source_mother_edit_1, 
-                              unique_source_mother_edit_2)
+unique_source_mother <- rbind(unique_source_mother_edit_1_1, 
+                              unique_source_mother_edit_1_2)
 
 view(unique_source_mother) # all goood
 # Saving all source population heights 2017-2022 data as csv file
