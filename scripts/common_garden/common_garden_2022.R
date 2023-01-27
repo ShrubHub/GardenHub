@@ -2,7 +2,7 @@
 ### Data wrangling and visualisation script
 ### By Erica Zaja and Madelaine Anderson, created on 30/09/2022
 ## Adapted from Madelaine Anderson's common_garden_2021.R 
-## Last updated: 26/01/2023 by Madelaine 
+## Last updated: 27/01/2023 by Erica
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -70,7 +70,7 @@ QHI_source_pop_2022 <- all_weekly_QHI_2022[,-1]
 
 # merging QHI and Kluane data from 2022
 all_source_pop_2022 <- rbind(QHI_source_pop_2022, kluane_source_pop_2022)
-str(all_source_pop_2022)
+unique(all_source_pop_2022$SampleDate)
 
 # making variables right format
 all_source_pop_2022$Species <- as.factor(all_source_pop_2022$Species)
@@ -78,7 +78,7 @@ all_source_pop_2022$Site <- as.factor(all_source_pop_2022$Site)
 all_source_pop_2022$Stem_diameter <- as.numeric(all_source_pop_2022$Stem_diameter)
 all_source_pop_2022$SampleDate  <- format(as.POSIXct(all_source_pop_2022$SampleDate,format='%d/%m/%Y %H:%M:%S'),format='%d-%m-%Y')
 all_source_pop_2022$SampleDate <- as.POSIXct(all_source_pop_2022$SampleDate, format = "%Y-%m-%d")
-str(all_source_pop_2022$SampleDate)
+unique(all_source_pop_2022$SampleDate)
 
 # making a year column
 all_source_pop_2022 <- all_source_pop_2022 %>%
@@ -367,7 +367,6 @@ field_source_pop_new <- field_source_pop_new %>%
          "Elevation" = "Elevation_m", 
          "SampleSite" = "Site")
 
-
 # making site column
 field_source_pop_new <- field_source_pop_new %>%
   mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
@@ -384,9 +383,9 @@ field_source_pop_new <- field_source_pop_new %>%
 # variables into right format
 field_source_pop_new$SampleDate <- as.POSIXct(field_source_pop_new$SampleDate, format = "%d/%m/%Y")
 field_source_pop_new$SampleYear <- as.numeric(field_source_pop_new$SampleYear)
-field_source_pop_new$Site <- as.factor(field_source_pop_new$Site)
+field_source_pop_new$SampleSite <- as.factor(field_source_pop_new$SampleSite)
 field_source_pop_new$Species <- as.factor(field_source_pop_new$Species)
-str(field_source_pop_new$SampleDate)
+str(field_source_pop_new$SampleSite)
 
 # 3.4. Mother data -----
 # only keeping relevant columns of mother data
@@ -439,7 +438,7 @@ two_dig_year_cnvt <- function(z, year=2013){
 mother_data$SampleDate <- two_dig_year_cnvt(mother_data$SampleDate)
 mother_data$Date_propagated <- two_dig_year_cnvt(mother_data$Date_propagated)
 mother_data$Date_planted <- two_dig_year_cnvt(mother_data$Date_planted)
-
+unique(mother_data$SampleDate)
 # renaming site col
 mother_data <- mother_data %>%
   rename("SampleSite" = "Site") 
@@ -488,14 +487,14 @@ all_source_pop_plus_mother <- bind_rows(field_source_pop_new, all_source_pop_202
 # formatting variables
 str(all_source_pop_plus_mother$SampleDate)
 unique(all_source_pop_plus_mother$SampleDate)
-#all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_mother$SampleDate,
-                                                         # format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
+all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_mother$SampleDate,
+                                                          format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
 
 # making a year column
 all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
   mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y")) %>%
   dplyr::select(-Year_measured,- `2022 Notes`)
-
+unique(all_source_pop_plus_mother$SampleDate)
 # variables in right format
 str(all_source_pop_plus_mother)
 all_source_pop_plus_mother$Species <- as.factor(all_source_pop_plus_mother$Species)
@@ -566,12 +565,13 @@ july_source_pop_plus_mother <- bind_rows(kluane_mid_july_2022, QHI_mid_july_2022
 # checking dataset has kluane 2022
 test <- july_source_pop_plus_mother %>%
   filter(SampleYear == "2022")
-
+view(july_source_pop_plus_mother)
 # formatting variables
 july_source_pop_plus_mother$Species <- as.factor(july_source_pop_plus_mother$Species)
 july_source_pop_plus_mother$Site <- as.factor(july_source_pop_plus_mother$Site)
 july_source_pop_plus_mother$SampleID <- as.factor(july_source_pop_plus_mother$SampleID)
 unique(july_source_pop_plus_mother$SampleID)
+unique(july_source_pop_plus_mother$SampleDate)
 length(unique(july_source_pop_plus_mother$SampleID))
 
 # Saving july source population heights 2017-2022 data as csv file
