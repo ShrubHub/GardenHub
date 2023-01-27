@@ -55,7 +55,7 @@ mother_data_merge <-  mother_data %>%
   dplyr::mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
                           SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))%>%
   dplyr::select(-SampleSite) %>% # also drop this because it's weird inconsistent and will cause merging issues 
-  mutate(Sample_age = replicate(879, 0))
+  mutate(Sample_age = replicate(603, 0))
 
 # reclassing variables
 str(mother_data_merge)
@@ -206,6 +206,9 @@ maternal_height_mod <-  lmer(Mother_Canopy_Height_cm ~ max_canopy_height_cm + Si
 summary(maternal_height_mod)
 tab_model(maternal_height_mod)
 
+maternal_height_mod_nosite <-  lmer(Mother_Canopy_Height_cm ~ max_canopy_height_cm + (1|Species), data = mother_cg)
+tab_model(maternal_height_mod_nosite)
+
 ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, color = Species)) +
   geom_point() +
   geom_smooth(method = "lm")
@@ -241,6 +244,9 @@ maternal_width_mod <-  lmer(Mother_mean_width ~ max_mean_width_cm + Site + (1|Sp
 summary(maternal_width_mod)
 tab_model(maternal_width_mod)
 
+maternal_width_mod_nosite <-  lmer(Mother_mean_width ~ max_mean_width_cm + (1|Species), data = mother_cg)
+tab_model(maternal_width_mod_nosite)
+
 (plot_mother_width_model <- ggplot() +
     geom_point(aes(x = max_mean_width_cm, y= Mother_mean_width, color = Species), size = 3, alpha = 0.5, data = mother_cg) +
     geom_smooth(aes(x = max_mean_width_cm, y= Mother_mean_width, colour = Species), method = "lm", data = mother_cg) +
@@ -262,6 +268,9 @@ tab_model(maternal_width_mod)
 cutting_length_mod <-  lmer(Cutting_length ~ max_canopy_height_cm + Site + (1|Species), data = mother_cg)
 summary(cutting_length_mod)
 tab_model(cutting_length_mod)
+
+cutting_length_mod_nosite <-  lmer(Cutting_length ~ max_canopy_height_cm + (1|Species), data = mother_cg)
+tab_model(cutting_length_mod_nosite)
 
 (plot_cutting_length_model <- ggplot() +
     geom_point(aes(x = max_canopy_height_cm, y= Cutting_length, color = Species), size = 3, alpha = 0.5, data = mother_cg) +
