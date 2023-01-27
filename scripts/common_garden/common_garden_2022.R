@@ -679,6 +679,7 @@ unique_source_mother_edit_1_4 <- unique_source_mother %>%
 unique_source_mother <- rbind(unique_source_mother_edit_1_3, 
                               unique_source_mother_edit_1_4)
 
+
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(unique_source_mother, 'data/source_pops/unique_source_mother.csv')
 
@@ -987,7 +988,6 @@ max_source_mother_heights_spp <- max_source_mother_heights %>%
 max_source_mother_width_spp <- max_source_mother_widths %>%
   group_by(Site,Species) %>%
   summarise(mean_max_width_cm = mean(max_mean_width_cm))
-# MADI ------
 # Kluane Salix arctica 58.1 
 # Qikiqtaruk Salix arctica 45.55
 
