@@ -157,6 +157,13 @@ mother_cg <- full_join(mother_data_merge_1, max_cg_heights_merge,
                       by = c("SampleID_standard" = "SampleID_standard", 
                              "Species" = "Species",
                             "Site" = "Site"))
+
+# add a mother or child column
+mother_cg_edit <- mother_cg %>%
+  mutate(mother_or_child = ifelse(population %in% c("Northern", "Southern"), "child", "mother"))
+
+mother_cg_edit$mother_or_child <- as.factor(mother_cg_edit$mother_or_child)               
+
 # MODELS -----
 # model structure we want:
 #lmer(mother_height ~ child_height + Site + (1|species))
@@ -174,9 +181,10 @@ ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, col
   geom_smooth(method = "lm")
 
 (plot_mother_height_model <- ggplot() +
-    geom_point(aes(x = max_canopy_height_cm, y= Mother_Canopy_Height_cm, color = Species), size = 3, alpha = 0.5, data = mother_cg) +
-    geom_smooth(aes(x = max_canopy_height_cm, y= Mother_Canopy_Height_cm, colour = Species), method = "lm", data = mother_cg) +
-    facet_wrap(~Species, scales = "free") +
+    geom_point(aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, color = mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit) +
+    geom_smooth(aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, colour = mother_or_child), method = "lm", data = mother_cg_edit) +
+    # facet_wrap(~Species + Site, scales = "free") +
+    facet_grid(Species ~ Site, scales = "free") +
     ylab("Mother shrub canopy height in sources (cm)") +
     xlab("\nMax child canopy height in common garden (cm)") +
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
@@ -199,6 +207,11 @@ mother_cg <- full_join(mother_data_merge_1, max_cg_widths_merge,
                        by = c("SampleID_standard" = "SampleID_standard", 
                               "Species" = "Species",
                               "Site" = "Site"))
+# add a mother or child column
+mother_cg_edit <- mother_cg %>%
+  mutate(mother_or_child = ifelse(population %in% c("Northern", "Southern"), "child", "mother"))
+
+mother_cg_edit$mother_or_child <- as.factor(mother_cg_edit$mother_or_child)               
 
 maternal_width_mod <-  lmer(Mother_mean_width ~ max_mean_width_cm + Site + (1|Species), data = mother_cg)
 summary(maternal_width_mod)
@@ -207,10 +220,12 @@ tab_model(maternal_width_mod)
 maternal_width_mod_nosite <-  lmer(Mother_mean_width ~ max_mean_width_cm + (1|Species), data = mother_cg)
 tab_model(maternal_width_mod_nosite)
 
+
 (plot_mother_width_model <- ggplot() +
-    geom_point(aes(x = max_mean_width_cm, y= Mother_mean_width, color = Species), size = 3, alpha = 0.5, data = mother_cg) +
-    geom_smooth(aes(x = max_mean_width_cm, y= Mother_mean_width, colour = Species), method = "lm", data = mother_cg) +
-    facet_wrap(~Species, scales = "free") +
+    geom_point(aes(x = max_mean_width_cm, y= Mother_mean_width, color = mother_or_child, fill = mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit) +
+    geom_smooth(aes(x = max_mean_width_cm, y= Mother_mean_width, colour = mother_or_child, fill = mother_or_child), method = "lm", data = mother_cg_edit) +
+   # facet_wrap(~Species + Site, scales = "free") +
+    facet_grid(Species ~ Site, scales = "free") +
     ylab("Mother shrub width in sources (cm)") +
     xlab("\nMax child width in common garden (cm)") +
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
@@ -233,9 +248,10 @@ cutting_length_mod_nosite <-  lmer(Cutting_length ~ max_canopy_height_cm + (1|Sp
 tab_model(cutting_length_mod_nosite)
 
 (plot_cutting_length_model <- ggplot() +
-    geom_point(aes(x = max_canopy_height_cm, y= Cutting_length, color = Species), size = 3, alpha = 0.5, data = mother_cg) +
-    geom_smooth(aes(x = max_canopy_height_cm, y= Cutting_length, colour = Species), method = "lm", data = mother_cg) +
-    facet_wrap(~Species, scales = "free") +
+    geom_point(aes(x = max_canopy_height_cm, y= Cutting_length, color =mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit) +
+    geom_smooth(aes(x = max_canopy_height_cm, y= Cutting_length, colour =mother_or_child), method = "lm", data = mother_cg_edit) +
+    # facet_wrap(~Species + Site, scales = "free") +
+    facet_grid(Species ~ Site, scales = "free") +    
     ylab("Cutting length (cm)") +
     xlab("\nMax child canopy height in common garden (cm)") +
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
