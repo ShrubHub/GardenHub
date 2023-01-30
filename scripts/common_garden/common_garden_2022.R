@@ -525,7 +525,7 @@ all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_m
 # making a year column
 all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
   mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y")) %>%
-  dplyr::select(-Year_measured,- `2022 Notes`)
+  dplyr::select(- `2022 Notes`)
 unique(all_source_pop_plus_mother$SampleDate)
 # variables in right format
 str(all_source_pop_plus_mother)
@@ -728,7 +728,7 @@ all_cg_data_2022_merge <- all_cg_data_2022 %>%
   dplyr::mutate(Site = "Common_garden") 
 
 unique_source_mother_merge <- unique_source_mother %>% 
-  dplyr::select(-c(SampleID, Match, X, SampleSite, Year_measured)) %>% 
+  dplyr::select(-c(SampleID, Match, X, SampleSite)) %>% 
   mutate(population = case_when(Site == "Kluane" ~ "source_south", 
                                 Site == "Qikiqtaruk" ~ "source_north" ))  # add population column to indicate source north or south
   
@@ -895,7 +895,7 @@ all_CG_source_growth_merge <- all_CG_source_growth %>%
   dplyr::select(-c(Month, Sample_Date, Day, X, X.5, X.2, X.1, X.3, X.4))
 
 all_CG_source_growth_merge$Year <- as.factor(all_CG_source_growth_merge$Year)
-all_CG_source_traits_merge$year <- as.factor(all_CG_source_traits_merge$year)
+all_CG_source_traits_merge$Year <- as.factor(all_CG_source_traits_merge$Year)
 
 
 all_data <- full_join(all_CG_source_growth_merge, all_CG_source_traits_merge, 
@@ -914,6 +914,10 @@ length(unique(all_CG_source_traits$SLA))
 all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
 all_cg_data_2022_merge <- all_cg_data_2022 %>% 
   dplyr::select(-c(Month, Sample_Date, Day, X, X.5, X.2, X.1, X.3, X.4))
+
+str(all_cg_data_2022_merge)
+all_cg_data_2022_merge$Year <- as.factor(all_cg_data_2022_merge$Year)
+str(all_CG_source_traits_merge)
 
 all_cg_data_merge <- full_join(all_cg_data_2022_merge, all_CG_source_traits_merge, 
                       by = c( "Site",
