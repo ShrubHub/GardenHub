@@ -23,6 +23,9 @@ growth <- read.csv("data/common_garden_data_2021/all_growth_2021.csv")
 # Data collected from source locations (Kluane and QHI) between 2013 – 2017
 field_data <- read.csv('data/source_pops/Salix_field_trait_data.csv')
 
+# Height data from 2021 on KP
+kp_2021 <- read.csv('data/source_pops/KP_heights_11AUG2021.csv')
+
 # Data collected from source locations (Kluane and QHI) in 2022
 # kluane subsets collected weekly in 2022
 X010822 <- read_excel("data/source_pops/source_pop_Kluane_shrub_data/weekly_subsets/010822_EZ_weekly_source_pop_Kluane_2022.xlsx")
@@ -385,6 +388,37 @@ field_source_pop_new$SampleYear <- as.numeric(field_source_pop_new$SampleYear)
 field_source_pop_new$Site <- as.factor(field_source_pop_new$Site)
 field_source_pop_new$Species <- as.factor(field_source_pop_new$Species)
 str(field_source_pop_new$Site)
+
+
+# Field data 2021 ----
+# Kluane Plateau height data 2021 
+str(kp_2021)
+
+# drop extra columns 
+kp_2021_heights <-kp_2021 %>% 
+  select(-c(X, Notes, elevation, Bulk_11_aug, CAMERA, fulcrum_Plant_ID)) %>% 
+  rename("Canopy_Height_cm" =  "Height..cm.", 
+         "Latitude" = "LAT", 
+         "Longitude" = "LONG",
+         "Elevation" = "ELEVATION",
+         "Species" = "species") %>% 
+  mutate(SampleYear = "2021") %>% 
+  mutate(Site = "Kluane")
+# merge with other field data 
+field_source_pop_new_merge <- read_csv("data/source_pops/field_source_pop_new.csv")
+str(field_source_pop_new_merge)
+kp_2021_heights$SampleYear <- as.factor(kp_2021_heights$SampleYear)
+field_source_pop_new_merge$Year_measured <- as.factor(field_source_pop_new_merge$Year_measured)
+  
+field_source_pop_new <- left_join(kp_2021_heights, field_source_pop_new_merge, 
+                                  by = c("Latitude" = "Lat", 
+                                         "Longitude" = "Lon",
+                                         "Elevation" = "Elevation_m",
+                                         "SampleYear" = "Year_measured",
+                                         "Canopy_Height_cm",
+                                         "Site", "Species"))
+# save file 
+write.csv(field_source_pop_new, 'data/source_pops/field_source_pop_new.csv')
 
 # 3.4. Mother data -----
 # only keeping relevant columns of mother data
