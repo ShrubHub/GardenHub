@@ -44,6 +44,17 @@ hobo_mean_temp_2022 <- hobo_clean_2022 %>%
 
 mean(hobo_mean_temp_2022$mean_temp) # 9.853633
 
+hobo_clean_2022$month <- month(as.POSIXlt(hobo_clean_2022$Date, format="%Y-%m-%d"))
+hobo_clean_2022$year <- year(as.POSIXlt(hobo_clean_2022$Date, format="%Y-%m-%d"))
+hobo_clean_2022$day <- day(as.POSIXlt(hobo_clean_2022$Date, format="%Y-%m-%d"))
+
+hobo_mean_july_2022 <- hobo_clean_2022 %>%
+  group_by(month) %>% 
+  summarise(mean_temp = mean(Value, na.rm = TRUE)) %>% 
+  ungroup()
+
+# july 2022 8.018875
+
 # QHI soil temp 2015-16 ----
 # data from phenology ridge HOBO station 
 # summarized by Haydn Thomas 
@@ -154,9 +165,15 @@ july_QHI_pheno <- pheno_hobo_all %>%
 july_QHI_pheno_mean <- july_QHI_pheno  %>%
   group_by(year) %>% 
   summarise(mean_air_temp = mean(Air_temp_C),
-            mean_surface_temp = mean(Canopy_temp_C), 
-            mean_canopy_temp = mean(Ground_temp_C), 
-            mean_ground_temp = mean(Soil_temp_C))
+            mean_canopy_temp = mean(Canopy_temp_C), 
+            mean_ground_temp = mean(Ground_temp_C), 
+            mean_soil_temp = mean(Soil_temp_C))
 
+# mean temp hobo 2022 8.018875
+# mean air temp hobo 2017 13.19234
+# mean air temp TOMST 2022 5.01368
 
-
+#use tomst and hobo 2017 bc overlap from 2022 of tomst and hobo 
+temp_july <- c(5.01368, 13.19234)
+mean(temp_july)
+# 9.10301
