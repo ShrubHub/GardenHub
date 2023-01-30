@@ -68,7 +68,7 @@ count_salarct_kluane <- growth_2022 %>%
 
 # previous data manipulation when using only 2022 values, replaced by using max height/widths
 
-# Erica tries to put data in long format  -----
+# Erica tries to put data in long format  
 #cg_means_2022_long <- cg_means_2022 %>%
 #group_by(Species, Site) %>%              
 # pivot_longer(cols = starts_with("mean"), names_to = "trait", names_prefix = "mean_", values_to = "mean_value") %>%
@@ -105,7 +105,18 @@ count_salarct_kluane <- growth_2022 %>%
 #                            "Site" = "Site", 
 #                         "Sample_age" = "Sample_age"))
 
-
+# # madi checking means a slightly way to compare values  
+#mother_cg_means_MA <- mother_data_merge %>%
+#  group_by(Species, Site) %>%
+#  summarise_at(c("Mother_Canopy_Height_cm", "Mother_mean_width", 
+#                 "Mother_mean_stem_elong", "Cutting_diameter"
+#                 ), mean, na.rm = TRUE) # woohoo they match! 
+# and sd 
+#mother_cg_sd_MA <-  mother_data_merge %>% 
+#  group_by(Species, Site) %>%
+#  summarise_at(c("Mother_Canopy_Height_cm", "Mother_mean_width", 
+#                 "Mother_mean_stem_elong", "Cutting_diameter"),
+#               sd, na.rm = TRUE) 
 
 # previous figures and data manipulation to create figures 
 # HEIGHTS: making one single column for each trait and a "treatment" column for mother/child

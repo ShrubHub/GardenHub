@@ -107,19 +107,6 @@ mother_cg_means <- mother_data_merge %>%
             se_mean_mother_elong = sd(Mother_mean_stem_elong, na.rm = TRUE)/sqrt(n),
             se_mean_mother_diam = sd(Cutting_diameter, na.rm = TRUE)/sqrt(n))
 
-# madi checking means a slightly way to compare values  
-mother_cg_means_MA <- mother_data_merge %>%
-  group_by(Species, Site) %>%
-  summarise_at(c("Mother_Canopy_Height_cm", "Mother_mean_width", 
-                 "Mother_mean_stem_elong", "Cutting_diameter"
-                 ), mean, na.rm = TRUE) # woohoo they match! 
-# and sd 
-mother_cg_sd_MA <-  mother_data_merge %>% 
-  group_by(Species, Site) %>%
-  summarise_at(c("Mother_Canopy_Height_cm", "Mother_mean_width", 
-                 "Mother_mean_stem_elong", "Cutting_diameter"),
-               sd, na.rm = TRUE) 
-
 # same as above for common garden data 
 # note, unlike for maternal data, there are multiple years of data here
 str(all_cg)
@@ -179,6 +166,10 @@ tab_model(maternal_height_mod_nosite)
 ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, color = Species)) +
   geom_point() +
   geom_smooth(method = "lm")
+# make long format of data 
+mother_cg_long <- mother_cg_edit %>% 
+  gather(key = mother_or_child, value = height, c(Mother_Canopy_Height_cm, max_canopy_height_cm), factor_key=TRUE) 
+levels(mother_cg_long$mother_or_child) <- list(Mother  = "Mother_Canopy_Height_cm", Child = "max_canopy_height_cm")
 
 (plot_mother_height_model <- ggplot() +
     geom_point(aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, color = mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit) +
