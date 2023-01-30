@@ -64,12 +64,12 @@ kluane_source_pop_2022 <- kluane_source_pop_2022 %>%
          mean_width = ((Width_cm + Width_2_cm)/2)) %>% 
  dplyr::select(- Stem_diameter_2, - Stem_diameter_3) # stem diam 2 and 3 were taken for sal ret
         
+# removing sort column from QHI subsets
+QHI_source_pop_2022 <- all_weekly_QHI_2022[,-1]
+
 # reclassing stem diam
 kluane_source_pop_2022$Stem_diameter <- as.numeric(kluane_source_pop_2022$Stem_diameter)
 QHI_source_pop_2022$Stem_diameter <- as.numeric(QHI_source_pop_2022$Stem_diameter)
-
-# removing sort column from QHI subsets
-QHI_source_pop_2022 <- all_weekly_QHI_2022[,-1]
 
 # merging QHI and Kluane data from 2022
 all_source_pop_2022 <- rbind(QHI_source_pop_2022, kluane_source_pop_2022)
@@ -334,7 +334,11 @@ view(cg_data_2020_renamed)
 cg_data_2022 <- all_cg_data_2022 %>% 
   filter(Year %in% c("2021", "2022"))
 # merge two data frames 
-all_cg_data_2022 <- bind_rows(cg_data_2020_renamed, cg_data_2022)
+all_cg_data_2022 <- bind_rows(cg_data_2020_renamed, cg_data_2022) 
+# drop all X columns 
+all_cg_data_2022 <- all_cg_data_2022 %>% 
+  select(-c("X.1", "X.2", "X.3", "X.4", "X.5"))
+
 write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
 
 # 3.3. Field data from 2017 ----
@@ -352,11 +356,14 @@ field_source_pop <- field_data %>%
   dplyr::select(-Plant_height_veg_m)%>%
   na.omit()
 
-# write.csv(field_source_pop, 'data/source_pops/field_source_pop.csv')
+write.csv(field_source_pop, 'data/source_pops/field_source_pop.csv')
 # fixing date issue manually was quicker
 
+
 # loading new dataset (modified a couple dates manually)
-field_source_pop_new <- read_csv("data/source_pops/field_source_pop_new.csv")
+# field_source_pop_new <- read_csv("data/source_pops/field_source_pop_new.csv")
+
+field_source_pop_new <- read_csv("data/source_pops/field_source_pop.csv")
 
 # making date into right format
 field_source_pop_new$date <- as.POSIXct(field_source_pop_new$date, format = "%d/%m/%Y")
@@ -370,8 +377,8 @@ field_source_pop_new <- field_source_pop_new %>%
          "Elevation" = "Elevation_m")
 
 # making site column
-field_source_pop_new <- field_source_pop_new %>%
-  mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
+# field_source_pop_new <- field_source_pop_new %>%
+#  mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
                           SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))
 
 # date into the right format
@@ -379,8 +386,12 @@ field_source_pop_new <- field_source_pop_new %>%
   #                                                         format='%Y/%m/%d %H:%M:%S'),format='%d/%m/%Y')
 
 # making a year column
-field_source_pop_new <- field_source_pop_new %>%
-  mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y"))
+# field_source_pop_new <- field_source_pop_new %>%
+#  mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y"))
+
+# renaming year column 
+field_source_pop_new <- field_source_pop_new %>% 
+  rename("SampleYear" = "Year_measured")
 
 # variables into right format
 field_source_pop_new$SampleDate <- as.POSIXct(field_source_pop_new$SampleDate, format = "%d/%m/%Y")
@@ -405,16 +416,15 @@ kp_2021_heights <-kp_2021 %>%
   mutate(SampleYear = "2021") %>% 
   mutate(Site = "Kluane")
 # merge with other field data 
-field_source_pop_new_merge <- read_csv("data/source_pops/field_source_pop_new.csv")
-str(field_source_pop_new_merge)
+str(field_source_pop_new)
 kp_2021_heights$SampleYear <- as.factor(kp_2021_heights$SampleYear)
-field_source_pop_new_merge$Year_measured <- as.factor(field_source_pop_new_merge$Year_measured)
+field_source_pop_new$SampleYear <- as.factor(field_source_pop_new$SampleYear)
   
-field_source_pop_new <- left_join(kp_2021_heights, field_source_pop_new_merge, 
-                                  by = c("Latitude" = "Lat", 
-                                         "Longitude" = "Lon",
-                                         "Elevation" = "Elevation_m",
-                                         "SampleYear" = "Year_measured",
+field_source_pop_new <- full_join(kp_2021_heights, field_source_pop_new, 
+                                  by = c("Latitude", 
+                                         "Longitude",
+                                         "Elevation",
+                                         "SampleYear",
                                          "Canopy_Height_cm",
                                          "Site", "Species"))
 # save file 
@@ -927,7 +937,7 @@ all_cg_data_merge <- full_join(all_cg_data_2022_merge, all_CG_source_traits_merg
 all_cg_data <- all_cg_data_merge %>% 
   dplyr::filter(population %in% c("Northern", "Southern"))
 # save 
-write.csv(all_cg_data, "data/all_cg_growth__traits_data.csv")
+write.csv(all_cg_data, "data/all_cg_growth_traits_data.csv")
 
 # 3.9 Max heights and widths ---- 
 
@@ -943,7 +953,7 @@ sum(is.na(all_cg_data_2022$Canopy_Height_cm)) # 1755 wow, quite a few
 
 # drop unnecessary columns 
 max_cg_extractions <-  all_cg_data_2022 %>% 
-  dplyr::select(-c(X, X.1, X.2, X.3, X.4, X.5, SampleID))
+  dplyr::select(-c(SampleID))
 
 # extract max value for height per sample bc samples have been trimmed over the years 
 max_cg_heights <- all_cg_data_2022 %>% 
@@ -965,7 +975,7 @@ max_cg_heights <- read_csv("data/common_garden_data_2022/max_heights_cg.csv")
 
 # reclassing Species as factor
 max_cg_heights$Species <- as.factor(max_cg_heights$Species)
-max_cg_widths$Species <- as.factor(max_cg_heights$Species)
+max_cg_widths$Species <- as.factor(max_cg_widths$Species)
 class(max_cg_heights$max_canopy_height_cm)
 
 # mean max height per population and species
@@ -978,7 +988,7 @@ range(max_cg_heights_spp$mean_max_height_cm)# 4.263636 52.472549
 max_cg_width_spp <- max_cg_widths %>%
   group_by(population,Species) %>%
   summarise(mean_max_width_cm = mean(max_mean_width_cm))
-range(max_cg_width_spp$mean_max_width_cm)# 4.263636 52.472549
+range(max_cg_width_spp$mean_max_width_cm)# 10.75625 67.72791
 
 # 3.9.2 Source populations max heights and widths -----
 # extract max value for height per sample bc samples have been trimmed over the years 
