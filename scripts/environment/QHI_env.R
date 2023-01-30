@@ -78,3 +78,85 @@ july_QHI_enviro_mean <- july_QHI_enviro  %>%
 # HOBO + TOMST mean soil temp july 
 soil_temp_QHI <- c(9.05,6.79, 3.323774)
 mean(soil_temp_QHI)# 6.387925
+
+# phenology ridge hobo data from 2017 ----
+pheno_hobo <- read_csv("data/environment/QHI/HOBO_Phenology_ridge_11th_Aug_2017.csv")
+str(pheno_hobo)
+
+# clean up 
+pheno_hobo_working <- pheno_hobo %>% 
+  rename("Air_temp_C" = "Temp, °C (LGR S/N: 10737643, SEN S/N: 10737643, LBL: Air Temp)",
+         "Canopy_temp_C" = "Temp, °C (LGR S/N: 10737643, SEN S/N: 10737643, LBL: Canopy Temp)",
+         "Ground_temp_C" = "Temp, °C (LGR S/N: 10737643, SEN S/N: 10737643, LBL: Ground Temp)",
+         "Soil_temp_C" = "Temp, °C (LGR S/N: 10737643, SEN S/N: 10737643, LBL: Soil Temp)", 
+         "Date_time" = "Date Time, GMT-06:00") %>% 
+  dplyr::select(-c("Good Battery (LGR S/N: 10737643)", "Host Connected (LGR S/N: 10737643)", 
+            "End Of File (LGR S/N: 10737643)"))
+# date issue 
+# normal dates 
+pheno_hobo_dates_good <- pheno_hobo_working %>% 
+  filter(Date_time <= "08/01/17" )
+
+# wrong dates 
+pheno_hobo_dates_bad <- pheno_hobo_working %>% 
+  filter(Date_time >= "08/01/17" )
+
+pheno_hobo_dates_bad$Date_time <- ymd_hm(pheno_hobo_dates_bad$Date_time)
+pheno_hobo_dates_bad$day <- month(as.POSIXlt(pheno_hobo_dates_bad$Date_time, format="%Y-%m-%d %H:%M"))
+pheno_hobo_dates_bad$month_wrong <- year(as.POSIXlt(pheno_hobo_dates_bad$Date_time, format="%Y-%m-%d %H:%M"))
+pheno_hobo_dates_bad$year <- day(as.POSIXlt(pheno_hobo_dates_bad$Date_time, format="%Y-%m-%d %H:%M"))
+# subtract 2000 from this value to get correct month value 
+pheno_hobo_dates_bad_1  <- pheno_hobo_dates_bad %>% 
+  mutate(Month = month_wrong - 2000) %>% 
+  select(-c(month_wrong)) %>% 
+  mutate(year = year + 2000)
+
+pheno_hobo_dates_bad_1$date <- paste(pheno_hobo_dates_bad_1$Month,
+                                     pheno_hobo_dates_bad_1$day, 
+                                     pheno_hobo_dates_bad_1$year,
+                                                    sep="/") %>% mdy() %>% 
+  as.Date()
+
+pheno_hobo_dates_bad_1$date_new <- format(as.Date(pheno_hobo_dates_bad_1$date, format = "%m-%d-%Y"), "%m/%d/%y")
+# drop confusing old columns
+pheno_hobo_dates_bad_1 <- pheno_hobo_dates_bad_1 %>% 
+  select(-c(Date_time))
+
+# reclass date to drop H:M and rename good dataframe 
+pheno_hobo_dates_good$Date_time_1 <- ymd_hm(pheno_hobo_dates_good$new_date_1)
+pheno_hobo_dates_good$new_date_1 <-  parse_date_time(pheno_hobo_dates_good$Date_time, "%m/%d/%y %I:%M:%S %p")
+pheno_hobo_dates_good$Month <- month(as.POSIXlt(pheno_hobo_dates_good$new_date_1, format="%Y-%m-%d %H:%M"))
+pheno_hobo_dates_good$year <- year(as.POSIXlt(pheno_hobo_dates_good$new_date_1, format="%Y-%m-%d %H:%M"))
+pheno_hobo_dates_good$day <- day(as.POSIXlt(pheno_hobo_dates_good$new_date_1, format="%Y-%m-%d %H:%M"))
+
+pheno_hobo_dates_good$date_new <- format(as.Date(pheno_hobo_dates_good$new_date_1, format = "%m-%d-%Y %I:%M:%S %p"), "%m/%d/%y")
+
+pheno_hobo_dates_good_1 <- pheno_hobo_dates_good %>% 
+  select(-c(Date_time))
+
+pheno_hobo_dates_good_1$day <- as.numeric(pheno_hobo_dates_good_1$day)
+# merge good and bad dates
+pheno_hobo_all <- full_join(pheno_hobo_dates_good_1, pheno_hobo_dates_bad_1, 
+                            by = c("#", 
+                            "Air_temp_C", 
+                            "Canopy_temp_C", 
+                            "Ground_temp_C", 
+                            "Soil_temp_C", 
+                            "Month", 
+                            "day", 
+                            "year", 
+                            "date_new"))
+# messy but it works for this 
+
+# filter july observations 
+july_QHI_pheno <- pheno_hobo_all %>% 
+  filter(Month == "7")
+july_QHI_pheno_mean <- july_QHI_pheno  %>%
+  group_by(year) %>% 
+  summarise(mean_air_temp = mean(Air_temp_C),
+            mean_surface_temp = mean(Canopy_temp_C), 
+            mean_canopy_temp = mean(Ground_temp_C), 
+            mean_ground_temp = mean(Soil_temp_C))
+
+
+

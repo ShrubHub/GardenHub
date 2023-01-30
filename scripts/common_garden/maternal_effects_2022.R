@@ -190,7 +190,7 @@ levels(mother_cg_long$mother_or_child) <- list(Mother  = "Mother_Canopy_Height_c
 
 (plot_mother_height_model <- ggplot(mother_cg_edit, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm)) +
     geom_point(aes(color = mother_or_child), size = 3, alpha = 0.5) +
-    facet_grid(Species ~ Site, scales = "free") +
+    facet_wrap(vars(Species)) +
     ylab("Mother shrub canopy height in sources (cm)") +
     xlab("\nMax child canopy height in common garden (cm)") +
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
