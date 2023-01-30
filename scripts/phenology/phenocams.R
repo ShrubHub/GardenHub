@@ -372,6 +372,7 @@ QHI_phenocams_2022_wrangle <- read_csv("data/phenology/phenocam_pics/QHI_phenoca
 KP_phenocams_2021_2022_wrangle <- read_csv("data/phenology/phenocam_pics/KP_phenocams_2021_2022_wrangle.csv")
 
 # Wrangling to allow merge for salix phenophase comparison
+# KP
 KP_phenocams_2021_2022_wrangle <- KP_phenocams_2021_2022_wrangle[, - c(1:2)]
 KP_phenocams_2021_2022_merge <- KP_phenocams_2021_2022_wrangle %>%
   dplyr::select(Plot, Year, Species, Salix_bud_burst, Salix_first_yellow,
@@ -386,6 +387,7 @@ KP_phenocams_2021_2022_merge <- KP_phenocams_2021_2022_wrangle %>%
          "First_leaf_yellow_DOY" = "Salix_first_yellow_DOY"  ,
          "All_leaves_yellow_DOY" = "Salix_last_yellow_DOY")
 
+# CG
 CG_phenocams_individual_2021_2022_wrangle <- CG_phenocams_individual_2021_2022_wrangle[, - 1]
 CG_phenocams_individual_2021_2022_merge <- CG_phenocams_individual_2021_2022_wrangle %>%
   dplyr::select(PhenocamID, Year, Species, First_leaf_bud_burst, First_leaf_yellow,
@@ -396,7 +398,14 @@ CG_phenocams_individual_2021_2022_merge <- CG_phenocams_individual_2021_2022_wra
          "First_bud_burst" = "First_leaf_bud_burst",
          "First_bud_burst_DOY" = "First_leaf_bud_burst_DOY")
 
+# removing rows where species NA
+CG_phenocams_individual_2021_2022_merge <- CG_phenocams_individual_2021_2022_merge[-118, ]
+CG_phenocams_individual_2021_2022_merge <- CG_phenocams_individual_2021_2022_merge[-c(124:126), ]
+
+# QHI
 QHI_phenocams_2022_wrangle <- QHI_phenocams_2022_wrangle[, -1]
+QHI_phenocams_2022_wrangle <- QHI_phenocams_2022_wrangle[-c(3:4), ]
+
 QHI_phenocams_2022_merge <- QHI_phenocams_2022_wrangle %>%
   dplyr::select(PhenocamID, Year, Species, Salix_bud_burst, Salix_first_yellow,
                 Salix_last_yellow, Salix_first_bud_burst_DOY, Salix_first_yellow_DOY,
@@ -417,17 +426,76 @@ all_phenocam_data_salix <- rbind(QHI_phenocams_2022_merge, CG_phenocams_individu
 all_phenocam_data_salix$Species <- as.factor(all_phenocam_data_salix$Species)
 all_phenocam_data_salix$population <- as.factor(all_phenocam_data_salix$population)
 
+# save as csv
+write.csv(all_phenocam_data_salix, "data/phenology/phenocam_pics/all_phenocam_data_salix.csv")
+
+# ordering levels so source and garden populations side by side
+all_phenocam_data_salix$population <- plyr::revalue(all_phenocam_data_salix$population, 
+                                                 c("QHI"="Northern Garden",
+                                                   "Kluane"="Southern Garden",
+                                                   "Southern_source"="Southern Source",
+                                                   "Northern_source"="Northern Source"))
+
+all_phenocam_data_salix$population <- ordered(all_phenocam_data_salix$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden", 
+                                                      "Southern Garden", 
+                                                      "Southern Source"))
+
 # model bud burst doy
 bud_burst_mod <- lmer(First_bud_burst_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_salix)
 tab_model(bud_burst_mod)
+
+(plot_bud_burst_mod <- ggplot(all_phenocam_data_salix) +
+    geom_boxplot(aes(x = population, y = First_bud_burst_DOY , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("First bud burst DOY") +
+    xlab("\nPopulation") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
+
 
 # model first yellow leaf doy
 yellow_mod <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_salix)
 tab_model(yellow_mod)
 
+(plot_yellow_mod <- ggplot(all_phenocam_data_salix) +
+    geom_boxplot(aes(x = population, y = First_leaf_yellow_DOY , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("First yellowing of leaves DOY") +
+    xlab("\nPopulation") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
+
 # common garden only models 
 all_phenocam_data_cg <- all_phenocam_data_salix %>% 
-  filter(population %in% c("Kluane", "QHI"))
+  filter(population %in% c("Northern Garden", "Southern Garden"))
 
 # model bud burst doy common garden
 bud_burst_cg_mod <- lmer(First_bud_burst_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_cg)
@@ -437,6 +505,27 @@ tab_model(bud_burst_cg_mod)
 bud_burst_cg_mod_1 <- lmer(First_bud_burst_DOY ~ population + (1|Species), data = all_phenocam_data_cg)
 tab_model(bud_burst_cg_mod_1)
 
+(plot_bud_burst_cg_mod <- ggplot(all_phenocam_data_cg) +
+    geom_boxplot(aes(x = population, y = First_bud_burst_DOY , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5) +
+    #facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("First bud burst DOY") +
+    xlab("\nPopulation") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
+
 # model first yellow leaf doy common garden 
 yellow_cg_mod <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_cg)
 tab_model(yellow_cg_mod)
@@ -444,3 +533,26 @@ tab_model(yellow_cg_mod)
 # omit year: 
 yellow_cg_mod_1 <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) , data = all_phenocam_data_cg)
 tab_model(yellow_cg_mod_1)
+
+(plot_yellow_cg_mod <- ggplot(all_phenocam_data_cg) +
+    geom_boxplot(aes(x = population, y = First_leaf_yellow_DOY , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5) +
+    #facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("First yellowing of leaves DOY") +
+    xlab("\nPopulation") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
+
+

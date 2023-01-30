@@ -3,7 +3,7 @@
 # omitting from working scripts to make easier to read/run 
 
 # common_garden_2022 ----
-# aka BIG FAT SCRIPT 
+# aka BIG FAT SCRIPT (if you know you know)
 
 # Sample size ----
 # Need to figure out how to remove NA rows of DEAD shurbs, not fully sen shrubs
