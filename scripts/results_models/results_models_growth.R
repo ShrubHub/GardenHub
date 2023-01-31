@@ -61,6 +61,7 @@ tab_model(height_growth_mod_3)
 # filter dataset to retain only population "northern" and "southern"
 all_CG_source_growth_garden_only <- all_CG_source_growth %>%
   filter(population %in% c("Northern", "Southern"))
+all_CG_source_growth_garden_only$population <- as.factor(all_CG_source_growth_garden_only$population)
 
 str(all_CG_source_growth_garden_only)
 view(all_CG_source_growth_garden_only)
@@ -135,6 +136,26 @@ tab_model(diam_garden_growth_mod_2)
 # where is arctica 2020 data?
 arctica_2020 <- all_CG_source_growth %>%
   filter(Species == "Salix arctica" & Year == "2020") # all NAs
+
+
+# 5. Biovolume (compare all)----
+# models 1 does converge but not using for consistency
+#biovol_mod_1 <- lmer(biovolume ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth)
+#tab_model(biovol_mod_1)
+# model 2 below doesnt  converge 
+# biovol_mod_2 <- lmer(biovolume ~ population + (1|Year/SampleID_standard) + (1|Species), data = all_CG_source_growth)
+# model 3 below converges 
+biovol_mod_3 <- lmer(biovolume ~ population + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
+tab_model(biovol_mod_3)
+
+# 5.1. Biovolume only in garden ----
+# model 1 below doesnt converge: boundary (singular) fit: see help('isSingular')
+#biovol_garden_growth_mod_1 <- lmer(biovolume ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)
+# model 2 below does not run 
+#biovol_garden_growth_mod_2 <- lmer(biovolume ~ population + (1|Year/SampleID_standard) + (1|Species/Sample_age), data = all_CG_source_growth_garden_only)
+# model 3 below does converge but not using 
+biovol_garden_growth_mod_3 <- lmer(biovolume ~ population + (1|Species) , data = all_CG_source_growth_garden_only)
+tab_model(biovol_garden_growth_mod_3)
 
 # 4. DATA VISUALISATION ------
 
@@ -428,6 +449,50 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
          axis.line = element_line(colour = "black"),
          axis.title = element_text(size = 18),
          axis.text.x = element_text(angle = 0, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
+# Biovolume  CG + source (2013-2022) ----
+(plot_biovol_all <- ggplot(all_CG_source_growth) +
+   geom_smooth(aes(x = Sample_age, y = biovolume, colour = population, fill = population, group = population, method = "glm")) +
+   geom_point(aes(x = Sample_age, y= biovolume, colour = population, group = population), size = 1.5, alpha = 0.5) +
+   # facet_grid(cols = vars(Species)) +   #facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free") +
+   ylab("Biovolume (cm3)") +
+   xlab("\n ") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
+# Biovolume  CG only (2013-2022) ----
+(plot_biovol_garden <- ggplot(all_CG_source_growth_garden_only) +
+   geom_smooth(aes(x = Sample_age, y = biovolume, colour = population, fill = population, group = population, method = "glm")) +
+   geom_point(aes(x = Sample_age, y= biovolume, colour = population, group = population), size = 1.5, alpha = 0.5) +
+   # facet_grid(cols = vars(Species)) +   #facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free") +
+   ylab("Biovolume (cm3)") +
+   xlab("\n ") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black")))
 
 # 3. CORRELATION -----
