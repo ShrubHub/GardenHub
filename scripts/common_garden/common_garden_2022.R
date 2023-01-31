@@ -996,8 +996,15 @@ max_cg_widths <- all_cg_data_2022 %>%
   slice(which.max(mean_width)) %>% 
   rename("max_mean_width_cm" = "mean_width")
 
+# do same for biovolume 
+max_cg_biovol <- all_cg_data_2022 %>% 
+  group_by(SampleID_standard) %>%
+  slice(which.max(biovolume)) %>% 
+  rename("max_biovol" = "biovolume")
+
 # save 
 write.csv(max_cg_heights, "data/common_garden_data_2022/max_heights_cg.csv")
+write.csv(max_cg_biovol, "data/common_garden_data_2022/max_biovol_cg.csv")
 write.csv(max_cg_widths, "data/common_garden_data_2022/max_widths_cg.csv")
 max_cg_widths <- read_csv("data/common_garden_data_2022/max_widths_cg.csv")
 max_cg_heights <- read_csv("data/common_garden_data_2022/max_heights_cg.csv")
