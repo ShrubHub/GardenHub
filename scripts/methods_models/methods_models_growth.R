@@ -122,7 +122,7 @@ tab_model(stem_elong_method_mod_2)
 
 # Width lmer with species interacting
 unique_source_mother_width <- unique_source_mother %>%
-  select(Site, Species, SampleYear, SampleID, mean_width)
+  dplyr::select(Site, Species, SampleYear, SampleID, mean_width)
 
 width_method_mod <- lmer(mean_width ~ Site*Species + (1|SampleYear), data = unique_source_mother)
 

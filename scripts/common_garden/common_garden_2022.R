@@ -61,8 +61,9 @@ kluane_source_pop_2022 <- kluane_source_pop_2022 %>%
   filter(Species != "Salix reticulata") %>% # removing salix reticulata
   mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
          mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
-         mean_width = ((Width_cm + Width_2_cm)/2)) %>% 
- dplyr::select(- Stem_diameter_2, - Stem_diameter_3) # stem diam 2 and 3 were taken for sal ret
+         mean_width = ((Width_cm + Width_2_cm)/2))%>% 
+ dplyr::select(- Stem_diameter_2, - Stem_diameter_3) %>% # stem diam 2 and 3 were taken for sal reticulata
+  mutate(biovolume = (Canopy_Height_cm* Width_cm* Width_2_cm))
         
 # removing sort column from QHI subsets
 QHI_source_pop_2022 <- all_weekly_QHI_2022[,-1]
@@ -70,6 +71,10 @@ QHI_source_pop_2022 <- all_weekly_QHI_2022[,-1]
 # reclassing stem diam
 kluane_source_pop_2022$Stem_diameter <- as.numeric(kluane_source_pop_2022$Stem_diameter)
 QHI_source_pop_2022$Stem_diameter <- as.numeric(QHI_source_pop_2022$Stem_diameter)
+
+# making biovolume col.
+QHI_source_pop_2022 <- QHI_source_pop_2022 %>%
+  mutate(biovolume = (Canopy_Height_cm* Width_cm* Width_2_cm))
 
 # merging QHI and Kluane data from 2022
 all_source_pop_2022 <- rbind(QHI_source_pop_2022, kluane_source_pop_2022)
@@ -124,7 +129,8 @@ july <- growth_2022 %>%
   filter(Month == "7") %>% 
   dplyr::select(SampleID, Canopy_Height_cm, Width_cm, Width_2_cm, 
          Stem_diameter, Stem_Elongation_1_mm, Stem_Elongation_2_mm, 
-         Stem_Elongation_3_mm, Length_1_mm, Length_2_mm, Length_3_mm) %>% 
+         Stem_Elongation_3_mm, Length_1_mm, Length_2_mm, Length_3_mm) %>%
+  mutate(biovolume = (Canopy_Height_cm*Width_cm*Width_2_cm)) %>%
   rename("jul_height" = "Canopy_Height_cm", # rename all to july values 
          "jul_width_1" = "Width_cm", 
          "jul_width_2" = "Width_2_cm", 
@@ -134,7 +140,8 @@ july <- growth_2022 %>%
          "jul_stem_Elong_3_mm" = "Stem_Elongation_3_mm",
          "jul_length_1_mm" = "Length_1_mm",
          "jul_length_2_mm" = "Length_2_mm",
-         "jul_length_3_mm" = "Length_3_mm")
+         "jul_length_3_mm" = "Length_3_mm",
+         "jul_biovol" = "biovolume")
 
 str(july) # all good 
 # date: 23/07/2022
@@ -142,6 +149,7 @@ str(july) # all good
 # same for august 
 aug <-  growth_2022 %>% 
   filter(Month == "8") %>% 
+  mutate(biovolume = (Canopy_Height_cm*Width_cm*Width_2_cm)) %>%
   rename("aug_height" = "Canopy_Height_cm", 
          "aug_width_1" = "Width_cm", 
          "aug_width_2" = "Width_2_cm", 
@@ -151,7 +159,8 @@ aug <-  growth_2022 %>%
          "aug_stem_Elong_3_mm" = "Stem_Elongation_3_mm",
          "aug_length_1_mm" = "Length_1_mm",
          "aug_length_2_mm" = "Length_2_mm",
-         "aug_length_3_mm" = "Length_3_mm")
+         "aug_length_3_mm" = "Length_3_mm",
+         "aug_biovol" = "biovolume")
 
 str(aug) # all good 
 
@@ -167,7 +176,8 @@ july_aug <- left_join(aug, july, by = "SampleID")  %>%
          Stem_Elongation_3_mm  = coalesce(aug_stem_Elong_3_mm, jul_stem_Elong_3_mm),
          Length_1_mm = coalesce(aug_length_1_mm, jul_length_1_mm), 
          Length_2_mm = coalesce(aug_length_2_mm, jul_length_2_mm), 
-         Length_3_mm = coalesce(aug_length_3_mm, jul_length_3_mm)) %>%
+         Length_3_mm = coalesce(aug_length_3_mm, jul_length_3_mm),
+         biovolume = coalesce(aug_biovol, jul_biovol)) %>%
   dplyr::select(- Sample_Date)
 
 sum(is.na(july_aug$aug_height)) # 76 NAs
@@ -208,7 +218,11 @@ sum(is.na(july_aug$Length_3_mm)) # 45
 
 sum(is.na(july_aug$aug_Stem_diameter)) # 76 NAs
 sum(is.na(july_aug$jul_Stem_diameter)) # 46
-sum(is.na(july_aug$Stem_diameter)) # 44 
+sum(is.na(july_aug$Stem_diameter)) # 44
+
+sum(is.na(july_aug$aug_biovol)) # 76 NAs
+sum(is.na(july_aug$jul_biovol)) # 44
+sum(is.na(july_aug$biovol)) # 44
 
 # statement specify the date depending on which value was used 
 CG_july_aug_2022_dates <- july_aug %>%
@@ -216,7 +230,7 @@ CG_july_aug_2022_dates <- july_aug %>%
                                    Width_2_cm == jul_width_2 & Stem_diameter == jul_Stem_diameter &
                                    Stem_Elongation_1_mm == jul_stem_Elong_1_mm & Stem_Elongation_2_mm == jul_stem_Elong_2_mm & 
                                  Stem_Elongation_3_mm == jul_stem_Elong_3_mm &  Length_1_mm == jul_length_1_mm & 
-                                   Length_2_mm == jul_length_2_mm & Length_3_mm == jul_length_3_mm 
+                                   Length_2_mm == jul_length_2_mm & Length_3_mm == jul_length_3_mm & biovolume == jul_biovol
                                  ~ make_date(year = "2022", month = "7", day = "23"), 
                                              TRUE ~ make_date(year = "2022", month = "8", day = "17")))
 
@@ -226,7 +240,7 @@ CG_july_aug_2022 <- CG_july_aug_2022_dates %>%
   dplyr::select(Bed, SampleID, Year_planted, Species, Site, Sample_Date, SampleID_standard,
                 Canopy_Height_cm, Width_cm, Width_2_cm, Stem_diameter, 
                 Stem_Elongation_1_mm, Stem_Elongation_2_mm, Stem_Elongation_3_mm, 
-                Length_1_mm, Length_2_mm, Length_3_mm) %>%
+                Length_1_mm, Length_2_mm, Length_3_mm, biovolume) %>%
   mutate(Year = lubridate::year(Sample_Date), 
           Month = lubridate::month(Sample_Date), 
           Day = lubridate::day(Sample_Date))
@@ -255,7 +269,8 @@ growth$SampleID_standard<-gsub(" ","",as.character(growth$SampleID_standard)) # 
 growth_to_merge <- growth %>% 
   filter(Species != "unknown" & Species!="Betula nana" & Species!="Betula glandulosa") %>% 
   filter(Month == "8") %>%
-  filter(Day != 2) 
+  filter(Day != 2) %>%
+  mutate(biovolume = (Canopy_Height_cm*Width_cm*Width_2_cm))
 
 # Merging 2022 data with 2013-2021 data 
 all_growth_2022 <- rbind(growth_to_merge, CG_july_aug_2022) 
@@ -268,8 +283,8 @@ all_merged_data_2022 <- all_growth_2022 %>%
   mutate(Sample_age = Year - Year_planted) %>%
   mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
        mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
-       mean_width = ((Width_cm + Width_2_cm)/2)) 
-#biovolume = (Width_cm*Width_2_cm*Canopy_Height_cm))
+       mean_width = (Width_cm + Width_2_cm)/2,
+      biovolume = (Width_cm*Width_2_cm*Canopy_Height_cm)) # already have a biovol column
 
 # Making variables into the right format
 all_merged_data_2022$Stem_Elongation_1_mm <- as.numeric(all_merged_data_2022$Stem_Elongation_1_mm)
@@ -307,8 +322,9 @@ all_cg_data_2022 <-  all_merged_data_2022 %>%
   mutate(population = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
                               TRUE ~ "Southern")) %>% 
   dplyr::select(-X) 
+
 # save again 
-# write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
+write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
 
 # 3.2.1. Leaf length - Stem elongation swap ----
 # fix 2013-2020 data from CG where leaf length and stem elongation values are swapped 
@@ -354,7 +370,7 @@ field_data$Site <- as.factor(field_data$Site)
 field_source_pop <- field_data %>%
   mutate(Canopy_Height_cm = Plant_height_veg_m*100) %>%
   dplyr::select(-Plant_height_veg_m)%>%
-  na.omit()
+  na.omit() 
 
 write.csv(field_source_pop, 'data/source_pops/field_source_pop.csv')
 # fixing date issue manually was quicker
@@ -418,8 +434,17 @@ kp_2021_heights <-kp_2021 %>%
 # merge with other field data 
 str(field_source_pop_new)
 kp_2021_heights$SampleYear <- as.factor(kp_2021_heights$SampleYear)
+kp_2021_heights$Species <- as.factor(kp_2021_heights$Species)
 field_source_pop_new$SampleYear <- as.factor(field_source_pop_new$SampleYear)
-  
+
+# fixing typo (Salic instead of salix)
+kp_2021_heights <- kp_2021_heights %>%
+  mutate(Spp_correct = case_when(Species %in% c("Salix pulchra", "Salic pulchra", "Salix pulchra ") ~ "Salix pulchra",
+                                 Species == "Salix arctica" ~ "Salix arctica",
+                                 Species %in% c("Salix richardsonii", "Salix richardsonii ") ~ "Salix richardsonii")) %>%
+  dplyr::select(-Species) %>%
+  rename("Species" = "Spp_correct")
+
 field_source_pop_new <- full_join(kp_2021_heights, field_source_pop_new, 
                                   by = c("Latitude", 
                                          "Longitude",
@@ -467,6 +492,10 @@ mother_data$Date_propagated <- as.Date(mother_data$Date_propagated, format="%d/%
 mother_data$Date_planted <- as.Date(mother_data$Date_planted, format="%d/%m/%Y")
 mother_data$Cutting_diameter<- as.numeric(mother_data$Cutting_diameter)
 mother_data$Cutting_length <- as.numeric(mother_data$Cutting_length)
+
+# adding biovolume column
+mother_data <- mother_data %>%
+mutate(biovolume = (Canopy_Height_cm*Width_cm*Width_2_cm))
 
 # function to convert "0017" to "2017"
 two_dig_year_cnvt <- function(z, year=2013){
@@ -750,7 +779,7 @@ all_CG_source_growth <- full_join(all_cg_data_2022_merge, unique_source_mother_m
                                "Width_cm", "Canopy_Height_cm", "Width_2_cm", 
                                "Stem_diameter", "Stem_Elongation_1_mm", "Stem_Elongation_2_mm", 
                                "Stem_Elongation_3_mm", "Length_1_mm", "Length_2_mm", 
-                               "Length_3_mm", "mean_stem_elong", "mean_leaf_length", "mean_width"
+                               "Length_3_mm", "mean_stem_elong", "mean_leaf_length", "mean_width", "biovolume"
                                ))
 # checking variables
 str(all_CG_source_growth)
@@ -784,7 +813,7 @@ range(all_CG_source_growth_arctica_KP$Canopy_Height_cm)
 #view(tall_arctica_KP) # 0! 
 
 # saving data as csv
-# write.csv(all_CG_source_growth, 'data/all_CG_source_growth.csv')
+write.csv(all_CG_source_growth, 'data/all_CG_source_growth.csv')
 
 # 3.7.2. Merge traits from cg with source and mother data ----
 # load data 
@@ -902,7 +931,7 @@ all_CG_source_traits_merge <- all_CG_source_traits %>%
   dplyr::select(-c(month, DOY, Sample_Date, date_sampled, sample_id, site_id, X, MONTH, date, plant_tag_id)) %>% 
   dplyr::rename("Year" = "year")
 all_CG_source_growth_merge <- all_CG_source_growth %>% 
-  dplyr::select(-c(Month, Sample_Date, Day, X, X.5, X.2, X.1, X.3, X.4))
+  dplyr::select(-c(Month, Sample_Date, Day, X))
 
 all_CG_source_growth_merge$Year <- as.factor(all_CG_source_growth_merge$Year)
 all_CG_source_traits_merge$Year <- as.factor(all_CG_source_traits_merge$Year)
@@ -923,7 +952,7 @@ length(unique(all_CG_source_traits$SLA))
 # only merging CG data now 
 all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
 all_cg_data_2022_merge <- all_cg_data_2022 %>% 
-  dplyr::select(-c(Month, Sample_Date, Day, X, X.1))
+  dplyr::select(-c(Month, Sample_Date, Day, X))
 
 str(all_cg_data_2022_merge)
 all_cg_data_2022_merge$Year <- as.factor(all_cg_data_2022_merge$Year)
@@ -1133,6 +1162,29 @@ max_source_mother_stem_elong_spp <- max_source_mother_stem_elong %>%
          axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
          axis.text.y = element_text(size = 12, colour = "black")))
 
+# Width scatter (2013-2022) ----
+(plot_width_scatter <- ggplot(all_merged_data_2022) +
+   geom_smooth(aes(x = Sample_age, y = mean_width, colour = Site, fill = Site, group = Site, method = "glm")) +
+   geom_point(aes(x = Sample_age, y= mean_width, colour = Site, group = Site), size = 1.5, alpha = 0.5) +
+   #facet_grid(cols = vars(Species)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Canopy width (cm)") +
+   xlab("\nAge (years)") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
+
 # Facet
 facet_traits <- grid.arrange(plot_canopy_2022, plot_stem_2022, plot_diameter_2022, plot_width_2022, ncol=2)
 
@@ -1204,10 +1256,12 @@ data_leaf_2022 <- all_merged_data_2022 %>% filter(Year == 2022)
 
 # g. Biovolume (2013-2022) ----
 (plot_biovol_2022 <- ggplot(all_merged_data_2022) +
-   geom_boxplot(aes(x = Site, y = biovolume, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
-   facet_wrap(~Species, scales = "free_y") +
-   ylab("Biovolume (cm3)") +
-   xlab("") +
+   geom_smooth(aes(x = Sample_age, y = (biovolume/1e+6), colour = Site, fill = Site, group = Site, method = "glm")) +
+   geom_point(aes(x = Sample_age, y= (biovolume/1e+6), colour = Site, group = Site), size = 1.5, alpha = 0.5) +
+  # geom_boxplot(aes(x = Site, y = biovolume, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
+   facet_wrap(~Species, scales = "free") +
+   ylab("Biovolume (m3)") +
+   xlab("Sample age") +
    scale_colour_viridis_d(begin = 0.3, end = 0.9) +
    scale_fill_viridis_d(begin = 0.3, end = 0.9) +
    theme_bw() +
