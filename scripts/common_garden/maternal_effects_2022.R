@@ -19,6 +19,7 @@ mother_data <- read_csv("data/source_pops/mother_data.csv")
 # maximum height and width data from CG 2013-2022 
 max_cg_heights <- read.csv("data/common_garden_data_2022/max_heights_cg.csv")
 max_cg_widths <- read.csv("data/common_garden_data_2022/max_widths_cg.csv")
+max_cg_biovol <-  read.csv("data/common_garden_data_2022/max_biovol_cg.csv")
 all_cg <- read_csv("data/common_garden_data_2022/all_merged_data_2022.csv") 
 cg_2022 <- all_cg %>%
   dplyr::select(-...1)
@@ -47,7 +48,8 @@ mother_data_merge <-  mother_data %>%
          "Mother_Stem_Elongation_3_mm" = "Stem_Elongation_3_mm",
          "Mother_mean_stem_elong" = "mean_stem_elong",
          "Mother_mean_leaf_length" = "mean_leaf_length",
-         "Mother_mean_width" = "mean_width") %>% 
+         "Mother_mean_width" = "mean_width", 
+         "Mother_biovolume" = "biovolume") %>% 
  # dplyr::select(-Match, -...1, -...2) %>%   # these columns are useless and will only cause anger and pain
   dplyr::select(-SampleID, - Site) %>%
   dplyr::mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
@@ -135,21 +137,37 @@ cg_means <- all_cg %>%
 str(max_cg_heights)
 
 max_cg_heights_merge <- max_cg_heights %>% 
-  dplyr::select(c(Species, max_canopy_height_cm, population, Site, SampleID_standard))
+  dplyr::select(c(Species, max_canopy_height_cm, population, Site, SampleID_standard)) 
+
+max_cg_biovol_merge <- max_cg_biovol %>% 
+  dplyr::select((c(Species, max_biovol, population, Site, SampleID_standard)))
+
+max_cg_widths_merge <- max_cg_widths %>% 
+  dplyr::select(c(Species, max_mean_width_cm, population, Site, SampleID_standard))
 
 mother_data_merge_1 <- mother_data_merge %>% 
   dplyr::select(-c(SampleDate, Date_propagated))
 
-mother_cg <- full_join(mother_data_merge_1, max_cg_heights_merge, 
+mother_cg_height <- full_join(mother_data_merge_1, max_cg_heights_merge, 
                       by = c("SampleID_standard" = "SampleID_standard", 
                              "Species" = "Species",
                             "Site" = "Site"))
+
+mother_cg_widths <- full_join(mother_cg_height, max_cg_widths_merge, 
+                              by = c("SampleID_standard" = "SampleID_standard", 
+                                     "Species" = "Species",
+                                     "Site" = "Site"))
+
+mother_cg <- full_join(mother_cg_widths, max_cg_biovol_merge, 
+                                    by = c("SampleID_standard" = "SampleID_standard", 
+                                           "Species" = "Species",
+                                           "Site" = "Site"))
 
 # add a mother or child column
 mother_cg_edit <- mother_cg %>%
   mutate(mother_or_child = ifelse(population %in% c("Northern", "Southern"), "child", "mother"))
 
-mother_cg_edit$mother_or_child <- as.factor(mother_cg_edit$mother_or_child)               
+mother_cg_edit$mother_or_child <- as.factor(mother_cg_edit$mother_or_child)  
 
 # MODELS -----
 # model structure we want:
@@ -207,20 +225,6 @@ plot(mother_cg_edit$max_canopy_height_cm, mother_cg_edit$Mother_Canopy_Height_cm
 
 
 # WIDTH MODEL  -----
-str(max_cg_widths)
-
-max_cg_widths_merge <- max_cg_widths %>% 
-  dplyr::select(c(Species, max_mean_width_cm, population, Site, SampleID_standard))
-
-mother_cg <- full_join(mother_data_merge_1, max_cg_widths_merge, 
-                       by = c("SampleID_standard" = "SampleID_standard", 
-                              "Species" = "Species",
-                              "Site" = "Site"))
-# add a mother or child column
-mother_cg_edit <- mother_cg %>%
-  mutate(mother_or_child = ifelse(population %in% c("Northern", "Southern"), "child", "mother"))
-
-mother_cg_edit$mother_or_child <- as.factor(mother_cg_edit$mother_or_child)               
 
 maternal_width_mod <-  lmer(Mother_mean_width ~ max_mean_width_cm + Site + (1|Species), data = mother_cg)
 summary(maternal_width_mod)
@@ -248,12 +252,38 @@ tab_model(maternal_width_mod_nosite)
           axis.text.y = element_text(size = 12, colour = "black"))) 
 
 
+# BIOVOLUME ----
+maternal_biovol_mod <-  lmer(Mother_biovolume ~ max_biovol + Site + (1|Species), data = mother_cg_edit)
+summary(maternal_biovol_mod)
+tab_model(maternal_biovol_mod)
+# run model without site 
+maternal_biovol_nosite_mod <-  lmer(Mother_biovolume ~ max_biovol + (1|Species), data = mother_cg_edit)
+summary(maternal_biovol_nosite_mod)
+tab_model(maternal_biovol_nosite_mod)
+
+(plot_biovol_maternal_model <- ggplot() +
+    geom_point(aes(x = max_biovol, y= Mother_biovolume, color =mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit) +
+    geom_smooth(aes(x = max_biovol, y= Mother_biovolume, colour =mother_or_child), method = "lm", data = mother_cg_edit) +
+    # facet_wrap(~Species + Site, scales = "free") +
+    facet_grid(Species ~ Site, scales = "free") +    
+    ylab("Mother biovolume (cm3)") +
+    xlab("\nMax child biovolume in common garden (cm3)") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
 # PROPOGATION DATA MODELS ----
-cutting_length_mod <-  lmer(Cutting_length ~ max_canopy_height_cm + Site + (1|Species), data = mother_cg)
+cutting_length_mod <-  lmer(Cutting_length ~ max_canopy_height_cm + Site + (1|Species), data = mother_cg_edit)
 summary(cutting_length_mod)
 tab_model(cutting_length_mod)
 
-cutting_length_mod_nosite <-  lmer(Cutting_length ~ max_canopy_height_cm + (1|Species), data = mother_cg)
+cutting_length_mod_nosite <-  lmer(Cutting_length ~ max_canopy_height_cm + (1|Species), data = mother_cg_edit)
 tab_model(cutting_length_mod_nosite)
 
 (plot_cutting_length_model <- ggplot() +
