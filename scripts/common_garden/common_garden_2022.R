@@ -337,7 +337,7 @@ cg_data_2022 <- all_cg_data_2022 %>%
 all_cg_data_2022 <- bind_rows(cg_data_2020_renamed, cg_data_2022) 
 # drop all X columns 
 all_cg_data_2022 <- all_cg_data_2022 %>% 
-  select(-c("X.1", "X.2", "X.3", "X.4", "X.5"))
+  dplyr::select(-"X.1")
 
 write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
 
@@ -379,7 +379,7 @@ field_source_pop_new <- field_source_pop_new %>%
 # making site column
 # field_source_pop_new <- field_source_pop_new %>%
 #  mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
-                          SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))
+                          # SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))
 
 # date into the right format
 #field_source_pop_new$SampleDate <- format(as.POSIXct(field_source_pop_new$SampleDate,
@@ -407,7 +407,7 @@ str(kp_2021)
 
 # drop extra columns 
 kp_2021_heights <-kp_2021 %>% 
-  select(-c(X, Notes, elevation, Bulk_11_aug, CAMERA, fulcrum_Plant_ID)) %>% 
+  dplyr::select(-c(X, Notes, elevation, Bulk_11_aug, CAMERA, fulcrum_Plant_ID)) %>% 
   rename("Canopy_Height_cm" =  "Height..cm.", 
          "Latitude" = "LAT", 
          "Longitude" = "LONG",
@@ -923,7 +923,7 @@ length(unique(all_CG_source_traits$SLA))
 # only merging CG data now 
 all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
 all_cg_data_2022_merge <- all_cg_data_2022 %>% 
-  dplyr::select(-c(Month, Sample_Date, Day, X, X.5, X.2, X.1, X.3, X.4))
+  dplyr::select(-c(Month, Sample_Date, Day, X, X.1))
 
 str(all_cg_data_2022_merge)
 all_cg_data_2022_merge$Year <- as.factor(all_cg_data_2022_merge$Year)

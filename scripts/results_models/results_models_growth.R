@@ -136,41 +136,6 @@ tab_model(diam_garden_growth_mod_2)
 arctica_2020 <- all_CG_source_growth %>%
   filter(Species == "Salix arctica" & Year == "2020") # all NAs
 
-# 3. CORRELATION -----
-# Correlation matrix growth ----
-
-# filter growth in the CG
-growth_variables_CG <- all_CG_source_growth %>%
-  filter(population %in% c("Northern", "Southern")) %>%
-  dplyr::select(Canopy_Height_cm, Stem_diameter, mean_stem_elong, mean_width)%>%
-  na.omit()
-view(growth_variables_CG)
-  
-res <- cor(growth_variables_CG)
-round(res, 2)
-# Visualising correlation matrix with ggcorr
-ggcorr(growth_variables_CG, method = c("everything", "pearson")) 
-
-# Correlation matrix growth AND traits ----
-# import all data (CG growth + traits)
-all_cg_growth_traits_data <- read_csv("data/all_cg_growth__traits_data.csv")
-view(all_cg_growth_traits_data)
-
-# keep columns of interest for correlation
-all_corr_variables_CG <- all_cg_growth_traits_data %>%
-  dplyr::select(-"...1",- Bed, -SampleID, -Year_planted, -Species, -Site, -Year,
-                - SampleID_standard, - Sample_age, - population, - Lat,-Lon, 
-                -Elevation_m, -Width_cm, -Width_2_cm,
-                -Length_1_mm, -Length_2_mm, -Length_3_mm, -Stem_Elongation_1_mm,
-                -Stem_Elongation_2_mm, -Stem_Elongation_3_mm)
-
-res_1 <- cor(all_corr_variables_CG)
-round(res_1, 2)
-
-ggcorr(all_corr_variables_CG, method = c("everything", "pearson")) 
-# NAs...! 
-# abandoning this. We don't really need it.
-
 # 4. DATA VISUALISATION ------
 
 # ordering levels so source and garden populations side by side
@@ -465,3 +430,37 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
          axis.text.x = element_text(angle = 0, vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black")))
 
+# 3. CORRELATION -----
+# Correlation matrix growth ----
+
+# filter growth in the CG
+growth_variables_CG <- all_CG_source_growth %>%
+  filter(population %in% c("Northern", "Southern")) %>%
+  dplyr::select(Canopy_Height_cm, Stem_diameter, mean_stem_elong, mean_width)%>%
+  na.omit()
+view(growth_variables_CG)
+
+res <- cor(growth_variables_CG)
+round(res, 2)
+# Visualising correlation matrix with ggcorr
+ggcorr(growth_variables_CG, method = c("everything", "pearson")) 
+
+# Correlation matrix growth AND traits ----
+# import all data (CG growth + traits)
+all_cg_growth_traits_data <- read_csv("data/all_cg_growth__traits_data.csv")
+view(all_cg_growth_traits_data)
+
+# keep columns of interest for correlation
+all_corr_variables_CG <- all_cg_growth_traits_data %>%
+  dplyr::select(-"...1",- Bed, -SampleID, -Year_planted, -Species, -Site, -Year,
+                - SampleID_standard, - Sample_age, - population, - Lat,-Lon, 
+                -Elevation_m, -Width_cm, -Width_2_cm,
+                -Length_1_mm, -Length_2_mm, -Length_3_mm, -Stem_Elongation_1_mm,
+                -Stem_Elongation_2_mm, -Stem_Elongation_3_mm)
+
+res_1 <- cor(all_corr_variables_CG)
+round(res_1, 2)
+
+ggcorr(all_corr_variables_CG, method = c("everything", "pearson")) 
+# NAs...! 
+# abandoning this. We don't really need it.
