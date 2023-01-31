@@ -1,7 +1,7 @@
 #### MATERNAL EFFECTS SCRIPT 
 ### Data wrangling and visualisation script
 ### By Erica Zaja, created on 31/10/2022
-## Last updated: 25/01/2023 by Madi
+## Last updated: 31/01/2023 by Madi
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)

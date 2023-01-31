@@ -1,6 +1,6 @@
 # Methods models for growth differences comparing northern and southern willows
 # by Erica Zaja, created on 29/11/2022
-# Last update: 29/11/2022
+# Last update: 31/01/2023 by Madi 
 
 # growth: canopy height, shrub width, stem elongation, stem diameter over time 
 # model structure: 
@@ -12,6 +12,7 @@ library(lme4)
 library(dplyr)
 library(sjPlot)
 library(ggpubr)
+library(tidyverse)
 
 # 2. Loading data ---- 
 unique_source_mother <- read_csv("data/source_pops/unique_source_mother.csv")
@@ -212,6 +213,50 @@ tab_model(diam_method_mod_2)
           axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
           axis.text.y = element_text(size = 15, colour = "black")))
 
+
+
+# d. Biovolume ----
+# biovolume (height * width * width) lmer with species interacting
+biovol_method_mod <- lmer(biovolume ~ Site*Species + (1|SampleYear), data = unique_source_mother)
+
+summary(biovol_method_mod)
+plot(biovol_method_mod)
+qqnorm(resid(biovol_method_mod))
+qqline(resid(biovol_method_mod)) 
+tab_model(biovol_method_mod)
+
+# model with species as random effect 
+biovol_method_mod_spp <- lmer(biovolume ~ Site + (1|Species) + (1|SampleYear), data = unique_source_mother)
+
+summary(biovol_method_mod_spp)
+plot(biovol_method_mod_spp)
+qqnorm(resid(biovol_method_mod_spp))
+qqline(resid(biovol_method_mod_spp)) 
+tab_model(biovol_method_mod_spp)
+
+(biovolume_p <- ggplot(unique_source_mother, aes(Site, biovolume)) +
+    geom_boxplot() +
+    facet_wrap(vars(Species)))
+
+(plot_biovolume_source <- ggplot(unique_source_mother) +
+    geom_boxplot(aes(x = Site, y = biovolume, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("Biovolume (cm3)") +
+    xlab("\n") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
 
 # quick arrange 
 (growth_plots <- ggarrange(height_p, width_p, elong_p, diam_p, nrow = 2, ncol = 2))
