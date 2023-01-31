@@ -303,4 +303,12 @@ tab_model(cutting_length_mod_nosite)
           axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black"))) 
 
+# PROPOGATION BIOVOLUME MODEL
+cutting_bio_mod <-  lmer(Cutting_length ~ max_biovol + Site + (1|Species), data = mother_cg_edit)
+# Some predictor variables are on very different scales: consider rescaling 
+summary(cutting_bio_mod)
+tab_model(cutting_bio_mod)
 
+cutting_bio_mod_nosite <-  lmer(Cutting_length ~ max_biovol + (1|Species), data = mother_cg_edit)
+# Some predictor variables are on very different scales: consider rescaling 
+tab_model(cutting_bio_mod_nosite)
