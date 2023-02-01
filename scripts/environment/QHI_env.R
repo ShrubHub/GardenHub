@@ -169,6 +169,12 @@ monthly_QHI_pheno_mean <- pheno_hobo_all  %>%
             mean_ground_temp = mean(Ground_temp_C), 
             mean_soil_temp = mean(Soil_temp_C))
 
+QHI_pheno_mean <- pheno_hobo_all  %>%
+  summarise(mean_air_temp = mean(Air_temp_C, na.rm = TRUE),
+            mean_canopy_temp = mean(Canopy_temp_C, na.rm = TRUE), 
+            mean_ground_temp = mean(Ground_temp_C, na.rm = TRUE), 
+            mean_soil_temp = mean(Soil_temp_C, na.rm = TRUE))
+
 aug_QHI_pheno <- pheno_hobo_all %>% 
   filter(Month == "8")
 aug_QHI_pheno_mean <- aug_QHI_pheno  %>%
