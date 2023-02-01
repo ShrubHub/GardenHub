@@ -22,12 +22,19 @@ library(Hmisc)
 temp <- raster("data/environment/CHELSA/CHELSA_bio10_10.tif") 
 # Temperature climatologies: mean daily mean air temperatures of the warmest quarter (bio10) (°C). Offset -273.15
 
+# Madi testing something out 
+# files stored on external hard drive because quite large 
+temp_2019 <- raster("CHELSA_data_1999-2019/data/CHELSA_tas_07_2019_V.2.1.tif") 
+
+
 precip <- raster("data/environment/CHELSA/CHELSA_bio10_18.tif")
 # Precipitation climatologies: mean monthly precipitation amount of the warmest quarter (bio18) (kg m-2)
 
 # DATA EXPLORATION -----
 # checking resolution of rasters
 res(temp)
+res(temp_2019)
+
 res(precip)
 # [1] 0.008333333 0.008333333
 # The spatial resolution of a raster refers the size of each cell in meters. 
@@ -36,13 +43,17 @@ res(precip)
 
 # Visualising climate rasters
 plot(temp, main = "Mean daily mean air temperatures of the warmest quarter (°C)")
+plot(temp_2019, main = "Mean daily mean air temperatures of 2019 (°C)")
+
 plot(precip, main = "Mean monthly precipitation of the warmest quarter (kg m-2)")
 precip_raster <- levelplot(precip)
 temp_raster <- levelplot(temp)
 
+temp_raster <- levelplot(temp_2019)
+
 # EXTRACTION (to be filled in) ------
 # Loading the coordinates of the sites of interest
-coords <- read.csv("") %>% 
+coords <- read.csv("CHELSA_data_1999-2019/lat_long_chelsa.csv") %>% 
   dplyr::select(longitude, latitude) # keeping lat and long
 
 # Creating SpatialPoints (sp) object of unique coordinates
