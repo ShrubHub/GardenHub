@@ -159,6 +159,24 @@ pheno_hobo_all <- full_join(pheno_hobo_dates_good_1, pheno_hobo_dates_bad_1,
                             "date_new"))
 # messy but it works for this 
 
+pheno_hobo_all$Month <- as.factor(pheno_hobo_all$Month)
+
+# means by month 
+monthly_QHI_pheno_mean <- pheno_hobo_all  %>%
+  group_by(Month) %>% 
+  summarise(mean_air_temp = mean(Air_temp_C),
+            mean_canopy_temp = mean(Canopy_temp_C), 
+            mean_ground_temp = mean(Ground_temp_C), 
+            mean_soil_temp = mean(Soil_temp_C))
+
+aug_QHI_pheno <- pheno_hobo_all %>% 
+  filter(Month == "8")
+aug_QHI_pheno_mean <- aug_QHI_pheno  %>%
+  summarise(mean_air_temp = mean(Air_temp_C, na.rm = TRUE),
+            mean_canopy_temp = mean(Canopy_temp_C, na.rm = TRUE), 
+            mean_ground_temp = mean(Ground_temp_C, na.rm = TRUE), 
+            mean_soil_temp = mean(Soil_temp_C, na.rm = TRUE))
+
 # filter july observations 
 july_QHI_pheno <- pheno_hobo_all %>% 
   filter(Month == "7")
