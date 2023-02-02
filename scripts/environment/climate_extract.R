@@ -13,27 +13,6 @@ library(viridis)
 library(rasterVis)
 library(lme4)
 library(sjPlot)
-library(gridExtra)
-library(ggpubr)
-library(corrplot)
-library(Hmisc)
-
-
-#### CLIMATE DATA EXTRACTION - CHELSA
-### extraction script
-### By Erica Zaja, created on 26/01/2023
-## Last updated: 02/02/2023 by Madi
-# Script credit: adapted from Joseph Everest and Mariana Garcia Criado
-
-# LOADING LIBRARIES -----
-library(sp)
-library(rgdal)
-library(raster)
-library(ggplot2)
-library(viridis)
-library(rasterVis)
-library(lme4)
-library(sjPlot)
 library(dplyr)
 library(gridExtra)
 library(ggpubr)
