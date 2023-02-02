@@ -1,7 +1,7 @@
 #### CLIMATE DATA EXTRACTION - CHELSA
 ### extraction script
 ### By Erica Zaja, created on 26/01/2023
-## Last updated: 26/01/2023 by Erica
+## Last updated: 02/02/2023 by Madi
 # Script credit: adapted from Joseph Everest and Mariana Garcia Criado
 
 # LOADING LIBRARIES -----
@@ -17,6 +17,10 @@ library(gridExtra)
 library(ggpubr)
 library(corrplot)
 library(Hmisc)
+
+# set wd to external hard drive where data is stored (too big for github)
+setwd("/Volumes/Spectral_21/CHELSA_data_1999-2019")
+
 
 # Climate data from CHELSA 2022
 temp <- raster("data/environment/CHELSA/CHELSA_bio10_10.tif") 
