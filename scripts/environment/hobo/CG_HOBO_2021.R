@@ -115,6 +115,7 @@ CG_HOBO$Date <- mdy(CG_HOBO$Date)
 write.csv(CG_HOBO, "data/hobo/all_CG_HOBO.csv")
 
 str(CG_HOBO)
+
 # Make DAILY means (one value per day)
 CG_HOBO_daily_means <- CG_HOBO %>%
   group_by(year, Month, day) %>%
@@ -122,18 +123,21 @@ CG_HOBO_daily_means <- CG_HOBO %>%
          mean_ground_temp = mean(Ground_temp),
          mean_soil_temp = mean(Soil_temp),
          mean_air_temp = mean(Air_temp)) %>%
-  select(Date, year, Month, day, mean_soil_moist, mean_ground_temp, mean_soil_temp,
+  dplyr::select(Date, year, Month, day, mean_soil_moist, mean_ground_temp, mean_soil_temp,
          mean_air_temp) %>%
   group_by(year, Month, day) %>%
   slice(1) %>% # keeping only one observation from each set of year/month
   ungroup()
 
 max(CG_HOBO_daily_means$Date)
+range(CG_HOBO_daily_means$mean_soil_moist) # -0.06062708  0.40506250
 
 # filtering for months of interest only 
 # july and august
 CG_HOBO_daily_means_season <- CG_HOBO_daily_means %>%
   filter(Month %in% c("6", "7", "8")) 
+
+range(CG_HOBO_daily_means_season$mean_soil_moist) # -0.01660833  0.15310833
 
 # Make MONTHLY means 
 CG_HOBO_monthly_means_season <- CG_HOBO_daily_means_season %>%
@@ -148,6 +152,8 @@ CG_HOBO_monthly_means_season <- CG_HOBO_daily_means_season %>%
   slice(1) %>% # keeping only one observation from each set of year/month
   ungroup() %>%
   rename("month"="Month")
+
+range(CG_HOBO_monthly_means_season$mean_soil_moist_month) #  -0.004076823  0.105578542
 
 # NB 2016 only has sept-oct-nov months so it gets filtered out when only
 # keeping months of interest
@@ -274,8 +280,8 @@ facet_HOBO_timeseries <- grid.arrange(plot_HOBO_air_temp,plot_HOBO_ground_temp,
          axis.text.y = element_text(size = 12, colour = "black")))
 
 # b. Monthly soil moisture ----
-(plot_HOBO_soil_moist_monthly <- ggplot(CG_HOBO_monthly_means, aes(x = date, y = mean_soil_moist)) +
-   geom_line() + 
+(plot_HOBO_soil_moist_monthly <- ggplot(CG_HOBO_monthly_means_july, aes(x = year, y = mean_soil_moist_month)) +
+   geom_point() + 
    #geom_smooth(method="lm", colour = "black")+
    ylab("Monthly soil moisture ()") +
    xlab("Date") +
