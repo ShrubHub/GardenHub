@@ -3,7 +3,7 @@
 ## Last updated: 26/01/2023 by Erica
 
 # HOBO JULY means across 2017-2021 ----
-# Soil moisture = 0.05968028
+# Soil moisture = 0.05968028 i.e. 5.9%
 # Ground temp = 13.11494
 # Soil temp = 13.64918
 # Air temp = 14.01731
@@ -30,5 +30,4 @@ mean_ground_temp_CG <- mean(17.97439, 14.54956, 13.11494,
 
 mean_soil_temp_CG <- mean(13.80938, 13.64918) # 13.72928
 
-mean_soil_moist_CG <- mean(39.10862,) # 13.72928
-
+mean_soil_moist_CG <- mean(39.10862,5.968028) # 22.53832
