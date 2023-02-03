@@ -1,7 +1,7 @@
 #### CLIMATE DATA EXTRACTION - CHELSA
 ### extraction script
 ### By Erica Zaja, created on 26/01/2023
-## Last updated: 02/02/2023 by Madi
+## Last updated: 03/02/2023 by Madi
 # Script credit: adapted from Joseph Everest and Mariana Garcia Criado
 
 # LOADING LIBRARIES -----
@@ -16,6 +16,7 @@ library(sjPlot)
 library(dplyr)
 library(gridExtra)
 library(ggpubr)
+library(tidyverse)
 library(corrplot)
 library(Hmisc)
 
@@ -26,18 +27,17 @@ setwd("/Volumes/Spectral_21/CHELSA_data_1999-2019")
 temp <- raster("data/environment/CHELSA/CHELSA_bio10_10.tif") 
 # Temperature climatologies: mean daily mean air temperatures of the warmest quarter (bio10) (°C). Offset -273.15
 
-# Madi testing something out 
+# Madi testing extractions 
 # files stored on external hard drive because quite large 
-temp_2018 <- raster("data/CHELSA_tas_07_2018_V.2.1.tif") 
-temp_1999 <- raster("data/CHELSA_tas_07_1999_V.2.1.tif") 
+temp_2018 <- raster("data/temperature/CHELSA_tas_07_2018_V.2.1.tif") 
+temp_1999 <- raster("data/temperature/CHELSA_tas_07_1999_V.2.1.tif") 
 
 
-precip_2018 <- raster("data/CHELSA_pr_07_2018_V.2.1.tif")
+precip_2018 <- raster("data/precipitation/CHELSA_pr_07_2018_V.2.1.tif")
 # Precipitation climatologies: mean monthly precipitation amount of the warmest quarter (bio18) (kg m-2)
 
 # DATA EXPLORATION -----
 # checking resolution of rasters
-res(temp)
 res(temp_2018)
 
 res(precip_2018)
@@ -73,8 +73,6 @@ chelsa.stack <- stack(precip_2018, temp_2018)
 # Extracting variables values for each pair of coordinates
 chelsa.extract <- raster::extract(chelsa.stack, coords_sp, df = TRUE) # extract coords 
 
-tea_climate <- extract(temp_2018, coords)
-
 
 # Combining dataframes:
 # Converting the SpatialPoints (sp) object into a dataframe 
@@ -103,3 +101,73 @@ unique(coord.chelsa.combo.c$CH_TempMeanSummer)
 # write.csv(coord.chelsa.combo.c, "data/environment/CHELSA/coord_chelsa_combo_new.csv")
 
 ################################################################## ÉND -----
+
+# madi taking slightly diff approach 
+# Loading the coordinates of the sites of interest
+coords_full <- read.csv("lat_long_chelsa.csv")
+
+coords <-  coords_full %>% 
+  dplyr::select(longitude, latitude) # keeping lat and long
+
+# Creating SpatialPoints (sp) object of unique coordinates
+coords_sp <- SpatialPoints(coords)
+
+temp_rasters <- list.files(path="data/temperature/", pattern = "*.tif", full.names = TRUE)
+temp_stack <- raster::stack(temp_rasters)
+mean_temp <- raster::extract(temp_stack, coords, df = T)
+
+
+# Combining dataframes:
+# Converting the SpatialPoints (sp) object into a dataframe 
+coord.df <- as.data.frame(coords_sp)
+
+# Reassigning the 'ID' to the coordinates dataframe
+coords_full$ID <- row.names(coords_full)
+coords_full$ID <- as.numeric(coords_full$ID) # Make numeric
+
+# Reassigning the 'ID' to the coordinates dataframe
+mean_temp$ID <- row.names(mean_temp)
+mean_temp$ID <- as.numeric(mean_temp$ID) # Make numeric
+
+mean_temp_a <- left_join(mean_temp, coords_full, by = c("ID" = "ID"))
+
+# make long form of data 
+mean_temp_long  <- gather(mean_temp_a, year, mean_temp, 
+                                         c(2:22))
+
+mean_temp_data <- mean_temp_long %>% 
+  mutate((mean_temp_C = (mean_temp/10 - 273.15))) # Divide by 10 to get to degC and subtract 273.15 
+# change year column to just year 
+
+mean_temp_data$year <- gsub("^.*?07_","",mean_temp_data$year)
+mean_temp_data$year <- gsub("\\_V.2.1*","",mean_temp_data$year)
+         
+# same for precipitation 
+
+prec_rasters <- list.files(path="data/precipitation/", pattern = "*.tif", full.names = TRUE)
+prec_stack <- raster::stack(prec_rasters)
+prec_temp <- raster::extract(prec_stack, coords, df = TRUE)
+
+# Reassigning the 'ID' to the coordinates dataframe
+prec_temp$ID <- row.names(prec_temp)
+prec_temp$ID <- as.numeric(prec_temp$ID) # Make numeric
+
+mean_prec_a <- left_join(prec_temp, coords_full, by = c("ID" = "ID"))
+
+mean_prec_long  <- gather(mean_prec_a, year, PrecipMeanJuly, 
+                          c(2:22))
+# change year column to just year 
+mean_prec_long$year <- gsub("^.*?07_","",mean_prec_long$year)
+mean_prec_long$year <- gsub("\\_V.2.1*","",mean_prec_long$year)
+
+
+# merge 
+july_enviro <- full_join(mean_prec_long, mean_temp_data, 
+                         by = c("ID",
+                                "site",
+                                "latitude", 
+                                "longitude", 
+                                "year"))
+
+write.csv(july_enviro, "july_enviro_chelsa.csv")
+
