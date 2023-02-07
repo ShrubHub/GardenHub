@@ -139,6 +139,7 @@ arctica_2020 <- all_CG_source_growth %>%
 
 
 # 5. Biovolume (compare all)----
+
 # models 1 does converge but not using for consistency
 #biovol_mod_1 <- lmer(biovolume ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth)
 #tab_model(biovol_mod_1)

@@ -172,7 +172,7 @@ july_enviro <- full_join(mean_prec_long, mean_temp_data,
 write.csv(july_enviro, "july_enviro_chelsa.csv")
 
 # Loading chelsa temperature and precipitation data -----
-july_enviro_chelsa <- read_csv("data/july_enviro_chelsa.csv")
+july_enviro_chelsa <- read_csv("data/environment/july_enviro_chelsa.csv")
 
 
 # DATA WRANGLE ------
@@ -181,7 +181,7 @@ unique(july_enviro_chelsa$site)
 #rename column
 july_enviro_chelsa <- july_enviro_chelsa %>%
   rename ("mean_temp_C" ="(mean_temp_C = (mean_temp/10 - 273.15))")
-
+str(july_enviro_chelsa)
 # QHI july mean temp and precip
 QHI_july_temp <- july_enviro_chelsa %>%
   filter(site == "QHI")%>%
@@ -227,7 +227,26 @@ CG_july_precip <- july_enviro_chelsa %>%
 
 mean(CG_july_precip$PrecipMeanJuly, na.rm=TRUE) # 5287.333
 
+# ORDINATION ------
 
+library(BiodiversityR)
+library(ggsci)
+library(ggrepel)
+library(ggforce)
+library(vegan)
+
+# I think we need to put the dataframe into wide format? 
+# i.e. column names must be: "KP","QHI", "CG" and their temperatures
+july_enviro_chelsa_temp_wide <- july_enviro_chelsa %>% 
+  dplyr::select(site, year, mean_temp_C) %>%
+  pivot_wider(names_from=site, values_from=mean_temp_C) %>% 
+  na.omit()
+
+
+Ordination.model1 <- metaMDS(july_enviro_chelsa_temp_wide, distance='bray',  k=2, trymax=1, 
+                             autotransform=TRUE, noshare=0.1, expand=TRUE, trace=1, plot=FALSE)
+
+plot1 <- ordiplot(Ordination.model1, choices=c(1,2))
 
 
 
