@@ -28,10 +28,8 @@ temp <- raster("data/environment/CHELSA/CHELSA_bio10_10.tif")
 # Temperature climatologies: mean daily mean air temperatures of the warmest quarter (bio10) (°C). Offset -273.15
 
 # Madi testing extractions 
-# files stored on external hard drive because quite large 
 temp_2018 <- raster("data/temperature/CHELSA_tas_07_2018_V.2.1.tif") 
 temp_1999 <- raster("data/temperature/CHELSA_tas_07_1999_V.2.1.tif") 
-
 
 precip_2018 <- raster("data/precipitation/CHELSA_pr_07_2018_V.2.1.tif")
 # Precipitation climatologies: mean monthly precipitation amount of the warmest quarter (bio18) (kg m-2)
@@ -182,6 +180,7 @@ unique(july_enviro_chelsa$site)
 july_enviro_chelsa <- july_enviro_chelsa %>%
   rename ("mean_temp_C" ="(mean_temp_C = (mean_temp/10 - 273.15))")
 str(july_enviro_chelsa)
+
 # QHI july mean temp and precip
 QHI_july_temp <- july_enviro_chelsa %>%
   filter(site == "QHI")%>%
@@ -189,7 +188,7 @@ QHI_july_temp <- july_enviro_chelsa %>%
 
 mean(QHI_july_temp$mean_temp_C, na.rm=TRUE) # 6.15
 # QHI july mean surface temp: 9.10 °C 
-# based on 2022 TOMST and 2017 HOBO data 
+# based on 2022 TOMST and 2017 HOBO data (both of those data sources are biased towards end of July for what it's worth)
 
 QHI_july_precip <- july_enviro_chelsa %>%
   filter(site == "QHI")%>%
@@ -248,5 +247,10 @@ Ordination.model1 <- metaMDS(july_enviro_chelsa_temp_wide, distance='bray',  k=2
 
 plot1 <- ordiplot(Ordination.model1, choices=c(1,2))
 
+three_site_chelsa <-  july_enviro_chelsa %>% 
+  filter(site %in% c("QHI", "Kluane_plateau", "Common_garden"))
+
+(climate_space <- ggplot(three_site_chelsa, aes(x = mean_temp_C, y = PrecipMeanJuly, color = site)) +
+  geom_point())
 
 
