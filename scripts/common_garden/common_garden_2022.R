@@ -753,6 +753,7 @@ unique_source_mother <- rbind(unique_source_mother_edit_1_3,
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(unique_source_mother, 'data/source_pops/unique_source_mother.csv')
 view(unique_source_mother)
+
 # 3.7.1. Merge source / mother / common garden data ----
 # load files 
 unique_source_mother <- read.csv('data/source_pops/unique_source_mother.csv') # all mother and source (growth, not traits -- that's a bigger problem to do after)
