@@ -50,12 +50,16 @@ unique(all_CG_source_growth$Species)
 # height_growth_mod_1 <- lmer(Canopy_Height_cm ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth)
 # model 2 below doesn't converge: boundary (singular) fit: see help('isSingular')
 # height_growth_mod_2 <- lmer(Canopy_Height_cm ~ population + (1|Year/Species), data = all_CG_source_growth)
-# model 3 runs
+# model 3 runs: species random effect
 height_growth_mod_3 <- lmer(Canopy_Height_cm ~ population + (1|Year/SampleID_standard)+ (1|Species), data = all_CG_source_growth)
 summary(height_growth_mod_3)
 tab_model(height_growth_mod_3) 
 # model 4 also runs, but we are keeping model 3
 # height_growth_mod_4 <- lmer(Canopy_Height_cm ~ population + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
+
+# model 5 runs: species interacting
+height_growth_mod_5 <- lmer(Canopy_Height_cm ~ population*Species + (1|Year/SampleID_standard), data = all_CG_source_growth)
+tab_model(height_growth_mod_5) 
 
 # 1.1. Canopy height only in garden -----
 # filter dataset to retain only population "northern" and "southern"
@@ -68,74 +72,98 @@ view(all_CG_source_growth_garden_only)
 
 # model 1 below doesn't converge: boundary (singular) fit: see help('isSingular')
 # height_garden_growth_mod_1 <- lmer(Canopy_Height_cm ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)
-# model 2 below converges
+# model 2 below converges: Spp random
 height_garden_growth_mod_2 <- lmer(Canopy_Height_cm ~ population + (1|Year/SampleID_standard) + (1|Species/Sample_age), data = all_CG_source_growth_garden_only)
 tab_model(height_garden_growth_mod_2)
 # model 3 below does converge but keeping model 2
 # height_garden_growth_mod_3 <- lmer(Canopy_Height_cm ~ population + Sample_age + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth_garden_only)
 # canopy height significatly taller for southern population
 
+# model 4 below converges: spp interaction
+height_garden_growth_mod_4 <- lmer(Canopy_Height_cm ~ population*Species + (1|Year/SampleID_standard) + (1|Sample_age), data = all_CG_source_growth_garden_only)
+tab_model(height_garden_growth_mod_4)
+
 # 2. Width (compare all)-----
 # trying comparison with all (CG, KP, QHI)
 # nb can't include sample_age because not all the source pop shrubs have age
 # model 1 below runs but not keeping for consistency with other model structures
 # width_growth_mod_1 <- lmer(mean_width ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth)
-# model 2 runs 
+# model 2 runs: spp random
 width_growth_mod_2 <- lmer(mean_width~ population + (1|Year/SampleID_standard) + (1|Species), data = all_CG_source_growth)
 tab_model(width_growth_mod_2)
 # model 3 runs 
 # width_growth_mod_3 <- lmer(mean_width ~ population +  (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
 
+# model 4: spp interact
+width_growth_mod_4 <- lmer(mean_width~ population*Species + (1|Year/SampleID_standard) , data = all_CG_source_growth)
+tab_model(width_growth_mod_4)
+
 # 2.1. Width only in garden -----
 # model 1 below doesnt converge: boundary (singular) fit: see help('isSingular')
 # width_garden_growth_mod_1 <- lmer(mean_width ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)
-# model below runs 
+# model below runs: spp random 
 width_garden_growth_mod_2 <- lmer(mean_width ~ population + (1|Year/SampleID_standard) + (1|Species/Sample_age), data = all_CG_source_growth_garden_only)
 tab_model(width_garden_growth_mod_2 )
 # southern shrubs in the garden have wider canopies
+
+width_garden_growth_mod_3 <- lmer(mean_width ~ population*Species + (1|Year/SampleID_standard) + (1|Sample_age), data = all_CG_source_growth_garden_only)
+tab_model(width_garden_growth_mod_3)
 
 # 3. Stem elongation (compare all) ----
 # trying comparison with all (CG, KP, QHI)
 # nb can't include sample_age because not all the source pop shrubs have age
 # model 1 below runs but not keeping for consistency?
 # elong_growth_mod_1 <- lmer(mean_stem_elong ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth)
-# model 2 below runs 
+# model 2 below runs: spp random
 elong_growth_mod_2 <- lmer(mean_stem_elong ~ population + (1|Year/SampleID_standard)+ (1|Species), data = all_CG_source_growth)
 tab_model(elong_growth_mod_2)
 # model 3 below runs but not using
 # elong_growth_mod_3 <- lmer(mean_stem_elong ~ population + (1|Year)+ (1|Species) + (1|SampleID_standard) , data = all_CG_source_growth)
 
+# model 2 below runs: spp interact
+elong_growth_mod_4 <- lmer(mean_stem_elong ~ population*Species + (1|Year/SampleID_standard)+ (1|Species), data = all_CG_source_growth)
+tab_model(elong_growth_mod_4)
+
 # 3.1. Stem elongation only in garden -----
 # model below converges but not using for consistency?
 # elong_garden_growth_mod_1 <- lmer(mean_stem_elong ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)
-# model below converges 
+# model below converges: spp random  
 elong_garden_growth_mod_2 <- lmer(mean_stem_elong ~ population  + (1|Year/SampleID_standard) + (1|Species/Sample_age), data = all_CG_source_growth_garden_only)
 tab_model(elong_garden_growth_mod_2)
+# higher stem elongation for southern shrubs in garden
+
+# model below converges: spp interact
+elong_garden_growth_mod_3 <- lmer(mean_stem_elong ~ population*Species  + (1|Year/SampleID_standard) + (1|Sample_age), data = all_CG_source_growth_garden_only)
+tab_model(elong_garden_growth_mod_3)
 # higher stem elongation for southern shrubs in garden
 
 
 # 4. Stem diameter (compare all) ----
 # models 1 below doesnt converge: boundary (singular) fit: see help('isSingular')
 # diam_growth_mod_1 <- lmer(Stem_diameter ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth)
-# model 2 below does converge 
+# model 2 below does converge: spp random 
 diam_growth_mod_2 <- lmer(Stem_diameter ~ population + (1|Year/SampleID_standard) + (1|Species), data = all_CG_source_growth)
 tab_model(diam_growth_mod_2)
 # model 3 below converges but not using
 # diam_growth_mod_3 <- lmer(Stem_diameter ~ population + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
 
+# model 4 below does converge: spp interact
+diam_growth_mod_4 <- lmer(Stem_diameter ~ population*Species + (1|Year/SampleID_standard), data = all_CG_source_growth)
+tab_model(diam_growth_mod_4)
+
 # 4.1. Stem diameter only in garden ----
 # model 1 below doesnt converge: boundary (singular) fit: see help('isSingular')
 # diam_garden_growth_mod_1 <- lmer(Stem_diameter ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)
-# model 2 below runs (doens't converge if I add sample age)
+# model 2 below runs (doens't converge if I add sample age): spp random
 diam_garden_growth_mod_2 <- lmer(Stem_diameter ~ population + (1|Year/SampleID_standard) + (1|Species), data = all_CG_source_growth_garden_only)
 tab_model(diam_garden_growth_mod_2)
 # model 3 below does converge but not using 
 # diam_garden_growth_mod_3 <- lmer(Stem_diameter ~ population + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth_garden_only)
 # larger diameters for southern shrubs
 
-# where is arctica 2020 data?
-arctica_2020 <- all_CG_source_growth %>%
-  filter(Species == "Salix arctica" & Year == "2020") # all NAs
+# model 4 below runs: spp interact
+diam_garden_growth_mod_4 <- lmer(Stem_diameter ~ population*Species + (1|Year/SampleID_standard) + (1|Sample_age), data = all_CG_source_growth_garden_only)
+tab_model(diam_garden_growth_mod_4)
 
 
 # 5. Biovolume (compare all)----
@@ -145,18 +173,27 @@ arctica_2020 <- all_CG_source_growth %>%
 #tab_model(biovol_mod_1)
 # model 2 below doesnt  converge 
 # biovol_mod_2 <- lmer(biovolume ~ population + (1|Year/SampleID_standard) + (1|Species), data = all_CG_source_growth)
-# model 3 below converges 
+# model 3 below converges: species random
 biovol_mod_3 <- lmer(biovolume ~ population + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
 tab_model(biovol_mod_3)
+
+# model 4 below converges: spp interact
+biovol_mod_4 <- lmer(biovolume ~ population*Species + (1|Year) + (1|SampleID_standard), data = all_CG_source_growth)
+tab_model(biovol_mod_4)
 
 # 5.1. Biovolume only in garden ----
 # model 1 below doesnt converge: boundary (singular) fit: see help('isSingular')
 #biovol_garden_growth_mod_1 <- lmer(biovolume ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth_garden_only)
 # model 2 below does not run 
 #biovol_garden_growth_mod_2 <- lmer(biovolume ~ population + (1|Year/SampleID_standard) + (1|Species/Sample_age), data = all_CG_source_growth_garden_only)
-# model 3 below does converge but not using 
+# model 3 below does converge: spp random 
 biovol_garden_growth_mod_3 <- lmer(biovolume ~ population + (1|Species) , data = all_CG_source_growth_garden_only)
 tab_model(biovol_garden_growth_mod_3)
+
+# model 4 below does converge: spp random 
+biovol_garden_growth_mod_4 <- lm(biovolume ~ population*Species, data = all_CG_source_growth_garden_only)
+tab_model(biovol_garden_growth_mod_4)
+
 
 # 4. DATA VISUALISATION ------
 
