@@ -131,7 +131,7 @@ july <- growth_2022 %>%
          Stem_diameter, Stem_Elongation_1_mm, Stem_Elongation_2_mm, 
          Stem_Elongation_3_mm, Length_1_mm, Length_2_mm, Length_3_mm) %>%
   mutate(biovolume = (Canopy_Height_cm*Width_cm*Width_2_cm)) %>%
-  rename("jul_height" = "Canopy_Height_cm", # rename all to july values 
+  dplyr::rename("jul_height" = "Canopy_Height_cm", # rename all to july values 
          "jul_width_1" = "Width_cm", 
          "jul_width_2" = "Width_2_cm", 
          "jul_Stem_diameter" = "Stem_diameter",
@@ -150,7 +150,7 @@ str(july) # all good
 aug <-  growth_2022 %>% 
   filter(Month == "8") %>% 
   mutate(biovolume = (Canopy_Height_cm*Width_cm*Width_2_cm)) %>%
-  rename("aug_height" = "Canopy_Height_cm", 
+  dplyr::rename("aug_height" = "Canopy_Height_cm", 
          "aug_width_1" = "Width_cm", 
          "aug_width_2" = "Width_2_cm", 
          "aug_Stem_diameter" = "Stem_diameter",
@@ -276,7 +276,6 @@ growth_to_merge <- growth %>%
 all_growth_2022 <- rbind(growth_to_merge, CG_july_aug_2022) 
 str(all_growth_2022)
 unique(all_growth_2022$Sample_Date) # one NA
-which(is.na(all_growth_2022$Sample_Date)) # at row 5211 
 
 # calculate mean leaf length, mean width, mean stem elongation, sample year 
 all_merged_data_2022 <- all_growth_2022 %>% 
@@ -320,8 +319,7 @@ str(all_merged_data_2022)
 # make treatment column that specifies whether shrubs are north or south 
 all_cg_data_2022 <-  all_merged_data_2022 %>% 
   mutate(population = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
-                              TRUE ~ "Southern")) %>% 
-  dplyr::select(-X) 
+                              TRUE ~ "Southern")) 
 
 # save again 
 write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
@@ -330,6 +328,8 @@ write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
 # fix 2013-2020 data from CG where leaf length and stem elongation values are swapped 
 # load data 
 all_cg_data_2022 <-  read.csv("data/common_garden_data_2022/all_cg_data_2022.csv")
+
+reference <-  all_cg_data_2022
 # filter out 2021 and 22 data (those values are already correct)
 # doing this in small steps so it's easy to follow / not mix myself up 
 cg_data_2020 <- all_cg_data_2022 %>% 
@@ -352,8 +352,8 @@ cg_data_2022 <- all_cg_data_2022 %>%
 # merge two data frames 
 all_cg_data_2022 <- bind_rows(cg_data_2020_renamed, cg_data_2022) 
 # drop all X columns 
-all_cg_data_2022 <- all_cg_data_2022 %>% 
-  dplyr::select(-"X.1")
+# all_cg_data_2022 <- all_cg_data_2022 %>% 
+#  dplyr::select(-"X.1")
 
 write.csv(all_cg_data_2022, "data/common_garden_data_2022/all_cg_data_2022.csv")
 
@@ -387,7 +387,7 @@ str(field_source_pop_new$date) # right!
 
 # renaming columns so they match 
 field_source_pop_new <- field_source_pop_new %>%
-  rename("SampleDate" = "date", 
+  dplyr::rename("SampleDate" = "date", 
          "Latitude" = "Lat",
          "Longitude" = "Lon", 
          "Elevation" = "Elevation_m")
@@ -407,7 +407,7 @@ field_source_pop_new <- field_source_pop_new %>%
 
 # renaming year column 
 field_source_pop_new <- field_source_pop_new %>% 
-  rename("SampleYear" = "Year_measured")
+  dplyr::rename("SampleYear" = "Year_measured")
 
 # variables into right format
 field_source_pop_new$SampleDate <- as.POSIXct(field_source_pop_new$SampleDate, format = "%d/%m/%Y")
@@ -424,7 +424,7 @@ str(kp_2021)
 # drop extra columns 
 kp_2021_heights <-kp_2021 %>% 
   dplyr::select(-c(X, Notes, elevation, Bulk_11_aug, CAMERA, fulcrum_Plant_ID)) %>% 
-  rename("Canopy_Height_cm" =  "Height..cm.", 
+  dplyr::rename("Canopy_Height_cm" =  "Height..cm.", 
          "Latitude" = "LAT", 
          "Longitude" = "LONG",
          "Elevation" = "ELEVATION",
@@ -443,7 +443,7 @@ kp_2021_heights <- kp_2021_heights %>%
                                  Species == "Salix arctica" ~ "Salix arctica",
                                  Species %in% c("Salix richardsonii", "Salix richardsonii ") ~ "Salix richardsonii")) %>%
   dplyr::select(-Species) %>%
-  rename("Species" = "Spp_correct")
+  dplyr::rename("Species" = "Spp_correct")
 
 field_source_pop_new <- full_join(kp_2021_heights, field_source_pop_new, 
                                   by = c("Latitude", 
@@ -463,7 +463,7 @@ mother_data <- Common_garden_2017 %>%
          Mother_CW_1, Mother_CW_2, Mother_LS, Mother_LL1, Mother_LL2, 
          Mother_LL3, Mother_SE1, Mother_SE2, Mother_SE3, Cutting_length, 
          Cutting_diameter) %>%
-  rename("SampleID" = "Sample_ID", 
+  dplyr::rename("SampleID" = "Sample_ID", 
          "Canopy_Height_cm" = "Mother_height",
          "Length_1_mm" = "Mother_LL1",
          "Length_2_mm" = "Mother_LL2",
@@ -475,8 +475,8 @@ mother_data <- Common_garden_2017 %>%
          "Width_2_cm" = "Mother_CW_2", 
          "Site" = "Sample_location",
          "SampleDate" = "Date_sampled") %>% 
-  filter(Canopy_Height_cm < 600) %>% 
-  filter(Width_cm < 700)
+  dplyr::filter(Canopy_Height_cm < 600) %>% 
+  dplyr::filter(Width_cm < 700)
 
 str(mother_data)
 
@@ -495,7 +495,7 @@ mother_data$Cutting_length <- as.numeric(mother_data$Cutting_length)
 
 # adding biovolume column
 mother_data <- mother_data %>%
-mutate(biovolume = (Canopy_Height_cm*Width_cm*Width_2_cm))
+  mutate(biovolume = (Canopy_Height_cm*Width_cm*Width_2_cm))
 
 # function to convert "0017" to "2017"
 two_dig_year_cnvt <- function(z, year=2013){
@@ -513,7 +513,7 @@ mother_data$Date_planted <- two_dig_year_cnvt(mother_data$Date_planted)
 unique(mother_data$SampleDate)
 # renaming site col
 mother_data <- mother_data %>%
-  rename("SampleSite" = "Site") 
+  dplyr::rename("SampleSite" = "Site") 
 
 # making site column
 mother_data <- mother_data %>%
@@ -652,16 +652,16 @@ write.csv(july_source_pop_plus_mother, 'data/source_pops/july_source_pop_plus_mo
 unique(july_source_pop_plus_mother$Species) # contains NAs because of mother_data 
 unique(july_source_pop_plus_mother$SampleID)
 # how many NAs for species? 
-sum(is.na(july_source_pop_plus_mother$Species)) # 879, uh-oh that's most of them
-length(unique(july_source_pop_plus_mother$SampleID)) # how many unique sampleIDs # #930 
+sum(is.na(july_source_pop_plus_mother$Species)) # 603
+length(unique(july_source_pop_plus_mother$SampleID)) # how many unique sampleIDs # #604 
 
 # major issue here is a lack of consistency between uppercase, lowercase, dashes, etc. 
 # pull sample_ids and species list from common garden samples 
 cg_ids <- all_merged_data_2022 %>% 
   dplyr::select(SampleID, Species) %>% 
   distinct(SampleID, Species) %>% # keep each sample ID once 
-  rename("Species2" = "Species") %>% # for matching 
-  rename("SampleID_standard" = "SampleID")
+  dplyr::rename("Species2" = "Species") %>% # for matching 
+  dplyr::rename("SampleID_standard" = "SampleID")
 
 # make all sample ids upper case 
 cg_ids$SampleID_standard <- toupper(cg_ids$SampleID_standard) 
@@ -694,7 +694,7 @@ sum(is.na(unique_source_mother_check$spp_3)) # 0 baby!
 # drop old Species columns and rename spp_3 column to Species
 unique_source_mother <- unique_source_mother_check %>% 
   dplyr::select(-c(spp_test, Species, Species2, spp)) %>% 
-  rename("Species" = "spp_3")
+  dplyr::rename("Species" = "spp_3")
 # check to make sure we still have no NAs for species 
 sum(is.na(unique_source_mother$Species)) # 0, success! 
 
@@ -988,19 +988,19 @@ max_cg_extractions <-  all_cg_data_2022 %>%
 max_cg_heights <- all_cg_data_2022 %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(Canopy_Height_cm)) %>% 
-  rename("max_canopy_height_cm" = "Canopy_Height_cm")
+  dplyr::rename("max_canopy_height_cm" = "Canopy_Height_cm")
 
 # do same for widths (use average width value)
 max_cg_widths <- all_cg_data_2022 %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(mean_width)) %>% 
-  rename("max_mean_width_cm" = "mean_width")
+  dplyr::rename("max_mean_width_cm" = "mean_width")
 
 # do same for biovolume 
 max_cg_biovol <- all_cg_data_2022 %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(biovolume)) %>% 
-  rename("max_biovol" = "biovolume")
+  dplyr::rename("max_biovol" = "biovolume")
 
 # save 
 write.csv(max_cg_heights, "data/common_garden_data_2022/max_heights_cg.csv")
@@ -1033,19 +1033,19 @@ unique_source_mother <- read_csv("data/source_pops/unique_source_mother.csv")
 max_source_mother_heights <- unique_source_mother %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(Canopy_Height_cm)) %>% 
-  rename("max_canopy_height_cm" = "Canopy_Height_cm")
+  dplyr::rename("max_canopy_height_cm" = "Canopy_Height_cm")
 
 # do same for widths (use average width value)
 max_source_mother_widths<- unique_source_mother %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(mean_width)) %>% 
-  rename("max_mean_width_cm" = "mean_width")
+  dplyr::rename("max_mean_width_cm" = "mean_width")
 
 # do same for stem elongation (use average value)
 max_source_mother_stem_elong <- unique_source_mother %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(mean_stem_elong)) %>% 
-  rename("max_mean_stem_elong_cm" = "mean_stem_elong")
+  dplyr::rename("max_mean_stem_elong_cm" = "mean_stem_elong")
 
 # save 
 write.csv(max_source_mother_heights, "data/source_pops/max_source_mother_heights.csv")
