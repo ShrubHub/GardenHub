@@ -1,6 +1,6 @@
 # Results models for trait differences comparing northern and southern willows
 # by Madi 13/12/2022
-# Last updated: 17/01/2022
+# Last updated: 08/02/2022
 
 # TRAITS: SLA, LDMC, leaf area (LA), leaf length, leaf mass per area (LMA)
 
@@ -21,6 +21,8 @@ library(GGally)
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
 all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv") # leaf length
+
+all_source_pop_2022 <- read.csv("data/all_source_pop_2022.csv")
 
 str(all_CG_source_traits)
 str(all_CG_source_growth)
@@ -46,11 +48,22 @@ all_CG_source_traits <- all_CG_source_traits %>%
   filter(leaf_mass_per_area_g_m2 < 130 | is.na(leaf_mass_per_area_g_m2)) %>% 
   filter(SLA > 2 | is.na(SLA))
 
+# to run separate models per species filter out species: 
+arctica_all_traits <- all_CG_source_traits %>% 
+  filter(Species == "Salix arctica")
+
+pulchra_all_traits <- all_CG_source_traits %>% 
+  filter(Species == "Salix pulchra")
+
+richardsonii_all_traits <- all_CG_source_traits %>% 
+  filter(Species == "Salix richardsonii")
+
+
 # SLA ----
-SLA_mod_1 <- lmer(SLA ~ population + (1|year/Species/plant_tag_id), 
+#SLA_mod_1 <- lmer(SLA ~ population + (1|year/Species/plant_tag_id), 
                  data = all_CG_source_traits)
-summary(SLA_mod_1)
-tab_model(SLA_mod_1) 
+#summary(SLA_mod_1)
+#tab_model(SLA_mod_1) 
 # dropping plant_tag_id because shrubs weren't repeatedly measured either in source pop or garden
 # in 2021 and 2022, same shrubs were sampled in garden, but also diff than in 2017 
 SLA_mod_2 <- lmer(SLA ~ population + (1|year/Species), 
@@ -58,6 +71,29 @@ SLA_mod_2 <- lmer(SLA ~ population + (1|year/Species),
 # fixed-effect model matrix is rank deficient so dropping 5 columns / coefficients
 summary(SLA_mod_2)
 tab_model(SLA_mod_2)
+
+# species as interaction term 
+SLA_mod_spp <- lmer(SLA ~ population*Species + (1|year), 
+                  data = all_CG_source_traits)
+summary(SLA_mod_spp)
+tab_model(SLA_mod_spp)
+# overwhelming with 4 populations and 3 species 
+
+# Species specific: 
+SLA_mod_arctica <- lmer(SLA ~ population + (1|year), 
+                    data = arctica_all_traits)
+summary(SLA_mod_arctica)
+tab_model(SLA_mod_arctica)
+
+SLA_mod_pulchra <- lmer(SLA ~ population + (1|year), 
+                        data = pulchra_all_traits)
+summary(SLA_mod_pulchra)
+tab_model(SLA_mod_pulchra)
+
+SLA_mod_richardsonii <- lmer(SLA ~ population + (1|year), 
+                        data = richardsonii_all_traits)
+summary(SLA_mod_richardsonii)
+tab_model(SLA_mod_richardsonii)
 
 # LDMC ----
 
@@ -68,29 +104,38 @@ LDMC_mod_1 <- lmer(LDMC_g_g ~ population + (1|year/Species),
 summary(LDMC_mod_1)
 tab_model(LDMC_mod_1)
 
-# try separate models for separate species 
-pulchra <- all_CG_source_traits %>% 
-  filter(Species == "Salix pulchra")
-LDMC_mod_pulchra <- lmer(LDMC_g_g ~ population + (1|year), 
-                   data = pulchra)
+# Species specific: 
+LDMC_mod_arctica <- lmer(LDMC_g_g ~ population + (1|year), 
+                        data = arctica_all_traits)
+summary(LDMC_mod_arctica)
+tab_model(LDMC_mod_arctica)
 
+LDMC_mod_pulchra <- lmer(LDMC_g_g ~ population + (1|year), 
+                        data = pulchra_all_traits)
 summary(LDMC_mod_pulchra)
 tab_model(LDMC_mod_pulchra)
 
-richardsonii <- all_CG_source_traits %>% 
-  filter(Species == "Salix richardsonii")
-LDMC_mod_rich <- lmer(LDMC_g_g ~ population + (1|year), 
-                         data = richardsonii)
-
-summary(LDMC_mod_rich)
-tab_model(LDMC_mod_rich)
+LDMC_mod_richardsonii <- lmer(LDMC_g_g ~ population + (1|year), 
+                             data = richardsonii_all_traits)
+summary(LDMC_mod_richardsonii)
+tab_model(LDMC_mod_richardsonii)
 
 # LEAF LENGTH ---- 
 
-# somethig weird is happening with leaf length where some CG values are increased by a factor of 10, omiit for now 
+# somethig weird is happening with leaf length where some CG values are increased by a factor of 10, omit for now 
 # filter only last two years to run models on 
 CG_source_growth_ll <- all_CG_source_growth %>% 
   filter(Year %in% c(2021, 2022))
+
+# to run separate models per species filter out species: 
+arctica_ll_growth <- CG_source_growth_ll %>% 
+  filter(Species == "Salix arctica")
+
+pulchra_ll_growth <- CG_source_growth_ll %>% 
+  filter(Species == "Salix pulchra")
+
+richardsonii_ll_growth <- CG_source_growth_ll %>% 
+  filter(Species == "Salix richardsonii")
 
 # not including sample age as fixed effect (or random) for leaf traits 
 # unsure about including year because only one year for source populations 
@@ -101,11 +146,27 @@ tab_model(ll_mod_1)
 
 # rerunning model with all years data now that dataset is fixed 
 
-
 ll_mod_2 <- lmer(mean_leaf_length ~ population + (1|Species) + (1|Year), 
                  data = all_CG_source_growth)
 summary(ll_mod_2)
 tab_model(ll_mod_2)
+
+# species specific 
+# don't currently have ll for kluane source 
+ll_mod_arctica <- lmer(mean_leaf_length ~ population  + (1|Year), 
+                 data = arctica_ll_traits)
+summary(ll_mod_2)
+tab_model(ll_mod_2)
+
+ll_mod_pulchra <- lmer(mean_leaf_length ~ population  + (1|Year), 
+                       data = pulchra_ll_growth)
+summary(ll_mod_pulchra)
+tab_model(ll_mod_pulchra)
+
+ll_mod_richardsonii <- lmer(mean_leaf_length ~ population  + (1|Year), 
+                       data = richardsonii_ll_growth)
+summary(ll_mod_richardsonii)
+tab_model(ll_mod_richardsonii)
 
 # LEAF AREA ----
 # data is a mess because of inconsistent unit reporting, 
@@ -113,6 +174,16 @@ tab_model(ll_mod_2)
 # in the common garden and source populations 
 all_CG_source_traits_2022 <- all_CG_source_traits %>% 
   dplyr::filter(year %in% c("2021", "2022")) 
+
+# to run separate models per species filter out species: 
+arctica_2022_traits <- all_CG_source_traits_2022 %>% 
+  filter(Species == "Salix arctica")
+
+pulchra_2022_traits <- all_CG_source_traits_2022 %>% 
+  filter(Species == "Salix pulchra")
+
+richardsonii_2022_traits <- all_CG_source_traits_2022 %>% 
+  filter(Species == "Salix richardsonii")
 
 # same model srtucture as above. No sample age or ID 
 # removing year as random effect because only two years worth of data 
@@ -133,6 +204,24 @@ LMA_mod_2 <- lmer(leaf_mass_per_area_g_m2 ~ population + (1|Species),
                   data = all_CG_source_traits)
 summary(LMA_mod_2)
 tab_model(LMA_mod_2)
+
+# species specific 
+# not including year bc only two years worth of data 
+LMA_mod_arctica <- lm(leaf_mass_per_area_g_m2 ~ population, 
+                       data = arctica_2022_traits)
+summary(LMA_mod_arctica)
+tab_model(LMA_mod_arctica)
+
+LMA_mod_pulchra <- lm(leaf_mass_per_area_g_m2 ~ population, 
+                       data = pulchra_2022_traits)
+summary(LMA_mod_pulchra)
+tab_model(LMA_mod_pulchra)
+
+LMA_mod_richardsonii <- lm(leaf_mass_per_area_g_m2 ~ population, 
+                            data = richardsonii_2022_traits)
+summary(LMA_mod_richardsonii)
+tab_model(LMA_mod_richardsonii)
+
 
 # correlation matrix ----
 # filter traits in the CG
@@ -293,7 +382,7 @@ geom_boxplot(aes(x= population, y = SLA, colour = population, fill = population,
           legend.text = element_text(size=12),
           axis.line = element_line(colour = "black"),
           axis.title = element_text(size = 14),
-          axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
+          axis.text.x = element_text(angle = 90, vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
 # panel figures 

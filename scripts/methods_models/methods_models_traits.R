@@ -77,6 +77,7 @@ plot(LDMC_method_mod_spp)
 qqnorm(resid(LDMC_method_mod_spp))
 qqline(resid(LDMC_method_mod_spp)) 
 tab_model(LDMC_method_mod_spp)
+
 # leaf length (LL) ----
 # use mean value from 3 leaf lengths 
 # note: we only have two years of data for leaf length in the source populations, omitted as random effect for now? 
