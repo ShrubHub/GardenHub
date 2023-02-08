@@ -55,7 +55,8 @@ res(precip_2018)
 
 #temp_2018_raster <- levelplot(temp_2018)
 
-# EXTRACTION (to be filled in) ------
+# EXTRACTION (not used) 
+# we could move this to old script? 
 # Loading the coordinates of the sites of interest
 #coords <- read.csv("lat_long_chelsa.csv") %>% 
 #  dplyr::select(longitude, latitude) # keeping lat and long
@@ -95,8 +96,7 @@ res(precip_2018)
 # Exporting the dataframe to csv
 # write.csv(coord.chelsa.combo.c, "data/environment/CHELSA/coord_chelsa_combo_new.csv")
 
-################################################################## ÉND -----
-
+# EXTRACTION ---- 
 # madi taking slightly diff approach 
 # Loading the coordinates of the sites of interest
 coords_full <- read.csv("lat_long_chelsa.csv")
@@ -190,9 +190,9 @@ mean(QHI_july_temp$mean_temp_C, na.rm=TRUE) # 6.15
 
 QHI_july_precip <- july_enviro_chelsa %>%
   filter(site == "QHI")%>%
-  select(site, year, PrecipMeanJuly)
+  select(site, year, mean_precip_mm)
 
-mean(QHI_july_precip$PrecipMeanJuly, na.rm=TRUE) # 9586.81
+mean(QHI_july_precip$mean_precip_mm, na.rm=TRUE) # 9586.81
 # QHI july mean surface temp: 9.10 °C 
 
 # KP july mean temp and precip
@@ -204,9 +204,9 @@ mean(KP_july_temp$mean_temp_C, na.rm=TRUE) #7.311905
 
 KP_july_precip <- july_enviro_chelsa %>%
   filter(site == "Kluane_plateau")%>%
-  select(site, year, PrecipMeanJuly)
+  select(site, year, mean_precip_mm)
 
-mean(KP_july_precip$PrecipMeanJuly, na.rm=TRUE) # 7123.429
+mean(KP_july_precip$mean_precip_mm, na.rm=TRUE) # 7123.429
 
 # CG july mean temp and precip
 CG_july_temp <- july_enviro_chelsa %>%
@@ -220,9 +220,9 @@ mean(CG_july_temp$mean_temp_C, na.rm=TRUE) #13.67857
 
 CG_july_precip <- july_enviro_chelsa %>%
   filter(site == "Common_garden") %>%
-  select(site, year, PrecipMeanJuly)
+  select(site, year, mean_precip_mm)
 
-mean(CG_july_precip$PrecipMeanJuly, na.rm=TRUE) # 5287.333
+mean(CG_july_precip$mean_precip_mm, na.rm=TRUE) # 5287.333
 
 # ORDINATION ------
 
@@ -249,10 +249,10 @@ three_site_chelsa <-  july_enviro_chelsa %>%
   filter(site %in% c("QHI", "Kluane_plateau", "Common_garden"))
 
 (climate_space <- ggplot(three_site_chelsa, 
-                         aes(x = mean_temp_C, y = PrecipMeanJuly, color = site, shape =site)) +
+                         aes(x = mean_temp_C, y = mean_precip_mm, color = site, shape =site)) +
   geom_point(size = 2.5)+
     stat_ellipse() +
-    ylab("Mean July precipitation (kg/m2 month-1/100)") +
+    ylab("Mean July precipitation (mm)") +
     xlab("\nMean July temperature (°C)") +
     scale_colour_viridis_d(begin = 0.2, end = 0.85) +
     scale_fill_viridis_d(begin = 0.2, end = 0.85) +
