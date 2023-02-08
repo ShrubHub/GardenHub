@@ -79,12 +79,13 @@ QHI_source_pop_2022 <- QHI_source_pop_2022 %>%
 # merging QHI and Kluane data from 2022
 all_source_pop_2022 <- rbind(QHI_source_pop_2022, kluane_source_pop_2022)
 unique(all_source_pop_2022$SampleDate)
+str(all_source_pop_2022)
 
 # making variables right format
 all_source_pop_2022$Species <- as.factor(all_source_pop_2022$Species)
 all_source_pop_2022$Site <- as.factor(all_source_pop_2022$Site)
 all_source_pop_2022$Stem_diameter <- as.numeric(all_source_pop_2022$Stem_diameter)
-all_source_pop_2022$SampleDate  <- format(as.POSIXct(all_source_pop_2022$SampleDate,format='%d/%m/%Y %H:%M:%S'),format='%d-%m-%Y')
+#all_source_pop_2022$SampleDate  <- format(as.POSIXct(all_source_pop_2022$SampleDate,format='%d/%m/%Y %H:%M:%S'),format='%d-%m-%Y')
 all_source_pop_2022$SampleDate <- as.POSIXct(all_source_pop_2022$SampleDate, format = "%Y-%m-%d")
 unique(all_source_pop_2022$SampleDate)
 
@@ -562,14 +563,14 @@ all_source_pop_plus_mother$SampleDate <- format(as.POSIXct(all_source_pop_plus_m
 
 # making a year column
 all_source_pop_plus_mother <- all_source_pop_plus_mother %>%
-  mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y")) %>%
+  #mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y")) %>%
   dplyr::select(- `2022 Notes`)
 unique(all_source_pop_plus_mother$SampleDate)
 # variables in right format
 str(all_source_pop_plus_mother)
 all_source_pop_plus_mother$Species <- as.factor(all_source_pop_plus_mother$Species)
 all_source_pop_plus_mother$Site <- as.factor(all_source_pop_plus_mother$Site)
-all_source_pop_plus_mother$SampleDate <- as.Date(all_source_pop_plus_mother$SampleDate, format="%d/%m/%Y")
+#all_source_pop_plus_mother$SampleDate <- as.Date(all_source_pop_plus_mother$SampleDate, format="%d/%m/%Y")
 all_source_pop_plus_mother$SampleID <- as.factor(all_source_pop_plus_mother$SampleID)
 all_source_pop_plus_mother$Stem_diameter <- as.numeric(all_source_pop_plus_mother$Stem_diameter)
 all_source_pop_plus_mother$Date_propagated <- as.Date(all_source_pop_plus_mother$Date_propagated, format="%d/%m/%Y")
@@ -603,24 +604,45 @@ kluane_mid_july_2022 <- all_source_pop_plus_mother %>%
   filter(SampleDate == "2022-07-16")%>%
   ungroup()
 
+# madi wants to filter by changing way date is written but it doesn't exist? 
+unique(all_source_pop_plus_mother$SampleDate)
+
+kluane_mid_july_2022 <- all_source_pop_plus_mother %>%
+  group_by(Site, SampleYear) %>%
+  filter(SampleDate == "16/07/2022")%>%
+  ungroup()
+
 # variables in right format
 kluane_mid_july_2022$Date_propagated <- as.Date(kluane_mid_july_2022$Date_propagated, format="%d/%m/%Y")
 kluane_mid_july_2022$Date_planted <- as.Date(kluane_mid_july_2022$Date_planted, format="%d/%m/%Y")
 str(kluane_mid_july_2022)
 
 # only keeping mid july dates for QHI 2022
+#QHI_mid_july_2022_a <- all_source_pop_plus_mother %>%
+#  group_by(Site, SampleYear) %>%
+#  filter(between(SampleDate, as.Date("2022-07-19"), as.Date("2022-07-21")))%>%
+#  distinct() %>%
+#  ungroup() 
+
 QHI_mid_july_2022_a <- all_source_pop_plus_mother %>%
   group_by(Site, SampleYear) %>%
-  filter(between(SampleDate, as.Date("2022-07-19"), as.Date("2022-07-21")))%>%
+  filter(SampleDate %in% c("19/07/2022", "21/07/2022", "20/07/2022")) %>%
   distinct() %>%
   ungroup() 
 
+#QHI_mid_july_2022_b <- all_source_pop_plus_mother %>%
+#  group_by(Site, SampleYear, SampleID) %>%
+#  filter(SampleDate == "2022-07-25" & 
+#          SampleID %in% c("HESP07", "HESP08", "HESP09", "HESP10")) %>%
+#  distinct() %>%
+#  ungroup() 
+
 QHI_mid_july_2022_b <- all_source_pop_plus_mother %>%
   group_by(Site, SampleYear, SampleID) %>%
-  filter(SampleDate == "2022-07-25" & 
-          SampleID %in% c("HESP07", "HESP08", "HESP09", "HESP10")) %>%
+  filter(SampleDate == "25/07/2022" & 
+           SampleID %in% c("HESP07", "HESP08", "HESP09", "HESP10")) %>%
   distinct() %>%
-  ungroup() 
+  ungroup()
 
 # merging the july subsets of QHI
 QHI_mid_july_2022 <- rbind(QHI_mid_july_2022_a, QHI_mid_july_2022_b)
