@@ -61,7 +61,7 @@ richardsonii_all_traits <- all_CG_source_traits %>%
 
 # SLA ----
 #SLA_mod_1 <- lmer(SLA ~ population + (1|year/Species/plant_tag_id), 
-                 data = all_CG_source_traits)
+#                 data = all_CG_source_traits)
 #summary(SLA_mod_1)
 #tab_model(SLA_mod_1) 
 # dropping plant_tag_id because shrubs weren't repeatedly measured either in source pop or garden
@@ -74,14 +74,14 @@ tab_model(SLA_mod_2)
 
 # species as interaction term 
 SLA_mod_spp <- lmer(SLA ~ population*Species + (1|year), 
-                  data = all_CG_source_traits)
+                    data = all_CG_source_traits)
 summary(SLA_mod_spp)
 tab_model(SLA_mod_spp)
 # overwhelming with 4 populations and 3 species 
 
 # Species specific: 
 SLA_mod_arctica <- lmer(SLA ~ population + (1|year), 
-                    data = arctica_all_traits)
+                        data = arctica_all_traits)
 summary(SLA_mod_arctica)
 tab_model(SLA_mod_arctica)
 
@@ -91,7 +91,7 @@ summary(SLA_mod_pulchra)
 tab_model(SLA_mod_pulchra)
 
 SLA_mod_richardsonii <- lmer(SLA ~ population + (1|year), 
-                        data = richardsonii_all_traits)
+                             data = richardsonii_all_traits)
 summary(SLA_mod_richardsonii)
 tab_model(SLA_mod_richardsonii)
 
@@ -100,23 +100,23 @@ tab_model(SLA_mod_richardsonii)
 # same as SLA so not including plant_tag_id because shrubs weren't repeatedly measured either in source pop or garden
 # in 2021 and 2022, same shrubs were sampled in garden, but also diff than in 2017 
 LDMC_mod_1 <- lmer(LDMC_g_g ~ population + (1|year/Species), 
-                  data = all_CG_source_traits)
+                   data = all_CG_source_traits)
 summary(LDMC_mod_1)
 tab_model(LDMC_mod_1)
 
 # Species specific: 
 LDMC_mod_arctica <- lmer(LDMC_g_g ~ population + (1|year), 
-                        data = arctica_all_traits)
+                         data = arctica_all_traits)
 summary(LDMC_mod_arctica)
 tab_model(LDMC_mod_arctica)
 
 LDMC_mod_pulchra <- lmer(LDMC_g_g ~ population + (1|year), 
-                        data = pulchra_all_traits)
+                         data = pulchra_all_traits)
 summary(LDMC_mod_pulchra)
 tab_model(LDMC_mod_pulchra)
 
 LDMC_mod_richardsonii <- lmer(LDMC_g_g ~ population + (1|year), 
-                             data = richardsonii_all_traits)
+                              data = richardsonii_all_traits)
 summary(LDMC_mod_richardsonii)
 tab_model(LDMC_mod_richardsonii)
 
@@ -140,7 +140,7 @@ richardsonii_ll_growth <- CG_source_growth_ll %>%
 # not including sample age as fixed effect (or random) for leaf traits 
 # unsure about including year because only one year for source populations 
 ll_mod_1 <- lmer(mean_leaf_length ~ population + (1|Species), 
-               data = CG_source_growth_ll)
+                 data = CG_source_growth_ll)
 summary(ll_mod_1)
 tab_model(ll_mod_1)
 
@@ -151,10 +151,11 @@ ll_mod_2 <- lmer(mean_leaf_length ~ population + (1|Species) + (1|Year),
 summary(ll_mod_2)
 tab_model(ll_mod_2)
 
+
 # species specific 
 # don't currently have ll for kluane source 
 ll_mod_arctica <- lmer(mean_leaf_length ~ population  + (1|Year), 
-                 data = arctica_ll_traits)
+                       data = arctica_ll_traits)
 summary(ll_mod_2)
 tab_model(ll_mod_2)
 
@@ -164,7 +165,7 @@ summary(ll_mod_pulchra)
 tab_model(ll_mod_pulchra)
 
 ll_mod_richardsonii <- lmer(mean_leaf_length ~ population  + (1|Year), 
-                       data = richardsonii_ll_growth)
+                            data = richardsonii_ll_growth)
 summary(ll_mod_richardsonii)
 tab_model(ll_mod_richardsonii)
 
@@ -188,15 +189,31 @@ richardsonii_2022_traits <- all_CG_source_traits_2022 %>%
 # same model srtucture as above. No sample age or ID 
 # removing year as random effect because only two years worth of data 
 LA_mod_1 <- lmer(LA ~ population + (1|Species), 
-                   data = all_CG_source_traits_2022)
+                 data = all_CG_source_traits_2022)
 # small sample size 
+summary(LA_mod_1)
+tab_model(LA_mod_1)
+
+# species specific 
+LA_mod_arctica <- lm(LA ~ population, 
+                     data = arctica_2022_traits)
+summary(LA_mod_1)
+tab_model(LA_mod_1)
+
+LA_mod_pulchra <- lm(LA ~ population, 
+                     data = pulchra_2022_traits)
+summary(LA_mod_1)
+tab_model(LA_mod_1)
+
+LA_mod_richardsonii <- lm(LA ~ population, 
+                          data = richardsonii_2022_traits)
 summary(LA_mod_1)
 tab_model(LA_mod_1)
 
 # LMA ---- 
 # same model as SLA, LDMC, leaf length  
 LMA_mod_1 <- lmer(leaf_mass_per_area_g_m2 ~ population + (1|year/Species), 
-                 data = all_CG_source_traits)
+                  data = all_CG_source_traits)
 # boundary (singular) fit: see help('isSingular')
 
 # removing year as random effect because only 2 years worth of data:
@@ -205,22 +222,23 @@ LMA_mod_2 <- lmer(leaf_mass_per_area_g_m2 ~ population + (1|Species),
 summary(LMA_mod_2)
 tab_model(LMA_mod_2)
 
-# species specific 
+# Species specific: 
 # not including year bc only two years worth of data 
-LMA_mod_arctica <- lm(leaf_mass_per_area_g_m2 ~ population, 
-                       data = arctica_2022_traits)
-summary(LMA_mod_arctica)
-tab_model(LMA_mod_arctica)
 
-LMA_mod_pulchra <- lm(leaf_mass_per_area_g_m2 ~ population, 
-                       data = pulchra_2022_traits)
-summary(LMA_mod_pulchra)
-tab_model(LMA_mod_pulchra)
+LMA_mod_arctica <- lm(leaf_mass_per_area_g_m2 ~ population , 
+                      data = arctica_all_traits)
+summary(LDMC_mod_arctica)
+tab_model(LDMC_mod_arctica)
 
-LMA_mod_richardsonii <- lm(leaf_mass_per_area_g_m2 ~ population, 
-                            data = richardsonii_2022_traits)
-summary(LMA_mod_richardsonii)
-tab_model(LMA_mod_richardsonii)
+LMA_mod_pulchra <- lm(leaf_mass_per_area_g_m2 ~ population , 
+                      data = pulchra_all_traits)
+summary(LDMC_mod_pulchra)
+tab_model(LDMC_mod_pulchra)
+
+LMA_mod_richardsonii <- lm(leaf_mass_per_area_g_m2 ~ population , 
+                           data = richardsonii_all_traits)
+summary(LDMC_mod_richardsonii)
+tab_model(LDMC_mod_richardsonii)
 
 
 # correlation matrix ----
@@ -237,9 +255,9 @@ ggcorr(traits_variables_CG, method = c("everything", "pearson"))
 # rename levels in garden for figures 
 all_CG_source_traits$population <- plyr::revalue(all_CG_source_traits$population, 
                                                  c("Northern"="Northern Garden",
-                                             "Southern"="Southern Garden",
-                                             "source_south"="Southern Source",
-                                             "source_north"="Northern Source"))
+                                                   "Southern"="Southern Garden",
+                                                   "source_south"="Southern Source",
+                                                   "source_north"="Northern Source"))
 all_CG_source_traits$population <- ordered(all_CG_source_traits$population, 
                                            levels = c("Northern Source", 
                                                       "Northern Garden", 
@@ -247,59 +265,59 @@ all_CG_source_traits$population <- ordered(all_CG_source_traits$population,
                                                       "Southern Garden"))
 
 all_CG_source_traits_2022$population <- plyr::revalue(all_CG_source_traits_2022$population, 
-                                                 c("Northern"="Northern Garden",
-                                                   "Southern"="Southern Garden",
-                                                   "source_south"="Southern Source",
-                                                   "source_north"="Northern Source"))
-all_CG_source_traits_2022$population <- ordered(all_CG_source_traits_2022$population, 
-                                           levels = c("Northern Source", 
-                                                      "Northern Garden",
-                                                      "Southern Source", 
-                                                      "Southern Garden"))
-
-CG_source_growth_ll$population <- plyr::revalue(CG_source_growth_ll$population, 
                                                       c("Northern"="Northern Garden",
                                                         "Southern"="Southern Garden",
                                                         "source_south"="Southern Source",
                                                         "source_north"="Northern Source"))
-CG_source_growth_ll$population <- ordered(CG_source_growth_ll$population, 
+all_CG_source_traits_2022$population <- ordered(all_CG_source_traits_2022$population, 
                                                 levels = c("Northern Source", 
                                                            "Northern Garden",
                                                            "Southern Source", 
                                                            "Southern Garden"))
 
-all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
+CG_source_growth_ll$population <- plyr::revalue(CG_source_growth_ll$population, 
                                                 c("Northern"="Northern Garden",
                                                   "Southern"="Southern Garden",
                                                   "source_south"="Southern Source",
                                                   "source_north"="Northern Source"))
-all_CG_source_growth$population <- ordered(all_CG_source_growth$population, 
+CG_source_growth_ll$population <- ordered(CG_source_growth_ll$population, 
                                           levels = c("Northern Source", 
                                                      "Northern Garden",
                                                      "Southern Source", 
                                                      "Southern Garden"))
 
+all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
+                                                 c("Northern"="Northern Garden",
+                                                   "Southern"="Southern Garden",
+                                                   "source_south"="Southern Source",
+                                                   "source_north"="Northern Source"))
+all_CG_source_growth$population <- ordered(all_CG_source_growth$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden",
+                                                      "Southern Source", 
+                                                      "Southern Garden"))
+
 
 # SLA 
 (sla_plot <- ggplot(all_CG_source_traits) +
-geom_boxplot(aes(x= population, y = SLA, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
-  # facet_grid(cols = vars(Species)) +
-  facet_wrap(~Species) +
-  ylab("Specific leaf area ()") +
-  xlab("") +
-  scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-  scale_fill_viridis_d(begin = 0.1, end = 0.95) +
-  theme_bw() +
-  theme(panel.border = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        strip.text = element_text(size = 15, color = "black", face = "italic"),
-        legend.title = element_text(size=15), #change legend title font size
-        legend.text = element_text(size=12),
-        axis.line = element_line(colour = "black"),
-        axis.title = element_text(size = 14),
-        axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
-        axis.text.y = element_text(size = 12, colour = "black")))
+    geom_boxplot(aes(x= population, y = SLA, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species) +
+    ylab("Specific leaf area ()") +
+    xlab("") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
 
 # LDMC
 (ldmc_plot <- ggplot(all_CG_source_traits) +
@@ -388,9 +406,9 @@ geom_boxplot(aes(x= population, y = SLA, colour = population, fill = population,
 # panel figures 
 
 (traits_panel <- ggarrange(sla_plot, ldmc_plot, la_plot, ll_plot, 
-                          labels = c("A", "B", "C", "D"), common.legend = TRUE, legend = "bottom",
-                          ncol = 2, nrow = 2))
-  
-  
-  
-  
+                           labels = c("A", "B", "C", "D"), common.legend = TRUE, legend = "bottom",
+                           ncol = 2, nrow = 2))
+
+
+
+
