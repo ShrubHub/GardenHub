@@ -1,6 +1,6 @@
 # methods models for trait differences comparing northern and southern willows
 # Created 29 Nov 2022 Madelaine 
-# last updated: 29/11/22
+# last updated: 08/02/2023
 
 # traits: SLA, LDMC, LA, leaf length, stem diameter, shrub width
 # model structure: 
@@ -105,10 +105,6 @@ tab_model(LL_method_mod_spp)
     geom_boxplot() +
     facet_wrap(vars(Species))) 
 
-
-# quick arrange 
-(traits_plots <- ggarrange(SLA_p, LA_p, LDMC_p, ll_p, nrow = 2, ncol = 2))
-
 # LA ---- 
 LA_method_mod <- lmer(LA ~ Site*Species + (1|year), data = all_source_area_traits) 
 summary(LA_method_mod)
@@ -128,19 +124,25 @@ tab_model(LA_method_mod_spp)
 (LA_p <- ggplot(all_source_area_traits, aes(Site, LA)) +
     geom_boxplot() +
     facet_wrap(vars(Species)))
+
 # something weird is going on with leaf area data -- not sure if maybe in past years units were not consistent? 
 # filter only data collected by Madi in 2021 and 2022
-# note this dramatically reduces sample size, but curious if there is a difference 
+# note this reduces sample size 
 
 mad_traits <- all_source_area_traits %>% 
   filter(year %in% c("2021", "2022")) %>% 
   select(-X)
 
-LA_method_mod_mad <- lmer(LA ~ Site + (1|Species), data = mad_LA) # omitted sample year bc only 2 levels 
+LA_method_mod_mad <- lmer(LA ~ Site + (1|Species), data = mad_traits) # omitted sample year bc only 2 levels 
 summary(LA_method_mod_mad)
 tab_model(LA_method_mod_mad)
 
-(LA_p_mad <- ggplot(mad_traits, aes(Site, LA)) + 
+LA_method_mod <- lm(LA ~ Site*Species, data = mad_traits) # omitted sample year bc only 2 levels 
+summary(LA_method_mod)
+tab_model(LA_method_mod)
+
+
+(LA_p <- ggplot(mad_traits, aes(Site, LA)) + 
     geom_boxplot() +
     facet_wrap(vars(Species))) # this makes sense to me, for what it's worth 
 
@@ -152,6 +154,9 @@ tab_model(LA_method_mod_mad)
     geom_boxplot() +
     facet_wrap(vars(Species)))
 
+
+# quick arrange 
+(traits_plots <- ggarrange(SLA_p, LA_p, LDMC_p, ll_p, nrow = 2, ncol = 2))
 
 # visualize traits by year  ---- 
 
