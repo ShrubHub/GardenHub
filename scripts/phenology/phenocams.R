@@ -365,7 +365,7 @@ mean(CG_phenocams_individual_2021_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE)
 # Growing season length on QHI 
 # 270 - 113 = 157 days
 
-# MODELS -----
+# 4. MODELS -----
 # load all data 
 CG_phenocams_individual_2021_2022_wrangle <- read_csv("data/phenology/phenocam_pics/CG_phenocams_individual_2021_2022_wrangle.csv")
 QHI_phenocams_2022_wrangle <- read_csv("data/phenology/phenocam_pics/QHI_phenocams_2022_wrangle.csv")
@@ -442,9 +442,30 @@ all_phenocam_data_salix$population <- ordered(all_phenocam_data_salix$population
                                                       "Southern Garden", 
                                                       "Southern Source"))
 
-# model bud burst doy
+all_phenocam_data_salix$Year <- as.factor(all_phenocam_data_salix$Year)
+
+# 4.1. SOURCE POP ONLY -----
+# keeping only source pops
+all_phenocam_data_salix_sources <- all_phenocam_data_salix %>%
+  filter(population %in% c("Northern Source", "Southern Source"))
+
+# bud burst: spp interact
+# doesnt run with year random effect or spp random effect
+bud_burst_mod_source <- lm(First_bud_burst_DOY ~ population*Species, data = all_phenocam_data_salix_sources)
+tab_model(bud_burst_mod_source) 
+
+# model first yellow leaf doy: spp interact
+yellow_mod_source <- lm(First_leaf_yellow_DOY ~ population*Species, data = all_phenocam_data_salix_sources)
+tab_model(yellow_mod_source)
+
+# 4.2 CG vs SOURCES ------
+# model bud burst doy: spp random
 bud_burst_mod <- lmer(First_bud_burst_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_salix)
 tab_model(bud_burst_mod)
+
+# model bud burst doy: spp interact
+bud_burst_mod_2 <- lmer(First_bud_burst_DOY ~ population*Species + (1|Year), data = all_phenocam_data_salix)
+tab_model(bud_burst_mod_2)
 
 (plot_bud_burst_mod <- ggplot(all_phenocam_data_salix) +
     geom_boxplot(aes(x = population, y = First_bud_burst_DOY , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5) +
@@ -468,9 +489,13 @@ tab_model(bud_burst_mod)
 
 
 
-# model first yellow leaf doy
+# model first yellow leaf doy: spp random
 yellow_mod <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_salix)
 tab_model(yellow_mod)
+
+# model first yellow leaf doy: spp interact
+yellow_mod_2 <- lm(First_leaf_yellow_DOY ~ population*Species, data = all_phenocam_data_salix)
+tab_model(yellow_mod_2)
 
 (plot_yellow_mod <- ggplot(all_phenocam_data_salix) +
     geom_boxplot(aes(x = population, y = First_leaf_yellow_DOY , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5) +
@@ -492,18 +517,21 @@ tab_model(yellow_mod)
           axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
           axis.text.y = element_text(size = 15, colour = "black")))
 
-
-# common garden only models 
+# 4.3. CG ONLY MODELS ------
 all_phenocam_data_cg <- all_phenocam_data_salix %>% 
   filter(population %in% c("Northern Garden", "Southern Garden"))
 
 # model bud burst doy common garden
-bud_burst_cg_mod <- lmer(First_bud_burst_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_cg)
-tab_model(bud_burst_cg_mod)
+#bud_burst_cg_mod <- lmer(First_bud_burst_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_cg)
+# tab_model(bud_burst_cg_mod)
 # boundary (singular) fit: see help('isSingular')
-# omit year: 
+# omit year, spp random effect
 bud_burst_cg_mod_1 <- lmer(First_bud_burst_DOY ~ population + (1|Species), data = all_phenocam_data_cg)
 tab_model(bud_burst_cg_mod_1)
+
+# omit year, spp interact
+bud_burst_cg_mod_2 <- lm(First_bud_burst_DOY ~ population*Species, data = all_phenocam_data_cg)
+tab_model(bud_burst_cg_mod_2)
 
 (plot_bud_burst_cg_mod <- ggplot(all_phenocam_data_cg) +
     geom_boxplot(aes(x = population, y = First_bud_burst_DOY , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5) +
@@ -527,12 +555,16 @@ tab_model(bud_burst_cg_mod_1)
 
 
 # model first yellow leaf doy common garden 
-yellow_cg_mod <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_cg)
-tab_model(yellow_cg_mod)
+#yellow_cg_mod <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_cg)
+# tab_model(yellow_cg_mod)
 # boundary (singular) fit: see help('isSingular')
-# omit year: 
+# omit year, spp random effect
 yellow_cg_mod_1 <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) , data = all_phenocam_data_cg)
 tab_model(yellow_cg_mod_1)
+
+# omit year, spp interact
+yellow_cg_mod_2 <- lm(First_leaf_yellow_DOY ~ population*Species, data = all_phenocam_data_cg)
+tab_model(yellow_cg_mod_2)
 
 (plot_yellow_cg_mod <- ggplot(all_phenocam_data_cg) +
     geom_boxplot(aes(x = population, y = First_leaf_yellow_DOY , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5) +
