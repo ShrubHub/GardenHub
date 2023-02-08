@@ -250,7 +250,25 @@ plot1 <- ordiplot(Ordination.model1, choices=c(1,2))
 three_site_chelsa <-  july_enviro_chelsa %>% 
   filter(site %in% c("QHI", "Kluane_plateau", "Common_garden"))
 
-(climate_space <- ggplot(three_site_chelsa, aes(x = mean_temp_C, y = PrecipMeanJuly, color = site)) +
-  geom_point())
+(climate_space <- ggplot(three_site_chelsa, 
+                         aes(x = mean_temp_C, y = PrecipMeanJuly, color = site, shape =site)) +
+  geom_point(size = 2.5)+
+    stat_ellipse() +
+    ylab("Mean July precipitation (kg/m2 month-1/100)") +
+    xlab("\nMean July temperature (°C)") +
+    scale_colour_viridis_d(begin = 0.2, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.2, end = 0.85) +
+    theme_bw()+
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
 
 
