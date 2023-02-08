@@ -45,55 +45,52 @@ res(precip_2018)
 # The higher the resolution for the same extent the crisper the image (and the larger the file size) 
 
 # Visualising climate rasters
-plot(temp, main = "Mean daily mean air temperatures of the warmest quarter (°C)")
-plot(temp_2018, main = "Mean daily mean air temperatures of 2018 (°C)")
-plot(temp_1999, main = "Mean daily mean air temperatures of 1999 (°C)")
+#plot(temp, main = "Mean daily mean air temperatures of the warmest quarter (°C)")
+#plot(temp_2018, main = "Mean daily mean air temperatures of 2018 (°C)")
+#plot(temp_1999, main = "Mean daily mean air temperatures of 1999 (°C)")
 
+#plot(precip_2018, main = "Mean monthly precipitation of the warmest quarter (kg m-2)")
+#precip_2018_raster <- levelplot(precip_2018)
+#temp_raster <- levelplot(temp)
 
-
-plot(precip_2018, main = "Mean monthly precipitation of the warmest quarter (kg m-2)")
-precip_2018_raster <- levelplot(precip_2018)
-temp_raster <- levelplot(temp)
-
-temp_2018_raster <- levelplot(temp_2018)
+#temp_2018_raster <- levelplot(temp_2018)
 
 # EXTRACTION (to be filled in) ------
 # Loading the coordinates of the sites of interest
-coords <- read.csv("lat_long_chelsa.csv") %>% 
-  dplyr::select(longitude, latitude) # keeping lat and long
+#coords <- read.csv("lat_long_chelsa.csv") %>% 
+#  dplyr::select(longitude, latitude) # keeping lat and long
 
 # Creating SpatialPoints (sp) object of unique coordinates
-coords_sp <- SpatialPoints(coords)
+#coords_sp <- SpatialPoints(coords)
 
 # creating raster stack
-chelsa.stack <- stack(precip_2018, temp_2018)
+#chelsa.stack <- stack(precip_2018, temp_2018)
 
 # Extracting variables values for each pair of coordinates
-chelsa.extract <- raster::extract(chelsa.stack, coords_sp, df = TRUE) # extract coords 
-
+#chelsa.extract <- raster::extract(chelsa.stack, coords_sp, df = TRUE) # extract coords 
 
 # Combining dataframes:
 # Converting the SpatialPoints (sp) object into a dataframe 
-coord.df <- as.data.frame(coords_sp)
+#coord.df <- as.data.frame(coords_sp)
 
 # Reassigning the 'ID' to the coordinates dataframe
-coord.df$ID <- row.names(coord.df)
-coord.df$ID <- as.numeric(coord.df$ID) # Make numeric
+#coord.df$ID <- row.names(coord.df)
+#coord.df$ID <- as.numeric(coord.df$ID) # Make numeric
 
 # Merging the two dataframes: extracted CHELSA variables and the coordinates
-coord.chelsa.combo.a <- left_join(chelsa.extract, coord.df, by = c("ID" = "ID"))
+#coord.chelsa.combo.a <- left_join(chelsa.extract, coord.df, by = c("ID" = "ID"))
 
 # Modifying some of the variables to more useful values
-coord.chelsa.combo.b <- coord.chelsa.combo.a %>% 
-  mutate((CHELSA_tas_07_2018_V.2.1 = CHELSA_tas_07_2018_V.2.1/10 - 273.15)) # Divide by 10 to get to degC
+#coord.chelsa.combo.b <- coord.chelsa.combo.a %>% 
+#  mutate((CHELSA_tas_07_2018_V.2.1 = CHELSA_tas_07_2018_V.2.1/10 - 273.15)) # Divide by 10 to get to degC
 # subtract 273.15 to adjust for Kelvin to C conversion 
 
 # Renaming the variables to shorter column headings
-coord.chelsa.combo.c <- coord.chelsa.combo.b %>% 
-  rename(CH_TempMeanSummer = CHELSA_tas_07_2018_V.2.1,
+#coord.chelsa.combo.c <- coord.chelsa.combo.b %>% 
+#  rename(CH_TempMeanSummer = CHELSA_tas_07_2018_V.2.1,
          CH_PrecipMeanSummer = CHELSA_pr_07_2018_V.2.1) %>% na.omit()
 
-unique(coord.chelsa.combo.c$CH_TempMeanSummer)
+#unique(coord.chelsa.combo.c$CH_TempMeanSummer)
 
 # Exporting the dataframe to csv
 # write.csv(coord.chelsa.combo.c, "data/environment/CHELSA/coord_chelsa_combo_new.csv")
@@ -178,7 +175,8 @@ unique(july_enviro_chelsa$site)
 
 #rename column
 july_enviro_chelsa <- july_enviro_chelsa %>%
-  rename ("mean_temp_C" ="(mean_temp_C = (mean_temp/10 - 273.15))")
+  dplyr::rename ("mean_temp_C" ="(mean_temp_C = (mean_temp/10 - 273.15))") %>% 
+  dplyr::mutate(mean_precip_mm = PrecipMeanJuly/100)
 str(july_enviro_chelsa)
 
 # QHI july mean temp and precip
