@@ -545,8 +545,7 @@ mother_data$SampleID_standard<-gsub(" ","",as.character(mother_data$SampleID_sta
 
 # save mother data 
 write.csv(mother_data, 'data/source_pops/mother_data.csv')
-
-
+  
 # 3.5. Merging source pop plus mother ----
 # Merging wrangled versions of salix_field_data, all_source_pop_2022, common_garden_2017
 field_source_pop_new <- read_csv("data/source_pops/field_source_pop_new.csv")
