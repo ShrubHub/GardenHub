@@ -1100,6 +1100,8 @@ max_source_mother_stem_elong_spp <- max_source_mother_stem_elong %>%
 # no data for stem elong arctica in Kluane
 
 # 4. DATA VISUALISATION ----
+# these data are wrong 
+all_merged_data_2022 <- read.csv("data/common_garden_data_2022/all_merged_data_2022.csv")
 
 # 4.1. COMMON GARDEN ----
 
