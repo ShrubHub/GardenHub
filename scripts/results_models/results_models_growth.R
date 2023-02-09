@@ -64,7 +64,7 @@ tab_model(height_growth_mod_5)
 # 1.1. Canopy height only in garden -----
 # filter dataset to retain only population "northern" and "southern"
 all_CG_source_growth_garden_only <- all_CG_source_growth %>%
-  filter(population %in% c("Northern Garden", "Southern Garden"))
+  filter(population %in% c("Northern", "Southern"))
 all_CG_source_growth_garden_only$population <- as.factor(all_CG_source_growth_garden_only$population)
 
 str(all_CG_source_growth_garden_only)
