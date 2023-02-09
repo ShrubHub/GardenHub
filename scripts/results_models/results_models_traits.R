@@ -22,8 +22,6 @@ library(GGally)
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
 all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv") # leaf length
 
-all_source_pop_2022 <- read.csv("data/all_source_pop_2022.csv")
-
 str(all_CG_source_traits)
 str(all_CG_source_growth)
 
@@ -57,7 +55,6 @@ pulchra_all_traits <- all_CG_source_traits %>%
 
 richardsonii_all_traits <- all_CG_source_traits %>% 
   filter(Species == "Salix richardsonii")
-
 
 # SLA ----
 #SLA_mod_1 <- lmer(SLA ~ population + (1|year/Species/plant_tag_id), 
@@ -155,7 +152,7 @@ tab_model(ll_mod_2)
 # species specific 
 # don't currently have ll for kluane source 
 ll_mod_arctica <- lmer(mean_leaf_length ~ population  + (1|Year), 
-                       data = arctica_ll_traits)
+                       data = arctica_ll_growth)
 summary(ll_mod_2)
 tab_model(ll_mod_2)
 
@@ -400,7 +397,7 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
           legend.text = element_text(size=12),
           axis.line = element_line(colour = "black"),
           axis.title = element_text(size = 14),
-          axis.text.x = element_text(angle = 90, vjust = 0.5, size = 12, colour = "black"),
+          axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
 # panel figures 
