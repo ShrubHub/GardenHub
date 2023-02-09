@@ -376,22 +376,15 @@ field_source_pop <- field_data %>%
 write.csv(field_source_pop, 'data/source_pops/field_source_pop.csv')
 # fixing date issue manually was quicker
 
-
 # loading new dataset (modified a couple dates manually)
-# field_source_pop_new <- read_csv("data/source_pops/field_source_pop_new.csv")
+field_source_pop_new <- read_csv("data/source_pops/field_source_pop_edit_new.csv")
 
-field_source_pop_new <- read_csv("data/source_pops/field_source_pop.csv")
-
+view(field_source_pop_new)
 # making date into right format
-field_source_pop_new$date <- as.POSIXct(field_source_pop_new$date, format = "%d/%m/%Y")
-str(field_source_pop_new$date) # right!
+field_source_pop_new$SampleDate <- as.POSIXct(field_source_pop_new$SampleDate, format = "%d/%m/%Y")
+str(field_source_pop_new$SampleDate) # right!
 
-# renaming columns so they match 
-field_source_pop_new <- field_source_pop_new %>%
-  dplyr::rename("SampleDate" = "date", 
-         "Latitude" = "Lat",
-         "Longitude" = "Lon", 
-         "Elevation" = "Elevation_m")
+field_source_pop_new <- field_source_pop_new[,-1]
 
 # making site column
 # field_source_pop_new <- field_source_pop_new %>%
@@ -406,17 +399,11 @@ field_source_pop_new <- field_source_pop_new %>%
 # field_source_pop_new <- field_source_pop_new %>%
 #  mutate(SampleYear = format(as.Date(SampleDate, format="%d/%m/%Y"),"%Y"))
 
-# renaming year column 
-field_source_pop_new <- field_source_pop_new %>% 
-  dplyr::rename("SampleYear" = "Year_measured")
-
 # variables into right format
-field_source_pop_new$SampleDate <- as.POSIXct(field_source_pop_new$SampleDate, format = "%d/%m/%Y")
 field_source_pop_new$SampleYear <- as.numeric(field_source_pop_new$SampleYear)
 field_source_pop_new$Site <- as.factor(field_source_pop_new$Site)
 field_source_pop_new$Species <- as.factor(field_source_pop_new$Species)
 str(field_source_pop_new$Site)
-
 
 # Field data 2021 ----
 # Kluane Plateau height data 2021 
@@ -796,11 +783,14 @@ all_cg_data_2022_merge <- all_cg_data_2022 %>%
   dplyr::select(-SampleID) %>% 
   dplyr::mutate(Site = "Common_garden") 
 
+all_cg_data_2022_merge$Sample_Date <- as.POSIXct(all_cg_data_2022_merge$Sample_Date, format = "%d/%m/%Y")
+
 unique_source_mother_merge <- unique_source_mother %>% 
   dplyr::select(-c(SampleID, Match, SampleSite)) %>% 
   mutate(population = case_when(Site == "Kluane" ~ "source_south", 
                                 Site == "Qikiqtaruk" ~ "source_north" ))  # add population column to indicate source north or south
-  
+
+
 all_CG_source_growth <- full_join(all_cg_data_2022_merge, unique_source_mother_merge, 
                         by = c("Species", "Site", 
                                "Sample_Date" = "SampleDate", 
@@ -845,6 +835,7 @@ range(all_CG_source_growth_arctica_KP$Canopy_Height_cm)
 # saving data as csv
 write.csv(all_CG_source_growth, 'data/all_CG_source_growth.csv')
 
+unique(all_CG_source_growth$Sample_Date)
 # 3.7.2. Merge traits from cg with source and mother data ----
 # load data 
 # SLA, LDMC, LA: 
