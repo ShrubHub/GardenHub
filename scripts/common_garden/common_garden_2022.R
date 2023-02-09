@@ -432,6 +432,7 @@ kp_2021_heights <-kp_2021 %>%
          "Species" = "species") %>% 
   mutate(SampleYear = "2021") %>% 
   mutate(Site = "Kluane")
+
 # merge with other field data 
 str(field_source_pop_new)
 kp_2021_heights$SampleYear <- as.factor(kp_2021_heights$SampleYear)
@@ -453,6 +454,8 @@ field_source_pop_new <- full_join(kp_2021_heights, field_source_pop_new,
                                          "SampleYear",
                                          "Canopy_Height_cm",
                                          "Site", "Species"))
+
+field_source_pop_new$SampleYear <- as.numeric(field_source_pop_new$SampleYear)
 # save file 
 write.csv(field_source_pop_new, 'data/source_pops/field_source_pop_new.csv')
 
@@ -546,7 +549,7 @@ mother_data$SampleID_standard<-gsub(" ","",as.character(mother_data$SampleID_sta
 
 # save mother data 
 write.csv(mother_data, 'data/source_pops/mother_data.csv')
-  
+
 # 3.5. Merging source pop plus mother ----
 # Merging wrangled versions of salix_field_data, all_source_pop_2022, common_garden_2017
 field_source_pop_new <- read_csv("data/source_pops/field_source_pop_new.csv")
@@ -555,6 +558,8 @@ mother_data <- read_csv("data/source_pops/mother_data.csv")
 
 all_source_pop_plus_mother <- bind_rows(field_source_pop_new, all_source_pop_2022,
                         mother_data)
+
+view(all_source_pop_plus_mother)
 # formatting variables
 str(all_source_pop_plus_mother$SampleDate)
 unique(all_source_pop_plus_mother$SampleDate)
@@ -615,7 +620,8 @@ kluane_mid_july_2022 <- all_source_pop_plus_mother %>%
 # variables in right format
 kluane_mid_july_2022$Date_propagated <- as.Date(kluane_mid_july_2022$Date_propagated, format="%d/%m/%Y")
 kluane_mid_july_2022$Date_planted <- as.Date(kluane_mid_july_2022$Date_planted, format="%d/%m/%Y")
-str(kluane_mid_july_2022)
+kluane_mid_july_2022$SampleDate <- as.POSIXct(kluane_mid_july_2022$SampleDate,  format = "%d/%m/%Y")
+
 
 # only keeping mid july dates for QHI 2022
 #QHI_mid_july_2022_a <- all_source_pop_plus_mother %>%
@@ -650,6 +656,7 @@ QHI_mid_july_2022 <- rbind(QHI_mid_july_2022_a, QHI_mid_july_2022_b)
 # formatting dates
 QHI_mid_july_2022$Date_propagated <- as.Date(QHI_mid_july_2022$Date_propagated, format="%d/%m/%Y")
 QHI_mid_july_2022$Date_planted <- as.Date(QHI_mid_july_2022$Date_planted, format="%d/%m/%Y")
+QHI_mid_july_2022$SampleDate <- as.POSIXct(QHI_mid_july_2022$SampleDate,  format = "%d/%m/%Y")
 
 # re-merge with mother data
 july_source_pop_plus_mother <- bind_rows(kluane_mid_july_2022, QHI_mid_july_2022, 
@@ -658,6 +665,7 @@ july_source_pop_plus_mother <- bind_rows(kluane_mid_july_2022, QHI_mid_july_2022
 test <- july_source_pop_plus_mother %>%
   filter(SampleYear == "2022")
 view(july_source_pop_plus_mother)
+
 # formatting variables
 july_source_pop_plus_mother$Species <- as.factor(july_source_pop_plus_mother$Species)
 july_source_pop_plus_mother$Site <- as.factor(july_source_pop_plus_mother$Site)
@@ -789,7 +797,7 @@ all_cg_data_2022_merge <- all_cg_data_2022 %>%
   dplyr::mutate(Site = "Common_garden") 
 
 unique_source_mother_merge <- unique_source_mother %>% 
-  dplyr::select(-c(SampleID, Match, X, SampleSite)) %>% 
+  dplyr::select(-c(SampleID, Match, SampleSite)) %>% 
   mutate(population = case_when(Site == "Kluane" ~ "source_south", 
                                 Site == "Qikiqtaruk" ~ "source_north" ))  # add population column to indicate source north or south
   
@@ -950,10 +958,10 @@ all_CG_source_traits$SampleID_standard<-gsub("-","",as.character(all_CG_source_t
 all_CG_source_traits$SampleID_standard<-gsub(" ","",as.character(all_CG_source_traits$SampleID_standard)) # remove spaces " " 
 # get rid of date columns 
 all_CG_source_traits_merge <- all_CG_source_traits %>% 
-  dplyr::select(-c(month, DOY, Sample_Date, date_sampled, sample_id, site_id, X, MONTH, date, plant_tag_id)) %>% 
+  dplyr::select(-c(month, DOY, Sample_Date, date_sampled, sample_id, site_id, MONTH, date, plant_tag_id)) %>% 
   dplyr::rename("Year" = "year")
 all_CG_source_growth_merge <- all_CG_source_growth %>% 
-  dplyr::select(-c(Month, Sample_Date, Day, X))
+  dplyr::select(-c(Month, Sample_Date, Day))
 
 all_CG_source_growth_merge$Year <- as.factor(all_CG_source_growth_merge$Year)
 all_CG_source_traits_merge$Year <- as.factor(all_CG_source_traits_merge$Year)
