@@ -176,13 +176,13 @@ unique(july_enviro_chelsa$site)
 #rename column
 july_enviro_chelsa <- july_enviro_chelsa %>%
   dplyr::rename ("mean_temp_C" ="(mean_temp_C = (mean_temp/10 - 273.15))") %>% 
-  dplyr::mutate(mean_precip_mm = PrecipMeanJuly/100)
+  dplyr::mutate(mean_precip_mm = PrecipMeanJuly/100) # to get mm of rainfall
 str(july_enviro_chelsa)
 
 # QHI july mean temp and precip
 QHI_july_temp <- july_enviro_chelsa %>%
   filter(site == "QHI")%>%
-  select(site, year, mean_temp_C)
+  dplyr::select(site, year, mean_temp_C)
 
 mean(QHI_july_temp$mean_temp_C, na.rm=TRUE) # 6.15
 # QHI july mean surface temp: 9.10 °C 
@@ -190,28 +190,28 @@ mean(QHI_july_temp$mean_temp_C, na.rm=TRUE) # 6.15
 
 QHI_july_precip <- july_enviro_chelsa %>%
   filter(site == "QHI")%>%
-  select(site, year, mean_precip_mm)
+  dplyr::select(site, year, mean_precip_mm)
 
-mean(QHI_july_precip$mean_precip_mm, na.rm=TRUE) # 9586.81
+mean(QHI_july_precip$mean_precip_mm, na.rm=TRUE) # 95.86
 # QHI july mean surface temp: 9.10 °C 
 
 # KP july mean temp and precip
 KP_july_temp <- july_enviro_chelsa %>%
   filter(site == "Kluane_plateau")%>%
-  select(site, year, mean_temp_C)
+  dplyr::select(site, year, mean_temp_C)
 
 mean(KP_july_temp$mean_temp_C, na.rm=TRUE) #7.311905
 
 KP_july_precip <- july_enviro_chelsa %>%
   filter(site == "Kluane_plateau")%>%
-  select(site, year, mean_precip_mm)
+  dplyr::select(site, year, mean_precip_mm)
 
-mean(KP_july_precip$mean_precip_mm, na.rm=TRUE) # 7123.429
+mean(KP_july_precip$mean_precip_mm, na.rm=TRUE) # 71.23
 
 # CG july mean temp and precip
 CG_july_temp <- july_enviro_chelsa %>%
   filter(site == "Common_garden") %>%
-  select(site, year, mean_temp_C)
+  dplyr::select(site, year, mean_temp_C)
 
 mean(CG_july_temp$mean_temp_C, na.rm=TRUE) #13.67857
 
@@ -220,9 +220,9 @@ mean(CG_july_temp$mean_temp_C, na.rm=TRUE) #13.67857
 
 CG_july_precip <- july_enviro_chelsa %>%
   filter(site == "Common_garden") %>%
-  select(site, year, mean_precip_mm)
+  dplyr::select(site, year, mean_precip_mm)
 
-mean(CG_july_precip$mean_precip_mm, na.rm=TRUE) # 5287.333
+mean(CG_july_precip$mean_precip_mm, na.rm=TRUE) # 52.87
 
 # ORDINATION ------
 

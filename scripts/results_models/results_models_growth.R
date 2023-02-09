@@ -82,6 +82,7 @@ tab_model(height_garden_growth_mod_2)
 # model 4 below converges: spp interaction
 height_garden_growth_mod_4 <- lmer(Canopy_Height_cm ~ population*Species + (1|Year/SampleID_standard) + (1|Sample_age), data = all_CG_source_growth_garden_only)
 tab_model(height_garden_growth_mod_4)
+summary(height_garden_growth_mod_4)
 
 # 2. Width (compare all)-----
 # trying comparison with all (CG, KP, QHI)
