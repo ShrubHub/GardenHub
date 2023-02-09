@@ -793,7 +793,7 @@ str(unique_source_mother)
 str(all_cg_data_2022) # I'll convert variables classes after merging 
 # change Site column to be Common_garden, instead of source pop location 
 all_cg_data_2022_merge <- all_cg_data_2022 %>% 
-  dplyr::select(-SampleID, -X) %>% 
+  dplyr::select(-SampleID) %>% 
   dplyr::mutate(Site = "Common_garden") 
 
 unique_source_mother_merge <- unique_source_mother %>% 
@@ -945,7 +945,7 @@ unique(all_CG_source_traits$Site) # Common_garden Kluane Qikiqtaruk
 unique(all_CG_source_traits$Species) # Salix arctica Salix pulchra Salix richardsonii
 
 # save 
-# write.csv(all_CG_source_traits, "data/all_CG_source_traits.csv")
+write.csv(all_CG_source_traits, "data/all_CG_source_traits.csv")
 
 # 3.8 Merge all data ----
 # merge ALL data (traits and growth) into one data frame 
