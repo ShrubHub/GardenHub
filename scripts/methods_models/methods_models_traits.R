@@ -48,6 +48,26 @@ tab_model(SLA_method_mod)
     geom_boxplot() +
     facet_wrap(vars(Species)))
 
+(SLA_p_source <- ggplot(all_source_area_traits) +
+    geom_boxplot(aes(x = Site, y = SLA, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("SLA") +
+    xlab("\n") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
 # okay, do we want species as an interaction term? not our main q and our other models aren't including it
 # here, as random effect: 
 SLA_method_mod_spp <- lmer(SLA ~ Site + (1|year) + (1|Species), data = all_source_area_traits) 
@@ -70,6 +90,26 @@ tab_model(LDMC_method_mod)
     geom_boxplot() +
     facet_wrap(vars(Species)))
 
+(LDMC_p_source <- ggplot(all_source_area_traits) +
+    geom_boxplot(aes(x = Site, y = LDMC_g_g, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("LDMC_g_g") +
+    xlab("\n") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
 # species as random effect 
 LDMC_method_mod_spp <- lmer(LDMC_g_g ~ Site + (1|year) + (1|Species), data = all_source_area_traits) 
 summary(LDMC_method_mod_spp)
@@ -85,7 +125,7 @@ tab_model(LDMC_method_mod_spp)
 ll_data <-  unique_source_mother %>% 
   filter(Species != "Salix arctica")
 
-LL_method_mod <- lm(mean_leaf_length ~ Site*Species, data = ll_data) 
+LL_method_mod <- lm(mean_leaf_length ~ Site*Species, data = unique_source_mother) 
 
 summary(LL_method_mod) 
 plot(LL_method_mod)
@@ -95,16 +135,36 @@ tab_model(LL_method_mod)
 
 # species as random effect 
 # although only 2 levels so I'm not inclined to do this, see above model 
-LL_method_mod_spp <- lmer(mean_leaf_length ~ Site + (1|Species), data = ll_data) 
+LL_method_mod_spp <- lmer(mean_leaf_length ~ Site + (1|Species), data = unique_source_mother) 
 summary(LL_method_mod_spp) 
 plot(LL_method_mod_spp)
 qqnorm(resid(LL_method_mod_spp))
 qqline(resid(LL_method_mod_spp))
 tab_model(LL_method_mod_spp)
 
-(ll_p <- ggplot(ll_data, aes(Site, mean_leaf_length)) +
+(ll_p <- ggplot(unique_source_mother, aes(Site, mean_leaf_length)) +
     geom_boxplot() +
     facet_wrap(vars(Species))) 
+
+(Ll_p_source <- ggplot(unique_source_mother) +
+    geom_boxplot(aes(x = Site, y = mean_leaf_length, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("leaf length") +
+    xlab("\n") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
 
 # LA ---- 
 LA_method_mod <- lmer(LA ~ Site*Species + (1|year), data = all_source_area_traits) 
@@ -126,6 +186,7 @@ tab_model(LA_method_mod_spp)
     geom_boxplot() +
     facet_wrap(vars(Species)))
 
+
 # something weird is going on with leaf area data -- not sure if maybe in past years units were not consistent? 
 # filter only data collected by Madi in 2021 and 2022
 # note this reduces sample size 
@@ -142,6 +203,26 @@ LA_method_mod <- lm(LA ~ Site*Species, data = mad_traits) # omitted sample year 
 summary(LA_method_mod)
 tab_model(LA_method_mod)
 
+(LA_p_source <- ggplot(mad_traits) +
+    geom_boxplot(aes(x = Site, y = LA, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("LA") +
+    xlab("\n") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
 
 (LA_p <- ggplot(mad_traits, aes(Site, LA)) + 
     geom_boxplot() +
@@ -157,7 +238,7 @@ tab_model(LA_method_mod)
 
 
 # quick arrange 
-(traits_plots <- ggarrange(SLA_p, LA_p, LDMC_p, ll_p, nrow = 2, ncol = 2))
+(traits_plots <- ggarrange(SLA_p_source, LA_p_source, LDMC_p_source, Ll_p_source, nrow = 2, ncol = 2))
 
 # visualize traits by year  ---- 
 
