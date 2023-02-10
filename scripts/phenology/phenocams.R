@@ -454,9 +454,55 @@ all_phenocam_data_salix_sources <- all_phenocam_data_salix %>%
 bud_burst_mod_source <- lm(First_bud_burst_DOY ~ population*Species, data = all_phenocam_data_salix_sources)
 tab_model(bud_burst_mod_source) 
 
+(budburst_source_plot <- ggplot(all_phenocam_data_salix_sources) +
+    geom_boxplot(aes(x= population, y = First_bud_burst_DOY, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species) +
+    ylab("Budburst DOY") +an 
+    xlab("") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
 # model first yellow leaf doy: spp interact
 yellow_mod_source <- lm(First_leaf_yellow_DOY ~ population*Species, data = all_phenocam_data_salix_sources)
 tab_model(yellow_mod_source)
+# Model matrix is rank deficient. Parameters population.L:SpeciesSalix richardsonii were not estimable. 
+
+(yellow_leaf_source_plot <- ggplot(all_phenocam_data_salix_sources) +
+    geom_boxplot(aes(x= population, y = First_leaf_yellow_DOY, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species) +
+    ylab("First yellow leaf DOY") +
+    xlab("") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
+(pheno_source_panel <- ggarrange(budburst_source_plot, yellow_leaf_source_plot, 
+                                                 labels = c("A", "B"), common.legend = TRUE, legend = "bottom",
+                                                 ncol = 2, nrow = 1))
+
 
 # 4.2 CG vs SOURCES ------
 # model bud burst doy: spp random
@@ -466,6 +512,11 @@ tab_model(bud_burst_mod)
 # model bud burst doy: spp interact
 bud_burst_mod_2 <- lmer(First_bud_burst_DOY ~ population*Species + (1|Year), data = all_phenocam_data_salix)
 tab_model(bud_burst_mod_2)
+# fixed-effect model matrix is rank deficient so dropping 1 column / coefficient
+
+# model bud burst doy: spp interact omit year 
+bud_burst_mod_3 <- lm(First_bud_burst_DOY ~ population*Species, data = all_phenocam_data_salix)
+tab_model(bud_burst_mod_3)
 
 (plot_bud_burst_mod <- ggplot(all_phenocam_data_salix) +
     geom_boxplot(aes(x = population, y = First_bud_burst_DOY , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5) +
@@ -486,8 +537,6 @@ tab_model(bud_burst_mod_2)
           axis.title = element_text(size = 18),
           axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
           axis.text.y = element_text(size = 15, colour = "black")))
-
-
 
 # model first yellow leaf doy: spp random
 yellow_mod <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_salix)
