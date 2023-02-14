@@ -888,10 +888,10 @@ biovol_test_rich <- biovol_test %>%
 hist(biovol_test_rich$biovolume, breaks = 30)
 
 (plot_biovol_test <- ggplot(biovol_test) +
-    geom_smooth(aes(x = Sample_age, y = (biovolume/1e+6), colour = population, fill = population, group = population,method = "glm")) +
-    geom_point(aes(x = Sample_age, y= (biovolume/1e+6), colour = population), size = 1.5, alpha = 0.5) +
+    geom_smooth(aes(x = Sample_age, y = log(biovolume), colour = population, fill = population, group = population,method = "glm")) +
+    geom_point(aes(x = Sample_age, y = log(biovolume), colour = population), size = 1.5, alpha = 0.5) +
     facet_wrap(~Species, scales = "free") +
-    ylab("Biovolume (m3)") +
+    ylab("Biovolume (cm3)") +
     xlab("Sample age") +
     scale_colour_viridis_d(begin = 0.3, end = 0.9) +
     scale_fill_viridis_d(begin = 0.3, end = 0.9) +

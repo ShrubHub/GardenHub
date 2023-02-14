@@ -175,11 +175,11 @@ tab_model(diam_garden_growth_mod_4)
 # model 2 below doesnt  converge 
 # biovol_mod_2 <- lmer(biovolume ~ population + (1|Year/SampleID_standard) + (1|Species), data = all_CG_source_growth)
 # model 3 below converges: species random
-biovol_mod_3 <- lmer(biovolume ~ population + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
+biovol_mod_3 <- lmer(log(biovolume) ~ population + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
 tab_model(biovol_mod_3)
 
 # model 4 below converges: spp interact
-biovol_mod_4 <- lmer(biovolume ~ population*Species + (1|Year) + (1|SampleID_standard), data = all_CG_source_growth)
+biovol_mod_4 <- lmer(log(biovolume) ~ population*Species + (1|Year) + (1|SampleID_standard), data = all_CG_source_growth)
 tab_model(biovol_mod_4)
 
 # 5.1. Biovolume only in garden ----
@@ -188,11 +188,11 @@ tab_model(biovol_mod_4)
 # model 2 below does not run 
 #biovol_garden_growth_mod_2 <- lmer(biovolume ~ population + (1|Year/SampleID_standard) + (1|Species/Sample_age), data = all_CG_source_growth_garden_only)
 # model 3 below does converge: spp random 
-biovol_garden_growth_mod_3 <- lmer(biovolume ~ population + (1|Species) , data = all_CG_source_growth_garden_only)
+biovol_garden_growth_mod_3 <- lmer(log(biovolume) ~ population + (1|Species) , data = all_CG_source_growth_garden_only)
 tab_model(biovol_garden_growth_mod_3)
 
 # model 4 below does converge: spp random 
-biovol_garden_growth_mod_4 <- lm(biovolume ~ population*Species, data = all_CG_source_growth_garden_only)
+biovol_garden_growth_mod_4 <- lm(log(biovolume) ~ population*Species, data = all_CG_source_growth_garden_only)
 tab_model(biovol_garden_growth_mod_4)
 
 
@@ -492,8 +492,8 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
 
 # Biovolume  CG + source (2013-2022) ----
 (plot_biovol_all <- ggplot(all_CG_source_growth) +
-   geom_smooth(aes(x = Sample_age, y = biovolume, colour = population, fill = population, group = population, method = "glm")) +
-   geom_point(aes(x = Sample_age, y= biovolume, colour = population, group = population), size = 1.5, alpha = 0.5) +
+   geom_smooth(aes(x = Sample_age, y = log(biovolume), colour = population, fill = population, group = population, method = "glm")) +
+   geom_point(aes(x = Sample_age, y= log(biovolume), colour = population, group = population), size = 1.5, alpha = 0.5) +
    # facet_grid(cols = vars(Species)) +   #facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free") +
    ylab("Biovolume (cm3)") +
@@ -514,8 +514,8 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
 
 # Biovolume  CG only (2013-2022) ----
 (plot_biovol_garden <- ggplot(all_CG_source_growth_garden_only) +
-   geom_smooth(aes(x = Sample_age, y = biovolume, colour = population, fill = population, group = population, method = "glm")) +
-   geom_point(aes(x = Sample_age, y= biovolume, colour = population, group = population), size = 1.5, alpha = 0.5) +
+   geom_smooth(aes(x = Sample_age, y = log(biovolume), colour = population, fill = population, group = population, method = "glm")) +
+   geom_point(aes(x = Sample_age, y= log(biovolume), colour = population, group = population), size = 1.5, alpha = 0.5) +
    # facet_grid(cols = vars(Species)) +   #facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free") +
    ylab("Biovolume (cm3)") +
