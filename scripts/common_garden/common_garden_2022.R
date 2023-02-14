@@ -840,8 +840,9 @@ unique(all_CG_source_growth$Sample_Date)
 # BIOVOLUME SCALING --------
 # checking distribution
 (biovol_hist <- ggplot(all_CG_source_growth) +
-   geom_histogram(aes(x = (biovolume/1e+6), colour = Site, fill = Site, group = Site)) +
+   geom_histogram(aes(x = biovolume, colour = Site, fill = Site, group = Site)) +
    facet_wrap(~Species, scales = "free_y") +
+   scale_x_continuous(name="biovolume", labels = scales::comma) +
    ylab("Frequency") +
    xlab("\nBiovolume") +
    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
@@ -859,12 +860,52 @@ unique(all_CG_source_growth$Sample_Date)
          axis.text.y = element_text(size = 15, colour = "black")))
 
 # coiuld it be that loads of zeros because it multiplies by NA if there is an NA 
-# between width1*width2*heihgt?
+# between width1*width2*height?
+# I think we need to remove all zeros. Because there is no way biovolume can be zero
 
 # trying new biovolume column
 biovol_test <- all_CG_source_growth %>%
-  mutate(biovol_test = (Height*Width_cm*Width_2_cm, na.rm=TRUE)
+  filter(Site == "Common_garden") %>%
+  dplyr::select(Year_planted, Species, Site,
+                Month, Day, Year, SampleID_standard, biovolume, Sample_age, 
+                 population) %>%
+  na.omit()
+
+# one graph per species
+biovol_test_arctica <- biovol_test %>%
+  filter(Species == "Salix arctica")
+
+hist(biovol_test_arctica$biovolume, breaks = 30)
+
+biovol_test_pulchra <- biovol_test %>%
+  filter(Species == "Salix pulchra")
+
+hist(biovol_test_pulchra$biovolume, breaks = 30)
   
+biovol_test_rich <- biovol_test %>%
+  filter(Species == "Salix richardsonii")
+
+hist(biovol_test_rich$biovolume, breaks = 30)
+
+(plot_biovol_test <- ggplot(biovol_test) +
+    geom_smooth(aes(x = Sample_age, y = (biovolume/1e+6), colour = population, fill = population, group = population,method = "glm")) +
+    geom_point(aes(x = Sample_age, y= (biovolume/1e+6), colour = population), size = 1.5, alpha = 0.5) +
+    facet_wrap(~Species, scales = "free") +
+    ylab("Biovolume (m3)") +
+    xlab("Sample age") +
+    scale_colour_viridis_d(begin = 0.3, end = 0.9) +
+    scale_fill_viridis_d(begin = 0.3, end = 0.9) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+# same as before...
+
+
 # 3.7.2. Merge traits from cg with source and mother data ----
 # load data 
 # SLA, LDMC, LA: 
