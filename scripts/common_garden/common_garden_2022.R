@@ -836,6 +836,35 @@ range(all_CG_source_growth_arctica_KP$Canopy_Height_cm)
 write.csv(all_CG_source_growth, 'data/all_CG_source_growth.csv')
 
 unique(all_CG_source_growth$Sample_Date)
+
+# BIOVOLUME SCALING --------
+# checking distribution
+(biovol_hist <- ggplot(all_CG_source_growth) +
+   geom_histogram(aes(x = (biovolume/1e+6), colour = Site, fill = Site, group = Site)) +
+   facet_wrap(~Species, scales = "free_y") +
+   ylab("Frequency") +
+   xlab("\nBiovolume") +
+   scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+   theme_bw() +
+   theme(panel.border = element_blank(),
+         panel.grid.major = element_blank(),
+         panel.grid.minor = element_blank(),
+         strip.text = element_text(size = 15, color = "black", face = "italic"),
+         legend.title = element_text(size=15), #change legend title font size
+         legend.text = element_text(size=12),
+         axis.line = element_line(colour = "black"),
+         axis.title = element_text(size = 18),
+         axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
+         axis.text.y = element_text(size = 15, colour = "black")))
+
+# coiuld it be that loads of zeros because it multiplies by NA if there is an NA 
+# between width1*width2*heihgt?
+
+# trying new biovolume column
+biovol_test <- all_CG_source_growth %>%
+  mutate(biovol_test = (Height*Width_cm*Width_2_cm, na.rm=TRUE)
+  
 # 3.7.2. Merge traits from cg with source and mother data ----
 # load data 
 # SLA, LDMC, LA: 
