@@ -512,7 +512,6 @@ mother_data <- mother_data %>%
 
 # site as factor
 mother_data$Site <- as.factor(mother_data$Site)
-str(mother_data)
 
 # Making means cols
 mother_data <- mother_data %>%
@@ -567,7 +566,7 @@ all_source_pop_plus_mother$Stem_diameter <- as.numeric(all_source_pop_plus_mothe
 all_source_pop_plus_mother$Date_propagated <- as.Date(all_source_pop_plus_mother$Date_propagated, format="%d/%m/%Y")
 all_source_pop_plus_mother$Date_planted <- as.Date(all_source_pop_plus_mother$Date_planted, format="%d/%m/%Y")
 all_source_pop_plus_mother$Cutting_diameter <- as.numeric(all_source_pop_plus_mother$Cutting_diameter)
-all_source_pop_plus_mother$SampleYear<- as.numeric(all_source_pop_plus_mother$SampleYear)
+# all_source_pop_plus_mother$SampleYear<- as.numeric(all_source_pop_plus_mother$SampleYear)
 
 # are SampleSite and Site the same? 
 all_source_pop_plus_mother$SampleSite <- as.factor(all_source_pop_plus_mother$SampleSite)
@@ -643,6 +642,7 @@ QHI_mid_july_2022 <- rbind(QHI_mid_july_2022_a, QHI_mid_july_2022_b)
 QHI_mid_july_2022$Date_propagated <- as.Date(QHI_mid_july_2022$Date_propagated, format="%d/%m/%Y")
 QHI_mid_july_2022$Date_planted <- as.Date(QHI_mid_july_2022$Date_planted, format="%d/%m/%Y")
 QHI_mid_july_2022$SampleDate <- as.POSIXct(QHI_mid_july_2022$SampleDate,  format = "%d/%m/%Y")
+str(QHI_mid_july_2022$SampleDate)
 
 # re-merge with mother data
 july_source_pop_plus_mother <- bind_rows(kluane_mid_july_2022, QHI_mid_july_2022, 
@@ -789,6 +789,8 @@ unique_source_mother_merge <- unique_source_mother %>%
   mutate(population = case_when(Site == "Kluane" ~ "source_south", 
                                 Site == "Qikiqtaruk" ~ "source_north" ))  # add population column to indicate source north or south
 
+unique_source_mother_merge$SampleDate <- as.POSIXct(unique_source_mother_merge$SampleDate, format = "%Y-%m-%d")
+unique(unique_source_mother_merge$SampleDate)
 
 all_CG_source_growth <- full_join(all_cg_data_2022_merge, unique_source_mother_merge, 
                         by = c("Species", "Site", 
