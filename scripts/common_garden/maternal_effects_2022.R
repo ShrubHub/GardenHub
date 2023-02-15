@@ -181,6 +181,26 @@ tab_model(maternal_height_mod)
 maternal_height_mod_nosite <-  lmer(Mother_Canopy_Height_cm ~ max_canopy_height_cm + (1|Species), data = mother_cg)
 tab_model(maternal_height_mod_nosite)
 
+# make species specific dfs
+mother_cg_arctica <- mother_cg %>% 
+  dplyr::filter(Species == "Salix arctica")
+
+mother_cg_richardsonii <- mother_cg %>% 
+  dplyr::filter(Species == "Salix richardsonii")
+
+mother_cg_pulchra <- mother_cg %>% 
+  dplyr::filter(Species == "Salix pulchra")
+# species specific models 
+maternal_height_pulchra_mod <-  lm(Mother_Canopy_Height_cm ~ max_canopy_height_cm + Site, data = mother_cg_pulchra)
+summary(maternal_height_pulchra_mod)
+tab_model(maternal_height_pulchra_mod)
+anova(maternal_height_pulchra_mod)
+
+maternal_height_richardsonii_mod <-  lm(Mother_Canopy_Height_cm ~ max_canopy_height_cm + Site, data = mother_cg_richardsonii)
+summary(maternal_height_richardsonii_mod)
+tab_model(maternal_height_richardsonii_mod)
+anova(maternal_height_richardsonii_mod)
+
 ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, color = Species)) +
   geom_point() +
   geom_smooth(method = "lm")
