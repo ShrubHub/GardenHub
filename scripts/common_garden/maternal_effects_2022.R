@@ -184,14 +184,16 @@ tab_model(maternal_height_mod_nosite)
 ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, color = Species)) +
   geom_point() +
   geom_smooth(method = "lm")
+
 # make long format of data 
 mother_cg_long <- mother_cg_edit %>% 
   gather(key = mother_or_child, value = height, c(Mother_Canopy_Height_cm, max_canopy_height_cm), factor_key=TRUE) 
+
 levels(mother_cg_long$mother_or_child) <- list(Mother  = "Mother_Canopy_Height_cm", Child = "max_canopy_height_cm")
 
 (plot_mother_height_model <- ggplot() +
     geom_point(aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, color = mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit) +
-    geom_smooth(aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, colour = mother_or_child), method = "lm", data = mother_cg_edit) +
+    geom_smooth(aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm), method = "lm", data = mother_cg_edit) +
     # facet_wrap(~Species + Site, scales = "free") +
     facet_grid(Species ~ Site, scales = "free") +
     ylab("Mother shrub canopy height in sources (cm)") +
@@ -225,7 +227,6 @@ plot(mother_cg_edit$max_canopy_height_cm, mother_cg_edit$Mother_Canopy_Height_cm
 
 
 # WIDTH MODEL  -----
-
 maternal_width_mod <-  lmer(Mother_mean_width ~ max_mean_width_cm + Site + (1|Species), data = mother_cg)
 summary(maternal_width_mod)
 tab_model(maternal_width_mod)
@@ -233,10 +234,9 @@ tab_model(maternal_width_mod)
 maternal_width_mod_nosite <-  lmer(Mother_mean_width ~ max_mean_width_cm + (1|Species), data = mother_cg)
 tab_model(maternal_width_mod_nosite)
 
-
 (plot_mother_width_model <- ggplot() +
-    geom_point(aes(x = max_mean_width_cm, y= Mother_mean_width, color = mother_or_child, fill = mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit) +
-    geom_smooth(aes(x = max_mean_width_cm, y= Mother_mean_width, colour = mother_or_child, fill = mother_or_child), method = "lm", data = mother_cg_edit) +
+    geom_point(aes(x = max_mean_width_cm, y = Mother_mean_width, color = mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit) +
+    geom_smooth(aes(x = max_mean_width_cm, y = Mother_mean_width), method = "lm", data = mother_cg_edit) +
    # facet_wrap(~Species + Site, scales = "free") +
     facet_grid(Species ~ Site, scales = "free") +
     ylab("Mother shrub width in sources (cm)") +
@@ -251,19 +251,40 @@ tab_model(maternal_width_mod_nosite)
           axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black"))) 
 
+(plot_mother_width_model <- ggplot(mother_cg_edit, aes(x = max_mean_width_cm, y = Mother_mean_width)) +
+    geom_point(aes(color = mother_or_child), size = 3, alpha = 0.5) +
+    facet_wrap(vars(Species)) +
+    ylab("Mother shrub canopy width in sources (cm)") +
+    xlab("\nMax child canopy width in common garden (cm)") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black"))) 
 
 # BIOVOLUME ----
-maternal_biovol_mod <-  lmer(Mother_biovolume ~ max_biovol + Site + (1|Species), data = mother_cg_edit)
+# log transforming biovolume and cutting length 
+mother_cg_edit_biovol <- mother_cg_edit %>%
+  mutate(mother_biovol_log = log(Mother_biovolume),
+         child_max_biovol_log = log(max_biovol),
+         log_cutting_length = log(Cutting_length))
+
+maternal_biovol_mod <-  lmer(mother_biovol_log ~ child_max_biovol_log + Site + (1|Species), data = mother_cg_edit_biovol)
 summary(maternal_biovol_mod)
-tab_model(maternal_biovol_mod)
+tab_model(maternal_biovol_mod) # nothing significant
+
 # run model without site 
-maternal_biovol_nosite_mod <-  lmer(Mother_biovolume ~ max_biovol + (1|Species), data = mother_cg_edit)
+maternal_biovol_nosite_mod <-  lmer(mother_biovol_log ~ child_max_biovol_log + (1|Species), data = mother_cg_edit_biovol)
 summary(maternal_biovol_nosite_mod)
-tab_model(maternal_biovol_nosite_mod)
+tab_model(maternal_biovol_nosite_mod) # still nothing significant
 
 (plot_biovol_maternal_model <- ggplot() +
-    geom_point(aes(x = max_biovol, y= Mother_biovolume, color =mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit) +
-    geom_smooth(aes(x = max_biovol, y= Mother_biovolume, colour =mother_or_child), method = "lm", data = mother_cg_edit) +
+    geom_point(aes(x = child_max_biovol_log, y= mother_biovol_log, color =mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit_biovol) +
+    geom_smooth(aes(x = child_max_biovol_log, y= mother_biovol_log, colour =mother_or_child), method = "lm", data = mother_cg_edit_biovol) +
     # facet_wrap(~Species + Site, scales = "free") +
     facet_grid(Species ~ Site, scales = "free") +    
     ylab("Mother biovolume (cm3)") +
@@ -279,6 +300,7 @@ tab_model(maternal_biovol_nosite_mod)
           axis.text.y = element_text(size = 12, colour = "black")))
 
 # PROPOGATION DATA MODELS ----
+
 cutting_length_mod <-  lmer(Cutting_length ~ max_canopy_height_cm + Site + (1|Species), data = mother_cg_edit)
 summary(cutting_length_mod)
 tab_model(cutting_length_mod)
@@ -304,11 +326,27 @@ tab_model(cutting_length_mod_nosite)
           axis.text.y = element_text(size = 12, colour = "black"))) 
 
 # PROPOGATION BIOVOLUME MODEL
-cutting_bio_mod <-  lmer(Cutting_length ~ max_biovol + Site + (1|Species), data = mother_cg_edit)
-# Some predictor variables are on very different scales: consider rescaling 
+cutting_bio_mod <-  lmer(child_max_biovol_log ~ log_cutting_length + Site + (1|Species), data = mother_cg_edit_biovol)
 summary(cutting_bio_mod)
-tab_model(cutting_bio_mod)
+tab_model(cutting_bio_mod) # site term significant
 
-cutting_bio_mod_nosite <-  lmer(Cutting_length ~ max_biovol + (1|Species), data = mother_cg_edit)
-# Some predictor variables are on very different scales: consider rescaling 
+cutting_bio_mod_nosite <-  lmer(child_max_biovol_log ~ log_cutting_length + (1|Species), data = mother_cg_edit_biovol)
 tab_model(cutting_bio_mod_nosite)
+
+(plot_biovol_cutting_model <- ggplot() +
+    geom_point(aes(x = child_max_biovol_log, y= log_cutting_length, color =mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit_biovol) +
+    geom_smooth(aes(x = child_max_biovol_log, y= log_cutting_length, colour =mother_or_child), method = "lm", data = mother_cg_edit_biovol) +
+    # facet_wrap(~Species + Site, scales = "free") +
+    facet_grid(Species ~ Site, scales = "free") +    
+    ylab("Maternal cutting length (cm)") +
+    xlab("\nMax child biovolume in common garden (cm3)") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+

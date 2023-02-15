@@ -863,7 +863,7 @@ unique(all_CG_source_growth$Sample_Date)
 # between width1*width2*height?
 # I think we need to remove all zeros. Because there is no way biovolume can be zero
 
-# trying new biovolume column
+# keeping only rows where biovol value is not NA
 biovol_test <- all_CG_source_growth %>%
   filter(Site == "Common_garden") %>%
   dplyr::select(Year_planted, Species, Site,
@@ -903,7 +903,7 @@ hist(biovol_test_rich$biovolume, breaks = 30)
           axis.title = element_text(size = 14),
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
-# same as before...
+# looks much better!
 
 
 # 3.7.2. Merge traits from cg with source and mother data ----
