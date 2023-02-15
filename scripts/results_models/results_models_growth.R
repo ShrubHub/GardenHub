@@ -195,6 +195,11 @@ tab_model(biovol_garden_growth_mod_3)
 biovol_garden_growth_mod_4 <- lm(log(biovolume) ~ population*Species, data = all_CG_source_growth_garden_only)
 tab_model(biovol_garden_growth_mod_4)
 
+# poisson model
+poisson_model <- glmer(biovolume ~ population*Species + (1|Sample_age), data = all_CG_source_growth_garden_only, family = poisson(link = "log"))
+summary(poisson_model)
+tab_model(poisson_model)
+
 
 # 4. DATA VISUALISATION ------
 
