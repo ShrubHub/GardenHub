@@ -403,7 +403,7 @@ field_source_pop_new <- field_source_pop_new[,-1]
 field_source_pop_new$SampleYear <- as.numeric(field_source_pop_new$SampleYear)
 field_source_pop_new$Site <- as.factor(field_source_pop_new$Site)
 field_source_pop_new$Species <- as.factor(field_source_pop_new$Species)
-str(field_source_pop_new$Site)
+str(field_source_pop_new$SampleYear)
 
 # Field data 2021 ----
 # Kluane Plateau height data 2021 
@@ -422,9 +422,9 @@ kp_2021_heights <-kp_2021 %>%
 
 # merge with other field data 
 str(field_source_pop_new)
-kp_2021_heights$SampleYear <- as.factor(kp_2021_heights$SampleYear)
+kp_2021_heights$SampleYear <- as.numeric(kp_2021_heights$SampleYear)
 kp_2021_heights$Species <- as.factor(kp_2021_heights$Species)
-field_source_pop_new$SampleYear <- as.factor(field_source_pop_new$SampleYear)
+# field_source_pop_new$SampleYear <- as.factor(field_source_pop_new$SampleYear)
 
 # fixing typo (Salic instead of salix)
 kp_2021_heights <- kp_2021_heights %>%
@@ -442,7 +442,6 @@ field_source_pop_new <- full_join(kp_2021_heights, field_source_pop_new,
                                          "Canopy_Height_cm",
                                          "Site", "Species"))
 
-field_source_pop_new$SampleYear <- as.numeric(field_source_pop_new$SampleYear)
 # save file 
 write.csv(field_source_pop_new, 'data/source_pops/field_source_pop_new.csv')
 
