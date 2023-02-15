@@ -217,7 +217,7 @@ tab_model(diam_method_mod_2)
 
 # d. Biovolume ----
 # biovolume (height * width * width) lmer with species interacting
-biovol_method_mod <- lmer(biovolume ~ Site*Species + (1|SampleYear), data = unique_source_mother)
+biovol_method_mod <- lmer(log(biovolume) ~ Site*Species + (1|SampleYear), data = unique_source_mother)
 
 summary(biovol_method_mod)
 plot(biovol_method_mod)
@@ -226,7 +226,7 @@ qqline(resid(biovol_method_mod))
 tab_model(biovol_method_mod)
 
 # model with species as random effect 
-biovol_method_mod_spp <- lmer(biovolume ~ Site + (1|Species) + (1|SampleYear), data = unique_source_mother)
+biovol_method_mod_spp <- lmer(log(biovolume) ~ Site + (1|Species) + (1|SampleYear), data = unique_source_mother)
 
 summary(biovol_method_mod_spp)
 plot(biovol_method_mod_spp)
@@ -234,12 +234,12 @@ qqnorm(resid(biovol_method_mod_spp))
 qqline(resid(biovol_method_mod_spp)) 
 tab_model(biovol_method_mod_spp)
 
-(biovolume_p <- ggplot(unique_source_mother, aes(Site, biovolume)) +
+(biovolume_p <- ggplot(unique_source_mother, aes(Site, log(biovolume))) +
     geom_boxplot() +
     facet_wrap(vars(Species)))
 
 (plot_biovolume_source <- ggplot(unique_source_mother) +
-    geom_boxplot(aes(x = Site, y = biovolume, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
+    geom_boxplot(aes(x = Site, y = log(biovolume), colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
     # facet_grid(cols = vars(Species)) +
     facet_wrap(~Species, scales = "free_y") +
     ylab("Biovolume (cm3)") +
@@ -284,3 +284,7 @@ tab_model(biovol_method_mod_spp)
 (diam_p_year <- ggplot(unique_source_mother, aes(Site, Stem_diameter)) + 
     geom_boxplot() +
     facet_wrap(vars(SampleYear))) # only 2022
+
+(biovol_p_year <- ggplot(unique_source_mother, aes(Site, log(biovolume))) + 
+    geom_boxplot() +
+    facet_wrap(vars(SampleYear))) # 2016, 2017, 2022
