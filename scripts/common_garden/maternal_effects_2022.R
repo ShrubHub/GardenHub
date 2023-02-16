@@ -245,6 +245,8 @@ levels(mother_cg_long$mother_or_child) <- list(Mother  = "Mother_Canopy_Height_c
 
 plot(mother_cg_edit$max_canopy_height_cm, mother_cg_edit$Mother_Canopy_Height_cm, col=as.factor(mother_cg_edit$mother_or_child))
 
+test <- mother_cg_edit %>% select(c(mother_or_child, max_mean_width_cm, Species, 
+                                    Mother_mean_width))
 
 # WIDTH MODEL  -----
 maternal_width_mod <-  lmer(Mother_mean_width ~ max_mean_width_cm + Site + (1|Species), data = mother_cg)
