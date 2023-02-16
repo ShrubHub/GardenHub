@@ -286,6 +286,7 @@ tab_model(maternal_width_mod_nosite)
           axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black"))) 
 
+
 # BIOVOLUME ----
 # log transforming biovolume and cutting length 
 mother_cg_edit_biovol <- mother_cg_edit %>%
