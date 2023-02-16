@@ -190,7 +190,8 @@ mother_cg_richardsonii <- mother_cg %>%
 
 mother_cg_pulchra <- mother_cg %>% 
   dplyr::filter(Species == "Salix pulchra")
-# species specific models 
+
+# Species specific height models -----
 maternal_height_pulchra_mod <-  lm(Mother_Canopy_Height_cm ~ max_canopy_height_cm + Site, data = mother_cg_pulchra)
 summary(maternal_height_pulchra_mod)
 tab_model(maternal_height_pulchra_mod)
@@ -200,6 +201,11 @@ maternal_height_richardsonii_mod <-  lm(Mother_Canopy_Height_cm ~ max_canopy_hei
 summary(maternal_height_richardsonii_mod)
 tab_model(maternal_height_richardsonii_mod)
 anova(maternal_height_richardsonii_mod)
+
+maternal_height_arctica_mod <-  lm(Mother_Canopy_Height_cm ~ max_canopy_height_cm + Site, data = mother_cg_arctica)
+summary(maternal_height_arctica_mod)
+tab_model(maternal_height_arctica_mod)
+anova(maternal_height_arctica_mod)
 
 ggplot(mother_cg, aes(x = max_canopy_height_cm, y = Mother_Canopy_Height_cm, color = Species)) +
   geom_point() +
@@ -256,6 +262,22 @@ tab_model(maternal_width_mod)
 maternal_width_mod_nosite <-  lmer(Mother_mean_width ~ max_mean_width_cm + (1|Species), data = mother_cg)
 tab_model(maternal_width_mod_nosite)
 
+# Species specific width models -----
+maternal_width_pulchra_mod <-  lm(Mother_mean_width ~ max_mean_width_cm + Site, data = mother_cg_pulchra)
+summary(maternal_width_pulchra_mod)
+tab_model(maternal_width_pulchra_mod) # no effects
+anova(maternal_width_pulchra_mod)
+
+maternal_width_rich_mod <-  lm(Mother_mean_width ~ max_mean_width_cm + Site, data = mother_cg_richardsonii)
+summary(maternal_width_rich_mod)
+tab_model(maternal_width_rich_mod) # yes effects
+anova(maternal_width_rich_mod)
+
+maternal_width_arc_mod <-  lm(Mother_mean_width ~ max_mean_width_cm + Site, data = mother_cg_arctica)
+summary(maternal_width_arc_mod)
+tab_model(maternal_width_arc_mod) # no effects
+anova(maternal_width_arc_mod)
+
 (plot_mother_width_model <- ggplot() +
     geom_point(aes(x = max_mean_width_cm, y = Mother_mean_width, color = mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit) +
     geom_smooth(aes(x = max_mean_width_cm, y = Mother_mean_width), method = "lm", data = mother_cg_edit) +
@@ -296,6 +318,16 @@ mother_cg_edit_biovol <- mother_cg_edit %>%
          child_max_biovol_log = log(max_biovol),
          log_cutting_length = log(Cutting_length))
 
+mother_cg_edit_biovol_arctica <- mother_cg_edit_biovol %>%
+  filter(Species == "Salix arctica")
+
+mother_cg_edit_biovol_rich <- mother_cg_edit_biovol %>%
+  filter(Species == "Salix richardsonii")
+
+mother_cg_edit_biovol_pulchra <- mother_cg_edit_biovol %>%
+  filter(Species == "Salix pulchra")
+
+# all species model
 maternal_biovol_mod <-  lmer(mother_biovol_log ~ child_max_biovol_log + Site + (1|Species), data = mother_cg_edit_biovol)
 summary(maternal_biovol_mod)
 tab_model(maternal_biovol_mod) # nothing significant
@@ -305,9 +337,25 @@ maternal_biovol_nosite_mod <-  lmer(mother_biovol_log ~ child_max_biovol_log + (
 summary(maternal_biovol_nosite_mod)
 tab_model(maternal_biovol_nosite_mod) # still nothing significant
 
+# Species specific biovolume models -----
+maternal_biovol_pulchra_mod <-  lm(mother_biovol_log ~ child_max_biovol_log + Site, data = mother_cg_edit_biovol_pulchra)
+summary(maternal_biovol_pulchra_mod)
+tab_model(maternal_biovol_pulchra_mod) # yes effects?or just QHI?
+anova(maternal_biovol_pulchra_mod)
+
+maternal_biovol_rich_mod <-  lm(mother_biovol_log ~ child_max_biovol_log + Site, data = mother_cg_edit_biovol_rich)
+summary(maternal_biovol_rich_mod)
+tab_model(maternal_biovol_rich_mod) # no effects
+anova(maternal_biovol_rich_mod)
+
+maternal_biovol_arc_mod <-  lm(mother_biovol_log ~ child_max_biovol_log + Site, data = mother_cg_edit_biovol_arctica)
+summary(maternal_biovol_arc_mod)
+tab_model(maternal_biovol_arc_mod) # no effects
+anova(maternal_biovol_arc_mod)
+
 (plot_biovol_maternal_model <- ggplot() +
     geom_point(aes(x = child_max_biovol_log, y= mother_biovol_log, color =mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit_biovol) +
-    geom_smooth(aes(x = child_max_biovol_log, y= mother_biovol_log, colour =mother_or_child), method = "lm", data = mother_cg_edit_biovol) +
+    geom_smooth(aes(x = child_max_biovol_log, y= mother_biovol_log), method = "lm", data = mother_cg_edit_biovol) +
     # facet_wrap(~Species + Site, scales = "free") +
     facet_grid(Species ~ Site, scales = "free") +    
     ylab("Mother biovolume (cm3)") +
@@ -323,7 +371,7 @@ tab_model(maternal_biovol_nosite_mod) # still nothing significant
           axis.text.y = element_text(size = 12, colour = "black")))
 
 # PROPOGATION DATA MODELS ----
-
+#a. Height vs Cutting length -----
 cutting_length_mod <-  lmer(Cutting_length ~ max_canopy_height_cm + Site + (1|Species), data = mother_cg_edit)
 summary(cutting_length_mod)
 tab_model(cutting_length_mod)
@@ -331,9 +379,25 @@ tab_model(cutting_length_mod)
 cutting_length_mod_nosite <-  lmer(Cutting_length ~ max_canopy_height_cm + (1|Species), data = mother_cg_edit)
 tab_model(cutting_length_mod_nosite)
 
+# Species specific propagation models -----
+maternal_prop_pulchra_mod <-  lm(Cutting_length ~ max_canopy_height_cm + Site, data = mother_cg_pulchra)
+summary(maternal_prop_pulchra_mod)
+tab_model(maternal_prop_pulchra_mod) #no effects
+anova(maternal_prop_pulchra_mod)
+
+maternal_prop_rich_mod <-  lm(Cutting_length ~ max_canopy_height_cm + Site, data = mother_cg_richardsonii)
+summary(maternal_prop_rich_mod)
+tab_model(maternal_prop_rich_mod) # no effects
+anova(maternal_prop_rich_mod)
+
+maternal_prop_arc_mod <-  lm(Cutting_length ~ max_canopy_height_cm + Site, data = mother_cg_arctica)
+summary(maternal_prop_arc_mod)
+tab_model(maternal_prop_arc_mod) # yes effects??
+anova(maternal_prop_arc_mod)
+
 (plot_cutting_length_model <- ggplot() +
     geom_point(aes(x = max_canopy_height_cm, y= Cutting_length, color =mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit) +
-    geom_smooth(aes(x = max_canopy_height_cm, y= Cutting_length, colour =mother_or_child), method = "lm", data = mother_cg_edit) +
+    geom_smooth(aes(x = max_canopy_height_cm, y= Cutting_length), method = "lm", data = mother_cg_edit) +
     # facet_wrap(~Species + Site, scales = "free") +
     facet_grid(Species ~ Site, scales = "free") +    
     ylab("Cutting length (cm)") +
@@ -348,13 +412,30 @@ tab_model(cutting_length_mod_nosite)
           axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black"))) 
 
-# PROPOGATION BIOVOLUME MODEL
+# b.Biovolume vs cutting length model -----
 cutting_bio_mod <-  lmer(child_max_biovol_log ~ log_cutting_length + Site + (1|Species), data = mother_cg_edit_biovol)
 summary(cutting_bio_mod)
 tab_model(cutting_bio_mod) # site term significant
 
 cutting_bio_mod_nosite <-  lmer(child_max_biovol_log ~ log_cutting_length + (1|Species), data = mother_cg_edit_biovol)
 tab_model(cutting_bio_mod_nosite)
+
+# Species specific propagation models -----
+maternal_prop_bio_pulchra_mod <-  lm(child_max_biovol_log ~ log_cutting_length + Site, data = mother_cg_edit_biovol_pulchra)
+summary(maternal_prop_bio_pulchra_mod)
+tab_model(maternal_prop_bio_pulchra_mod) #yes?
+anova(maternal_prop_bio_pulchra_mod)
+
+maternal_prop_bio_arc_mod <-  lm(child_max_biovol_log ~ log_cutting_length + Site, data = mother_cg_edit_biovol_arctica)
+summary(maternal_prop_bio_arc_mod)
+tab_model(maternal_prop_bio_arc_mod) #yes?
+anova(maternal_prop_bio_arc_mod)
+
+maternal_prop_bio_rich_mod <-  lm(child_max_biovol_log ~ log_cutting_length + Site, data = mother_cg_edit_biovol_rich)
+summary(maternal_prop_bio_rich_mod)
+tab_model(maternal_prop_bio_rich_mod) #yes?
+anova(maternal_prop_bio_rich_mod)
+
 
 (plot_biovol_cutting_model <- ggplot() +
     geom_point(aes(x = child_max_biovol_log, y= log_cutting_length, color =mother_or_child), size = 3, alpha = 0.5, data = mother_cg_edit_biovol) +
