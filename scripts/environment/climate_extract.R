@@ -254,7 +254,7 @@ three_site_chelsa <-  july_enviro_chelsa %>%
     stat_ellipse(geom = "polygon",
                  aes(fill = site), 
                  alpha = 0.25) +
-    ylab("Mean July precipitation (mm)") +
+    ylab("Mean July precipitation (mm)\n") +
     xlab("\nMean July temperature (°C)") +
     scale_colour_viridis_d(begin = 0.2, end = 0.85) +
     scale_fill_viridis_d(begin = 0.2, end = 0.85) +

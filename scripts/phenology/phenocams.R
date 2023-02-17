@@ -312,29 +312,36 @@ range(CG_KP_arctica_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
 CG_QHI_arctica_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix arctica" & population == "QHI")
 
-# range of green up and senescence DOY
+# range or mean(change code as appropriate) of green up and senescence DOY
 range(CG_QHI_arctica_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
-# 129 132
-range(CG_QHI_arctica_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
-# 172- 217
+# range:  129 132
+# mean: 129.75
+mean (CG_QHI_arctica_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
+#range: 172- 217
+#mean: 194.8333
 
 CG_KP_pulchra_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix pulchra" & population == "Kluane")
 
 # range of green up and senescence DOY
-range(CG_KP_pulchra_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
-# 135- 147
-range(CG_KP_pulchra_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
-# 197 - 228
+mean(CG_KP_pulchra_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# range: 135- 147
+#mean: 141.5
+mean(CG_KP_pulchra_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
+#  range:197 - 228
+#mean:  217.1667
 
 CG_QHI_pulchra_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix pulchra" & population == "QHI")
 
 # range of green up and senescence DOY
-range(CG_QHI_pulchra_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
-# 128 - 140
-range(CG_QHI_pulchra_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
-# 174 - 224
+mean(CG_QHI_pulchra_pheno$First_leaf_bud_burst_DOY, na.rm=TRUE)
+# range: 128 - 140
+# mean:136
+mean(CG_QHI_pulchra_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
+# range: 174 - 224
+# mean:194.4
+
 
 CG_KP_rich_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix richardsonii" & population == "Kluane")
@@ -364,6 +371,22 @@ mean(CG_phenocams_individual_2021_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE)
 
 # Growing season length on QHI 
 # 270 - 113 = 157 days
+
+# Growing season length -----
+# summarise mean DOY of leaf emergence and leaf yellowing 
+# to calculate species specific and site specific growing season lenghts
+CG_pheno_summary <- CG_phenocams_individual_2021_2022_wrangle %>%
+  group_by(Species, population)%>%
+  summarise(mean_leaf_emergence_DOY = mean(First_leaf_bud_burst_DOY, na.rm=TRUE), 
+            mean_leaf_yellow_DOY = mean(First_leaf_yellow_DOY, na.rm=TRUE)) %>%
+  na.omit() %>%
+  mutate(population = case_when(population == "Kluane" ~ "Southern",
+                                population == "QHI" ~ "Northern"))
+
+# CG -----
+CG_growing_season <- CG_pheno_summary %>%
+  group_by(Species, population)%>%
+  summarise(growing_season_length = (mean_leaf_yellow_DOY-mean_leaf_emergence_DOY))
 
 # 4. MODELS -----
 # load all data 
@@ -458,7 +481,7 @@ tab_model(bud_burst_mod_source)
     geom_boxplot(aes(x= population, y = First_bud_burst_DOY, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
     # facet_grid(cols = vars(Species)) +
     facet_wrap(~Species) +
-    ylab("Budburst DOY") +an 
+    ylab("First leaf emergence DOY") +
     xlab("") +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -522,7 +545,7 @@ tab_model(bud_burst_mod_3)
     geom_boxplot(aes(x = population, y = First_bud_burst_DOY , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5) +
     # facet_grid(cols = vars(Species)) +
     facet_wrap(~Species, scales = "free_y") +
-    ylab("First bud burst DOY") +
+    ylab("First leaf emergence DOY\n") +
     xlab("\nPopulation") +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -550,7 +573,7 @@ tab_model(yellow_mod_2)
     geom_boxplot(aes(x = population, y = First_leaf_yellow_DOY , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5) +
     # facet_grid(cols = vars(Species)) +
     facet_wrap(~Species, scales = "free_y") +
-    ylab("First yellowing of leaves DOY") +
+    ylab("First yellowing of leaves DOY\n") +
     xlab("\nPopulation") +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -586,7 +609,7 @@ tab_model(bud_burst_cg_mod_2)
     geom_boxplot(aes(x = population, y = First_bud_burst_DOY , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5) +
     #facet_grid(cols = vars(Species)) +
     facet_wrap(~Species, scales = "free_y") +
-    ylab("First bud burst DOY") +
+    ylab("First leaf emergence DOY\n") +
     xlab("\nPopulation") +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
