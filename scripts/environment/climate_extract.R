@@ -251,7 +251,9 @@ three_site_chelsa <-  july_enviro_chelsa %>%
 (climate_space <- ggplot(three_site_chelsa, 
                          aes(x = mean_temp_C, y = mean_precip_mm, color = site, shape =site)) +
   geom_point(size = 2.5)+
-    stat_ellipse() +
+    stat_ellipse(geom = "polygon",
+                 aes(fill = site), 
+                 alpha = 0.25) +
     ylab("Mean July precipitation (mm)") +
     xlab("\nMean July temperature (°C)") +
     scale_colour_viridis_d(begin = 0.2, end = 0.85) +

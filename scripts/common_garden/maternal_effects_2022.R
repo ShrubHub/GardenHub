@@ -461,7 +461,7 @@ anova(maternal_prop_bio_rich_mod)
           axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
-# c. Mother height vs cutting length -----
+# c. Cutting length vs mother canopy height -----
 # Species-specific 
 maternal_height_cutting_pulchra_mod <-  lm(Cutting_length ~ Mother_Canopy_Height_cm*Site, data = mother_cg_pulchra)
 summary(maternal_height_cutting_pulchra_mod)
