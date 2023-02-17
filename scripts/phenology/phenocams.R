@@ -372,9 +372,10 @@ mean(CG_phenocams_individual_2021_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE)
 # Growing season length on QHI 
 # 270 - 113 = 157 days
 
-# Growing season length -----
+# MEAN Growing season length -----
 # summarise mean DOY of leaf emergence and leaf yellowing 
 # to calculate species specific and site specific growing season lenghts
+# CG -----
 CG_pheno_summary <- CG_phenocams_individual_2021_2022_wrangle %>%
   group_by(Species, population)%>%
   summarise(mean_leaf_emergence_DOY = mean(First_leaf_bud_burst_DOY, na.rm=TRUE), 
@@ -383,10 +384,62 @@ CG_pheno_summary <- CG_phenocams_individual_2021_2022_wrangle %>%
   mutate(population = case_when(population == "Kluane" ~ "Southern",
                                 population == "QHI" ~ "Northern"))
 
-# CG -----
+
 CG_growing_season <- CG_pheno_summary %>%
   group_by(Species, population)%>%
   summarise(growing_season_length = (mean_leaf_yellow_DOY-mean_leaf_emergence_DOY))
+
+CG_pheno_summary_for_plot <- CG_phenocams_individual_2021_2022_wrangle %>%
+  group_by(Species, population) %>%
+  mutate(growing_season = First_leaf_yellow_DOY-First_leaf_bud_burst_DOY) %>%
+  mutate(population = case_when(population == "Kluane" ~ "Southern",
+                                population == "QHI" ~ "Northern"))
+
+
+
+# KP -----
+KP_pheno_summary <- KP_phenocams_2021_2022_wrangle %>%
+  group_by(Species) %>%
+  summarise(mean_leaf_emergence_DOY = mean(First_leaf_bud_burst_DOY, na.rm=TRUE), 
+            mean_leaf_yellow_DOY = mean(First_leaf_yellow_DOY, na.rm=TRUE)) %>%
+  na.omit()%>%
+  mutate(population = rep("KP"))
+
+KP_growing_season <- KP_pheno_summary %>%
+  group_by(Species, population)%>%
+  summarise(growing_season_length = (mean_leaf_yellow_DOY-mean_leaf_emergence_DOY))
+
+KP_pheno_summary_for_plot <- KP_phenocams_2021_2022_wrangle %>%
+  group_by(Species) %>%
+  mutate(growing_season = First_leaf_yellow_DOY-First_leaf_bud_burst_DOY) %>%
+  mutate(population = rep("KP"))
+
+# QHI -----
+QHI_pheno_summary <- QHI_phenocams_2022_wrangle %>%
+  group_by(Species) %>%
+  summarise(mean_leaf_emergence_DOY = mean(First_leaf_bud_burst_DOY, na.rm=TRUE), 
+            mean_leaf_yellow_DOY = mean(First_leaf_yellow_DOY, na.rm=TRUE)) %>%
+  na.omit()%>%
+  mutate(population = rep("QHI"))
+
+QHI_growing_season <- QHI_pheno_summary %>%
+  group_by(Species, population)%>%
+  summarise(growing_season_length = (mean_leaf_yellow_DOY-mean_leaf_emergence_DOY))
+
+QHI_pheno_summary_for_plot <- QHI_phenocams_2022_wrangle %>%
+  group_by(Species) %>%
+  mutate(growing_season = First_leaf_yellow_DOY-First_leaf_bud_burst_DOY)%>%
+  mutate(population = rep("QHI"))
+
+# merge all growing season datasets (MEANS)
+all_growing_season_means <- rbind(QHI_growing_season, KP_growing_season,
+                            CG_growing_season)
+
+all_growing_season <-rbind(QHI_pheno_summary_for_plot,KP_pheno_summary_for_plot,
+                           CG_pheno_summary_for_plot)
+
+all_growing_season<-all_growing_season[-which(is.na(all_growing_season$Species)),]
+
 
 # 4. MODELS -----
 # load all data 
@@ -574,6 +627,27 @@ tab_model(yellow_mod_2)
     # facet_grid(cols = vars(Species)) +
     facet_wrap(~Species, scales = "free_y") +
     ylab("First yellowing of leaves DOY\n") +
+    xlab("\nPopulation") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
+# plot growing season length
+(plot_growing_season <- ggplot(all_growing_season) +
+    geom_boxplot(aes(x = population, y = growing_season , colour = population, fill = population, group =population), size = 0.5, alpha = 0.5, na.rm=TRUE) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species, scales = "free_y") +
+    ylab("Growing season length (days)\n") +
     xlab("\nPopulation") +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
