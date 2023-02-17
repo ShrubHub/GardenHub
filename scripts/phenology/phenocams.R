@@ -440,6 +440,11 @@ all_growing_season <-rbind(QHI_pheno_summary_for_plot,KP_pheno_summary_for_plot,
 
 all_growing_season<-all_growing_season[-which(is.na(all_growing_season$Species)),]
 
+# OVERALL growing season means per site ----
+means_growing_season <- all_growing_season_means %>%
+  group_by(population) %>%
+  summarise(overall_mean_growing_season = mean(growing_season_length))
+
 
 # 4. MODELS -----
 # load all data 
@@ -641,6 +646,10 @@ tab_model(yellow_mod_2)
           axis.title = element_text(size = 18),
           axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
           axis.text.y = element_text(size = 15, colour = "black")))
+
+# growing seasonn length diffferences
+growing_season_mod <- lm(growing_season ~ population*Species, data = all_growing_season)
+tab_model(growing_season_mod)
 
 # plot growing season length
 (plot_growing_season <- ggplot(all_growing_season) +
