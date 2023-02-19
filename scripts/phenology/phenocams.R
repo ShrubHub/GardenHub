@@ -440,6 +440,20 @@ all_growing_season <-rbind(QHI_pheno_summary_for_plot,KP_pheno_summary_for_plot,
 
 all_growing_season<-all_growing_season[-which(is.na(all_growing_season$Species)),]
 
+
+# ordering levels so source and garden populations side by side
+all_growing_season$population <- plyr::revalue(all_growing_season$population, 
+                                                    c("Northern"="Northern Garden",
+                                                      "Southern"="Southern Garden",
+                                                      "KP"="Southern Source",
+                                                      "QHI"="Northern Source"))
+
+all_growing_season$population <- ordered(all_growing_season$population, 
+                                              levels = c("Northern Source", 
+                                                         "Northern Garden", 
+                                                         "Southern Source",
+                                                         "Southern Garden"))
+
 # OVERALL growing season means per site ----
 means_growing_season <- all_growing_season_means %>%
   group_by(population) %>%
@@ -520,8 +534,8 @@ all_phenocam_data_salix$population <- plyr::revalue(all_phenocam_data_salix$popu
 all_phenocam_data_salix$population <- ordered(all_phenocam_data_salix$population, 
                                            levels = c("Northern Source", 
                                                       "Northern Garden", 
-                                                      "Southern Garden", 
-                                                      "Southern Source"))
+                                                      "Southern Source",
+                                                      "Southern Garden"))
 
 all_phenocam_data_salix$Year <- as.factor(all_phenocam_data_salix$Year)
 
