@@ -141,14 +141,21 @@ tab_model(elong_garden_growth_mod_3)
 # BAYESIAN -----
 library(brms)
 all_CG_source_growth_garden_rich <- all_CG_source_growth_garden_only %>%
-  filter (Species == "Salix richardsonii")
+  filter (Species == "Salix richardsonii") %>%
+  dplyr::select(mean_stem_elong, Year, population, Sample_age)%>%
+  na.omit()
 
-hist(all_CG_source_growth_garden_rich$mean_stem_elong)
-# scaling variables
+unique(all_CG_source_growth_garden_rich$Year)
+range(all_CG_source_growth_garden_rich$mean_stem_elong)
+
+hist(all_CG_source_growth_garden_rich$mean_stem_elong) # not gaussian, not poisson?
+# scaling 
 all_CG_source_growth_garden_rich$mean_stem_elong_scale <- scale(all_CG_source_growth_garden_rich$mean_stem_elong, center = T)  # scaling time
-hist(all_CG_source_growth_garden_rich$mean_stem_elong_scale)
-garden_rich_elong <- brms::brm(mean_stem_elong_scale ~ Sample_age + (1|Sample_age),
-                           data = all_CG_source_growth_garden_rich, family = binomial, chains = 3,
+hist(all_CG_source_growth_garden_rich$mean_stem_elong_scale) # still not gaussian?
+
+# model
+garden_rich_elong <- brms::brm(mean_stem_elong ~ population + (1|Sample_age) + (1|Year),
+                           data = all_CG_source_growth_garden_rich, family = gaussian(), chains = 3,
                            iter = 3000, warmup = 1000)
 
 summary(garden_rich_elong)
