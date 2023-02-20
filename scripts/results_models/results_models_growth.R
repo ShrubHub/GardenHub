@@ -84,6 +84,31 @@ height_garden_growth_mod_4 <- lmer(Canopy_Height_cm ~ population*Species + (1|Ye
 tab_model(height_garden_growth_mod_4)
 summary(height_garden_growth_mod_4)
 
+# BAYESIAN -----
+library(brms)
+all_CG_source_growth_garden_rich_height <- all_CG_source_growth_garden_only %>%
+  filter (Species == "Salix richardsonii") %>%
+  dplyr::select(Canopy_Height_cm, Year, population, Sample_age)%>%
+  na.omit()
+
+unique(all_CG_source_growth_garden_rich_height$Year)
+range(all_CG_source_growth_garden_rich_height$Canopy_Height_cm)
+
+hist(all_CG_source_growth_garden_rich_height$Canopy_Height_cm) # not gaussian, not poisson?
+# scaling 
+all_CG_source_growth_garden_rich_height$Canopy_Height_cm_scale <- scale(all_CG_source_growth_garden_rich_height$Canopy_Height_cm, center = T)  # scaling time
+hist(all_CG_source_growth_garden_rich_height$Canopy_Height_cm_scale ) # still not gaussian?
+
+# model
+garden_rich_height <- brms::brm(Canopy_Height_cm_scale ~ population + (1|Sample_age) + (1|Year),
+                               data = all_CG_source_growth_garden_rich_height, family = gaussian(), chains = 3,
+                               iter = 3000, warmup = 1000)
+
+summary(garden_rich_height)
+plot(garden_rich_height)
+pp_check(garden_rich_height) # i think maybe the family () is wrong 
+
+
 # 2. Width (compare all)-----
 # trying comparison with all (CG, KP, QHI)
 # nb can't include sample_age because not all the source pop shrubs have age
