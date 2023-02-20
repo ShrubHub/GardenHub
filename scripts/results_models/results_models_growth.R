@@ -168,6 +168,9 @@ tab_model(diam_garden_growth_mod_4)
 
 
 # 5. Biovolume (compare all)----
+# try centering biovolume
+all_CG_source_growth$biovolume <- scale(all_CG_source_growth$biovolume, center = TRUE, scale = TRUE)
+all_CG_source_growth_garden_only$biovolume <- scale(all_CG_source_growth_garden_only$biovolume, center = TRUE, scale = TRUE)
 
 # models 1 does converge but not using for consistency
 #biovol_mod_1 <- lmer(biovolume ~ population + (1|Year/Species/SampleID_standard), data = all_CG_source_growth)
@@ -175,11 +178,11 @@ tab_model(diam_garden_growth_mod_4)
 # model 2 below doesnt  converge 
 # biovol_mod_2 <- lmer(biovolume ~ population + (1|Year/SampleID_standard) + (1|Species), data = all_CG_source_growth)
 # model 3 below converges: species random
-biovol_mod_3 <- lmer(log(biovolume) ~ population + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
+biovol_mod_3 <- lmer(biovolume ~ population + (1|Year) + (1|Species) + (1|SampleID_standard), data = all_CG_source_growth)
 tab_model(biovol_mod_3)
 
 # model 4 below converges: spp interact
-biovol_mod_4 <- lmer(log(biovolume) ~ population*Species + (1|Year) + (1|SampleID_standard), data = all_CG_source_growth)
+biovol_mod_4 <- lmer(biovolume ~ population*Species + (1|Year) + (1|SampleID_standard), data = all_CG_source_growth)
 tab_model(biovol_mod_4)
 
 # 5.1. Biovolume only in garden ----
@@ -188,18 +191,12 @@ tab_model(biovol_mod_4)
 # model 2 below does not run 
 #biovol_garden_growth_mod_2 <- lmer(biovolume ~ population + (1|Year/SampleID_standard) + (1|Species/Sample_age), data = all_CG_source_growth_garden_only)
 # model 3 below does converge: spp random 
-biovol_garden_growth_mod_3 <- lmer(log(biovolume) ~ population + (1|Species) , data = all_CG_source_growth_garden_only)
+biovol_garden_growth_mod_3 <- lmer(biovolume ~ population + (1|Species) , data = all_CG_source_growth_garden_only)
 tab_model(biovol_garden_growth_mod_3)
 
 # model 4 below does converge: spp random 
-biovol_garden_growth_mod_4 <- lm(log(biovolume) ~ population*Species, data = all_CG_source_growth_garden_only)
+biovol_garden_growth_mod_4 <- lm(biovolume ~ population*Species, data = all_CG_source_growth_garden_only)
 tab_model(biovol_garden_growth_mod_4)
-
-# poisson model
-poisson_model <- glmer(biovolume ~ population*Species + (1|Sample_age), data = all_CG_source_growth_garden_only, family = poisson(link = "log"))
-summary(poisson_model)
-tab_model(poisson_model)
-
 
 # 4. DATA VISUALISATION ------
 

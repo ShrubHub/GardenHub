@@ -860,10 +860,6 @@ unique(all_CG_source_growth$Sample_Date)
          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
          axis.text.y = element_text(size = 15, colour = "black")))
 
-# coiuld it be that loads of zeros because it multiplies by NA if there is an NA 
-# between width1*width2*height?
-# I think we need to remove all zeros. Because there is no way biovolume can be zero
-
 # keeping only rows where biovol value is not NA
 biovol_test <- all_CG_source_growth %>%
   filter(Site == "Common_garden") %>%
@@ -892,7 +888,7 @@ hist(biovol_test_rich$biovolume, breaks = 30)
     geom_smooth(aes(x = Sample_age, y = log(biovolume), colour = population, fill = population, group = population,method = "glm")) +
     geom_point(aes(x = Sample_age, y = log(biovolume), colour = population), size = 1.5, alpha = 0.5) +
     facet_wrap(~Species, scales = "free") +
-    ylab("Biovolume (cm3)") +
+    ylab("Log biovolume (cm3)") +
     xlab("Sample age") +
     scale_colour_viridis_d(begin = 0.3, end = 0.9) +
     scale_fill_viridis_d(begin = 0.3, end = 0.9) +
@@ -905,7 +901,6 @@ hist(biovol_test_rich$biovolume, breaks = 30)
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 # looks much better!
-
 
 # 3.7.2. Merge traits from cg with source and mother data ----
 # load data 
