@@ -138,6 +138,22 @@ elong_garden_growth_mod_3 <- lmer(mean_stem_elong ~ population*Species  + (1|Yea
 tab_model(elong_garden_growth_mod_3)
 # higher stem elongation for southern shrubs in garden
 
+# BAYESIAN -----
+library(brms)
+all_CG_source_growth_garden_rich <- all_CG_source_growth_garden_only %>%
+  filter (Species == "Salix richardsonii")
+
+hist(all_CG_source_growth_garden_rich$mean_stem_elong)
+# scaling variables
+all_CG_source_growth_garden_rich$mean_stem_elong_scale <- scale(all_CG_source_growth_garden_rich$mean_stem_elong, center = T)  # scaling time
+hist(all_CG_source_growth_garden_rich$mean_stem_elong_scale)
+garden_rich_elong <- brms::brm(mean_stem_elong_scale ~ Sample_age + (1|Sample_age),
+                           data = all_CG_source_growth_garden_rich, family = binomial, chains = 3,
+                           iter = 3000, warmup = 1000)
+
+summary(garden_rich_elong)
+plot(garden_rich_elong)
+pp_check(garden_rich_elong) # i think maybe the family () is wrong 
 
 # 4. Stem diameter (compare all) ----
 # models 1 below doesnt converge: boundary (singular) fit: see help('isSingular')
