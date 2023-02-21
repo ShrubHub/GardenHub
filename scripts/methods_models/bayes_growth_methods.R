@@ -50,7 +50,7 @@ source_rich_elong <- brms::brm(log(mean_stem_elong) ~ Site + (1|year),
 
 summary(source_rich_elong)
 plot(source_rich_elong)
-pp_check(source_rich_elong) 
+pp_check(source_rich_elong)
 
 # c. Width----
 # Salix richardsonii -------
