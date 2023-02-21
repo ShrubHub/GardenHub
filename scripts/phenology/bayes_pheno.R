@@ -37,21 +37,20 @@ all_growing_season$population <- ordered(all_growing_season$population,
                                                     "Southern Source",
                                                     "Southern Garden"))
 # SPECIES SPECIFIC datasets -----
-all_phenocam_rich <- all_phenocam_data %>%
+all_phenocam_rich <- all_phenocam_data_salix %>%
   filter(Species == "Salix richardsonii")
 
-all_phenocam_pulchra <- all_phenocam_data %>%
+all_phenocam_pulchra <- all_phenocam_data_salix %>%
   filter(Species == "Salix pulchra")
 
-all_phenocam_arctica <- all_phenocam_data %>%
+all_phenocam_arctica <- all_phenocam_data_salix %>%
   filter(Species == "Salix arctica")
 
 # SOURCE POP ONLY models -----
 # keeping only source pops
-
 # Salix richardsonii -----
 all_phenocam_rich_source <- all_phenocam_rich %>%
-  filter(population %in% c("Northern_source", "Southern_source"))
+  filter(population %in% c("Northern Source", "Southern Source"))
 
 hist(all_phenocam_rich_source$First_bud_burst_DOY, breaks=10) # defo not normal
 
@@ -78,12 +77,64 @@ pp_check(garden_rich_emerg) # not too happy with that....
 # CG vs SOURCES models ------
 # model bud burst doy
 
-# growing seasonn length diffferences
-growing_season_mod <- lm(growing_season ~ population*Species, data = all_growing_season)
+# Salix richardsonii -----
+garden_rich_emerg_compare <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
+                               data = all_phenocam_rich, family = gaussian(), chains = 3,
+                               iter = 3000, warmup = 1000)
+
+
+summary(garden_rich_emerg_compare)
+plot(garden_rich_emerg_compare)
+pp_check(garden_rich_emerg_compare) # looks good
+
+garden_rich_yellow_compare <- brms::brm(First_leaf_yellow_DOY ~ population + (1|Year),
+                                       data = all_phenocam_rich, family = gaussian(), chains = 3,
+                                       iter = 3000, warmup = 1000)
+
+
+summary(garden_rich_yellow_compare)
+plot(garden_rich_yellow_compare)
+pp_check(garden_rich_yellow_compare) # looks good
+
 
 # CG ONLY MODELS ------
-all_phenocam_data_cg <- all_phenocam_data_salix %>% 
+all_phenocam_rich_garden <- all_phenocam_rich %>% 
   filter(population %in% c("Northern Garden", "Southern Garden"))
 
-bud_burst_cg_mod_1 <- lmer(First_bud_burst_DOY ~ population + (1|Species), data = all_phenocam_data_cg)
-yellow_cg_mod_1 <- lmer(First_leaf_yellow_DOY ~ population + (1|Species) , data = all_phenocam_data_cg)
+all_phenocam_pul_garden <- all_phenocam_pulchra %>% 
+  filter(population %in% c("Northern Garden", "Southern Garden"))
+
+all_phenocam_arc_garden <- all_phenocam_arctica %>% 
+  filter(population %in% c("Northern Garden", "Southern Garden"))
+
+# Salix richardsonii -----
+garden_rich_emerg <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
+                                       data = all_phenocam_rich_garden, family = gaussian(), chains = 3,
+                                       iter = 3000, warmup = 1000)
+
+
+summary(garden_rich_emerg)
+plot(garden_rich_emerg)
+pp_check(garden_rich_emerg) # looks ok
+
+garden_rich_yellow <- brms::brm(First_leaf_yellow_DOY ~ population + (1|Year),
+                                        data = all_phenocam_rich, family = gaussian(), chains = 3,
+                                        iter = 3000, warmup = 1000)
+
+
+summary(garden_rich_yellow)
+plot(garden_rich_yellow)
+pp_check(garden_rich_yellow) # looks good
+
+
+# GROWING SEASON LENGTH -----
+growing_season_mod <- lm(growing_season ~ population + Species, data = all_growing_season)
+
+growing_season_mod <- brms::brm(growing_season ~ population + Species,
+                                data = all_growing_season, family = gaussian(), chains = 3,
+                                iter = 3000, warmup = 1000)
+
+
+summary(growing_season_mod)
+plot(growing_season_mod)
+pp_check(growing_season_mod) # looks good
