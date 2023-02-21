@@ -4,6 +4,12 @@
 # Code adapted from coding club tutorial by Louise Litrico:
 # https://ourcodingclub.github.io/tutorials/brms/ 
 
+# 3 options for growth model structure: 
+# 1) max height across all years, 
+# 2) using the last three years of August height data as a repeated measures test (without the shrubID nesting in the random effects), 
+# which assumes that the shrubs aren’t really getting taller any more (seems true from the data, but that isn’t a priori), or 
+# 3) only using the August 2022 data (aka the last time point).
+
 # Loading libraries ----
 library(brms)
 library(tidyverse)
