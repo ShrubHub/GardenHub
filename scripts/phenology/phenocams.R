@@ -440,6 +440,7 @@ all_growing_season <-rbind(QHI_pheno_summary_for_plot,KP_pheno_summary_for_plot,
 
 all_growing_season<-all_growing_season[-which(is.na(all_growing_season$Species)),]
 
+write.csv(all_growing_season, "data/phenology/phenocam_pics/all_growing_season.csv")
 
 # ordering levels so source and garden populations side by side
 all_growing_season$population <- plyr::revalue(all_growing_season$population, 
