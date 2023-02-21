@@ -54,7 +54,6 @@ all_CG_source_growth_garden_pulchra <- all_CG_source_growth_garden_only %>%
   filter (Species == "Salix pulchra") 
 # write.csv(all_CG_source_growth_garden_pulchra, "data/all_CG_source_growth_garden_pulchra.csv")
 
-
 all_CG_source_growth_garden_arctica <- all_CG_source_growth_garden_only %>%
   filter (Species == "Salix arctica") 
 # write.csv(all_CG_source_growth_garden_arctica, "data/all_CG_source_growth_garden_arctica.csv")
@@ -64,14 +63,8 @@ all_CG_source_growth_garden_arctica <- all_CG_source_growth_garden_only %>%
 
 # 1. CANOPY HEIGHT -----
 
-# S. Richardsonii -----
-all_CG_source_growth_garden_rich_height <- all_CG_source_growth_garden_only %>%
-  filter (Species == "Salix richardsonii") %>%
-  dplyr::select(Canopy_Height_cm, Year, population, Sample_age)%>%
-  na.omit()
-
+# S. Richardsonii ----
 unique(all_CG_source_growth_garden_rich$Year)
-
 hist(all_CG_source_growth_garden_rich$Canopy_Height_cm) # not gaussian, not poisson, need to log transform
 
 # tried scaling but doesnt change anything, so not doing it
@@ -98,9 +91,9 @@ range(all_CG_source_growth_garden_rich$mean_stem_elong)
 
 hist(all_CG_source_growth_garden_rich$mean_stem_elong) # not gaussian, not poisson?
 # scaling 
-all_CG_source_growth_garden_rich$mean_stem_elong_scale <- scale(all_CG_source_growth_garden_rich$mean_stem_elong, center = T)  # scaling time
-hist(all_CG_source_growth_garden_rich$mean_stem_elong_scale) # still not gaussian?
-all_CG_source_growth_garden_rich$population<-as.factor(all_CG_source_growth_garden_rich$population)
+# all_CG_source_growth_garden_rich$mean_stem_elong_scale <- scale(all_CG_source_growth_garden_rich$mean_stem_elong, center = T)  # scaling time
+# hist(all_CG_source_growth_garden_rich$mean_stem_elong_scale) # still not gaussian?
+# all_CG_source_growth_garden_rich$population<-as.factor(all_CG_source_growth_garden_rich$population)
 
 # model
 garden_rich_elong <- brms::brm(log(mean_stem_elong) ~ population + (1|Sample_age) + (1|Year),
@@ -110,9 +103,10 @@ garden_rich_elong <- brms::brm(log(mean_stem_elong) ~ population + (1|Sample_age
 
 summary(garden_rich_elong)
 plot(garden_rich_elong)
-pp_check(garden_rich_elong) # i think maybe the family () is wrong 
+pp_check(garden_rich_elong) 
 
 # S. Pulchra -----
+
 # S. Arctica -----
 
 # 3. BIOVOLUME ------
@@ -135,6 +129,7 @@ pp_check(garden_rich_elong) # i think maybe the family () is wrong
 # plot model output
 # plotted as "regression" / slope lines but prob not what we want
 
+# canopy height -----
 (model_height <- all_CG_source_growth_garden_rich_height %>%
    add_predicted_draws(garden_rich_height) %>%  # adding the posterior distribution
    ggplot(aes(x = population, y = Canopy_Height_cm_scale)) +  
@@ -148,6 +143,7 @@ pp_check(garden_rich_elong) # i think maybe the family () is wrong
    theme(legend.title = element_blank(),
          legend.position = c(0.15, 0.85)))
 
+# stem elong -----
 (model_elong <- all_CG_source_growth_garden_rich %>%
    add_predicted_draws(garden_rich_elong) %>%  # adding the posterior distribution
    ggplot(aes(x = population, y = mean_stem_elong)) +  
