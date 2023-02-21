@@ -44,41 +44,55 @@ all_CG_source_growth_garden_only$population <- plyr::revalue(all_CG_source_growt
                                                  c("Northern"="Northern Garden",
                                                    "Southern"="Southern Garden"))
 
+
+# Separating into 3 datasets: one per spp.
+all_CG_source_growth_garden_rich <- all_CG_source_growth_garden_only %>%
+  filter (Species == "Salix richardsonii")
+# write.csv(all_CG_source_growth_garden_rich, "data/all_CG_source_growth_garden_rich.csv")
+
+all_CG_source_growth_garden_pulchra <- all_CG_source_growth_garden_only %>%
+  filter (Species == "Salix pulchra") 
+# write.csv(all_CG_source_growth_garden_pulchra, "data/all_CG_source_growth_garden_pulchra.csv")
+
+
+all_CG_source_growth_garden_arctica <- all_CG_source_growth_garden_only %>%
+  filter (Species == "Salix arctica") 
+# write.csv(all_CG_source_growth_garden_arctica, "data/all_CG_source_growth_garden_arctica.csv")
+
 # MODELLING -------
-# one model per species
+# NB one model per species
 
-# 1. Canopy height-----
+# 1. CANOPY HEIGHT -----
 
-#Richardsonii -----
+# S. Richardsonii -----
 all_CG_source_growth_garden_rich_height <- all_CG_source_growth_garden_only %>%
   filter (Species == "Salix richardsonii") %>%
   dplyr::select(Canopy_Height_cm, Year, population, Sample_age)%>%
   na.omit()
 
-unique(all_CG_source_growth_garden_rich_height$Year)
-range(all_CG_source_growth_garden_rich_height$Canopy_Height_cm)
+unique(all_CG_source_growth_garden_rich$Year)
 
-hist(all_CG_source_growth_garden_rich_height$Canopy_Height_cm) # not gaussian, not poisson?
-# scaling 
-all_CG_source_growth_garden_rich_height$Canopy_Height_cm_scale <- scale(all_CG_source_growth_garden_rich_height$Canopy_Height_cm, center = T)  # scaling time
-hist(all_CG_source_growth_garden_rich_height$Canopy_Height_cm_scale ) # still not gaussian?
+hist(all_CG_source_growth_garden_rich$Canopy_Height_cm) # not gaussian, not poisson, need to log transform
+
+# tried scaling but doesnt change anything, so not doing it
+# all_CG_source_growth_garden_rich_height$Canopy_Height_cm_scale <- scale(all_CG_source_growth_garden_rich_height$Canopy_Height_cm, center = T)  # scaling time
+# hist(all_CG_source_growth_garden_rich_height$Canopy_Height_cm_scale ) # still not gaussian?
 
 # model
-garden_rich_height <- brms::brm(Canopy_Height_cm_scale ~ population + (1|Sample_age) + (1|Year),
-                                data = all_CG_source_growth_garden_rich_height, family = gaussian(), chains = 3,
+garden_rich_height <- brms::brm(log(Canopy_Height_cm) ~ population + (1|Sample_age) + (1|Year),
+                                data = all_CG_source_growth_garden_rich, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000)
 
 summary(garden_rich_height)
 plot(garden_rich_height)
-pp_check(garden_rich_height) # i think maybe the family () is wrong 
+pp_check(garden_rich_height) 
 
-# 2. Stem elongation ------
-# Richardsonii
-all_CG_source_growth_garden_rich <- all_CG_source_growth_garden_only %>%
-  filter (Species == "Salix richardsonii") %>%
-  dplyr::select(mean_stem_elong, Year, population, Sample_age)%>%
-  na.omit()
+# S. Pulchra -----
+# S. Arctica -----
 
+# 2. STEM ELONGATION ------
+
+# S. Richardsonii -----
 unique(all_CG_source_growth_garden_rich$population)
 range(all_CG_source_growth_garden_rich$mean_stem_elong)
 
@@ -89,7 +103,7 @@ hist(all_CG_source_growth_garden_rich$mean_stem_elong_scale) # still not gaussia
 all_CG_source_growth_garden_rich$population<-as.factor(all_CG_source_growth_garden_rich$population)
 
 # model
-garden_rich_elong <- brms::brm(mean_stem_elong ~ population + (1|Sample_age) + (1|Year),
+garden_rich_elong <- brms::brm(log(mean_stem_elong) ~ population + (1|Sample_age) + (1|Year),
                                data = all_CG_source_growth_garden_rich, family = gaussian(), chains = 3,
                                iter = 3000, warmup = 1000)
 
@@ -97,6 +111,24 @@ garden_rich_elong <- brms::brm(mean_stem_elong ~ population + (1|Sample_age) + (
 summary(garden_rich_elong)
 plot(garden_rich_elong)
 pp_check(garden_rich_elong) # i think maybe the family () is wrong 
+
+# S. Pulchra -----
+# S. Arctica -----
+
+# 3. BIOVOLUME ------
+# S. Richardsonii -----
+# S. Pulchra -----
+# S. Arctica -----
+
+# 4. WIDTH ------
+# S. Richardsonii -----
+# S. Pulchra -----
+# S. Arctica -----
+
+# 4. STEM DIAMETER ------
+# S. Richardsonii -----
+# S. Pulchra -----
+# S. Arctica -----
 
 # PLOTTING -----
 
