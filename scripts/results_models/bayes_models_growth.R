@@ -1,4 +1,8 @@
 # BAYESIAN growth results models -----
+# Script by Erica
+# Last update: 21/02/2023
+# Code adapted from coding club tutorial by Louise Litrico:
+# https://ourcodingclub.github.io/tutorials/brms/ 
 
 # Loading libraries ----
 library(brms)
@@ -94,7 +98,6 @@ pp_check(garden_rich_elong) # i think maybe the family () is wrong
 # plotted as "regression" / slope lines but prob not what we want
 
 (model_height <- all_CG_source_growth_garden_rich_height %>%
-   group_by(population) %>%
    add_predicted_draws(garden_rich_height) %>%  # adding the posterior distribution
    ggplot(aes(x = population, y = Canopy_Height_cm_scale)) +  
    stat_lineribbon(aes(y = .prediction), .width = c(.95, .80, .50),  # regression line and CI
@@ -108,7 +111,6 @@ pp_check(garden_rich_elong) # i think maybe the family () is wrong
          legend.position = c(0.15, 0.85)))
 
 (model_elong <- all_CG_source_growth_garden_rich %>%
-   group_by(population) %>%
    add_predicted_draws(garden_rich_elong) %>%  # adding the posterior distribution
    ggplot(aes(x = population, y = mean_stem_elong)) +  
    stat_lineribbon(aes(y = .prediction), .width = c(.95, .80, .50),  # regression line and CI
