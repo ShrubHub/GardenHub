@@ -29,6 +29,7 @@ view(unique_source_mother)
 
 unique_source_mother$year <-  format(as.Date(unique_source_mother$SampleDate, format="%d/%m/%Y"),"%Y")
 view(unique_source_mother)
+
 # 4. Modelling ----
 
 # a. Canopy height -----
