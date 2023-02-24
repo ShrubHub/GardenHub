@@ -101,27 +101,42 @@ pp_check(arctica_SLA)
 
 # S. pulchra 
 pulchra_SLA <- brms::brm(SLA ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
-                         iter = 3000, warmup = 1000)
-summary(pulchra_SLA)
+                         iter = 5000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99)
+summary(pulchra_SLA) # There were 60 divergent transitions after warmup
 plot(pulchra_SLA)
 pp_check(pulchra_SLA) 
 # test with log transformed data 
 pulchra_log_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
-                         iter = 3000, warmup = 1000)
-summary(pulchra_SLA)
+                         iter = 5000, warmup = 1000)
+# There were 60 divergent transitions after warmup.
+summary(pulchra_log_SLA)
 plot(pulchra_SLA)
 pp_check(pulchra_SLA)
 
 # S. richardsonii 
 rich_SLA <- brms::brm(SLA ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-                         iter = 3000, warmup = 1000)
+                      iter = 5000, warmup = 1000, 
+                      control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(rich_SLA)
 plot(rich_SLA)
 pp_check(rich_SLA) 
-# oomg : There were 260 divergent transitions after warmup. See
-
+# omg : There were 260 divergent transitions after warmup. See
+rich_log_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
+                      iter = 5000, warmup = 1000)
+# There were 15 divergent transitions after warmup
+summary(rich_log_SLA)
+plot(rich_log_SLA)
+pp_check(rich_log_SLA) 
 
 # LDMC ----
+# S. arctica 
+arctica_LDMC <- brms::brm(LDMC_g_g ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
+                         iter = 3000, warmup = 1000)
+summary(arctica_SLA)
+plot(arctica_SLA)
+pp_check(arctica_SLA) 
+
 
 # LA ----
 
