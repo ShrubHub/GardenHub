@@ -61,6 +61,8 @@ source_rich_width<- brms::brm(log(mean_width) ~ Site,
 summary(source_rich_elong)
 plot(source_rich_elong)
 pp_check(source_rich_elong) 
+conditional_effects(source_rich_elong)
+
 
 # d. Stem diameter -----
 # Salix richardsonii -------
