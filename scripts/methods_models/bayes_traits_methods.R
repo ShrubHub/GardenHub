@@ -6,6 +6,12 @@
 library(brms)
 library(tidyverse)
 
+# scale function =====
+# centering with 'scale()'
+center_scale <- function(x) {
+  scale(x, scale = FALSE)
+}
+
 # data ---- 
 # SLA, LDMC, LA: 
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") 
@@ -31,6 +37,10 @@ all_source_growth$Species <- as.factor(all_source_growth$Species)
 all_source_growth$population <- as.factor(all_source_growth$population)
 all_source_growth$Year <- as.factor(all_source_growth$Year)
 
+all_source_traits$SLA_scaled <- center_scale(all_source_traits$SLA)
+# log transform leaf area data 
+all_source_traits$LA_log <- log(all_source_traits$LA)
+
 # to run separate models per species filter out species: 
 arctica_source_traits <- all_source_traits %>% 
   filter(Species == "Salix arctica")
@@ -47,15 +57,15 @@ richardsonii_source_growth <- all_source_growth %>%
   filter(Species == "Salix richardsonii")
 
 # leaf area using 2021 and 2022 data only: 
-all_source_traits_2022 <- all_source_traits %>% 
-  dplyr::filter(year %in% c("2021", "2022")) 
+#all_source_traits_2022 <- all_source_traits %>% 
+#  dplyr::filter(year %in% c("2021", "2022")) 
 # now filter by spp
-arctica_source_2022_traits <- all_source_traits_2022 %>% 
-  filter(Species == "Salix arctica")
-pulchra_source_2022_traits <- all_source_traits_2022 %>% 
-  filter(Species == "Salix pulchra")
-richardsonii_source_2022_traits <- all_source_traits_2022 %>% 
-  filter(Species == "Salix richardsonii")
+#arctica_source_2022_traits <- all_source_traits_2022 %>% 
+#  filter(Species == "Salix arctica")
+#pulchra_source_2022_traits <- all_source_traits_2022 %>% 
+#  filter(Species == "Salix pulchra")
+#richardsonii_source_2022_traits <- all_source_traits_2022 %>% 
+#  filter(Species == "Salix richardsonii")
 
 # look at distributions ----
 # SLA
@@ -68,13 +78,14 @@ hist(arctica_source_traits$LDMC_g_g)
 hist(pulchra_source_traits$LDMC_g_g) # very right skew
 hist(richardsonii_source_traits$LDMC_g_g) # very off 
 # LA
-hist(arctica_source_2022_traits$LA) #  right skew
-hist(pulchra_source_2022_traits$LA) # mild right skew
-hist(richardsonii_source_2022_traits$LA)# decent
+hist(arctica_source_traits$LA_log) #  good
+hist(pulchra_source_traits$LA_log) # decent
+hist(richardsonii_source_traits$LA_log)# decent
 # LMA
-hist(arctica_source_2022_traits$leaf_mass_per_area_g_m2) 
-hist(pulchra_source_2022_traits$leaf_mass_per_area_g_m2) 
-hist(richardsonii_source_2022_traits$leaf_mass_per_area_g_m2) 
+hist(arctica_source_traits$leaf_mass_per_area_g_m2) 
+hist(pulchra_source_traits$leaf_mass_per_area_g_m2) # not great 
+hist(richardsonii_source_traits$leaf_mass_per_area_g_m2) # not great
+
 # leaf length 
 hist(arctica_source_growth$mean_leaf_length) # decent
 hist(pulchra_source_growth$mean_leaf_length) # mild right skew
@@ -83,9 +94,16 @@ hist(richardsonii_source_growth$mean_leaf_length) # pretty decent
 # SLA ---- 
 
 # S. arctica 51 observations 
-arctiac_SLA_meth_mod <- brms::brm(SLA ~ Site + (1|year), data = arctica_source_traits, family = gaussian(), chains = 3,
+arctica_SLA_meth_mod <- brms::brm(SLA ~ Site + (1|year), data = arctica_source_traits, family = gaussian(), chains = 3,
+                                  iter = 5000, warmup = 1000) # There were 9 divergent transitions after warmup with 5000 iterations, 71 with 3000 iterations
+summary(arctica_SLA_meth_mod) # crosses 0
+plot(arctica_SLA_meth_mod)
+pp_check(arctica_SLA_meth_mod)
+
+# compare to with scaled data 
+arctica_SLA_meth_mod_scaled <- brms::brm(SLA_scaled ~ Site + (1|year), data = arctica_source_traits, family = gaussian(), chains = 3,
                                   iter = 5000, warmup = 1000)
-summary(arctiac_SLA_meth_mod) # There were 9 divergent transitions after warmup with 5000 iterations, 71 with 3000 iterations
+summary(arctica_SLA_meth_mod_scaled) # There were 70 divergent transitions after warmup with 5000 iterations, 71 with 3000 iterations
 plot(arctiac_SLA_meth_mod)
 pp_check(arctiac_SLA_meth_mod)
 
@@ -133,23 +151,44 @@ pp_check(rich_LDMC_meth, type = "dens_overlay", ndraws = 100) # decent
 
 # LA ----
 
-# not including year because only 2 years worth of data 
-# S. arctica, 9 observations - is this worth it? 
-arctiac_LA_meth <- brms::brm(LA ~ population, data = arctica_source_2022_traits, family = gaussian(), chains = 3,
+LDMC_method_mod <- lm(LA_log ~ population, data = richardsonii_source_traits) 
+tab_model(LDMC_method_mod)
+
+# S. arctica 93 observations 
+arctica_LA_meth <- brms::brm(LA_log ~ population, data = arctica_source_traits, family = gaussian(), chains = 3,
                                iter = 3000, warmup = 1000) # runs without issue 
-summary(arctiac_LA_meth) # not sig diff, crosses 0
-plot(arctiac_LA_meth)
-pp_check(arctiac_LA_meth, type = "dens_overlay", ndraws = 100) # oh this is not good 
+summary(arctica_LA_meth) # sig diff 
+plot(arctica_LA_meth)
+pp_check(arctica_LA_meth, type = "dens_overlay", ndraws = 100) # good  
 
-# S. pulchra, 25 observations 
+# S. pulchra  104 observations 
+pulchra_LA_meth <- brms::brm(LA_log ~ population, data = pulchra_source_traits, family = gaussian(), chains = 3,
+                             iter = 3000, warmup = 1000) # runs without issue 
+summary(pulchra_LA_meth) # sig diff 
+plot(pulchra_LA_meth)
+pp_check(pulchra_LA_meth, type = "dens_overlay", ndraws = 100) # uh oh  
 
-# S. richardsonii, 42 observations 
+# S. richardsonii  120 observations 
+rich_LA_meth <- brms::brm(LA_log ~ population, data = richardsonii_source_traits, family = gaussian(), chains = 3,
+                             iter = 3000, warmup = 1000) # runs without issue 
+summary(rich_LA_meth) # sig diff 
+plot(rich_LA_meth)
+pp_check(rich_LA_meth, type = "dens_overlay", ndraws = 100) # same bimodal swoop - is this okay?  
 
 # LMA ----- 
-# so few data - worth keeping? 
-# S. arctica 
-# S. pulchra 
-# S. richardsonii 
+# S. arctica 9 observations only - so few data - worth keeping?
+# S. pulchra 25 observations 
+pulchra_LMA_meth <- brms::brm(leaf_mass_per_area_g_m2 ~ population, data = pulchra_source_traits, family = gaussian(), chains = 3,
+                             iter = 3000, warmup = 1000) # runs without issue 
+summary(pulchra_LMA_meth) # not sig diff, crosses 0
+plot(pulchra_LMA_meth)
+pp_check(pulchra_LMA_meth, type = "dens_overlay", ndraws = 100) # not great 
+# S. richardsonii 41 observations 
+rich_LMA_meth <- brms::brm(leaf_mass_per_area_g_m2 ~ population, data = richardsonii_source_traits, family = gaussian(), chains = 3,
+                              iter = 3000, warmup = 1000) # runs without issue 
+summary(rich_LMA_meth) # not sig diff, crosses 0
+plot(rich_LMA_meth)
+pp_check(rich_LMA_meth, type = "dens_overlay", ndraws = 100) # weird?  
 
 # leaf length -----
 # not including year as random effect bc only 2 years worth of data 
