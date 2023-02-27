@@ -371,12 +371,12 @@ rich_height_data <- rich_heights[[1]] # making the extracted model outputs into
 # [[1]] is to extract the first term in the model which in our case is population
 
 (rich_height_plot <-ggplot(rich_height_data) +
-    geom_point(data = all_CG_source_growth_garden_rich, aes(x = population, y = log(Canopy_Height_cm), colour = population),
+    geom_point(data = max_heights_cg_rich, aes(x = population, y = log(max_canopy_height_cm), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = estimate__), colour = "red", size = 4)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__),
                alpha = 1) +
-    ylab("Canopy height (log, cm)\n") +
+    ylab("Max. canopy height (log, cm)\n") +
     xlab("\n Population" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -388,12 +388,12 @@ rich_elong_data <- rich_elong[[1]] # making the extracted model outputs into a 
 # [[1]] is to extract the first term in the model which in our case is population
 
 (rich_height_plot <-ggplot(rich_elong_data) +
-    geom_point(data = all_CG_source_growth_garden_rich, aes(x = population, y = log(mean_stem_elong), colour = population),
+    geom_point(data = max_elong_cg_rich, aes(x = population, y = log(max_stem_elong), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = estimate__), colour = "red", size = 4)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__),
                   alpha = 1) +
-    ylab("Mean stem elongation (log, mm)\n") +
+    ylab("Max. mean stem elongation (log, mm)\n") +
     xlab("\n Population" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -413,6 +413,25 @@ rich_elong_data <- rich_elong[[1]] # making the extracted model outputs into a 
    theme_bw() +
    theme(legend.title = element_blank(),
          legend.position = c(0.15, 0.85)))
+
+# Biovolume richardsonii ----
+rich_biovol <- (conditional_effects(garden_rich_biovol)) # extracting conditional effects from bayesian model
+rich_biovol_data <- rich_biovol[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(rich_biovol_plot <-ggplot(rich_biovol_data) +
+    geom_point(data = max_biovol_cg_rich, aes(x = population, y = log(max_biovol), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__), colour = "red", size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__),
+                  alpha = 1) +
+    ylab("Max. biovol (log, mm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub())
+
+# can do for all figures....
 
 
 
