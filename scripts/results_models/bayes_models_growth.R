@@ -17,68 +17,72 @@ library(tidybayes)
 library(dplyr)
 
 # Loading data ---- 
-all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
+# all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
+# Only using max growth variables values
+max_widths_cg <- read_csv("data/common_garden_data_2022/max_widths_cg.csv")
+max_heights_cg <- read_csv("data/common_garden_data_2022/max_heights_cg.csv")
+max_biovol_cg <- read_csv("data/common_garden_data_2022/max_biovol_cg.csv")
+max_elong_cg <- read_csv("data/common_garden_data_2022/max_elong_cg.csv")
+max_diam_cg <- read_csv("data/common_garden_data_2022/max_diam_cg.csv")
 
-# reclassing variables
-all_CG_source_growth$Species <- as.factor(all_CG_source_growth$Species)
-all_CG_source_growth$SampleID_standard <- as.factor(all_CG_source_growth$SampleID_standard)
-all_CG_source_growth$population <- as.factor(all_CG_source_growth$population)
-all_CG_source_growth$Site <- as.factor(all_CG_source_growth$Site)
-all_CG_source_growth$Sample_Date <- as.POSIXct(all_CG_source_growth$Sample_Date, format = '%Y/%m/%d')
-all_CG_source_growth$Year <- as.factor(all_CG_source_growth$Year)
-all_CG_source_growth$Sample_age <- as.factor(all_CG_source_growth$Sample_age)
+# Wrangle ------
+# max height  -----
+max_heights_cg$Species <- as.factor(max_heights_cg$Species)
+max_heights_cg$SampleID_standard <- as.factor(max_heights_cg$SampleID_standard)
+max_heights_cg$population <- as.factor(max_heights_cg$population)
+max_heights_cg$Site <- as.factor(max_heights_cg$Site)
+max_heights_cg$Sample_Date <- as.POSIXct(max_heights_cg$Sample_Date, format = '%Y/%m/%d')
+max_heights_cg$Year <- as.factor(max_heights_cg$Year)
+max_heights_cg$Sample_age <- as.factor(max_heights_cg$Sample_age)
 
-# filter dataset to retain only population "northern" and "southern"
-all_CG_source_growth_garden_only <- all_CG_source_growth %>%
-  filter(Site == "Common_garden") %>%
-  filter(population %in% c("Northern", "Southern"))
+# ordering levels
+max_heights_cg$population <- plyr::revalue(max_heights_cg$population , 
+                                          c("Northern"="Northern Garden",
+                                            "Southern"="Southern Garden"))
 
-all_CG_source_growth_garden_only$population <- as.character(all_CG_source_growth_garden_only$population)
-str(all_CG_source_growth_garden_only$population)
-unique(all_CG_source_growth_garden_only$population)
-all_CG_source_growth_garden_only$population <- as.factor(all_CG_source_growth_garden_only$population)
+# Separating into 3 datasets: one per spp.
+max_heights_cg_rich <- max_heights_cg %>%
+  filter (Species == "Salix richardsonii")
 
+max_heights_cg_pul <- max_heights_cg %>%
+  filter (Species == "Salix pulchra") 
 
-# ordering levels so source and garden populations side by side
-all_CG_source_growth_garden_only$population <- plyr::revalue(all_CG_source_growth_garden_only$population , 
+max_heights_cg_arc <- max_heights_cg %>%
+  filter (Species == "Salix arctica") 
+
+# exploring variables distribution
+hist(max_heights_cg_rich$max_canopy_height_cm) # right skew
+hist(max_heights_cg_pul$max_canopy_height_cm) #  right skew
+hist(max_heights_cg_arc$max_canopy_height_cm)#  right skew/normal?
+
+# max width -----
+max_widths_cg$Species <- as.factor(max_widths_cg$Species)
+max_widths_cg$SampleID_standard <- as.factor(max_widths_cg$SampleID_standard)
+max_widths_cg$population <- as.factor(max_widths_cg$population)
+max_widths_cg$Site <- as.factor(max_widths_cg$Site)
+max_widths_cg$Sample_Date <- as.POSIXct(max_widths_cg$Sample_Date, format = '%Y/%m/%d')
+max_widths_cg$Year <- as.factor(max_widths_cg$Year)
+max_widths_cg$Sample_age <- as.factor(max_widths_cg$Sample_age)
+
+# ordering levels
+max_widths_cg$population <- plyr::revalue(max_widths_cg$population , 
                                                  c("Northern"="Northern Garden",
                                                    "Southern"="Southern Garden"))
 
-
 # Separating into 3 datasets: one per spp.
-all_CG_source_growth_garden_rich <- all_CG_source_growth_garden_only %>%
+max_widths_cg_rich <- max_widths_cg %>%
   filter (Species == "Salix richardsonii")
-# write.csv(all_CG_source_growth_garden_rich, "data/all_CG_source_growth_garden_rich.csv")
 
-all_CG_source_growth_garden_pulchra <- all_CG_source_growth_garden_only %>%
+max_widths_cg_pul <- max_widths_cg %>%
   filter (Species == "Salix pulchra") 
-# write.csv(all_CG_source_growth_garden_pulchra, "data/all_CG_source_growth_garden_pulchra.csv")
 
-all_CG_source_growth_garden_arctica <- all_CG_source_growth_garden_only %>%
+max_widths_cg_arc <- max_widths_cg %>%
   filter (Species == "Salix arctica") 
-# write.csv(all_CG_source_growth_garden_arctica, "data/all_CG_source_growth_garden_arctica.csv")
 
 # exploring variables distribution
-hist(all_CG_source_growth_garden_rich$Canopy_Height_cm) # right skew
-hist(all_CG_source_growth_garden_pulchra$Canopy_Height_cm) #  right skew
-hist(all_CG_source_growth_garden_arctica$Canopy_Height_cm)#  right skew
-
-hist(all_CG_source_growth_garden_rich$mean_stem_elong) # right skew
-hist(all_CG_source_growth_garden_pulchra$mean_stem_elong) #  right skew
-hist(all_CG_source_growth_garden_arctica$mean_stem_elong)#  right skew
-
-hist(all_CG_source_growth_garden_rich$biovolume) # right skew
-hist(all_CG_source_growth_garden_pulchra$biovolume) #  right skew
-hist(all_CG_source_growth_garden_arctica$biovolume)#  right skew
-
-hist(all_CG_source_growth_garden_rich$mean_width) # right skew
-hist(all_CG_source_growth_garden_pulchra$mean_width) #  right skew
-hist(all_CG_source_growth_garden_arctica$mean_width)#  right skew
-
-hist(all_CG_source_growth_garden_rich$Stem_diameter) # right skew
-hist(all_CG_source_growth_garden_pulchra$Stem_diameter) #  right skew
-hist(all_CG_source_growth_garden_arctica$Stem_diameter)#  right skew
-
+hist(max_widths_cg_rich$max_mean_width_cm) # right skew
+hist(max_widths_cg_pul$max_mean_width_cm) #  right skew
+hist(max_widths_cg_arc$max_mean_width_cm)#  right skew
 
 # MODELLING -------
 # NB one model per species
@@ -86,24 +90,37 @@ hist(all_CG_source_growth_garden_arctica$Stem_diameter)#  right skew
 # 1. CANOPY HEIGHT -----
 
 # S. Richardsonii ----
-unique(all_CG_source_growth_garden_rich$Year)
-hist(all_CG_source_growth_garden_rich$Canopy_Height_cm) # not gaussian, not poisson, need to log transform
-
-# tried scaling but doesnt change anything, so not doing it
 # all_CG_source_growth_garden_rich_height$Canopy_Height_cm_scale <- scale(all_CG_source_growth_garden_rich_height$Canopy_Height_cm, center = T)  # scaling time
-# hist(all_CG_source_growth_garden_rich_height$Canopy_Height_cm_scale ) # still not gaussian?
 
 # model
-garden_rich_height <- brms::brm(log(Canopy_Height_cm) ~ population + (1|Sample_age) + (1|Year),
-                                data = all_CG_source_growth_garden_rich, family = gaussian(), chains = 3,
-                                iter = 3000, warmup = 1000)
+garden_rich_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sample_age),
+                                data =max_heights_cg_rich, family = gaussian(), chains = 3, 
+                                iter = 5000, warmup = 1000, 
+                                control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(garden_rich_height)
-plot(garden_rich_height)
-pp_check(garden_rich_height) 
+summary(garden_rich_height) # significantly higher canopy heights for southern pop.
+plot(garden_rich_height) # fine
+pp_check(garden_rich_height,  type = "dens_overlay", nsamples = 100)  # good
 
 # S. Pulchra -----
+garden_pul_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sample_age),
+                                data =max_heights_cg_pul, family = gaussian(), chains = 3, 
+                                iter = 5000, warmup = 1000, 
+                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(garden_pul_height) # significantly higher canopy heights for southern pop.
+plot(garden_pul_height) # fine
+pp_check(garden_pul_height, type = "dens_overlay", nsamples = 100)  # good) 
+
 # S. Arctica -----
+garden_arc_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sample_age),
+                                data =max_heights_cg_arc, family = gaussian(), chains = 3, 
+                                iter = 5000, warmup = 1000, 
+                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(garden_arc_height)# NOT significant difference (again makes sense!)
+plot(garden_arc_height) # fine
+pp_check(garden_arc_height, type = "dens_overlay", nsamples = 100)# good
 
 # 2. STEM ELONGATION ------
 
@@ -150,8 +167,8 @@ pp_check(garden_rich_biovol,  type = "dens_overlay", nsamples = 100) # fine
 # 4. WIDTH ------
 # omitting year random effect because only 2 years
 # S. Richardsonii -----
-garden_rich_width <- brms::brm(log(mean_width) ~ population + (1|Sample_age),
-                                data = all_CG_source_growth_garden_rich, family = gaussian(), chains = 3,
+garden_rich_width <- brms::brm(log(max_mean_width_cm) ~ population + (1|Sample_age),
+                                data = max_widths_cg_rich, family = gaussian(), chains = 3,
                                 iter = 5000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
@@ -161,7 +178,27 @@ plot(garden_rich_width) # fine
 pp_check(garden_rich_width,  type = "dens_overlay", nsamples = 100) # fine
 
 # S. Pulchra -----
+garden_pul_width <- brms::brm(log(max_mean_width_cm) ~ population + (1|Sample_age),
+                               data = max_widths_cg_pul, family = gaussian(), chains = 3,
+                               iter = 5000, warmup = 1000, 
+                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(garden_pul_width) # significantly larger widths for southern shrubs in garden
+plot(garden_pul_width) # fine
+pp_check(garden_pul_width,  type = "dens_overlay", nsamples = 100) # fine
+
 # S. Arctica -----
+garden_arc_width <- brms::brm(log(max_mean_width_cm) ~ population + (1|Sample_age),
+                               data = max_widths_cg_arc, family = gaussian(), chains = 3,
+                               iter = 5000, warmup = 1000, 
+                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(garden_arc_width) # NOT significantly larger widths for southern shrubs in garden (makes sense)
+plot(garden_arc_width) # fine
+pp_check(garden_arc_width,  type = "dens_overlay", nsamples = 100) # fine
+
 
 # 4. STEM DIAMETER ------
 # omitting year random effect because only 2 years

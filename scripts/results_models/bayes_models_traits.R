@@ -104,7 +104,8 @@ pp_check(arctica_SLA)
 # S. pulchra 
 pulchra_SLA <- brms::brm(SLA ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
                          iter = 5000, warmup = 1000, 
-                         control = list(max_treedepth = 15, adapt_delta = 0.99)
+                         control = list(max_treedepth = 15, adapt_delta = 0.99))
+
 summary(pulchra_SLA) # There were 60 divergent transitions after warmup
 plot(pulchra_SLA)
 pp_check(pulchra_SLA) 

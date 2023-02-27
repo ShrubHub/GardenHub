@@ -1089,10 +1089,25 @@ max_cg_biovol <- all_cg_data_2022 %>%
   slice(which.max(biovolume)) %>% 
   dplyr::rename("max_biovol" = "biovolume")
 
+# stem elongation max
+max_cg_elong <- all_cg_data_2022 %>% 
+  group_by(SampleID_standard) %>%
+  slice(which.max(mean_stem_elong)) %>% 
+  dplyr::rename("max_stem_elong" = "mean_stem_elong")
+
+# stem diameter max
+max_cg_diam <- all_cg_data_2022 %>% 
+  group_by(SampleID_standard) %>%
+  slice(which.max(Stem_diameter)) %>% 
+  dplyr::rename("max_stem_diam" = "Stem_diameter")
+
 # save 
 write.csv(max_cg_heights, "data/common_garden_data_2022/max_heights_cg.csv")
 write.csv(max_cg_biovol, "data/common_garden_data_2022/max_biovol_cg.csv")
 write.csv(max_cg_widths, "data/common_garden_data_2022/max_widths_cg.csv")
+write.csv(max_cg_elong, "data/common_garden_data_2022/max_elong_cg.csv")
+write.csv(max_cg_diam, "data/common_garden_data_2022/max_diam_cg.csv")
+
 max_cg_widths <- read_csv("data/common_garden_data_2022/max_widths_cg.csv")
 max_cg_heights <- read_csv("data/common_garden_data_2022/max_heights_cg.csv")
 
