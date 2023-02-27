@@ -1,14 +1,14 @@
 # BAYESIAN growth results models -----
 # Script by Erica
-# Last update: 21/02/2023
+# Last update: 27/02/2023
 # Code adapted from coding club tutorial by Louise Litrico:
 # https://ourcodingclub.github.io/tutorials/brms/ 
 
-# 3 options for growth model structure: 
-# 1) max height across all years, 
-# 2) using the last three years of August height data as a repeated measures test (without the shrubID nesting in the random effects), 
+# 3 available options for growth model structure: 
+# 1) max height across all years (WE ARE DOING THIS ONE.)
+# OR  2) using the last three years of August height data as a repeated measures test (without the shrubID nesting in the random effects), 
 # which assumes that the shrubs aren’t really getting taller any more (seems true from the data, but that isn’t a priori), or 
-# 3) only using the August 2022 data (aka the last time point).
+# OR 3) only using the August 2022 data (aka the last time point).
 
 # Loading libraries ----
 library(brms)
@@ -84,6 +84,93 @@ hist(max_widths_cg_rich$max_mean_width_cm) # right skew
 hist(max_widths_cg_pul$max_mean_width_cm) #  right skew
 hist(max_widths_cg_arc$max_mean_width_cm)#  right skew
 
+# max stem elongation -----
+max_elong_cg$Species <- as.factor(max_elong_cg$Species)
+max_elong_cg$SampleID_standard <- as.factor(max_elong_cg$SampleID_standard)
+max_elong_cg$population <- as.factor(max_elong_cg$population)
+max_elong_cg$Site <- as.factor(max_elong_cg$Site)
+max_elong_cg$Sample_Date <- as.POSIXct(max_elong_cg$Sample_Date, format = '%Y/%m/%d')
+max_elong_cg$Year <- as.factor(max_elong_cg$Year)
+max_elong_cg$Sample_age <- as.factor(max_elong_cg$Sample_age)
+
+# ordering levels
+max_elong_cg$population <- plyr::revalue(max_elong_cg$population , 
+                                          c("Northern"="Northern Garden",
+                                            "Southern"="Southern Garden"))
+
+# Separating into 3 datasets: one per spp.
+max_elong_cg_rich <- max_elong_cg %>%
+  filter (Species == "Salix richardsonii")
+
+max_elong_cg_pul <- max_elong_cg %>%
+  filter (Species == "Salix pulchra") 
+
+max_elong_cg_arc <- max_elong_cg %>%
+  filter (Species == "Salix arctica") 
+
+# exploring variables distribution
+hist(max_elong_cg_rich$max_stem_elong) # right skew
+hist(max_elong_cg_pul$max_stem_elong) #  right skew
+hist(max_elong_cg_arc$max_stem_elong)#  right skew
+
+# max biovolume -----
+max_biovol_cg$Species <- as.factor(max_biovol_cg$Species)
+max_biovol_cg$SampleID_standard <- as.factor(max_biovol_cg$SampleID_standard)
+max_biovol_cg$population <- as.factor(max_biovol_cg$population)
+max_biovol_cg$Site <- as.factor(max_biovol_cg$Site)
+max_biovol_cg$Sample_Date <- as.POSIXct(max_biovol_cg$Sample_Date, format = '%Y/%m/%d')
+max_biovol_cg$Year <- as.factor(max_biovol_cg$Year)
+max_biovol_cg$Sample_age <- as.factor(max_biovol_cg$Sample_age)
+
+# ordering levels
+max_biovol_cg$population <- plyr::revalue(max_biovol_cg$population , 
+                                         c("Northern"="Northern Garden",
+                                           "Southern"="Southern Garden"))
+
+# Separating into 3 datasets: one per spp.
+max_biovol_cg_rich <- max_biovol_cg %>%
+  filter (Species == "Salix richardsonii")
+
+max_biovol_cg_pul <- max_biovol_cg %>%
+  filter (Species == "Salix pulchra") 
+
+max_biovol_cg_arc <- max_biovol_cg %>%
+  filter (Species == "Salix arctica") 
+
+# exploring variables distribution
+hist(max_biovol_cg_rich$max_biovol) # right skew
+hist(max_biovol_cg_pul$max_biovol, breaks = 30) #  right skew - so weird
+hist(max_biovol_cg_arc$max_biovol)#  right skew
+
+# max stem diameter -----
+max_diam_cg$Species <- as.factor(max_diam_cg$Species)
+max_diam_cg$SampleID_standard <- as.factor(max_diam_cg$SampleID_standard)
+max_diam_cg$population <- as.factor(max_diam_cg$population)
+max_diam_cg$Site <- as.factor(max_diam_cg$Site)
+max_diam_cg$Sample_Date <- as.POSIXct(max_diam_cg$Sample_Date, format = '%Y/%m/%d')
+max_diam_cg$Year <- as.factor(max_diam_cg$Year)
+max_diam_cg$Sample_age <- as.factor(max_diam_cg$Sample_age)
+
+# ordering levels
+max_diam_cg$population <- plyr::revalue(max_diam_cg$population , 
+                                          c("Northern"="Northern Garden",
+                                            "Southern"="Southern Garden"))
+
+# Separating into 3 datasets: one per spp.
+max_diam_cg_rich <- max_diam_cg %>%
+  filter (Species == "Salix richardsonii")
+
+max_diam_cg_pul <- max_diam_cg %>%
+  filter (Species == "Salix pulchra") 
+
+max_diam_cg_arc <- max_diam_cg %>%
+  filter (Species == "Salix arctica") 
+
+# exploring variables distribution
+hist(max_diam_cg_rich$max_stem_diam) # right skew
+hist(max_diam_cg_pul$max_stem_diam, breaks = 30) #  right skew - so weird
+hist(max_diam_cg_arc$max_stem_diam,  breaks = 30)#  right skew
+
 # MODELLING -------
 # NB one model per species
 
@@ -125,34 +212,41 @@ pp_check(garden_arc_height, type = "dens_overlay", nsamples = 100)# good
 # 2. STEM ELONGATION ------
 
 # S. Richardsonii -----
-unique(all_CG_source_growth_garden_rich$population)
-range(all_CG_source_growth_garden_rich$mean_stem_elong)
-
-hist(all_CG_source_growth_garden_rich$mean_stem_elong) # not gaussian, not poisson?
-# scaling 
-# all_CG_source_growth_garden_rich$mean_stem_elong_scale <- scale(all_CG_source_growth_garden_rich$mean_stem_elong, center = T)  # scaling time
-# hist(all_CG_source_growth_garden_rich$mean_stem_elong_scale) # still not gaussian?
-# all_CG_source_growth_garden_rich$population<-as.factor(all_CG_source_growth_garden_rich$population)
-
 # model
-garden_rich_elong <- brms::brm(log(mean_stem_elong) ~ population + (1|Sample_age) + (1|Year),
-                               data = all_CG_source_growth_garden_rich, family = gaussian(), chains = 3,
-                               iter = 3000, warmup = 1000)
+garden_rich_elong <- brms::brm(log(max_stem_elong) ~ population + (1|Sample_age),
+                               data = max_elong_cg_rich, family = gaussian(), chains = 3,
+                               iter = 3000, warmup = 1000, 
+                               control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-
-summary(garden_rich_elong)
-plot(garden_rich_elong)
-pp_check(garden_rich_elong) 
+summary(garden_rich_elong) # southern pop significantly longer stem elong
+plot(garden_rich_elong) # fine
+pp_check(garden_rich_elong, type = "dens_overlay", nsamples = 100) # goood
 
 # S. Pulchra -----
+garden_pul_elong <- brms::brm(log(max_stem_elong) ~ population + (1|Sample_age),
+                               data = max_elong_cg_pul, family = gaussian(), chains = 3,
+                               iter = 3000, warmup = 1000, 
+                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(garden_pul_elong)# southern pop significantly longer stem elong
+plot(garden_pul_elong) # fine
+pp_check(garden_pul_elong, type = "dens_overlay", nsamples = 100)  # fine
 
 # S. Arctica -----
+garden_arc_elong <- brms::brm(log(max_stem_elong) ~ population + (1|Sample_age),
+                               data = max_elong_cg_arc, family = gaussian(), chains = 3,
+                               iter = 3000, warmup = 1000, 
+                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(garden_arc_elong) # southern shrubs SIGNIFICANTLY SHORTER elong! 
+plot(garden_arc_elong) # fine
+pp_check(garden_arc_elong,  type = "dens_overlay", nsamples = 100) # fine
 
 # 3. BIOVOLUME ------
 # S. Richardsonii -----
 # model
-garden_rich_biovol <- brms::brm(log(biovolume) ~ population + (1|Sample_age) + (1|Year),
-                               data = all_CG_source_growth_garden_rich, family = gaussian(), chains = 3,
+garden_rich_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
+                               data = max_biovol_cg_rich, family = gaussian(), chains = 3,
                                iter = 5000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
 
@@ -162,7 +256,27 @@ plot(garden_rich_biovol) # fine
 pp_check(garden_rich_biovol,  type = "dens_overlay", nsamples = 100) # fine
 
 # S. Pulchra -----
+garden_pul_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
+                                data = max_biovol_cg_pul, family = gaussian(), chains = 3,
+                                iter = 5000, warmup = 1000, 
+                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(garden_pul_biovol) # significantly larger biovolume for southern shrubs in garden
+plot(garden_pul_biovol) # fine
+pp_check(garden_pul_biovol,  type = "dens_overlay", nsamples = 100) # fine
+
 # S. Arctica -----
+garden_arc_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
+                                data = max_biovol_cg_arc, family = gaussian(), chains = 3,
+                                iter = 5000, warmup = 1000, 
+                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(garden_arc_biovol) # NOT significant diff. 
+plot(garden_arc_biovol) # fine
+pp_check(garden_arc_biovol,  type = "dens_overlay", nsamples = 100) # fine
+
 
 # 4. WIDTH ------
 # omitting year random effect because only 2 years
@@ -204,8 +318,8 @@ pp_check(garden_arc_width,  type = "dens_overlay", nsamples = 100) # fine
 # omitting year random effect because only 2 years
 # S. Richardsonii -----
 # model
-garden_rich_diam <- brms::brm(log(Stem_diameter) ~ population + (1|Sample_age),
-                               data = all_CG_source_growth_garden_rich, family = gaussian(), chains = 3,
+garden_rich_diam <- brms::brm(log(max_stem_diam) ~ population + (1|Sample_age),
+                               data = max_diam_cg_rich, family = gaussian(), chains = 3,
                                iter = 5000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
 
@@ -215,7 +329,27 @@ plot(garden_rich_diam) # fine
 pp_check(garden_rich_diam,  type = "dens_overlay", nsamples = 100) # fine
 
 # S. Pulchra -----
+garden_pul_diam <- brms::brm(log(max_stem_diam) ~ population + (1|Sample_age),
+                              data = max_diam_cg_pul, family = gaussian(), chains = 3,
+                              iter = 5000, warmup = 1000, 
+                              control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(garden_pul_diam) # significantly larger stem diameters for southern shrubs in garden
+plot(garden_pul_diam) # fine
+pp_check(garden_pul_diam,  type = "dens_overlay", nsamples = 100) # fine
+
 # S. Arctica -----
+garden_arc_diam <- brms::brm(log(max_stem_diam) ~ population + (1|Sample_age),
+                              data = max_diam_cg_arc, family = gaussian(), chains = 3,
+                              iter = 5000, warmup = 1000, 
+                              control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(garden_arc_diam) # no significant diff.
+plot(garden_arc_diam) # fine
+pp_check(garden_arc_diam,  type = "dens_overlay", nsamples = 100) # fine
+
 
 # PLOTTING -----
 theme_shrub <- function(){ theme(legend.position = "right",
