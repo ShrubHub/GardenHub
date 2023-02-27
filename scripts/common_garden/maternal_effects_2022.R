@@ -163,6 +163,8 @@ mother_cg <- full_join(mother_cg_widths, max_cg_biovol_merge,
                                            "Species" = "Species",
                                            "Site" = "Site"))
 
+write.csv(mother_cg, "data/source_pops/mother_cg.csv")
+
 # add a mother or child column
 mother_cg_edit <- mother_cg %>%
   mutate(mother_or_child = ifelse(population %in% c("Northern", "Southern"), "child", "mother"))
