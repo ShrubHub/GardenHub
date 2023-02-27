@@ -66,6 +66,16 @@ all_phenocam_pul_garden <- all_phenocam_pulchra %>%
 all_phenocam_arc_garden <- all_phenocam_arctica %>% 
   filter(population %in% c("Northern Garden", "Southern Garden"))
 
+# Sp specific growing season data
+all_growing_season_rich <- all_growing_season %>%
+  filter(Species == "Salix richardsonii")
+
+all_growing_season_pul <- all_growing_season %>%
+  filter(Species == "Salix pulchra")
+
+all_growing_season_arc <- all_growing_season %>%
+  filter(Species == "Salix arctica")
+
 # exploring variables ------
 hist(all_phenocam_pul_source$First_bud_burst_DOY, breaks=30) # defo not normal
 hist(all_phenocam_rich_source$First_bud_burst_DOY, breaks=30) # defo not normal
@@ -269,15 +279,34 @@ pp_check(garden_arc_yellow, type = "dens_overlay", nsamples = 100) # looks good
 
 # 3. GROWING SEASON LENGTH -----
 # Salix richardsonii ------
+growing_season_rich <- brms::brm(growing_season ~ population, 
+                                data = all_growing_season_rich, family = gaussian(), chains = 3,
+                                iter = 3000, warmup = 1000,
+                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+
+summary(growing_season_rich) # all different
+plot(growing_season_rich)
+pp_check(growing_season_rich, type = "dens_overlay", nsamples = 100) # looks good
 
 # Salix pulchra ------
+growing_season_pul <- brms::brm(growing_season ~ population, 
+                                 data = all_growing_season_pul, family = gaussian(), chains = 3,
+                                 iter = 3000, warmup = 1000,
+                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(growing_season_pul) # 
+plot(growing_season_pul)
+pp_check(growing_season_pul, type = "dens_overlay", nsamples = 100) # looks good
 
 # Salix arctica ------
-growing_season_mod <- brms::brm(growing_season ~ population + Species,
-                                data = all_growing_season, family = gaussian(), chains = 3,
-                                iter = 3000, warmup = 1000)
+growing_season_arc <- brms::brm(growing_season ~ population,
+                                data = all_growing_season_arc, family = gaussian(), chains = 3,
+                                iter = 3000, warmup = 1000,
+                                control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-
-summary(growing_season_mod)
-plot(growing_season_mod)
-pp_check(growing_season_mod) # looks good
+summary(growing_season_arc)
+plot(growing_season_arc)
+pp_check(growing_season_arc, type = "dens_overlay", nsamples = 100) # looks good
