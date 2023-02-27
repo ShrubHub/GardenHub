@@ -1,6 +1,6 @@
 ### Processing TOMST logger data from Qikiqtaruk-Hershel Island (QHI) (2022)
 ### Script by Erica Zaja, based on script by Elise Gallois
-### Last updated: 15/12/2022 by Madi 
+### Last updated: 27/02/2023 by Madi 
 
 ### 1. LOADING LIBRARIES -----
 library(readr)
@@ -63,6 +63,7 @@ july_surface_temp <- QHI_mean_daily_temp %>%
   subset(Date >= "2022-07-27" & Date <= "2022-07-31")
 
 mean(july_surface_temp$mean_temp) #  5.01368
+sd(july_surface_temp$mean_temp) # 2.42599
 
 # Saving as csv
 write.csv(QHI_mean_daily_temp, file = "data/tomst/QHI_TOMST_August2022/QHI_mean_daily_temp.csv", row.names = FALSE)
@@ -148,7 +149,7 @@ july_soil_temp_2022 <- QHI_mean_daily_soil_temp %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
 mean(july_soil_temp_2022$mean_temp) # 3.323774
-
+sd(july_soil_temp_2022$mean_temp) # 0.7855326
 
 # Save as csv
 write.csv(QHI_mean_daily_soil_temp, file = "data/tomst/QHI_TOMST_August2022/QHI_mean_daily_soil_temp.csv", row.names = FALSE)
@@ -186,7 +187,8 @@ QHI_mean_daily_soil_moist <- QHI_moist_percent  %>%
   #filter(Variable %in% "SoilMoistureCount") %>% 
   filter(Date > lubridate::ymd("2022-07-27")) %>% 
   group_by(Date) %>% 
-  summarise(mean_moist = mean(moisture_percent)) %>% 
+  summarise(mean_moist = mean(moisture_percent), 
+            sd_moist = sd(moisture_percent)) %>% 
   group_by(Date) %>% 
   top_n(-5, mean_moist) %>%  # see top 5 warmest days
   glimpse()
@@ -200,6 +202,7 @@ july_soil_moist <- QHI_mean_daily_soil_moist %>%
   subset(Date >= "2022-07-27" & Date <= "2022-07-31")
 
 mean(july_soil_moist$mean_moist) #  53.75361
+sd(july_soil_moist$mean_moist) #  3.247914
 
 # Save as csv
 write.csv(QHI_mean_daily_soil_moist, file = "data/tomst/QHI_TOMST_August2022/QHI_mean_daily_soil_moist.csv", row.names = FALSE)
