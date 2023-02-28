@@ -68,10 +68,10 @@ tomst_cg <-  cg_data %>%
 str(tomst_cg)
 
 # Saving as csv
-write.csv(tomst_cg, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_FullTOMST_2022.csv", row.names = FALSE)
+# write.csv(tomst_cg, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_FullTOMST_2022.csv", row.names = FALSE)
 
-# Reading in file
-tomst_cg <- read_csv("data/tomst/Common_garden_TOMST_17August2022/CG_FullTOMST_2022.csv")
+# Reading in file: NB this is the old dataset - github won't let me push the new one. So run from the top 
+# tomst_cg <- read_csv("data/tomst/Common_garden_TOMST_17August2022/CG_FullTOMST_2022.csv")
 
 ### 4. DATA VISUALISATION ----
 
@@ -98,7 +98,7 @@ tomst_cg <- read_csv("data/tomst/Common_garden_TOMST_17August2022/CG_FullTOMST_2
 # get date column
 cg_data <- tomst_cg %>% 
   mutate(Date = lubridate::date(Datetime_UTC))
-
+range(cg_data$Date) # "2021-06-24" "2022-08-17"
 str(cg_data)
 
 # see top 5 warmest days
@@ -133,6 +133,7 @@ july_surface_temp_2022 <- CG_mean_daily_temp %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
 mean(july_surface_temp_2022$mean_temp) # 14.54956
+sd(july_surface_temp_2022$mean_temp) # 2.690567
 
 july_surface_temp_2021 <- CG_mean_daily_temp %>%
   subset(Date >= "2021-07-30" & Date <= "2021-07-31")
@@ -289,13 +290,13 @@ write.csv(CG_mean_daily_top_sensor, file = "data/tomst/Common_Garden_TOMST_17Aug
 # Daily mean soil temperature 
 CG_mean_daily_soil_temp <- cg_data  %>%
   filter(Variable %in% "T1: Soil sensor") %>% 
-  #filter(Date > lubridate::ymd("2022-07-27")) %>% 
+  filter(Date > lubridate::ymd("2021-07-30")) %>% 
   group_by(Date) %>% 
   summarise(mean_temp = mean(Value)) %>% 
   group_by(Date) %>% 
   top_n(-5, mean_temp) %>%  # see top 5 warmest days
   glimpse()
-
+range(CG_mean_daily_soil_temp$Date)
 range(CG_mean_daily_soil_temp$mean_temp)
 # 9.492622 16.236979
 # warmest: 5th July, coldest: 14th June 
@@ -315,6 +316,11 @@ july_soil_temp_2022 <- CG_mean_daily_soil_temp %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
 mean(july_soil_temp_2022$mean_temp) # 13.63691
+
+# july 2021 
+july_soil_temp_2021 <- CG_mean_daily_soil_temp %>%
+  subset(Date >= "2021-07-30" & Date <= "2021-07-31") 
+mean(july_soil_temp_2021$mean_temp) # 15.62174
 
 # 2021 and 2022 july
 july_soil_temp <- CG_mean_daily_soil_temp %>%
@@ -411,11 +417,17 @@ june_soil_moist <- CG_mean_daily_soil_moist %>%
 
 mean(june_soil_moist$mean_moist) # 38.66966
 
-# filter out july
+# filter out july 2022
 july_soil_moist_2022 <- CG_mean_daily_soil_moist %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
 mean(july_soil_moist_2022$mean_moist) # 40.04226
+
+# filter out july 2021
+july_soil_moist_2021 <- CG_mean_daily_soil_moist %>%
+  subset(Date >= "2021-07-30" & Date <= "2021-07-31")
+
+mean(july_soil_moist_2021$mean_moist) # 24.63718
 
 # 2021 and 2022 july
 july_soil_moist <- CG_mean_daily_soil_moist %>%

@@ -71,3 +71,4 @@ KP_july_temp_hobo <- KP_mean_monthly_temp_hobo %>%
 # MEAN JULY SOIL TEMP (HOBO - TOMST across 2015-2022)
 soil_temp_KP <- c(4.568919,8.252268,4.763441,3.925377,4.632053)
 mean(soil_temp_KP)# 5.228412
+sd(soil_temp_KP)

@@ -113,7 +113,7 @@ CG_HOBO$Date <- mdy(CG_HOBO$Date)
 
 # save all CG hobo merged together 
 write.csv(CG_HOBO, "data/hobo/all_CG_HOBO.csv")
-
+CG_HOBO <- read_csv("data/hobo/all_CG_HOBO.csv")
 str(CG_HOBO)
 
 # Make DAILY means (one value per day)
