@@ -375,12 +375,13 @@ july_soil_temp_2022 <- KP_mean_daily_soil_temp %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
 mean(july_soil_temp_2022$mean_temp) # 3.925377
-sd(july_soil_temp_2022$mean_temp) # 3.925377
+sd(july_soil_temp_2022$mean_temp) # 0.5224132
    
 july_soil_temp_2021 <- KP_mean_daily_soil_temp %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31")
 
 mean(july_soil_temp_2021$mean_temp) # 4.632053
+sd(july_soil_temp_2021$mean_temp) #0.09782565
 
 # 2021 and 2022 july 
 july_soil_temp <- KP_mean_daily_soil_temp %>%
@@ -486,7 +487,15 @@ mean(june_soil_moist$mean_moist) #  51.43146
 july_soil_moist_2022 <- KP_mean_daily_soil_moist %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
-mean(july_soil_moist$mean_moist) # 48.50145
+mean(july_soil_moist_2022$mean_moist) # 48.50145
+sd(july_soil_moist_2022$mean_moist) # 4.630409
+
+# july 2021 
+july_soil_moist_2021 <- KP_mean_daily_soil_moist %>%
+  subset(Date >= "2021-07-29" & Date <= "2021-07-31")
+
+mean(july_soil_moist_2021$mean_moist) #  45.15257
+sd(july_soil_moist_2021$mean_moist) # 0.2783909
 
 # 2021 and 2022 july 
 july_soil_moist <- KP_mean_daily_soil_moist %>%
@@ -552,11 +561,32 @@ facet_env_kp_hist <- grid.arrange(kp_mean_daily_soil_moist_hist, kp_mean_daily_s
 
 
 # SUMMARY DATA -----
+# Surface + top sensor -----
 # July mean temperatures (average of top sensor, surface temp) (TOMST):
 # 2021 = mean(11.20757, 8.504422) = 9.855996
 # 2021 sd = mean(1.479431,  0.7201118) = 1.099771
 # 2022 = mean(9.465119, 7.805064) = 8.635091
 # 2022 sd = mean(3.547377,2.179662 )=  2.86352
+# overall mean & sd (OF THE MEAN)
+# overall SD 
+mean_kp_temp <- c(9.855996, 8.635091) # 9.245544
+mean(mean_kp_temp)
+sd(mean_kp_temp) # 0.8633102
 
-# overall mean  = mean(9.855996, 8.635091) = 9.245544
-# overall SD = mean(1.099771, 2.86352) = 1.981645
+# Soil temp (2021-22 TOMST + (other years HOBO, see KP_env.R script)-----
+# 2021 = # 4.632053, 2021 sd = 0.09782565
+# 2022 =3.925377, 2022 sd = 0.5224132
+# 2015 = 4.568919, 2015 sd = 1.385542
+# 2016 = 8.252268, 2016 sd =2.993852
+# 2017 = 4.763441, 2017 sd = 1.545860
+# overall mean: 
+mean_soiltemp_kp <- c(4.632053,3.925377,4.568919,8.252268, 4.763441)
+mean(mean_soiltemp_kp) #  5.228412
+sd(mean_soiltemp_kp) #  1.721074
+
+# Soil moisture -----
+# 2021: 45.15257
+# 2022:48.50145
+mean_soilmoist_kp <- c(45.15257, 48.50145)
+mean(mean_soilmoist_kp) # 46.82701
+sd(mean_soilmoist_kp) # 2.368016

@@ -44,14 +44,14 @@ KP_hobo_pheno_2017 <- Haydn_summary %>%
 unique(KP_hobo_pheno_2017$Plotcode)
 unique(KP_hobo_pheno_2017$Year)
 
-range(KP_FullTOMST_2022$Datetime_UTC) # 1 june 2022 - 15 aug 2022
 
 # Monthly means 
 
 # Daily mean surface temperature
 KP_mean_monthly_temp_hobo <- KP_hobo_pheno_2017  %>%
   group_by(Year, Month) %>% 
-  summarise(mean_temp = mean(Temperature))
+  summarise(mean_temp = mean(Temperature),
+            sd = sd(Temperature))
 
 KP_july_temp_hobo <- KP_mean_monthly_temp_hobo %>%
   filter(Month == 7) 
