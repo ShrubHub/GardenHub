@@ -1,6 +1,6 @@
 #### Common garden HOBO and TOMST summary SCRIPT
 ### By Erica Zaja and Madi Anderson, created on 24/01/2023
-## Last updated: 26/01/2023 by Erica
+## Last updated: 28/02/2023 by Madi
 
 # HOBO JULY means across 2017-2021 ----
 # Soil moisture 
@@ -59,3 +59,16 @@ sd(mean_soil_temp_CG) #  1.218523
 mean_soil_moist_CG <- c(40.04226, 24.63718, 6.2, 6.2, 3.3, 8) 
 mean(mean_soil_moist_CG) # 14.72991
 sd(mean_soil_moist_CG) # 17.09821
+
+# compare soil moisture to soil samples collected 2021
+
+soil_moist_manual <- read.csv("data/environment/CG_Soil_moisture_aug6.csv")
+str(soil_moist_manual)
+
+soil_moist_calc <- soil_moist_manual %>% 
+  dplyr::select(-c(X, X.1, X.2)) %>% 
+  mutate(soil_moist = (((Wet_weight..g. - Dry_weight..g.)/Dry_weight..g.))*100)
+
+# mean soil moisture: 
+mean(soil_moist_calc$soil_moist) # 29.41922
+sd(soil_moist_calc$soil_moist) # 3.961386

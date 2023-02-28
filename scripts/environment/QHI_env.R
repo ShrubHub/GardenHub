@@ -317,8 +317,8 @@ mean(july_qhi_16_17_sd) # 5.133061 mean sd
 
 #use tomst and hobo 2017 bc overlap from 2022 of tomst and hobo 
 air_temp_july <- c(5.01368, 13.19234, 11.12449)
-mean(air_temp_july)
-# 9.776837
+mean(air_temp_july) # 9.776837
+sd(air_temp_july) #4.252616
 
 # mean standard deviation 
 air_sd_july <- c(2.42599, 5.133061, 7.130952)
@@ -334,6 +334,7 @@ mean(air_sd_july)
 soil_temp_july <- c(3.6884819, 3.323774, 7.45063)
 mean(soil_temp_july)
 # 4.820962
+sd(soil_temp_july)
 
 # mean standard deviation 
 soil_temp_sd_july <- c(1.0665079, 0.7855326, 4.195172)
