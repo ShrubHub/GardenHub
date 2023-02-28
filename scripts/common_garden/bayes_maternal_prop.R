@@ -20,7 +20,7 @@ mother_cg_rich <- mother_cg %>%
 mother_cg_pulchra <- mother_cg %>% 
   dplyr::filter(Species == "Salix pulchra")
 
-# explore 
+# explore height distributions and compare with log transform of data 
 hist(mother_cg_arctica$Mother_Canopy_Height_cm) # right skew
 mother_cg_arctica$Mother_Canopy_Height_cm_log <- log(mother_cg_arctica$Mother_Canopy_Height_cm)
 hist(mother_cg_arctica$Mother_Canopy_Height_cm_log) # a little better 
@@ -32,6 +32,29 @@ hist(mother_cg_pulchra$Mother_Canopy_Height_cm_log) # better
 hist(mother_cg_rich$Mother_Canopy_Height_cm) # right skew mild 
 mother_cg_rich$Mother_Canopy_Height_cm_log <- log(mother_cg_rich$Mother_Canopy_Height_cm)
 hist(mother_cg_rich$Mother_Canopy_Height_cm_log)
+
+# explore width distributions and compare with log transform
+hist(mother_cg_arctica$Mother_mean_width) # right skew
+hist(mother_cg_arctica$max_mean_width_cm) # slight right skew 
+mother_cg_arctica$max_mean_width_cm_log <- log(mother_cg_arctica$max_mean_width_cm)
+mother_cg_arctica$Mother_mean_width_log <- log(mother_cg_arctica$Mother_mean_width)
+hist(mother_cg_arctica$Mother_mean_width_log) # a little better 
+hist(mother_cg_arctica$max_mean_width_cm_log)
+
+hist(mother_cg_pulchra$Mother_mean_width) # right skew
+hist(mother_cg_pulchra$max_mean_width_cm) # right skew  
+mother_cg_pulchra$max_mean_width_cm_log <- log(mother_cg_pulchra$max_mean_width_cm)
+mother_cg_pulchra$Mother_mean_width_log <- log(mother_cg_pulchra$Mother_mean_width)
+hist(mother_cg_pulchra$max_mean_width_cm_log) # better 
+hist(mother_cg_pulchra$Mother_mean_width_log) # better
+
+hist(mother_cg_rich$Mother_mean_width) # right skew mild 
+hist(mother_cg_rich$max_mean_width_cm) # right skew  
+mother_cg_rich$max_mean_width_cm_log <- log(mother_cg_rich$max_mean_width_cm)
+mother_cg_rich$Mother_mean_width_log <- log(mother_cg_rich$Mother_mean_width)
+hist(mother_cg_rich$max_mean_width_cm_log) # better not great 
+hist(mother_cg_rich$Mother_mean_width_log) # not much better 
+
 
 # 4. MODELLING ------
 
@@ -50,7 +73,7 @@ plot(maternal_rich_height_site)
 pp_check(maternal_rich_height_site, type = "dens_overlay", nsamples = 100)  # good) 
 
 
-# maternal_rich_height_site_year <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm)* Site +(1|SampleYear),
+#maternal_rich_height_site_year <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm)* Site +(1|SampleYear),
 #                                       data = mother_cg_rich, family = gaussian(), chains = 3,
 #                                       iter = 3000, warmup = 1000, 
 #                                       control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -65,6 +88,7 @@ pp_check(maternal_rich_height_site, type = "dens_overlay", nsamples = 100)  # go
 #summary(maternal_rich_height) # not significant
 #plot(maternal_rich_height)
 #pp_check(maternal_rich_height, type = "dens_overlay", nsamples = 100)  # good) 
+
 
 # Salix pulchra -------
 maternal_pul_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm)* Site,
@@ -126,7 +150,7 @@ pp_check(maternal_arc_width, type = "dens_overlay", nsamples = 100)  # meh
 maternal_biovol_pulchra_mod <-  lm(mother_biovol_log ~ child_max_biovol_log*Site, data = mother_cg_edit_biovol_pulchra)
 
 # Salix richardsonii ------
-maternal_rich_biovol <- brms::brm(log(max_biovol) ~ log(Mother_biovolume) + Site + (1|SampleYear),
+maternal_rich_biovol <- brms::brm(log(max_biovol) ~ log(Mother_biovolume) * Site,
                                  data = mother_cg_rich, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000, 
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -135,7 +159,7 @@ plot(maternal_rich_biovol)
 pp_check(maternal_rich_biovol, type = "dens_overlay", nsamples = 100)  # good) 
 
 # Salix pulchra -------
-maternal_pul_biovol <- brms::brm(log(max_biovol) ~ log(Mother_biovolume) + Site + (1|SampleYear),
+maternal_pul_biovol <- brms::brm(log(max_biovol) ~ log(Mother_biovolume) * Site,
                                   data = mother_cg_pulchra, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -144,77 +168,76 @@ plot(maternal_pul_biovol)
 pp_check(maternal_pul_biovol, type = "dens_overlay", nsamples = 100)  # good) 
 
 # Salix arctica --------
-maternal_arc_biovol <- brms::brm(log(max_biovol) ~ log(Mother_biovolume) + Site + (1|SampleYear),
+maternal_arc_biovol <- brms::brm(log(max_biovol) ~ log(Mother_biovolume) * Site,
                                  data = mother_cg_arctica, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000, 
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(maternal_arc_biovol) # not significant
 plot(maternal_arc_biovol)
-pp_check(maternal_arc_biovol, type = "dens_overlay", nsamples = 100)  # good) 
+pp_check(maternal_arc_biovol, type = "dens_overlay", nsamples = 100)  # decent? 
 
 # 4.2. PROPAGATION EFFECTS ------
 
 # Height vs Cutting length ------
 # Salix richardsonii ------
-prop_rich <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) + Site + (1|SampleYear),
+prop_rich <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
                                   data = mother_cg_rich, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_rich) # not significant
 plot(prop_rich)
-pp_check(prop_rich, type = "dens_overlay", nsamples = 100)  # good) 
+pp_check(prop_rich, type = "dens_overlay", ndraws = 100)  # good 
 
 # Salix pulchra -------
-prop_pul <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) + Site + (1|SampleYear),
+prop_pul <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
                        data = mother_cg_pulchra, family = gaussian(), chains = 3,
                        iter = 3000, warmup = 1000, 
                        control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_pul) # not significant
 plot(prop_pul)
-pp_check(prop_pul, type = "dens_overlay", nsamples = 100)  # good) 
+pp_check(prop_pul, type = "dens_overlay", ndraws = 100)  # good 
 
 # Salix arctica --------
-
-prop_arc <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) + Site + (1|SampleYear),
+prop_arc <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
                       data = mother_cg_arctica, family = gaussian(), chains = 3,
                       iter = 3000, warmup = 1000, 
                       control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_arc) # not significant
 plot(prop_arc)
-pp_check(prop_arc, type = "dens_overlay", nsamples = 100)  # good) 
+pp_check(prop_arc, type = "dens_overlay", ndraws = 100)  # okay? kind of wonky 
 
 # Biovolume vs Cutting length ------
 # Salix richardsonii ------
-prop_biovol_rich <- brms::brm(log(max_biovol) ~ log(Cutting_length) + Site + (1|SampleYear),
+prop_biovol_rich <- brms::brm(log(max_biovol) ~ log(Cutting_length) * Site,
                        data = mother_cg_rich, family = gaussian(), chains = 3,
                        iter = 3000, warmup = 1000, 
                        control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_biovol_rich) # not significant
 plot(prop_biovol_rich)
-pp_check(prop_biovol_rich, type = "dens_overlay", nsamples = 100)  # good) 
+pp_check(prop_biovol_rich, type = "dens_overlay", ndraws = 100)  # kind of bimodal? 
 
 # Salix pulchra -------
-prop_biovol_pul <- brms::brm(log(max_biovol) ~ log(Cutting_length) + Site + (1|SampleYear),
+prop_biovol_pul <- brms::brm(log(max_biovol) ~ log(Cutting_length) * Site,
                               data = mother_cg_pulchra, family = gaussian(), chains = 3,
                               iter = 3000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_biovol_pul) # not significant
 plot(prop_biovol_pul)
-pp_check(prop_biovol_pul, type = "dens_overlay", nsamples = 100)  # good) 
+pp_check(prop_biovol_pul, type = "dens_overlay", ndraws = 100)  # good
 
 # Salix arctica --------
-prop_biovol_arc <- brms::brm(log(max_biovol) ~ log(Cutting_length) + Site + (1|SampleYear),
+prop_biovol_arc <- brms::brm(log(max_biovol) ~ log(Cutting_length) * Site,
                              data = mother_cg_arctica, family = gaussian(), chains = 3,
                              iter = 3000, warmup = 1000, 
                              control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_biovol_arc) # not significant
 plot(prop_biovol_arc)
-pp_check(prop_biovol_arc, type = "dens_overlay", nsamples = 100)  # good) 
+pp_check(prop_biovol_arc, type = "dens_overlay", ndraws = 100)  # good) 
 
 # Cutting length vs mother canopy height  ------
 
 # Salix richardsonii ------
-prop_cutting_rich <- brms::brm(log(Cutting_length) ~ log(Mother_Canopy_Height_cm) + Site + (1|SampleYear),
+prop_cutting_rich <- brms::brm(log(Cutting_length) ~ log(Mother_Canopy_Height_cm) * Site,
                               data = mother_cg_rich, family = gaussian(), chains = 3,
                               iter = 3000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -223,7 +246,7 @@ plot(prop_cutting_rich)
 pp_check(prop_cutting_rich, type = "dens_overlay", nsamples = 100)  # good) 
 
 # Salix pulchra -------
-prop_cutting_pul <- brms::brm(log(Cutting_length) ~ log(Mother_Canopy_Height_cm) + Site + (1|SampleYear),
+prop_cutting_pul <- brms::brm(log(Cutting_length) ~ log(Mother_Canopy_Height_cm) * Site,
                                data = mother_cg_pulchra, family = gaussian(), chains = 3,
                                iter = 3000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -232,7 +255,7 @@ plot(prop_cutting_pul)
 pp_check(prop_cutting_pul, type = "dens_overlay", nsamples = 100)  # good) 
 
 # Salix arctica --------
-prop_cutting_arc <- brms::brm(log(Cutting_length) ~ log(Mother_Canopy_Height_cm) + Site + (1|SampleYear),
+prop_cutting_arc <- brms::brm(log(Cutting_length) ~ log(Mother_Canopy_Height_cm) * Site,
                               data = mother_cg_arctica, family = gaussian(), chains = 3,
                               iter = 3000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
