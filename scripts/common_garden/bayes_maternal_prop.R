@@ -1,6 +1,6 @@
 # BAYESIAN maternal effects / propagation effects ------
 # script by Erica and Madi
-# last update: 27/02/2023
+# last update: 28/02/2023
 
 # 1. Loading libraries ----
 library(brms)
@@ -21,9 +21,17 @@ mother_cg_pulchra <- mother_cg %>%
   dplyr::filter(Species == "Salix pulchra")
 
 # explore 
-hist(mother_cg_arctica$Mother_Canopy_Height_cm)
-hist(mother_cg_pulchra$Mother_Canopy_Height_cm)
-hist(mother_cg_rich$Mother_Canopy_Height_cm)
+hist(mother_cg_arctica$Mother_Canopy_Height_cm) # right skew
+mother_cg_arctica$Mother_Canopy_Height_cm_log <- log(mother_cg_arctica$Mother_Canopy_Height_cm)
+hist(mother_cg_arctica$Mother_Canopy_Height_cm_log) # a little better 
+
+hist(mother_cg_pulchra$Mother_Canopy_Height_cm) # right skew
+mother_cg_pulchra$Mother_Canopy_Height_cm_log <- log(mother_cg_pulchra$Mother_Canopy_Height_cm)
+hist(mother_cg_pulchra$Mother_Canopy_Height_cm_log) # better
+
+hist(mother_cg_rich$Mother_Canopy_Height_cm) # right skew mild 
+mother_cg_rich$Mother_Canopy_Height_cm_log <- log(mother_cg_rich$Mother_Canopy_Height_cm)
+hist(mother_cg_rich$Mother_Canopy_Height_cm_log)
 
 # 4. MODELLING ------
 
@@ -32,25 +40,51 @@ hist(mother_cg_rich$Mother_Canopy_Height_cm)
 # HEIGHT -------
 
 # Salix richardsonii ------
-maternal_rich_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site + (1|SampleYear),
-                                data = mother_cg_rich, family = gaussian(), chains = 3,
-                                iter = 3000, warmup = 1000, 
-                                control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(maternal_rich_height) # not significant
-plot(maternal_rich_height)
-pp_check(maternal_rich_height, type = "dens_overlay", nsamples = 100)  # good) 
+# interactive site model without year 
+maternal_rich_height_site <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm)* Site,
+                                  data = mother_cg_rich, family = gaussian(), chains = 3,
+                                  iter = 3000, warmup = 1000, 
+                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(maternal_rich_height_site) # not significant
+plot(maternal_rich_height_site)
+pp_check(maternal_rich_height_site, type = "dens_overlay", nsamples = 100)  # good) 
+
+
+# maternal_rich_height_site_year <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm)* Site +(1|SampleYear),
+#                                       data = mother_cg_rich, family = gaussian(), chains = 3,
+#                                       iter = 3000, warmup = 1000, 
+#                                       control = list(max_treedepth = 15, adapt_delta = 0.99))
+# summary(maternal_rich_height_site_year) # not significant
+# plot(maternal_rich_height_site_year)
+# pp_check(maternal_rich_height_site_year, type = "dens_overlay", nsamples = 100)  # good)
+
+# maternal_rich_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site + (1|SampleYear),
+#                                data = mother_cg_rich, family = gaussian(), chains = 3,
+#                                iter = 3000, warmup = 1000, 
+#                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+#summary(maternal_rich_height) # not significant
+#plot(maternal_rich_height)
+#pp_check(maternal_rich_height, type = "dens_overlay", nsamples = 100)  # good) 
 
 # Salix pulchra -------
-maternal_pul_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site + (1|SampleYear),
+maternal_pul_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm)* Site,
                                   data = mother_cg_pulchra, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(maternal_pul_height) # not significant
+summary(maternal_pul_height) # significant for QHI 
 plot(maternal_pul_height)
 pp_check(maternal_pul_height, type = "dens_overlay", nsamples = 100)  # good) 
 
+#maternal_pul_height_old <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site,
+                                 data = mother_cg_pulchra, family = gaussian(), chains = 3,
+                                 iter = 3000, warmup = 1000, 
+                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
+#summary(maternal_pul_height_old) # not significant
+#plot(maternal_pul_height_old)
+#pp_check(maternal_pul_height_old, type = "dens_overlay", nsamples = 100)  # good) 
+
 # Salix arctica --------
-maternal_arc_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site + (1|SampleYear),
+maternal_arc_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) * Site,
                                  data = mother_cg_arctica, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000, 
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -61,7 +95,7 @@ pp_check(maternal_arc_height, type = "dens_overlay", nsamples = 100)  # good)
 
 # WIDTH ------
 # Salix richardsonii ------
-maternal_rich_width <- brms::brm(log(max_mean_width_cm) ~ log(Mother_mean_width) + Site + (1|SampleYear),
+maternal_rich_width <- brms::brm(log(max_mean_width_cm) ~ log(Mother_mean_width) * Site,
                                   data = mother_cg_rich, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -70,22 +104,22 @@ plot(maternal_rich_width)
 pp_check(maternal_rich_width, type = "dens_overlay", nsamples = 100)  # good) 
 
 # Salix pulchra -------
-maternal_pul_width <- brms::brm(log(max_mean_width_cm) ~ log(Mother_mean_width) + Site + (1|SampleYear),
+maternal_pul_width <- brms::brm(log(max_mean_width_cm) ~ log(Mother_mean_width) * Site,
                                  data = mother_cg_pulchra, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000, 
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(maternal_pul_width) # yes significant but negative estimate??
+summary(maternal_pul_width) # not significant but negative estimate 
 plot(maternal_pul_width)
 pp_check(maternal_pul_width, type = "dens_overlay", nsamples = 100)  # good) 
 
 # Salix arctica --------
-maternal_arc_width <- brms::brm(log(max_mean_width_cm) ~ log(Mother_mean_width) + Site + (1|SampleYear),
+maternal_arc_width <- brms::brm(log(max_mean_width_cm) ~ log(Mother_mean_width) * Site,
                                 data = mother_cg_arctica, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(maternal_arc_width) # not significant
 plot(maternal_arc_width)
-pp_check(maternal_arc_width, type = "dens_overlay", nsamples = 100)  # good) 
+pp_check(maternal_arc_width, type = "dens_overlay", nsamples = 100)  # meh 
 
 
 # BIOVOLUME -------
