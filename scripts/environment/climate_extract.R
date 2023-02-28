@@ -185,6 +185,7 @@ QHI_july_temp <- july_enviro_chelsa %>%
   dplyr::select(site, year, mean_temp_C)
 
 mean(QHI_july_temp$mean_temp_C, na.rm=TRUE) # 6.15
+sd(QHI_july_temp$mean_temp_C, na.rm=TRUE) # 1.859839
 # QHI july mean surface temp: 9.10 °C 
 # based on 2022 TOMST and 2017 HOBO data (both of those data sources are biased towards end of July for what it's worth)
 
@@ -193,7 +194,8 @@ QHI_july_precip <- july_enviro_chelsa %>%
   dplyr::select(site, year, mean_precip_mm)
 
 mean(QHI_july_precip$mean_precip_mm, na.rm=TRUE) # 95.86
-# QHI july mean surface temp: 9.10 °C 
+sd(QHI_july_precip$mean_precip_mm, na.rm=TRUE) # 80.31091
+# QHI july mean surface temp: 9.10 °C  
 
 # KP july mean temp and precip
 KP_july_temp <- july_enviro_chelsa %>%
@@ -201,12 +203,14 @@ KP_july_temp <- july_enviro_chelsa %>%
   dplyr::select(site, year, mean_temp_C)
 
 mean(KP_july_temp$mean_temp_C, na.rm=TRUE) #7.311905
+sd(KP_july_temp$mean_temp_C, na.rm=TRUE) # 0.9651301
 
 KP_july_precip <- july_enviro_chelsa %>%
   filter(site == "Kluane_plateau")%>%
   dplyr::select(site, year, mean_precip_mm)
 
 mean(KP_july_precip$mean_precip_mm, na.rm=TRUE) # 71.23
+sd(KP_july_precip$mean_precip_mm, na.rm=TRUE) # 26.90
 
 # CG july mean temp and precip
 CG_july_temp <- july_enviro_chelsa %>%
@@ -214,8 +218,8 @@ CG_july_temp <- july_enviro_chelsa %>%
   dplyr::select(site, year, mean_temp_C)
 
 mean(CG_july_temp$mean_temp_C, na.rm=TRUE) #13.67857
-
-# Common garden july mean surface temp: 17.97°C 
+sd(CG_july_temp$mean_temp_C, na.rm=TRUE) # 0.99
+# Common garden july mean surface temp: 14.1
 # Based on 6 years data (TOMST+ HOBO)
 
 CG_july_precip <- july_enviro_chelsa %>%
@@ -223,6 +227,7 @@ CG_july_precip <- july_enviro_chelsa %>%
   dplyr::select(site, year, mean_precip_mm)
 
 mean(CG_july_precip$mean_precip_mm, na.rm=TRUE) # 52.87
+sd(CG_july_precip$mean_precip_mm, na.rm=TRUE) #19.85592
 
 # ORDINATION ------
 
