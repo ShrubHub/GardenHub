@@ -147,12 +147,16 @@ range(KP_phenocams_2021_2022_rich$First_leaf_yellow_DOY, na.rm=TRUE)
 #199- 227
 
 # Mean 90% snow melt DOY
-mean(KP_phenocams_2021_2022_manual$Snow_melt_DOY, na.rm=TRUE)
+mean(KP_phenocams_2021_2022_wrangle$Snow_melt_DOY, na.rm=TRUE)
 # 170.375
+range(KP_phenocams_2021_2022_wrangle$Snow_melt_DOY, na.rm=TRUE)
+# 166 177
 
 # Mean snow return DOY
-mean(KP_phenocams_2021_2022_manual$Snow_return_EoS_DOY, na.rm=TRUE)
+mean(KP_phenocams_2021_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE)
 # 240
+range(KP_phenocams_2021_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE)
+# 240 240
 
 # Growing season length KP
 # 240 - 170 = 70 days
@@ -235,10 +239,12 @@ range(QHI_salric_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
 # Mean DOY of 90% snow melt
 mean(QHI_phenocams_2022_wrangle$Snow_melt_DOY, na.rm=TRUE) 
 # 155.4
+range(QHI_phenocams_2022_wrangle$Snow_melt_DOY, na.rm=TRUE)
 
 # Mean DOY of snow return
 mean(QHI_phenocams_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE) 
 # 243.5
+range(QHI_phenocams_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE)
 
 # Growing season length on QHI 
 # 243 - 155 = 88 days
@@ -342,7 +348,6 @@ mean(CG_QHI_pulchra_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
 # range: 174 - 224
 # mean:194.4
 
-
 CG_KP_rich_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix richardsonii" & population == "Kluane")
 
@@ -364,12 +369,16 @@ range(CG_QHI_rich_pheno$First_leaf_yellow_DOY, na.rm=TRUE)
 # Mean DOY of 90% snow melt
 mean(CG_phenocams_individual_2021_2022_wrangle$Snow_melt_DOY, na.rm=TRUE) 
 # 113.4658
+range(CG_phenocams_individual_2021_2022_wrangle$Snow_melt_DOY, na.rm=TRUE)
+# 109 124
 
 # Mean DOY of snow return
 mean(CG_phenocams_individual_2021_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE) 
 # 270.1905
+range(CG_phenocams_individual_2021_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE)
+# 270 276
 
-# Growing season length on QHI 
+# Growing season length on CG
 # 270 - 113 = 157 days
 
 # MEAN Growing season length -----
@@ -441,6 +450,7 @@ all_growing_season <-rbind(QHI_pheno_summary_for_plot,KP_pheno_summary_for_plot,
 all_growing_season<-all_growing_season[-which(is.na(all_growing_season$Species)),]
 
 write.csv(all_growing_season, "data/phenology/phenocam_pics/all_growing_season.csv")
+all_growing_season <- read_csv("data/phenology/phenocam_pics/all_growing_season.csv")
 
 # ordering levels so source and garden populations side by side
 all_growing_season$population <- plyr::revalue(all_growing_season$population, 
