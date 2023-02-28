@@ -1,6 +1,6 @@
 #### PHENOCAMS: common garden, Kluane and QHI
 #### Script by Erica Zaja, created 14/12/22
-### Last updated: 22/01/23 by Madi 
+### Last updated: 28/02/23 by Madi 
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -305,6 +305,9 @@ CG_phenocams_individual_2021_2022_wrangle$population <- as.factor(CG_phenocams_i
 
 write.csv(CG_phenocams_individual_2021_2022_wrangle, "data/phenology/phenocam_pics/CG_phenocams_individual_2021_2022_wrangle.csv")
 
+# import 
+CG_phenocams_individual_2021_2022_wrangle <- read.csv("data/phenology/phenocam_pics/CG_phenocams_individual_2021_2022_wrangle.csv")
+
 # subsetting into species and site
 CG_KP_arctica_pheno <- CG_phenocams_individual_2021_2022_wrangle %>%
   filter(Species == "Salix arctica" & population == "Kluane")
@@ -380,6 +383,8 @@ range(CG_phenocams_individual_2021_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE)
 
 # Growing season length on CG
 # 270 - 113 = 157 days
+mean_cg_gs <- (mean(CG_phenocams_individual_2021_2022_wrangle$Snow_return_EoS_DOY, na.rm=TRUE) - mean(CG_phenocams_individual_2021_2022_wrangle$Snow_melt_DOY, na.rm=TRUE))
+mean_cg_gs
 
 # MEAN Growing season length -----
 # summarise mean DOY of leaf emergence and leaf yellowing 
