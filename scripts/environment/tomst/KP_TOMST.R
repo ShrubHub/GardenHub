@@ -144,11 +144,13 @@ july_surface_temp_2022 <- KP_mean_daily_temp %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
 mean(july_surface_temp_2022$mean_temp) # 7.805064
+sd(july_surface_temp_2022$mean_temp) #  2.179662
 
 july_surface_temp_2021 <- KP_mean_daily_temp %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31")
 
 mean(july_surface_temp_2021$mean_temp) # 8.504422
+sd(july_surface_temp_2021$mean_temp) # 0.7201118
 
 july_surface_temp <- KP_mean_daily_temp %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31" | # sensor deployed midway through month
@@ -257,11 +259,13 @@ july_topsensor_temp_2022 <- KP_mean_daily_top_sensor %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
 mean(july_topsensor_temp_2022$mean_temp) # 9.465119
+sd(july_topsensor_temp_2022$mean_temp) # 3.547377
 
 july_topsensor_temp_2021 <- KP_mean_daily_top_sensor %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31")
 
 mean(july_topsensor_temp_2021$mean_temp) # 11.20757
+sd(july_topsensor_temp_2021$mean_temp) # 1.479431
 
 july_topsensor_temp <- KP_mean_daily_top_sensor %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31" |
@@ -371,7 +375,8 @@ july_soil_temp_2022 <- KP_mean_daily_soil_temp %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
 mean(july_soil_temp_2022$mean_temp) # 3.925377
-
+sd(july_soil_temp_2022$mean_temp) # 3.925377
+   
 july_soil_temp_2021 <- KP_mean_daily_soil_temp %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31")
 
@@ -549,4 +554,9 @@ facet_env_kp_hist <- grid.arrange(kp_mean_daily_soil_moist_hist, kp_mean_daily_s
 # SUMMARY DATA -----
 # July mean temperatures (average of top sensor, surface temp) (TOMST):
 # 2021 = mean(11.20757, 8.504422) = 9.855996
+# 2021 sd = mean(1.479431,  0.7201118) = 1.099771
 # 2022 = mean(9.465119, 7.805064) = 8.635091
+# 2022 sd = mean(3.547377,2.179662 )=  2.86352
+
+# overall mean  = mean(9.855996, 8.635091) = 9.245544
+# overall SD = mean(1.099771, 2.86352) = 1.981645

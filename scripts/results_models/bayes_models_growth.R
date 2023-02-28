@@ -365,16 +365,16 @@ theme_shrub <- function(){ theme(legend.position = "right",
 
 # plot model output
 
-# CANOPY HEIGHT richardsonii ----
-rich_heights <- (conditional_effects(garden_rich_height)) # extracting conditional effects from bayesian model
-rich_height_data <- rich_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
+# CANOPY HEIGHT arctica ----
+arc_heights <- (conditional_effects(garden_arc_height)) # extracting conditional effects from bayesian model
+arc_height_data <- arc_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
 
-(rich_height_plot <-ggplot(rich_height_data) +
-    geom_point(data = max_heights_cg_rich, aes(x = population, y = log(max_canopy_height_cm), colour = population),
+(arc_height_plot <-ggplot(arc_height_data) +
+    geom_point(data = max_heights_cg_arc, aes(x = population, y = log(max_canopy_height_cm), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__), colour = "red", size = 4)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__),
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                alpha = 1) +
     ylab("Max. canopy height (log, cm)\n") +
     xlab("\n Population" ) +
