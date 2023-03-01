@@ -59,6 +59,9 @@ sd(mean_soil_temp_CG) #  1.218523
 mean_soil_moist_CG <- c(40.04226, 24.63718, 6.2, 6.2, 3.3, 8) 
 mean(mean_soil_moist_CG) # 14.72991
 sd(mean_soil_moist_CG) # 17.09821
+mean_soil_moist_CG_TOMST <- c(40.04226, 24.63718) 
+mean(mean_soil_moist_CG_TOMST) # 32.33972
+sd(mean_soil_moist_CG_TOMST) # 10.89304
 
 # compare soil moisture to soil samples collected 2021
 

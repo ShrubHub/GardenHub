@@ -1077,11 +1077,15 @@ max_cg_heights <- all_cg_data_2022 %>%
   slice(which.max(Canopy_Height_cm)) %>% 
   dplyr::rename("max_canopy_height_cm" = "Canopy_Height_cm")
 
+max(max_cg_heights$max_canopy_height_cm) # 127
+
 # do same for widths (use average width value)
 max_cg_widths <- all_cg_data_2022 %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(mean_width)) %>% 
   dplyr::rename("max_mean_width_cm" = "mean_width")
+
+max(max_cg_widths$max_mean_width_cm) # 240
 
 # do same for biovolume 
 max_cg_biovol <- all_cg_data_2022 %>% 
@@ -1137,11 +1141,31 @@ max_source_mother_heights <- unique_source_mother %>%
   slice(which.max(Canopy_Height_cm)) %>% 
   dplyr::rename("max_canopy_height_cm" = "Canopy_Height_cm")
 
+# filter kluane only
+max_source_mother_heights_Kluane <- max_source_mother_heights %>%
+  filter(Site == "Kluane")
+max(max_source_mother_heights_Kluane$max_canopy_height_cm) # 282
+
+# filter QHI only
+max_source_mother_heights_QHI<- max_source_mother_heights %>%
+  filter(Site == "Qikiqtaruk")
+max(max_source_mother_heights_QHI$max_canopy_height_cm) # 124
+
 # do same for widths (use average width value)
 max_source_mother_widths<- unique_source_mother %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(mean_width)) %>% 
   dplyr::rename("max_mean_width_cm" = "mean_width")
+
+# filter Kluane only
+max_source_mother_widths_Kluane <- max_source_mother_widths %>%
+  filter(Site == "Kluane") 
+max(max_source_mother_widths_Kluane$max_mean_width_cm) # 652, umm nah. Next largest is 421 cm
+
+# filter QHI only
+max_source_mother_widths_QHI<- max_source_mother_widths %>%
+  filter(Site == "Qikiqtaruk")
+max(max_source_mother_widths_QHI$max_mean_width_cm) # 733.5??? umm nah again? next largest is 539cm (still large?!)
 
 # do same for stem elongation (use average value)
 max_source_mother_stem_elong <- unique_source_mother %>% 
