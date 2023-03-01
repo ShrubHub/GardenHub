@@ -429,6 +429,10 @@ july_soil_moist_2021 <- CG_mean_daily_soil_moist %>%
 
 mean(july_soil_moist_2021$mean_moist) # 24.63718
 
+# for comparison with physical measurements
+july_soil_moist_2021_31st <- CG_mean_daily_soil_moist %>%
+  subset(Date == "2021-07-31")
+
 # 2021 and 2022 july
 july_soil_moist <- CG_mean_daily_soil_moist %>%
   subset(Date >= "2021-07-30" & Date <= "2021-07-31" |

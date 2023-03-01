@@ -70,5 +70,10 @@ soil_moist_calc <- soil_moist_manual %>%
   mutate(soil_moist = (((Wet_weight..g. - Dry_weight..g.)/Dry_weight..g.))*100)
 
 # mean soil moisture: 
-mean(soil_moist_calc$soil_moist) # 29.41922
+mean(soil_moist_calc$soil_moist) # 29.41922, on 31/07/2021
 sd(soil_moist_calc$soil_moist) # 3.961386
+
+# HOBO on 31/07/2020 because no 2021:
+# soil moist  7.919167 %
+# TOMST soil moist on july 31st 2021: 29.34688 %
+# so we should probably not keep HOBO / change the conversion !
