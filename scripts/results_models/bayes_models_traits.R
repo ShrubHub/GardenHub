@@ -6,6 +6,9 @@
 library(plyr) # load before dplyr aka tidyverse 
 library(tidyverse)
 library(brms)
+library(ggplot2)
+library(tidybayes)
+
 
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
@@ -26,6 +29,29 @@ all_CG_source_traits$plant_tag_id <- as.factor(all_CG_source_traits$plant_tag_id
 all_CG_source_traits$population <- as.factor(all_CG_source_traits$population)
 all_CG_source_traits$date_sampled <- as.POSIXct(all_CG_source_traits$date_sampled, format = '%Y-%m-%d')
 all_CG_source_traits$year <- as.factor(all_CG_source_traits$year)
+
+# rename levels of variables for easier interpretation 
+all_CG_source_traits$population <- plyr::revalue(all_CG_source_traits$population, 
+                                                 c("Northern"="Northern Garden",
+                                                   "Southern"="Southern Garden",
+                                                   "source_south"="Southern Source",
+                                                   "source_north"="Northern Source"))
+all_CG_source_traits$population <- ordered(all_CG_source_traits$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden", 
+                                                      "Southern Source",
+                                                      "Southern Garden"))
+
+all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
+                                                 c("Northern"="Northern Garden",
+                                                   "Southern"="Southern Garden",
+                                                   "source_south"="Southern Source",
+                                                   "source_north"="Northern Source"))
+all_CG_source_growth$population <- ordered(all_CG_source_growth$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden",
+                                                      "Southern Source", 
+                                                      "Southern Garden"))
 
 # filter out two extreme LDMC values from 2014 
 # filter out one extreme LMA value from 2021 
@@ -49,17 +75,6 @@ pulchra_all_growth <- all_CG_source_growth %>%
 richardsonii_all_growth <- all_CG_source_growth %>% 
   filter(Species == "Salix richardsonii")
 
-# leaf area using 2021 and 2022 data only: 
-all_CG_source_traits_2022 <- all_CG_source_traits %>% 
-  dplyr::filter(year %in% c("2021", "2022")) 
-# now filter by spp
-arctica_2022_traits <- all_CG_source_traits_2022 %>% 
-  filter(Species == "Salix arctica")
-pulchra_2022_traits <- all_CG_source_traits_2022 %>% 
-  filter(Species == "Salix pulchra")
-richardsonii_2022_traits <- all_CG_source_traits_2022 %>% 
-  filter(Species == "Salix richardsonii")
-
 # look at distributions ----
 # SLA
 hist(arctica_all_traits$SLA) # mild right skew
@@ -73,15 +88,23 @@ hist(richardsonii_all_traits$SLA)# mild right skew
 hist(arctica_all_traits$LDMC_g_g) # very mild right skew
 hist(pulchra_all_traits$LDMC_g_g) # mild right skew
 hist(richardsonii_all_traits$LDMC_g_g)# decent
-# LA
-hist(arctica_2022_traits$LA) #  right skew
-arctica_2022_traits$LA_log <- log(arctica_2022_traits$LA)
-hist(pulchra_2022_traits$LA) # mild right skew
-hist(richardsonii_2022_traits$LA)# decent
+# LA - compare with log version 
+hist(arctica_all_traits$LA) #  right skew
+arctica_all_traits$LA_log <- log(arctica_all_traits$LA)
+hist(arctica_all_traits$LA_log) #  better 
+hist(pulchra_all_traits$LA) # right skew
+pulchra_all_traits$LA_log <- log(pulchra_all_traits$LA)
+hist(pulchra_all_traits$LA_log) #  better 
+hist(richardsonii_all_traits$LA) # right skew 
+richardsonii_all_traits$LA_log <- log(richardsonii_all_traits$LA)
+hist(richardsonii_all_traits$LA_log) # better 
 # LMA
-hist(arctica_2022_traits$leaf_mass_per_area_g_m2) 
-hist(pulchra_2022_traits$leaf_mass_per_area_g_m2) 
-hist(richardsonii_2022_traits$leaf_mass_per_area_g_m2) 
+hist(arctica_all_traits$leaf_mass_per_area_g_m2) # decent 
+hist(pulchra_all_traits$leaf_mass_per_area_g_m2) # decent 
+hist(richardsonii_all_traits$leaf_mass_per_area_g_m2) # mild bimodal  
+richardsonii_all_traits$leaf_mass_per_area_g_m2_log <- log(richardsonii_all_traits$leaf_mass_per_area_g_m2)
+hist(richardsonii_all_traits$leaf_mass_per_area_g_m2_log) # kind of bimodal  
+
 # leaf length 
 hist(arctica_all_growth$mean_leaf_length) # decent
 hist(pulchra_all_growth$mean_leaf_length) # mild right skew
@@ -173,27 +196,21 @@ pp_check(rich_LDMC_log)
 # LA ----
 # not including year bc only 2 years worth of data 2021 and 2022 
 # S. arctica 
-arctica_LA <- brms::brm(LA ~ population, data = arctica_2022_traits, family = gaussian(), chains = 3,
+arctica_LA <- brms::brm(log(LA) ~ population, data = arctica_all_traits, family = gaussian(), chains = 3,
                           iter = 3000, warmup = 1000)
 summary(arctica_LA) 
 plot(arctica_LA)
 pp_check(arctica_LA) 
 
-arctica_LA_log <- brms::brm(log(LA) ~ population, data = arctica_2022_traits, family = gaussian(), chains = 3,
-                        iter = 3000, warmup = 1000)
-summary(arctica_LA_log) 
-plot(arctica_LA_log)
-pp_check(arctica_LA_log) # worse ! 
-
 # S. pulchra
-pulchra_LA <- brms::brm(LA ~ population, data = pulchra_2022_traits, family = gaussian(), chains = 3,
+pulchra_LA <- brms::brm(log(LA) ~ population, data = pulchra_all_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
 summary(pulchra_LA) 
 plot(pulchra_LA)
 pp_check(pulchra_LA) 
 
 # S. richardsonii 
-rich_LA <- brms::brm(LA ~ population, data = richardsonii_2022_traits, family = gaussian(), chains = 3,
+rich_LA <- brms::brm(log(LA) ~ population, data = richardsonii_all_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
 summary(rich_LA) 
 plot(rich_LA)
@@ -251,4 +268,10 @@ summary(rich_LL)
 plot(rich_LL)
 pp_check(rich_LL) 
 
+
+# SLA
+# LMDC
+# LA
+# LMA
+# LEAF LENGTH 
 
