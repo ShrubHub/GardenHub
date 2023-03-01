@@ -1,8 +1,10 @@
 # BAYESIAN phenology script ----
-# BY Erica 
-# Last update:
+# BY Erica and Madi 
+# Last update: 01/03/2023
 
 # Libraries----
+library(plyr)
+library(tidyverse)
 library(brms)
 
 # Load data ----
@@ -94,7 +96,8 @@ source_rich_emerg <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
                                iter = 3000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-
+bud_burst_mod <- lmer(First_bud_burst_DOY ~ population  + (1|Year), data = all_phenocam_pul_source)
+tab_model(bud_burst_mod)
 
 summary(source_rich_emerg) # not significant diff. 
 plot(source_rich_emerg)
