@@ -1160,6 +1160,7 @@ max_cg_heights <- all_cg_data_2022 %>%
 max(max_cg_heights$max_canopy_height_cm) # 127
 mean(max_cg_heights$max_canopy_height_cm)#  21.22924
 sd(max_cg_heights$max_canopy_height_cm) #24.91144
+mean(all_cg_data_2022$Canopy_Height_cm, na.rm = TRUE)#   19.18346
 
 # do same for widths (use average width value)
 max_cg_widths <- all_cg_data_2022 %>% 
@@ -1170,6 +1171,7 @@ max_cg_widths <- all_cg_data_2022 %>%
 max(max_cg_widths$max_mean_width_cm) # 240
 mean(max_cg_widths$max_mean_width_cm) # 30.87956
 sd(max_cg_widths$max_mean_width_cm) # 35.62966
+mean(all_cg_data_2022$mean_width, na.rm = TRUE) # 27.60868
 
 # do same for biovolume 
 max_cg_biovol <- all_cg_data_2022 %>% 

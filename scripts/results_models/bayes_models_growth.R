@@ -362,17 +362,51 @@ pp_check(garden_arc_diam,  type = "dens_overlay", nsamples = 100) # fine
 
 # PLOTTING -----
 theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", size=20),
-                                 axis.text.x  = element_text(vjust=0.5, size=18, colour = "black"), 
-                                 axis.title.y = element_text(face="bold", size=20),
-                                 axis.text.y  = element_text(vjust=0.5, size=18, colour = "black"),
+                                 axis.title.x = element_text(face="bold", size=12),
+                                 axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 45), 
+                                 axis.title.y = element_text(face="bold", size=12),
+                                 axis.text.y  = element_text(vjust=0.5, size=12, colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 18, face = "bold", hjust = 0.5),
+                                 plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5),
                                  plot.margin = unit(c(1,1,1,1), units = , "cm"))}
 
 # plot model output
+
+# CANOPY HEIGHT richardsonii ----
+ric_heights <- (conditional_effects(garden_rich_height)) # extracting conditional effects from bayesian model
+ric_height_data <- ric_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(ric_height_plot <-ggplot(ric_height_data) +
+    geom_point(data = max_heights_cg_rich, aes(x = population, y = log(max_canopy_height_cm), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1) +
+    ylab("Salix richardsonii max. canopy height (log, cm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub())
+
+# CANOPY HEIGHT pulchra ----
+pul_heights <- (conditional_effects(garden_pul_height)) # extracting conditional effects from bayesian model
+pul_height_data <- pul_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(pul_height_plot <-ggplot(pul_height_data) +
+    geom_point(data = max_heights_cg_pul, aes(x = population, y = log(max_canopy_height_cm), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1) +
+    ylab("Salix pulchra max. canopy height (log, cm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub())
 
 # CANOPY HEIGHT arctica ----
 arc_heights <- (conditional_effects(garden_arc_height)) # extracting conditional effects from bayesian model
@@ -385,11 +419,14 @@ arc_height_data <- arc_heights[[1]] # making the extracted model outputs into a
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                alpha = 1) +
-    ylab("Max. canopy height (log, cm)\n") +
+    ylab("Salic arctica max. canopy height (log, cm)\n") +
     xlab("\n Population" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     theme_shrub())
+
+library(gridExtra)
+panel_heights_bayes <- grid.arrange(ric_height_plot, pul_height_plot, arc_height_plot, nrow = 1)
 
 # STEM ELONG richardsonii ----
 rich_elong <- (conditional_effects(garden_rich_elong)) # extracting conditional effects from bayesian model
