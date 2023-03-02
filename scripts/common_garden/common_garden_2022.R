@@ -17,6 +17,9 @@ library(readxl) # reads excel files if java doesn't work for (xlsx)
 # Data collected in the common garden in summer 2022 (June-July-August)
 growth_2022 <- read.csv("data/common_garden_data_2022/wrangled_ALL_combined_Common_Garden_Measurements_2022.csv")
 
+# GD 2020 additions 
+GD_2020_additions <- read_excel("data/common_garden_data_2020/GD_2020_additions.xlsx")
+
 # Common garden data collected between 2013-2021
 growth <- read.csv("data/common_garden_data_2021/all_growth_2021.csv")
 
@@ -265,9 +268,86 @@ growth$SampleID_standard <- toupper(growth$SampleID) # make all uppercase charac
 growth$SampleID_standard<-gsub("-","",as.character(growth$SampleID_standard)) # remove "-"
 growth$SampleID_standard<-gsub(" ","",as.character(growth$SampleID_standard)) # remove spaces " " 
 
+# GD ADDITIONS MERGE --------
+# subsetting to relevant date in 2020 to merge with GD additions data
+growth_19thaug2020 <- growth %>%
+  filter(Sample_Date == "2020-08-19") 
+#%>%
+ # select(-c("Year_planted", "Species", "Site", 
+            #"Month", "Day", "Year"))
+
+str(GD_2020_additions)
+GD_2020_additions <- GD_2020_additions %>%
+  rename("Stem_diameter" = "Stem_Diameter ")
+
+str(GD_2020_additions) # need to adjust str of variables before comparing
+GD_2020_additions$Length_1_mm <- as.numeric(GD_2020_additions$Length_1_mm)
+GD_2020_additions$Length_2_mm <- as.numeric(GD_2020_additions$Length_2_mm)
+GD_2020_additions$Length_3_mm <- as.numeric(GD_2020_additions$Length_3_mm)
+GD_2020_additions$Stem_Elongation_1_mm <- as.numeric(GD_2020_additions$Stem_Elongation_1_mm)
+GD_2020_additions$Stem_Elongation_2_mm <- as.numeric(GD_2020_additions$Stem_Elongation_2_mm)
+GD_2020_additions$Stem_Elongation_3_mm <- as.numeric(GD_2020_additions$Stem_Elongation_3_mm)
+GD_2020_additions$Width_cm <- as.numeric(GD_2020_additions$Width_cm)
+GD_2020_additions$Width_2_cm <- as.numeric(GD_2020_additions$Width_2_cm)
+GD_2020_additions$Canopy_Height_cm <- as.numeric(GD_2020_additions$Canopy_Height_cm)
+# make standard sample ID column to avoid issue of dashes, spaces, etc. 
+GD_2020_additions$SampleID_standard <- toupper(GD_2020_additions$SampleID) # make all uppercase characters 
+GD_2020_additions$SampleID_standard<-gsub("-","",as.character(GD_2020_additions$SampleID_standard)) # remove "-"
+GD_2020_additions$SampleID_standard<-gsub(" ","",as.character(GD_2020_additions$SampleID_standard)) # remove spaces " " 
+
+# comparing datasheets from 19th aug 2020 to see if same or different.
+library(arsenal)
+summary(comparedf(GD_2020_additions,growth_19thaug2020))
+identical(GD_2020_additions,growth_19thaug2020) #FALSE
+
+# merge by SampleID
+#GD_2020_additions_merge <- merge(GD_2020_additions, growth_19thaug2020, by="SampleID_standard", 
+    #                             all.x = TRUE, all.y = TRUE)
+#GD_2020_additions_merge_test <- GD_2020_additions %>% 
+ # left_join(growth_19thaug2020, by = c("SampleID_standard" = "SampleID_standard"))
+
+# Merge myDF1 & my DF2 by the "SampleID_standard", keeping all the rows in my DF1
+agg_df = merge(growth_19thaug2020, GD_2020_additions, "SampleID_standard", all.x=TRUE)
+
+# Populate columns in the merged dataframe by using columns in myDF2 (GD aditions) if it is available. Otherwise, use columns from myDF1 (growth)
+# is missing in myDF1
+agg_df$Width_2_cm.x = ifelse(is.na(agg_df$Width_2_cm.y), agg_df$Width_2_cm.x, agg_df$Width_2_cm.y)
+agg_df$Width_cm.x = ifelse(is.na(agg_df$Width_cm.y), agg_df$Width_cm.x, agg_df$Width_cm.y)
+agg_df$Stem_diameter.x = ifelse(is.na(agg_df$Stem_diameter.y), agg_df$Stem_diameter.x, agg_df$Stem_diameter.y)
+agg_df$Canopy_Height_cm.x = ifelse(is.na(agg_df$Canopy_Height_cm.y), agg_df$Canopy_Height_cm.x, agg_df$Canopy_Height_cm.y)
+
+# keeping only columns x and renaming
+agg_df_1 <- agg_df %>%
+  select(c("SampleID_standard", "Bed.x","SampleID.x","Year_planted", "Species", "Site", 
+           "Sample_Date.x", "Month", "Day", "Year","Canopy_Height_cm.x", "Width_cm.x",
+           "Width_2_cm.x", "Stem_diameter.x", "Stem_Elongation_1_mm.x", 
+           "Stem_Elongation_2_mm.x", "Stem_Elongation_3_mm.x", "Length_1_mm.x", 
+           "Length_2_mm.x", "Length_3_mm.x"))%>%
+  rename("Bed"="Bed.x", 
+         "SampleID"="SampleID.x",
+         "Sample_Date"="Sample_Date.x", 
+         "Canopy_Height_cm"="Canopy_Height_cm.x", 
+         "Width_cm" ="Width_cm.x",
+         "Width_2_cm"="Width_2_cm.x", 
+         "Stem_diameter"="Stem_diameter.x", 
+         "Stem_Elongation_1_mm"="Stem_Elongation_1_mm.x", 
+         "Stem_Elongation_2_mm"="Stem_Elongation_2_mm.x", 
+         "Stem_Elongation_3_mm"="Stem_Elongation_3_mm.x", 
+         "Length_1_mm"="Length_1_mm.x", 
+         "Length_2_mm" ="Length_2_mm.x", 
+         "Length_3_mm"= "Length_3_mm.x")
+
+# merge back with full growth dataset
+growth_minus_19thaug2020 <- growth %>%
+  filter(Sample_Date != "2020-08-19") 
+unique(growth_minus_19thaug2020$Sample_Date)
+
+new_growth <- rbind(growth_minus_19thaug2020,agg_df_1)
+# now changing everywhere where growth was into new growth. If wrong just revert back to growth
+
 # Removing Betula nana and Betula glandulosa, keeping only month of August for consistency,
 # Creating mean stem elongation, mean leaf length and mean width columns
-growth_to_merge <- growth %>% 
+growth_to_merge <- new_growth %>% 
   filter(Species != "unknown" & Species!="Betula nana" & Species!="Betula glandulosa") %>% 
   filter(Month == "8") %>%
   filter(Day != 2) %>%

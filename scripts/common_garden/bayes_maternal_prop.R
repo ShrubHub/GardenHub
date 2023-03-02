@@ -100,9 +100,9 @@ plot(maternal_pul_height)
 pp_check(maternal_pul_height, type = "dens_overlay", nsamples = 100)  # good) 
 
 #maternal_pul_height_old <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site,
-                                 data = mother_cg_pulchra, family = gaussian(), chains = 3,
-                                 iter = 3000, warmup = 1000, 
-                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
+                              #   data = mother_cg_pulchra, family = gaussian(), chains = 3,
+                              ##   iter = 3000, warmup = 1000, 
+                               #  control = list(max_treedepth = 15, adapt_delta = 0.99))
 #summary(maternal_pul_height_old) # not significant
 #plot(maternal_pul_height_old)
 #pp_check(maternal_pul_height_old, type = "dens_overlay", nsamples = 100)  # good) 
@@ -261,4 +261,7 @@ prop_cutting_arc <- brms::brm(log(Cutting_length) ~ log(Mother_Canopy_Height_cm)
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_cutting_arc) #no 
 plot(prop_cutting_arc)
-pp_check(prop_cutting_arc, type = "dens_overlay", nsamples = 100)  # good) 
+pp_check(prop_cutting_arc, type = "dens_overlay", nsamples = 100)  # good)
+
+# 5. DATA VISUALISATION --------
+
