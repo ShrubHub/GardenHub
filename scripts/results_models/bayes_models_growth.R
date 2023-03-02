@@ -433,5 +433,20 @@ rich_biovol_data <- rich_biovol[[1]] # making the extracted model outputs into 
 
 # can do for all figures....
 
+# try with ggpredict () ------
+# Model predictions - get number of species per degree from here
+ggpred_height <- ggpredict(garden_arc_height, terms = "population")
+colnames(ggpred_height) = c('population', 'fit', 'lwr', 'upr', 'dunno')
 
+(arc_height_plot <-ggplot(ggpred_height) +
+    geom_point(data = max_heights_cg_arc, aes(x = population, y = log(max_canopy_height_cm), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = population , y = log(fit),colour = population), size = 4)+
+    geom_errorbar(aes(x = population, ymin = log(lwr), ymax = log(upr),colour = population),
+                  alpha = 1) +
+    ylab("Max. canopy height (cm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub()) # if i log everything it's exactly the same plot as with conditional effects! 
 
