@@ -64,7 +64,7 @@ hist(mother_cg_rich$Mother_mean_width_log) # not much better
 
 # Salix richardsonii ------
 # interactive site model without year 
-maternal_rich_height_site <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm)* Site,
+maternal_rich_height_site <- brms::brm(max_canopy_height_cm ~ log(Mother_Canopy_Height_cm)* Site,
                                   data = mother_cg_rich, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -264,4 +264,39 @@ plot(prop_cutting_arc)
 pp_check(prop_cutting_arc, type = "dens_overlay", nsamples = 100)  # good)
 
 # 5. DATA VISUALISATION --------
+
+#Salix richardsonii child height vs mother height ----
+rich_height_maternal <- (conditional_effects(maternal_rich_height_site)) # extracting conditional effects from bayesian model
+rich_height_maternal_data <- rich_height_maternal[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(rich_height_mat_plot <-ggplot(rich_height_maternal_data) +
+    geom_point(data = mother_cg_rich, aes(x = log(Mother_Canopy_Height_cm), y = max_canopy_height_cm),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = effect1__, y = estimate__))+
+    geom_ribbon(aes(x = effect1__, ymin = lower__, ymax = upper__),
+                  alpha = 0.2) +
+    ylab("Child canopy height (log, cm) \n") +
+    xlab("\nMother canopy height (log, cm) " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub())
+
+#Salix pulchra child height vs mother height ----
+pul_height_maternal <- (conditional_effects(maternal_pul_height)) # extracting conditional effects from bayesian model
+pul_height_maternal_data <- pul_height_maternal[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(pul_height_mat_plot <-ggplot(pul_height_maternal_data) +
+    geom_point(data = mother_cg_pulchra, aes(x = log(Mother_Canopy_Height_cm), y = log(max_canopy_height_cm)),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = effect1__, y = estimate__))+
+    geom_ribbon(aes(x = effect1__, ymin = lower__, ymax = upper__),
+                alpha = 0.2) +
+    ylab("Child canopy height (log, cm) \n") +
+    xlab("\nMother canopy height (log, cm) " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub())
+
 
