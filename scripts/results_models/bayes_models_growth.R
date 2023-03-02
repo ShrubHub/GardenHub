@@ -1,6 +1,6 @@
 # BAYESIAN growth results models -----
 # Script by Erica
-# Last update: 27/02/2023
+# Last update: 02/03/2023 by Madi 
 # Code adapted from coding club tutorial by Louise Litrico:
 # https://ourcodingclub.github.io/tutorials/brms/ 
 
@@ -49,6 +49,15 @@ max_heights_cg_pul <- max_heights_cg %>%
 
 max_heights_cg_arc <- max_heights_cg %>%
   filter (Species == "Salix arctica") 
+
+# look at mean max heights per species 
+mean(max_heights_cg_rich$max_canopy_height_cm) # 31.25362
+range(max_heights_cg_rich$max_canopy_height_cm) # 0.7 - 127.0
+mean(max_heights_cg_pul$max_canopy_height_cm) # 21.90695 
+range(max_heights_cg_pul$max_canopy_height_cm) # 1.5 101.0
+mean(max_heights_cg_arc$max_canopy_height_cm) # 4.589855
+range(max_heights_cg_arc$max_canopy_height_cm) # 0.3 15.2
+
 
 # exploring variables distribution
 hist(max_heights_cg_rich$max_canopy_height_cm) # right skew
