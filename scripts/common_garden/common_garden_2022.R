@@ -339,10 +339,10 @@ agg_df_1 <- agg_df %>%
 
 # merge back with full growth dataset
 growth_minus_19thaug2020 <- growth %>%
-  filter(Sample_Date != "2020-08-19") 
+  filter(Sample_Date != "2020-08-19") # removing the old data from that date
 unique(growth_minus_19thaug2020$Sample_Date)
 
-new_growth <- rbind(growth_minus_19thaug2020,agg_df_1)
+new_growth <- rbind(growth_minus_19thaug2020,agg_df_1) # merged
 # now changing everywhere where growth was into new growth. If wrong just revert back to growth
 
 # Removing Betula nana and Betula glandulosa, keeping only month of August for consistency,
@@ -1119,7 +1119,7 @@ length(unique(all_CG_source_traits$SLA))
 # only merging CG data now 
 all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv') # all CG (one point per year)
 all_cg_data_2022_merge <- all_cg_data_2022 %>% 
-  dplyr::select(-c(Month, Sample_Date, Day, X))
+  dplyr::select(-c(Month, Sample_Date, Day))
 
 str(all_cg_data_2022_merge)
 all_cg_data_2022_merge$Year <- as.factor(all_cg_data_2022_merge$Year)
@@ -1158,6 +1158,8 @@ max_cg_heights <- all_cg_data_2022 %>%
   dplyr::rename("max_canopy_height_cm" = "Canopy_Height_cm")
 
 max(max_cg_heights$max_canopy_height_cm) # 127
+mean(max_cg_heights$max_canopy_height_cm)#  21.22924
+sd(max_cg_heights$max_canopy_height_cm) #24.91144
 
 # do same for widths (use average width value)
 max_cg_widths <- all_cg_data_2022 %>% 
@@ -1166,6 +1168,8 @@ max_cg_widths <- all_cg_data_2022 %>%
   dplyr::rename("max_mean_width_cm" = "mean_width")
 
 max(max_cg_widths$max_mean_width_cm) # 240
+mean(max_cg_widths$max_mean_width_cm) # 30.87956
+sd(max_cg_widths$max_mean_width_cm) # 35.62966
 
 # do same for biovolume 
 max_cg_biovol <- all_cg_data_2022 %>% 
@@ -1210,7 +1214,7 @@ range(max_cg_heights_spp$mean_max_height_cm)# 4.263636 52.472549
 max_cg_width_spp <- max_cg_widths %>%
   group_by(population,Species) %>%
   summarise(mean_max_width_cm = mean(max_mean_width_cm))
-range(max_cg_width_spp$mean_max_width_cm)# 10.75625 67.72791
+range(max_cg_width_spp$mean_max_width_cm)# 10.64954 68.01047
 
 # 3.9.2 Source populations max heights and widths -----
 # extract max value for height per sample bc samples have been trimmed over the years 
@@ -1225,11 +1229,15 @@ max_source_mother_heights <- unique_source_mother %>%
 max_source_mother_heights_Kluane <- max_source_mother_heights %>%
   filter(Site == "Kluane")
 max(max_source_mother_heights_Kluane$max_canopy_height_cm) # 282
+mean(max_source_mother_heights_Kluane$max_canopy_height_cm) # 74.26732
+sd(max_source_mother_heights_Kluane$max_canopy_height_cm) #  46.36711
 
 # filter QHI only
 max_source_mother_heights_QHI<- max_source_mother_heights %>%
   filter(Site == "Qikiqtaruk")
 max(max_source_mother_heights_QHI$max_canopy_height_cm) # 124
+mean(max_source_mother_heights_QHI$max_canopy_height_cm) #  33.28095
+sd(max_source_mother_heights_QHI$max_canopy_height_cm) # 18.00989
 
 # do same for widths (use average width value)
 max_source_mother_widths<- unique_source_mother %>% 
@@ -1241,11 +1249,15 @@ max_source_mother_widths<- unique_source_mother %>%
 max_source_mother_widths_Kluane <- max_source_mother_widths %>%
   filter(Site == "Kluane") 
 max(max_source_mother_widths_Kluane$max_mean_width_cm) # 652, umm nah. Next largest is 421 cm
+mean(max_source_mother_widths_Kluane$max_mean_width_cm) # 150.0153 ( but including large ones)
+sd(max_source_mother_widths_Kluane$max_mean_width_cm) # 92.47113( but including large ones)
 
 # filter QHI only
 max_source_mother_widths_QHI<- max_source_mother_widths %>%
   filter(Site == "Qikiqtaruk")
 max(max_source_mother_widths_QHI$max_mean_width_cm) # 733.5??? umm nah again? next largest is 539cm (still large?!)
+mean(max_source_mother_widths_QHI$max_mean_width_cm) # 149.2887 ( but including large one)
+sd(max_source_mother_widths_QHI$max_mean_width_cm) # 131.6878( but including large one)
 
 # do same for stem elongation (use average value)
 max_source_mother_stem_elong <- unique_source_mother %>% 

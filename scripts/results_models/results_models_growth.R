@@ -110,6 +110,7 @@ tab_model(width_garden_growth_mod_2 )
 
 width_garden_growth_mod_3 <- lmer(mean_width ~ population*Species + (1|Year/SampleID_standard) + (1|Sample_age), data = all_CG_source_growth_garden_only)
 tab_model(width_garden_growth_mod_3)
+summary(width_garden_growth_mod_3)
 
 # 3. Stem elongation (compare all) ----
 # trying comparison with all (CG, KP, QHI)
