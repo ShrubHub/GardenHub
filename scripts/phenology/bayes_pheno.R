@@ -6,10 +6,11 @@
 library(plyr)
 library(tidyverse)
 library(brms)
+library(tidybayes)
 
 # Load data ----
-all_phenocam_data_salix <- read_csv("data/phenology/phenocam_pics/all_phenocam_data_salix.csv")
-all_growing_season <- read_csv("data/phenology/phenocam_pics/all_growing_season.csv")
+all_phenocam_data_salix <- read_csv("data/phenology/all_phenocam_update.csv")
+all_growing_season <- read_csv("data/phenology/all_growing_season_salix.csv")
 
 # Wrangle data ------
 # ordering levels so source and garden populations side by side
@@ -87,6 +88,12 @@ hist(all_phenocam_pul_source$First_leaf_yellow_DOY, breaks=30) # defo not normal
 hist(all_phenocam_rich_source$First_leaf_yellow_DOY, breaks=30) # defo not normal
 hist(all_phenocam_arc_source$First_leaf_yellow_DOY, breaks=30) # defo not normal
 
+# scale function =====
+# centering with 'scale()'
+center_scale <- function(x) {
+  scale(x, scale = FALSE)
+}
+
 # MODELLING ------
 # 1. LEAF EMERGENCE (only source pops) -------
 
@@ -116,18 +123,21 @@ pp_check(source_pul_emerg, type = "dens_overlay", nsamples = 100) # not too happ
 
 # 1.1. LEAF EMERGENCE (CG vs SOURCES)  ------
 # Salix richardsonii -----
-garden_rich_emerg_compare <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
+all_phenocam_rich$First_bud_burst_DOY_center <- center_scale(all_phenocam_rich$First_bud_burst_DOY) 
+
+garden_rich_emerg_compare <- brms::brm(First_bud_burst_DOY_center ~ population + (1|Year),
                                data = all_phenocam_rich, family = gaussian(), chains = 3,
                                iter = 3000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
-
 
 summary(garden_rich_emerg_compare)
 plot(garden_rich_emerg_compare)
 pp_check(garden_rich_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
 
 # Salix pulchra -----
-garden_pul_emerg_compare <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
+all_phenocam_pulchra$First_bud_burst_DOY_center <- center_scale(all_phenocam_pulchra$First_bud_burst_DOY) 
+
+garden_pul_emerg_compare <- brms::brm(First_bud_burst_DOY_center ~ population + (1|Year),
                                        data = all_phenocam_pulchra, family = gaussian(), chains = 3,
                                        iter = 3000, warmup = 1000, 
                                        control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -138,7 +148,9 @@ plot(garden_pul_emerg_compare)
 pp_check(garden_pul_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
 
 # Salix arctica -----
-garden_arc_emerg_compare <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
+all_phenocam_arctica$First_bud_burst_DOY_center <- center_scale(all_phenocam_arctica$First_bud_burst_DOY) 
+
+garden_arc_emerg_compare <- brms::brm(First_bud_burst_DOY_center ~ population + (1|Year),
                                       data = all_phenocam_arctica, family = gaussian(), chains = 3,
                                       iter = 3000, warmup = 1000, 
                                       control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -151,7 +163,9 @@ pp_check(garden_arc_emerg_compare, type = "dens_overlay", nsamples = 100) # look
 
 # 1.2. LEAF EMERGENCE (CG ONLY MODELS) ------
 # Salix richardsonii -----
-garden_rich_emerg <- brms::brm(First_bud_burst_DOY ~ population,
+all_phenocam_rich_garden$First_bud_burst_DOY_center <- center_scale(all_phenocam_rich_garden$First_bud_burst_DOY) 
+
+garden_rich_emerg <- brms::brm(First_bud_burst_DOY_center ~ population,
                                        data = all_phenocam_rich_garden, family = gaussian(), chains = 3,
                                        iter = 3000, warmup = 1000, 
                                       control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -162,6 +176,8 @@ plot(garden_rich_emerg)
 pp_check(garden_rich_emerg,type = "dens_overlay", nsamples = 100) # looks ok
 
 # Salix pulchra -----
+all_phenocam_pul_garden$First_bud_burst_DOY_center <- center_scale(all_phenocam_pul_garden$First_bud_burst_DOY) 
+
 garden_pul_emerg <- brms::brm(First_bud_burst_DOY ~ population,
                                data = all_phenocam_pul_garden, family = gaussian(), chains = 3,
                                iter = 3000, warmup = 1000, 
@@ -172,12 +188,14 @@ plot(garden_pul_emerg)
 pp_check(garden_pul_emerg,type = "dens_overlay", nsamples = 100) # looks ok
 
 # Salix arctica -----
-garden_arc_emerg <- brms::brm(First_bud_burst_DOY ~ population,
+all_phenocam_arc_garden$First_bud_burst_DOY_center <- center_scale(all_phenocam_arc_garden$First_bud_burst_DOY) 
+
+garden_arc_emerg <- brms::brm(First_bud_burst_DOY_center ~ population,
                               data = all_phenocam_arc_garden, family = gaussian(), chains = 3,
                               iter = 3000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(garden_arc_emerg) # YEs significant (southern emergence later?)
+summary(garden_arc_emerg) # YEs significant 
 plot(garden_arc_emerg)
 pp_check(garden_arc_emerg,type = "dens_overlay", nsamples = 100) # looks ok
 
@@ -208,7 +226,9 @@ pp_check(source_pul_yellow, type = "dens_overlay", nsamples = 100) # looks ok
 
 # 2.1. LEAF YELLOWING (source vs garden) -------
 # Salix richardsonii ------
-garden_rich_yellow_compare <- brms::brm(First_leaf_yellow_DOY ~ population + (1|Year),
+all_phenocam_rich$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_rich$First_leaf_yellow_DOY) 
+
+garden_rich_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ population + (1|Year),
                                         data = all_phenocam_rich, family = gaussian(), chains = 3,
                                         iter = 3000, warmup = 1000,
                                         control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -218,7 +238,9 @@ plot(garden_rich_yellow_compare)
 pp_check(garden_rich_yellow_compare, type = "dens_overlay", nsamples = 100) # looks good
 
 # Salix pulchra ------
-garden_pul_yellow_compare <- brms::brm(First_leaf_yellow_DOY ~ population + (1|Year),
+all_phenocam_pulchra$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_pulchra$First_leaf_yellow_DOY) 
+
+garden_pul_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ population + (1|Year),
                                         data = all_phenocam_pulchra, family = gaussian(), chains = 3,
                                         iter = 3000, warmup = 1000,
                                         control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -228,7 +250,9 @@ plot(garden_pul_yellow_compare)
 pp_check(garden_pul_yellow_compare, type = "dens_overlay", nsamples = 100) # looks good
 
 # Salix arctica ------
-garden_arc_yellow_compare <- brms::brm(First_leaf_yellow_DOY ~ population + (1|Year),
+all_phenocam_arctica$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_arctica$First_leaf_yellow_DOY) 
+
+garden_arc_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ population + (1|Year),
                                        data = all_phenocam_arctica, family = gaussian(), chains = 3,
                                        iter = 3000, warmup = 1000,
                                        control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -239,7 +263,9 @@ pp_check(garden_arc_yellow_compare, type = "dens_overlay", nsamples = 100) # loo
 
 # 2.2.  LEAF YELLOWING (only CG) -----
 # Salix richardsonii -------
-garden_rich_yellow <- brms::brm(First_leaf_yellow_DOY ~ population,
+all_phenocam_rich_garden$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_rich_garden$First_leaf_yellow_DOY) 
+
+garden_rich_yellow <- brms::brm(First_leaf_yellow_DOY_center ~ population,
                                         data = all_phenocam_rich_garden, family = gaussian(), chains = 3,
                                         iter = 3000, warmup = 1000,
                                         control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -249,7 +275,9 @@ plot(garden_rich_yellow)
 pp_check(garden_rich_yellow, type = "dens_overlay", nsamples = 100) # looks good
 
 # Salix pulchra -------
-garden_pul_yellow <- brms::brm(First_leaf_yellow_DOY ~ population,
+all_phenocam_pul_garden$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_pul_garden$First_leaf_yellow_DOY) 
+
+garden_pul_yellow <- brms::brm(First_leaf_yellow_DOY_center ~ population,
                                 data = all_phenocam_pul_garden, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000,
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -259,12 +287,14 @@ plot(garden_pul_yellow)
 pp_check(garden_rich_yellow, type = "dens_overlay", nsamples = 100) # looks good
 
 # Salix arctica -------
-garden_arc_yellow <- brms::brm(First_leaf_yellow_DOY ~ population,
+all_phenocam_arc_garden$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_arc_garden$First_leaf_yellow_DOY) 
+
+garden_arc_yellow <- brms::brm(First_leaf_yellow_DOY_center ~ population,
                                data = all_phenocam_arc_garden, family = gaussian(), chains = 3,
                                iter = 3000, warmup = 1000,
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(garden_arc_yellow) # significant (later for southern shrubs?)
+summary(garden_arc_yellow) # significant 
 plot(garden_arc_yellow)
 pp_check(garden_arc_yellow, type = "dens_overlay", nsamples = 100) # looks good
 
@@ -299,3 +329,14 @@ growing_season_arc <- brms::brm(growing_season ~ population,
 summary(growing_season_arc)
 plot(growing_season_arc)
 pp_check(growing_season_arc, type = "dens_overlay", nsamples = 100) # looks good
+
+
+# PLOTS ====
+# bud burst ----
+# S. richardsonii
+# S. pulchra 
+# S. arctica 
+# first yellow leaf ----
+# S. richardsonii
+# S. pulchra 
+# S. arctica 

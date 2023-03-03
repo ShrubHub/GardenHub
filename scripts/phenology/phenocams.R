@@ -781,24 +781,59 @@ qhi <- read_csv("data/phenology/QHI_phenology_plots/qiki_phen_with_before_2022.c
 
 str(qhi)
 unique(qhi$Spp)
+unique(all_phenocam_data_salix$population)
 
 qhi_arctica <- qhi %>% 
   dplyr::filter(Spp == "SALARC") %>% 
   dplyr::filter(Year >= "2014") %>% 
-  mutate("population" = "QHI") %>% 
-  rename("Species" = "Spp", 
+  mutate("population" = "Northern Source") %>% 
+  dplyr::rename("Species" = "Spp", 
          "All_snow_free_DOY" = "P1",
-         "Salix_burd_burst_DOY" = "P2", 
-         "Salix_first_yellow_DOY" = "P5", 
-         "Salix_last_yellow_DOY" = "P6") %>% 
+         "First_bud_burst_DOY" = "P2", 
+         "First_leaf_yellow_DOY" = "P5", 
+         "All_leaves_yellow_DOY" = "P6",
+         "PhenocamID" = "Plot.ID") %>% 
   select(-c(P7_before, P6_before, P5_before, P4_before, P3_before, P2_before, 
-            P1_before, P3, P4 
+            P1_before, P3, P4, P7
             ))
 
+# merge with phenocam data 
+all_phenocam_update <- full_join(qhi_arctica, all_phenocam_data_salix, 
+                                      by = c("Year", "population", "PhenocamID", 
+                                             "Species", 
+                                             "First_bud_burst_DOY", 
+                                            "First_leaf_yellow_DOY", 
+                                            "All_leaves_yellow_DOY"))
 
+# second merge 
+unique(all_growing_season$population)
 
+qhi_arctica_2 <- qhi %>% 
+  dplyr::filter(Spp == "SALARC") %>% 
+  dplyr::filter(Year >= "2014") %>% 
+  mutate("population" = "QHI") %>% 
+  dplyr::rename("Species" = "Spp", 
+         "All_snow_free_DOY" = "P1",
+         "Salix_first_bud_burst_DOY" = "P2", 
+         "Salix_first_yellow_DOY" = "P5", 
+         "Salix_last_yellow_DOY" = "P6",
+         "PhenocamID" = "Plot.ID") %>% 
+  select(-c(P7_before, P6_before, P5_before, P4_before, P3_before, P2_before, 
+            P1_before, P3, P4, P7
+  )) %>% 
+  mutate(growing_season = Salix_first_yellow_DOY - Salix_first_bud_burst_DOY)
 
-  
+str(all_growing_season)
+
+all_growing_season_salix <- full_join(qhi_arctica_2, all_growing_season, 
+                                      by = c("Year", "population", "PhenocamID", 
+                                             "Species", 
+                                             "Salix_first_bud_burst_DOY", 
+                                             "Salix_first_yellow_DOY", 
+                                             "Salix_last_yellow_DOY"))
+# saving updated data frames 
+write.csv(all_phenocam_update, "data/phenology/all_phenocam_update.csv")
+write.csv(all_growing_season_salix, "data/phenology/all_growing_season_salix.csv")
   
   
   
