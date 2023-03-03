@@ -785,16 +785,19 @@ unique(qhi$Spp)
 qhi_arctica <- qhi %>% 
   dplyr::filter(Spp == "SALARC") %>% 
   dplyr::filter(Year >= "2014") %>% 
-  dplyr:rename("Spp" = "Species",
-    "P1" = "All_snow_free_DOY", 
-               "P2" = "Salix_burd_burst_DOY", 
-    "P5" = "Salix_first_yellow_DOY", 
-    "P6" = "Salix_last_yellow_DOY") %>% 
-  dplyr::select(-c("P7_before", "P6_before", "P5_before", "P4_before", "P3_before", "P2_before", "P1_before")) %>% 
-  mutate(population = "QHI")
-  
-  
-  
+  mutate("population" = "QHI") %>% 
+  rename("Species" = "Spp", 
+         "All_snow_free_DOY" = "P1",
+         "Salix_burd_burst_DOY" = "P2", 
+         "Salix_first_yellow_DOY" = "P5", 
+         "Salix_last_yellow_DOY" = "P6") %>% 
+  select(-c(P7_before, P6_before, P5_before, P4_before, P3_before, P2_before, 
+            P1_before, P3, P4 
+            ))
+
+
+
+
   
   
   
