@@ -17,7 +17,7 @@ library(tidybayes)
 library(dplyr)
 
 # Loading data ---- 
-# all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
+all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
 # Only using max growth variables values
 max_widths_cg <- read_csv("data/common_garden_data_2022/max_widths_cg.csv")
 max_heights_cg <- read_csv("data/common_garden_data_2022/max_heights_cg.csv")
@@ -180,6 +180,20 @@ hist(max_diam_cg_rich$max_stem_diam) # right skew
 hist(max_diam_cg_pul$max_stem_diam, breaks = 30) #  right skew - so weird
 hist(max_diam_cg_arc$max_stem_diam,  breaks = 30)#  right skew
 
+# Filtering data for height over time model ------
+all_CG_growth <- all_CG_source_growth %>%
+  filter(population %in% c("Northern", "Southern"))
+
+# Species specific ------
+all_CG_growth_ric <- all_CG_growth %>%
+  filter(Species == "Salix richardsonii")
+
+all_CG_growth_pul<-  all_CG_growth%>%
+  filter(Species == "Salix pulchra")
+
+all_CG_growth_arc <-all_CG_growth%>%
+  filter(Species == "Salix arctica")
+
 # MODELLING -------
 # NB one model per species
 
@@ -217,6 +231,38 @@ garden_arc_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sampl
 summary(garden_arc_height)# NOT significant difference (again makes sense!)
 plot(garden_arc_height) # fine
 pp_check(garden_arc_height, type = "dens_overlay", nsamples = 100)# good
+
+# 1.1. HEIGHT OVER TIME MODEL -------
+# Salix rich ------
+height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population + (1|Year),
+                         data = all_CG_growth_ric,  family = gaussian(), chains = 3,
+                         iter = 5000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(height_rich) # significant height growth over time
+plot(height_rich)
+pp_check(height_rich, type = "dens_overlay", nsamples = 100) 
+
+# Salix pulchra -------
+height_pul <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year),
+                        data = all_CG_growth_pul,  family = gaussian(), chains = 3,
+                        iter = 5000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(height_pul) # significant height growth over time
+plot(height_pul)
+pp_check(height_pul, type = "dens_overlay", nsamples = 100) 
+
+# Salix arctica -------
+height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year),
+                        data = all_CG_growth_arc,  family = gaussian(), chains = 3,
+                        iter = 5000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(height_arc) # significant growth over time
+plot(height_arc)
+pp_check(height_arc, type = "dens_overlay", nsamples = 100) 
+
 
 # 2. STEM ELONGATION ------
 
@@ -427,6 +473,47 @@ arc_height_data <- arc_heights[[1]] # making the extracted model outputs into a
 
 library(gridExtra)
 panel_heights_bayes <- grid.arrange(ric_height_plot, pul_height_plot, arc_height_plot, nrow = 1)
+
+# HEIGHT OVER TIME PLOTS-----
+(rich_heights_plot_new <- all_CG_growth_ric %>%
+   group_by(population) %>%
+   add_predicted_draws(height_rich) %>%
+   ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = all_CG_growth_ric) +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_shrub() +
+   ylab("Richardsonii canopy height (log cm)\n") +
+   xlab("\nSample age"))
+
+# Salix pulchra ------
+
+(pul_heights_plot_new <- all_CG_growth_pul %>%
+   group_by(population) %>%
+   add_predicted_draws(height_pul) %>%
+   ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = all_CG_growth_pul) +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_shrub() +
+   ylab("Pulchra canopy height (log cm)\n") +
+   xlab("\nSample age"))
+
+
+# Salix arctica------
+(arc_heights_plot_new <- all_CG_growth_arc %>%
+   group_by(population) %>%
+   add_predicted_draws(height_arc) %>%
+   ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = all_CG_growth_arc) +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_shrub() +
+   ylab("Arctica canopy height (log cm)\n") +
+   xlab("\nSample age"))
 
 # STEM ELONG richardsonii ----
 rich_elong <- (conditional_effects(garden_rich_elong)) # extracting conditional effects from bayesian model
