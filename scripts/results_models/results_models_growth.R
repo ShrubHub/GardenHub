@@ -522,7 +522,7 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
    geom_point(aes(x = Sample_age, y= log(biovolume), colour = population, group = population), size = 1.5, alpha = 0.5) +
    # facet_grid(cols = vars(Species)) +   #facet_grid(cols = vars(Species)) +
    facet_wrap(~Species, scales = "free") +
-   ylab("Biovolume (cm3)") +
+   ylab("Biovolume (log, cm3)") +
    xlab("\n ") +
    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
    scale_fill_viridis_d(begin = 0.1, end = 0.95) +

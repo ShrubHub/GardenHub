@@ -272,9 +272,6 @@ growth$SampleID_standard<-gsub(" ","",as.character(growth$SampleID_standard)) # 
 # subsetting to relevant date in 2020 to merge with GD additions data
 growth_19thaug2020 <- growth %>%
   filter(Sample_Date == "2020-08-19") 
-#%>%
- # select(-c("Year_planted", "Species", "Site", 
-            #"Month", "Day", "Year"))
 
 str(GD_2020_additions)
 GD_2020_additions <- GD_2020_additions %>%
@@ -299,12 +296,6 @@ GD_2020_additions$SampleID_standard<-gsub(" ","",as.character(GD_2020_additions$
 library(arsenal)
 summary(comparedf(GD_2020_additions,growth_19thaug2020))
 identical(GD_2020_additions,growth_19thaug2020) #FALSE
-
-# merge by SampleID
-#GD_2020_additions_merge <- merge(GD_2020_additions, growth_19thaug2020, by="SampleID_standard", 
-    #                             all.x = TRUE, all.y = TRUE)
-#GD_2020_additions_merge_test <- GD_2020_additions %>% 
- # left_join(growth_19thaug2020, by = c("SampleID_standard" = "SampleID_standard"))
 
 # Merge myDF1 & my DF2 by the "SampleID_standard", keeping all the rows in my DF1
 agg_df = merge(growth_19thaug2020, GD_2020_additions, "SampleID_standard", all.x=TRUE)
