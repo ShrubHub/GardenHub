@@ -773,11 +773,11 @@ tab_model(yellow_cg_mod_2)
 
 
 # adding QHI data ----
-# Load data ----
+# data 
 all_phenocam_data_salix <- read_csv("data/phenology/phenocam_pics/all_phenocam_data_salix.csv")
 all_growing_season <- read_csv("data/phenology/phenocam_pics/all_growing_season.csv")
 
-qhi <- read_csv("data/phenology/QHI_phenology_plots/qiki_phen_with_before_2019.csv")
+qhi <- read_csv("data/phenology/QHI_phenology_plots/qiki_phen_with_before_2022.csv")
 
 str(qhi)
 unique(qhi$Spp)
@@ -785,8 +785,13 @@ unique(qhi$Spp)
 qhi_arctica <- qhi %>% 
   dplyr::filter(Spp == "SALARC") %>% 
   dplyr::filter(Year >= "2014") %>% 
-  dplyr:rename("P1" = "All_snow_free_DOY", 
-               "P2" = "")
+  dplyr:rename("Spp" = "Species",
+    "P1" = "All_snow_free_DOY", 
+               "P2" = "Salix_burd_burst_DOY", 
+    "P5" = "Salix_first_yellow_DOY", 
+    "P6" = "Salix_last_yellow_DOY") %>% 
+  dplyr::select(-c("P7_before", "P6_before", "P5_before", "P4_before", "P3_before", "P2_before", "P1_before")) %>% 
+  mutate(population = "QHI")
   
   
   
