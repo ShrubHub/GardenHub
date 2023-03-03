@@ -90,6 +90,10 @@ tab_model(LDMC_method_mod)
     geom_boxplot() +
     facet_wrap(vars(Species)))
 
+(LMA_p_ <- ggplot(all_source_area_traits, aes(Site, leaf_mass_per_area_g_m2)) + 
+    geom_boxplot() +
+    facet_wrap(vars(Species)))
+
 (LDMC_p_source <- ggplot(all_source_area_traits) +
     geom_boxplot(aes(x = Site, y = LDMC_g_g, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
     # facet_grid(cols = vars(Species)) +

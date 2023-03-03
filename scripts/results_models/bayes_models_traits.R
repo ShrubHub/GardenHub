@@ -9,7 +9,6 @@ library(brms)
 library(ggplot2)
 library(tidybayes)
 
-
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
 all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv") # leaf length
@@ -41,7 +40,6 @@ all_CG_source_traits$population <- ordered(all_CG_source_traits$population,
                                                       "Northern Garden", 
                                                       "Southern Source",
                                                       "Southern Garden"))
-
 all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
                                                  c("Northern"="Northern Garden",
                                                    "Southern"="Southern Garden",
@@ -83,6 +81,8 @@ hist(pulchra_all_traits$SLA) # mild right skew
 pulchra_all_traits$SLA_log <- log(pulchra_all_traits$SLA)
 hist(pulchra_all_traits$SLA_log) # mildly better right skew
 hist(richardsonii_all_traits$SLA)# mild right skew
+richardsonii_all_traits$SLA_log <- log(richardsonii_all_traits$SLA)
+hist(richardsonii_all_traits$SLA_log) # better 
 
 # LDMC
 hist(arctica_all_traits$LDMC_g_g) # very mild right skew
@@ -110,48 +110,49 @@ hist(arctica_all_growth$mean_leaf_length) # decent
 hist(pulchra_all_growth$mean_leaf_length) # mild right skew
 hist(richardsonii_all_growth$mean_leaf_length) # pretty decent 
 
+# scale function =====
+# centering with 'scale()'
+center_scale <- function(x) {
+  scale(x, scale = FALSE)
+}
+
 # MODELS ----
 # model structure : 
 # mod <- brms::brm(trait ~ population + (1|Year),
 # data = spp_traits, family = gaussian(), chains = 3,
-# iter = 3000, warmup = 1000)
+# iter = 3000 - 5000, warmup = 1000)
 
 # SLA ----
 # S. arctica 
-arctica_SLA <- brms::brm(SLA ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
-                                iter = 3000, warmup = 1000)
-summary(arctica_SLA) #There were 2 divergent transitions after warmup
+arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
+                                iter = 3000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(arctica_SLA) #There were 3 divergent transitions after warmup
 plot(arctica_SLA)
-pp_check(arctica_SLA) 
+pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 
 # S. pulchra 
-pulchra_SLA <- brms::brm(SLA ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
-                         iter = 5000, warmup = 1000, 
+pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
+                         iter = 3000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(pulchra_SLA) # There were 60 divergent transitions after warmup
+summary(pulchra_SLA) # There were 1 divergent transitions after warmup
 plot(pulchra_SLA)
-pp_check(pulchra_SLA) 
+pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 
 # S. richardsonii 
-rich_SLA <- brms::brm(SLA ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-                      iter = 5000, warmup = 1000, 
+rich_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
+                      iter = 3000, warmup = 1000, 
                       control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(rich_SLA)
+summary(rich_SLA) # there were 1 divergent transitions after warmup
 plot(rich_SLA)
-pp_check(rich_SLA) 
-# omg : There were 260 divergent transitions after warmup. See
-rich_log_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-                      iter = 5000, warmup = 1000)
-# There were 15 divergent transitions after warmup
-summary(rich_log_SLA)
-plot(rich_log_SLA)
-pp_check(rich_log_SLA) 
+pp_check(rich_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 
 # LDMC ----
 # S. arctica 
 arctica_LDMC <- brms::brm(LDMC_g_g ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
-                         iter = 3000, warmup = 1000) #207 divergent transitions after warmup
+                         iter = 3000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99)) #207 divergent transitions after warmup
 summary(arctica_LDMC)
 plot(arctica_LDMC)
 pp_check(arctica_LDMC) 
