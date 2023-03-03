@@ -772,4 +772,26 @@ tab_model(yellow_cg_mod_2)
           axis.text.y = element_text(size = 15, colour = "black")))
 
 
+# adding QHI data ----
+# Load data ----
+all_phenocam_data_salix <- read_csv("data/phenology/phenocam_pics/all_phenocam_data_salix.csv")
+all_growing_season <- read_csv("data/phenology/phenocam_pics/all_growing_season.csv")
 
+qhi <- read_csv("data/phenology/QHI_phenology_plots/qiki_phen_with_before_2019.csv")
+
+str(qhi)
+unique(qhi$Spp)
+
+qhi_arctica <- qhi %>% 
+  dplyr::filter(Spp == "SALARC") %>% 
+  dplyr::filter(Year >= "2014") %>% 
+  dplyr:rename("P1" = "All_snow_free_DOY", 
+               "P2" = "")
+  
+  
+  
+  
+  
+  
+  
+  
