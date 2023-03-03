@@ -9,7 +9,6 @@ library(brms)
 library(ggplot2)
 library(tidybayes)
 
-
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
 all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv") # leaf length
@@ -41,7 +40,6 @@ all_CG_source_traits$population <- ordered(all_CG_source_traits$population,
                                                       "Northern Garden", 
                                                       "Southern Source",
                                                       "Southern Garden"))
-
 all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
                                                  c("Northern"="Northern Garden",
                                                    "Southern"="Southern Garden",
@@ -83,6 +81,8 @@ hist(pulchra_all_traits$SLA) # mild right skew
 pulchra_all_traits$SLA_log <- log(pulchra_all_traits$SLA)
 hist(pulchra_all_traits$SLA_log) # mildly better right skew
 hist(richardsonii_all_traits$SLA)# mild right skew
+richardsonii_all_traits$SLA_log <- log(richardsonii_all_traits$SLA)
+hist(richardsonii_all_traits$SLA_log) # better 
 
 # LDMC
 hist(arctica_all_traits$LDMC_g_g) # very mild right skew
@@ -110,48 +110,49 @@ hist(arctica_all_growth$mean_leaf_length) # decent
 hist(pulchra_all_growth$mean_leaf_length) # mild right skew
 hist(richardsonii_all_growth$mean_leaf_length) # pretty decent 
 
+# scale function =====
+# centering with 'scale()'
+center_scale <- function(x) {
+  scale(x, scale = FALSE)
+}
+
 # MODELS ----
 # model structure : 
 # mod <- brms::brm(trait ~ population + (1|Year),
 # data = spp_traits, family = gaussian(), chains = 3,
-# iter = 3000, warmup = 1000)
+# iter = 3000 - 5000, warmup = 1000)
 
 # SLA ----
-# S. arctica 
-arctica_SLA <- brms::brm(SLA ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
-                                iter = 3000, warmup = 1000)
-summary(arctica_SLA) #There were 2 divergent transitions after warmup
+# S. arctica ----
+arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
+                                iter = 3000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(arctica_SLA) #There were 3 divergent transitions after warmup
 plot(arctica_SLA)
-pp_check(arctica_SLA) 
+pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 
-# S. pulchra 
-pulchra_SLA <- brms::brm(SLA ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
-                         iter = 5000, warmup = 1000, 
+# S. pulchra ----
+pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
+                         iter = 3000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(pulchra_SLA) # There were 60 divergent transitions after warmup
+summary(pulchra_SLA) # There were 1 divergent transitions after warmup
 plot(pulchra_SLA)
-pp_check(pulchra_SLA) 
+pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 
-# S. richardsonii 
-rich_SLA <- brms::brm(SLA ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-                      iter = 5000, warmup = 1000, 
+# S. richardsonii ----
+rich_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
+                      iter = 3000, warmup = 1000, 
                       control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(rich_SLA)
+summary(rich_SLA) # there were 1 divergent transitions after warmup
 plot(rich_SLA)
-pp_check(rich_SLA) 
-# omg : There were 260 divergent transitions after warmup. See
-rich_log_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-                      iter = 5000, warmup = 1000)
-# There were 15 divergent transitions after warmup
-summary(rich_log_SLA)
-plot(rich_log_SLA)
-pp_check(rich_log_SLA) 
+pp_check(rich_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 
 # LDMC ----
-# S. arctica 
+# S. arctica ----
 arctica_LDMC <- brms::brm(LDMC_g_g ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
-                         iter = 3000, warmup = 1000) #207 divergent transitions after warmup
+                         iter = 3000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99)) #207 divergent transitions after warmup
 summary(arctica_LDMC)
 plot(arctica_LDMC)
 pp_check(arctica_LDMC) 
@@ -163,7 +164,7 @@ summary(arctica_LDMC_log)
 plot(arctica_LDMC_log)
 pp_check(arctica_LDMC_log) 
 
-# S. pulchra 
+# S. pulchra ----
 pulchra_LDMC <- brms::brm(LDMC_g_g ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
                          iter = 5000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99)) # 4 divergent transitions after warmup
@@ -178,7 +179,7 @@ summary(pulchra_LDMC_log)
 plot(pulchra_LDMC_log)
 pp_check(pulchra_LDMC_log) 
 
-# S. richardsonii 
+# S. richardsonii ----
 rich_LDMC <- brms::brm(LDMC_g_g ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
                       iter = 5000, warmup = 1000, 
                       control = list(max_treedepth = 15, adapt_delta = 0.99)) # 11 divergent transitions after warmup
@@ -194,23 +195,22 @@ plot(rich_LDMC_log)
 pp_check(rich_LDMC_log) 
 
 # LA ----
-# not including year bc only 2 years worth of data 2021 and 2022 
 # S. arctica 
-arctica_LA <- brms::brm(log(LA) ~ population, data = arctica_all_traits, family = gaussian(), chains = 3,
+arctica_LA <- brms::brm(log(LA)  ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
                           iter = 3000, warmup = 1000)
 summary(arctica_LA) 
 plot(arctica_LA)
 pp_check(arctica_LA) 
 
 # S. pulchra
-pulchra_LA <- brms::brm(log(LA) ~ population, data = pulchra_all_traits, family = gaussian(), chains = 3,
+pulchra_LA <- brms::brm(log(LA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
 summary(pulchra_LA) 
 plot(pulchra_LA)
 pp_check(pulchra_LA) 
 
 # S. richardsonii 
-rich_LA <- brms::brm(log(LA) ~ population, data = richardsonii_all_traits, family = gaussian(), chains = 3,
+rich_LA <- brms::brm(log(LA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
 summary(rich_LA) 
 plot(rich_LA)
@@ -218,21 +218,21 @@ pp_check(rich_LA)
 
 # LMA ----
 # S. arcitca 
-arctica_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population, data = arctica_2022_traits, family = gaussian(), chains = 3,
+arctica_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = arctica_2022_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
 summary(arctica_LMA) 
 plot(arctica_LMA)
 pp_check(arctica_LMA) 
 
 # S. pulchra
-pulchra_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population, data = pulchra_2022_traits, family = gaussian(), chains = 3,
+pulchra_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = pulchra_2022_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
 summary(pulchra_LMA) 
 plot(pulchra_LMA)
 pp_check(pulchra_LMA) 
 
 # S. richardsonii 
-rich_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population, data = richardsonii_2022_traits, family = gaussian(), chains = 3,
+rich_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = richardsonii_2022_traits, family = gaussian(), chains = 3,
                      iter = 3000, warmup = 1000)
 summary(rich_LMA) 
 plot(rich_LMA)
@@ -268,10 +268,10 @@ summary(rich_LL)
 plot(rich_LL)
 pp_check(rich_LL) 
 
-
-# SLA
-# LMDC
-# LA
-# LMA
-# LEAF LENGTH 
+# PLOTS ---- 
+# SLA ---- 
+# LMDC ---- 
+# LA ----
+# LMA -----
+# LEAF LENGTH -----
 
