@@ -1081,6 +1081,13 @@ unique(all_CG_source_traits$population) # Northern source_north source_south Sou
 unique(all_CG_source_traits$Site) # Common_garden Kluane Qikiqtaruk
 unique(all_CG_source_traits$Species) # Salix arctica Salix pulchra Salix richardsonii
 
+# filter out two extreme LDMC values from 2014 
+# filter out one extreme LMA value from 2021 
+all_CG_source_traits <- all_CG_source_traits %>% 
+  filter(LDMC_g_g < 1 | is.na(LDMC_g_g)) %>% 
+  filter(leaf_mass_per_area_g_m2 < 130 | is.na(leaf_mass_per_area_g_m2)) %>% 
+  filter(SLA > 2 | is.na(SLA))
+
 # save 
 write.csv(all_CG_source_traits, "data/all_CG_source_traits.csv")
 
@@ -1145,7 +1152,7 @@ all_cg_data_2022 <-  read.csv('data/common_garden_data_2022/all_cg_data_2022.csv
 length(unique(all_cg_data_2022$SampleID_standard)) # 827
 
 # out of curiosity how many of these are NAs?
-sum(is.na(all_cg_data_2022$Canopy_Height_cm)) # 1755 wow, quite a few 
+sum(is.na(all_cg_data_2022$Canopy_Height_cm)) # 1761 wow, quite a few 
 
 # drop unnecessary columns 
 max_cg_extractions <-  all_cg_data_2022 %>% 
@@ -1231,15 +1238,15 @@ max_source_mother_heights <- unique_source_mother %>%
 max_source_mother_heights_Kluane <- max_source_mother_heights %>%
   filter(Site == "Kluane")
 max(max_source_mother_heights_Kluane$max_canopy_height_cm) # 282
-mean(max_source_mother_heights_Kluane$max_canopy_height_cm) # 74.26732
-sd(max_source_mother_heights_Kluane$max_canopy_height_cm) #  46.36711
+mean(max_source_mother_heights_Kluane$max_canopy_height_cm) # 71.03625
+sd(max_source_mother_heights_Kluane$max_canopy_height_cm) #  44.34028
 
 # filter QHI only
 max_source_mother_heights_QHI<- max_source_mother_heights %>%
   filter(Site == "Qikiqtaruk")
 max(max_source_mother_heights_QHI$max_canopy_height_cm) # 124
-mean(max_source_mother_heights_QHI$max_canopy_height_cm) #  33.28095
-sd(max_source_mother_heights_QHI$max_canopy_height_cm) # 18.00989
+mean(max_source_mother_heights_QHI$max_canopy_height_cm) #  34.25734
+sd(max_source_mother_heights_QHI$max_canopy_height_cm) # 17.96677
 
 # do same for widths (use average width value)
 max_source_mother_widths<- unique_source_mother %>% 
@@ -1258,8 +1265,8 @@ sd(max_source_mother_widths_Kluane$max_mean_width_cm) # 92.47113( but including 
 max_source_mother_widths_QHI<- max_source_mother_widths %>%
   filter(Site == "Qikiqtaruk")
 max(max_source_mother_widths_QHI$max_mean_width_cm) # 733.5??? umm nah again? next largest is 539cm (still large?!)
-mean(max_source_mother_widths_QHI$max_mean_width_cm) # 149.2887 ( but including large one)
-sd(max_source_mother_widths_QHI$max_mean_width_cm) # 131.6878( but including large one)
+mean(max_source_mother_widths_QHI$max_mean_width_cm) # 163.0306 ( but including large one)
+sd(max_source_mother_widths_QHI$max_mean_width_cm) # 132.209( but including large one)
 
 # do same for stem elongation (use average value)
 max_source_mother_stem_elong <- unique_source_mother %>% 
@@ -1297,208 +1304,4 @@ max_source_mother_stem_elong_spp <- max_source_mother_stem_elong %>%
   summarise(mean_max_stem_elong_cm = mean(max_mean_stem_elong_cm))
 # Qikiqtaruk Salix arctica 29.16506
 # no data for stem elong arctica in Kluane
-
-# 4. DATA VISUALISATION ----
-# these data are wrong 
-all_merged_data_2022 <- read.csv("data/common_garden_data_2022/all_merged_data_2022.csv")
-
-# 4.1. COMMON GARDEN ----
-
-# a. Canopy height(2013-2022) ----
-(plot_canopy_2022 <- ggplot(all_merged_data_2022) +
-    geom_smooth(aes(x = Sample_age, y = Canopy_Height_cm, colour = Site, fill = Site, group = Site, method = "glm")) +
-    geom_point(aes(x = Sample_age, y= Canopy_Height_cm, colour = Site, group = Site), size = 1.5, alpha = 0.5) +
-    #facet_grid(cols = vars(Species)) +
-   facet_wrap(~Species, scales = "free_y") +
-   ylab("Canopy Height (cm)") +
-    xlab("\nAge (years)") +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_bw() +
-    theme(panel.border = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          strip.text = element_text(size = 15, color = "black", face = "italic"),
-          legend.title = element_text(size=15), #change legend title font size
-          legend.text = element_text(size=12),
-          axis.line = element_line(colour = "black"),
-          axis.title = element_text(size = 18),
-          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
-          axis.text.y = element_text(size = 15, colour = "black")))
-
-# b. Stem elongation (2013-2022) ----
-(plot_stem_2022 <- ggplot(all_merged_data_2022) +
-    geom_smooth(aes(x = Sample_age, y= mean_stem_elong, colour = Site, fill = Site, group = Site, method = "glm")) +
-    geom_point(aes(x = Sample_age, y= mean_stem_elong, colour = Site, group = Site), size = 1.5, alpha = 0.5) +
-    #facet_grid(cols = vars(Species)) +
-   facet_wrap(~Species, scales = "free_y") +
-   ylab("Stem Elongation (mm)") +
-    xlab("\nAge (years)") +
-   scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-   scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-   theme_bw() +
-   theme(panel.border = element_blank(),
-         panel.grid.major = element_blank(),
-         panel.grid.minor = element_blank(),
-         strip.text = element_text(size = 15, color = "black", face = "italic"),
-         legend.title = element_text(size=15), #change legend title font size
-         legend.text = element_text(size=12),
-         axis.line = element_line(colour = "black"),
-         axis.title = element_text(size = 18),
-         axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
-         axis.text.y = element_text(size = 15, colour = "black")))
-
-# c. Stem diameter (2013-2022) ----
-(plot_diameter_2022 <- ggplot(all_merged_data_2022) +
-    geom_smooth(aes(x = Sample_age, y = Stem_diameter, colour = Site, fill = Site, group = Site, method = "glm")) +
-    geom_point(aes(x = Sample_age, y= Stem_diameter, colour = Site, group = Site), size = 1.5, alpha = 0.5) +
-    #facet_grid(cols = vars(Species)) +
-   facet_wrap(~Species, scales = "free_y") +
-    ylab("Stem diameter (mm)") +
-    xlab("\nAge (years)") +
-   scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-   scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-   theme_bw() +
-   theme(panel.border = element_blank(),
-         panel.grid.major = element_blank(),
-         panel.grid.minor = element_blank(),
-         strip.text = element_text(size = 15, color = "black", face = "italic"),
-         legend.title = element_text(size=15), #change legend title font size
-         legend.text = element_text(size=12),
-         axis.line = element_line(colour = "black"),
-         axis.title = element_text(size = 14),
-         axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
-         axis.text.y = element_text(size = 12, colour = "black")))
-
-# d. Shrub width (2013-2022) ----
-(plot_width_2022 <- ggplot(all_merged_data_2022) +
-    geom_boxplot(aes(x= Site, y = mean_width, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
-    #facet_grid(cols = vars(Species)) +
-   facet_wrap(~Species, scales = "free_y") +
-   ylab("Width (cm)") +
-    xlab("") +
-   scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-   scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-   theme_bw() +
-   theme(panel.border = element_blank(),
-         panel.grid.major = element_blank(),
-         panel.grid.minor = element_blank(),
-         strip.text = element_text(size = 15, color = "black", face = "italic"),
-         legend.title = element_text(size=15), #change legend title font size
-         legend.text = element_text(size=12),
-         axis.line = element_line(colour = "black"),
-         axis.title = element_text(size = 14),
-         axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
-         axis.text.y = element_text(size = 12, colour = "black")))
-
-# Width scatter (2013-2022) ----
-(plot_width_scatter <- ggplot(all_merged_data_2022) +
-   geom_smooth(aes(x = Sample_age, y = mean_width, colour = Site, fill = Site, group = Site, method = "glm")) +
-   geom_point(aes(x = Sample_age, y= mean_width, colour = Site, group = Site), size = 1.5, alpha = 0.5) +
-   #facet_grid(cols = vars(Species)) +
-   facet_wrap(~Species, scales = "free_y") +
-   ylab("Canopy width (cm)") +
-   xlab("\nAge (years)") +
-   scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-   scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-   theme_bw() +
-   theme(panel.border = element_blank(),
-         panel.grid.major = element_blank(),
-         panel.grid.minor = element_blank(),
-         strip.text = element_text(size = 15, color = "black", face = "italic"),
-         legend.title = element_text(size=15), #change legend title font size
-         legend.text = element_text(size=12),
-         axis.line = element_line(colour = "black"),
-         axis.title = element_text(size = 18),
-         axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
-         axis.text.y = element_text(size = 15, colour = "black")))
-
-
-# Facet
-facet_traits <- grid.arrange(plot_canopy_2022, plot_stem_2022, plot_diameter_2022, plot_width_2022, ncol=2)
-
-# e. Leaf length (2013-2022) boxplot ----
-
-(plot_leaf_2022 <- ggplot(all_merged_data_2022) +
-    geom_boxplot(aes(x = Site, y = mean_leaf_length, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
-    #facet_grid(cols = vars(Species)) +
-   facet_wrap(~Species, scales = "free_y") +
-    ylab("Leaf Length (mm)") +
-    xlab("") +
-   scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-   scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-   theme_bw() +
-   theme(panel.border = element_blank(),
-         panel.grid.major = element_blank(),
-         panel.grid.minor = element_blank(),
-         strip.text = element_text(size = 15, color = "black", face = "italic"),
-         legend.title = element_text(size=15), #change legend title font size
-         legend.text = element_text(size=12),
-         axis.line = element_line(colour = "black"),
-         axis.title = element_text(size = 14),
-         axis.text.x = element_text(vjust = 0.5, size = 12, colour = "black"),
-         axis.text.y = element_text(size = 12, colour = "black")))
-
-# e.1. Leaf length scatter (2013-2022) -----
-(plot_leaf_scatter_2022 <- ggplot(all_merged_data_2022) +
-    geom_smooth(aes(x = Sample_age, y = mean_leaf_length, colour = Site, fill = Site, group = Site, method = "glm")) +
-    geom_point(aes(x = Sample_age, y= mean_leaf_length, colour = Site, group = Site), size = 1.5, alpha = 0.5) +
-    #facet_grid(cols = vars(Species)) +
-   facet_wrap(~Species, scales = "free_y") +
-   ylab("Leaf Length (mm)") +
-    xlab("\nAge (years)") +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_bw() +
-    theme(panel.border = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          strip.text = element_text(size = 15, color = "black", face = "italic"),
-          legend.title = element_text(size=15), #change legend title font size
-          legend.text = element_text(size=12),
-          axis.line = element_line(colour = "black"),
-          axis.title = element_text(size = 18),
-          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
-          axis.text.y = element_text(size = 15, colour = "black")))
-  
-# f. Leaf length (2022) ----
-data_leaf_2022 <- all_merged_data_2022 %>% filter(Year == 2022)
-
-(plot_leaf_2022_only <- ggplot(data_leaf_2022) +
-    geom_boxplot(aes(x = Site, y = mean_leaf_length, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
-    #facet_grid(cols = vars(Species)) +
-    facet_wrap(~Species, scales = "free_y") +
-    ylab("Leaf Length (mm)") +
-    xlab("") +
-    scale_colour_viridis_d(begin = 0.3, end = 0.9) +
-    scale_fill_viridis_d(begin = 0.3, end = 0.9) +
-    theme_bw() +
-    theme(panel.border = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          axis.line = element_line(colour = "black"),
-          axis.title = element_text(size = 14),
-          axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
-          axis.text.y = element_text(size = 12, colour = "black")))
-
-# ggsave("scripts/common_garden/common_garden_figures/plot_leaf_2022_only.png", width = 28, height = 20, units = "cm", dpi = 100, plot = plot_leaf_2022_only)
-
-# g. Biovolume (2013-2022) ----
-(plot_biovol_2022 <- ggplot(all_merged_data_2022) +
-   geom_smooth(aes(x = Sample_age, y = (biovolume/1e+6), colour = Site, fill = Site, group = Site, method = "glm")) +
-   geom_point(aes(x = Sample_age, y= (biovolume/1e+6), colour = Site, group = Site), size = 1.5, alpha = 0.5) +
-  # geom_boxplot(aes(x = Site, y = biovolume, colour = Site, fill = Site, group = Site), size = 0.5, alpha = 0.5) +
-   facet_wrap(~Species, scales = "free") +
-   ylab("Biovolume (m3)") +
-   xlab("Sample age") +
-   scale_colour_viridis_d(begin = 0.3, end = 0.9) +
-   scale_fill_viridis_d(begin = 0.3, end = 0.9) +
-   theme_bw() +
-   theme(panel.border = element_blank(),
-         panel.grid.major = element_blank(),
-         panel.grid.minor = element_blank(),
-         axis.line = element_line(colour = "black"),
-         axis.title = element_text(size = 14),
-         axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
-         axis.text.y = element_text(size = 12, colour = "black")))
 
