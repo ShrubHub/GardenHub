@@ -8,6 +8,7 @@ library(tidyverse)
 library(brms)
 library(ggplot2)
 library(tidybayes)
+library(gridExtra)
 
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
@@ -50,13 +51,6 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
                                                       "Northern Garden",
                                                       "Southern Source", 
                                                       "Southern Garden"))
-
-# filter out two extreme LDMC values from 2014 
-# filter out one extreme LMA value from 2021 
-all_CG_source_traits <- all_CG_source_traits %>% 
-  filter(LDMC_g_g < 1 | is.na(LDMC_g_g)) %>% 
-  filter(leaf_mass_per_area_g_m2 < 130 | is.na(leaf_mass_per_area_g_m2)) %>% 
-  filter(SLA > 2 | is.na(SLA))
 
 # to run separate models per species filter out species: 
 arctica_all_traits <- all_CG_source_traits %>% 
@@ -144,7 +138,7 @@ pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # pretty good
 rich_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
                       iter = 3000, warmup = 1000, 
                       control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(rich_SLA) # there were 1 divergent transitions after warmup
+summary(rich_SLA) 
 plot(rich_SLA)
 pp_check(rich_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 
@@ -152,7 +146,7 @@ pp_check(rich_SLA, type = "dens_overlay", ndraws = 100) # pretty good
 # S. arctica ----
 arctica_LDMC <- brms::brm(LDMC_g_g ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
                          iter = 3000, warmup = 1000, 
-                         control = list(max_treedepth = 15, adapt_delta = 0.99)) #207 divergent transitions after warmup
+                         control = list(max_treedepth = 15, adapt_delta = 0.99)) 
 summary(arctica_LDMC)
 plot(arctica_LDMC)
 pp_check(arctica_LDMC) 
@@ -269,7 +263,72 @@ plot(rich_LL)
 pp_check(rich_LL) 
 
 # PLOTS ---- 
+theme_shrub <- function(){ theme(legend.position = "right",
+                                 axis.title.x = element_text(face="bold", size=12),
+                                 axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 45), 
+                                 axis.title.y = element_text(face="bold", size=12),
+                                 axis.text.y  = element_text(vjust=0.5, size=12, colour = "black"),
+                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
+                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
+                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+                                 plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5),
+                                 plot.margin = unit(c(1,1,1,1), units = , "cm"))}
 # SLA ---- 
+# arctica ----
+arc_sla <- (conditional_effects(arctica_SLA)) # extracting conditional effects from bayesian model
+arc_sla_data <- arc_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
+#[[1]] is to extract the first term in the model which in our case is population
+
+(arc_sla_plot <-ggplot(arc_sla_data) +
+    geom_point(data = arctica_all_traits, aes(x = population, y = log(SLA), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1) +
+    ylab("Salix arctica SLA (log, UNIT)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub())
+# pulchra ----
+pul_sla <- (conditional_effects(pulchra_SLA)) # extracting conditional effects from bayesian model
+pul_sla_data <- pul_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
+#[[1]] is to extract the first term in the model which in our case is population
+
+(pul_sla_plot <-ggplot(pul_sla_data) +
+    geom_point(data = pulchra_all_traits, aes(x = population, y = log(SLA), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1) +
+    ylab("Salix arctica SLA (log, UNIT)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub())
+# richardsonii ----
+richard_sla <- (conditional_effects(rich_SLA)) # extracting conditional effects from bayesian model
+richard_sla_data <- richard_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
+#[[1]] is to extract the first term in the model which in our case is population
+
+(rich_sla_plot <-ggplot(richard_sla_data) +
+    geom_point(data = richardsonii_all_traits, aes(x = population, y = log(SLA), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1) +
+    ylab("Salix arctica SLA (log, UNIT)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub())
+
+panel_sla_bayes <- grid.arrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, nrow = 1)
+
+(sla_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, 
+                           labels = c("A", "B", "C"), common.legend = TRUE, legend = "bottom",
+                           ncol = 3, nrow = 1))
+
 # LMDC ---- 
 # LA ----
 # LMA -----
