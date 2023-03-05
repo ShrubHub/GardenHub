@@ -301,7 +301,7 @@ pp_check(garden_arc_yellow, type = "dens_overlay", nsamples = 100) # looks good
 
 # 3. GROWING SEASON LENGTH -----
 # Salix richardsonii ------
-growing_season_rich <- brms::brm(growing_season ~ population, 
+growing_season_rich <- brms::brm(growing_season.y ~ population, 
                                 data = all_growing_season_rich, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000,
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -311,7 +311,7 @@ plot(growing_season_rich)
 pp_check(growing_season_rich, type = "dens_overlay", nsamples = 100) # looks good
 
 # Salix pulchra ------
-growing_season_pul <- brms::brm(growing_season ~ population, 
+growing_season_pul <- brms::brm(growing_season.y ~ population, 
                                  data = all_growing_season_pul, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000,
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -321,7 +321,7 @@ plot(growing_season_pul)
 pp_check(growing_season_pul, type = "dens_overlay", nsamples = 100) # looks good
 
 # Salix arctica ------
-growing_season_arc <- brms::brm(growing_season ~ population,
+growing_season_arc <- brms::brm(growing_season.y ~ population,
                                 data = all_growing_season_arc, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000,
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -340,3 +340,5 @@ pp_check(growing_season_arc, type = "dens_overlay", nsamples = 100) # looks good
 # S. richardsonii
 # S. pulchra 
 # S. arctica 
+
+
