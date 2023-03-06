@@ -426,11 +426,13 @@ ric_height_data <- ric_heights[[1]] # making the extracted model outputs into a
 # [[1]] is to extract the first term in the model which in our case is population
 
 (ric_height_plot <-ggplot(ric_height_data) +
-    geom_point(data = max_heights_cg_rich, aes(x = population, y = log(max_canopy_height_cm), colour = population),
-               alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
+    geom_violin(data = max_heights_cg_rich, aes(x = population, y = log(max_canopy_height_cm), fill = population, colour = population),
+               alpha = 0.1)+ # raw data
+    geom_jitter(data = max_heights_cg_rich, aes(x = population, y = log(max_canopy_height_cm), colour = population),
+                 alpha = 0.8)+
+    geom_boxplot(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 4)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
-                  alpha = 1) +
+                  alpha = 1,  width=.5) +
     ylab("Salix richardsonii max. canopy height (log, cm)\n") +
     xlab("\n Population" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
