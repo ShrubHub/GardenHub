@@ -406,7 +406,7 @@ plot(garden_arc_diam) # fine
 pp_check(garden_arc_diam,  type = "dens_overlay", nsamples = 100) # fine
 
 
-# PLOTTING -----
+# DATA VISUALISATION -----
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", size=12),
                                  axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 45), 
@@ -430,7 +430,7 @@ ric_height_data <- ric_heights[[1]] # making the extracted model outputs into a
                alpha = 0.1)+ # raw data
     geom_jitter(data = max_heights_cg_rich, aes(x = population, y = log(max_canopy_height_cm), colour = population),
                  alpha = 0.8)+
-    geom_boxplot(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 4)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                   alpha = 1,  width=.5) +
     ylab("Salix richardsonii max. canopy height (log, cm)\n") +

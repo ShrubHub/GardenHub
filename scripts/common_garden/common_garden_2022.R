@@ -255,6 +255,10 @@ str(CG_july_aug_2022)
 CG_july_aug_2022$Sample_Date <- as.POSIXct(CG_july_aug_2022$Sample_Date)
 CG_july_aug_2022$Sample_Date <- format(as.POSIXct(CG_july_aug_2022$Sample_Date,format='%Y-%m-%d %H:%M:%S'),format='%Y-%m-%d')
 
+# find NAs
+dead <- CG_july_aug_2022 %>% 
+  filter(is.na(Canopy_Height_cm))
+
 # Keeping only relevant columns of 2013-2021 data
 growth <- dplyr::select(growth, Bed, SampleID, Year_planted, Species, Site, Sample_Date,
                         Month, Day, Year, Canopy_Height_cm, Width_cm, Width_2_cm, Stem_diameter,
