@@ -89,7 +89,7 @@ res(precip_2018)
 # Renaming the variables to shorter column headings
 #coord.chelsa.combo.c <- coord.chelsa.combo.b %>% 
 #  rename(CH_TempMeanSummer = CHELSA_tas_07_2018_V.2.1,
-         CH_PrecipMeanSummer = CHELSA_pr_07_2018_V.2.1) %>% na.omit()
+#         CH_PrecipMeanSummer = CHELSA_pr_07_2018_V.2.1) %>% na.omit()
 
 #unique(coord.chelsa.combo.c$CH_TempMeanSummer)
 
@@ -179,6 +179,21 @@ july_enviro_chelsa <- july_enviro_chelsa %>%
   dplyr::mutate(mean_precip_mm = PrecipMeanJuly/100) # to get mm of rainfall
 str(july_enviro_chelsa)
 
+
+# means for three sites 
+
+sites_july_temp <- july_enviro_chelsa %>% 
+  filter(site %in% c("QHI", "Kluane_plateau", "Common_garden")) %>% 
+  filter(PrecipMeanJuly < 20000) # remove one values that's obscenly high 
+
+mean_july_temp <- sites_july_temp %>% 
+  group_by(site) %>% 
+  summarise(mean_temp = mean(mean_temp_C, na.rm=T), 
+            mean_precip = mean(PrecipMeanJuly, na.rm = T), 
+            sd_temp = sd(mean_temp_C, na.rm = T), 
+            sd_precip = sd(PrecipMeanJuly, na.rm = T))
+
+
 # QHI july mean temp and precip
 QHI_july_temp <- july_enviro_chelsa %>%
   filter(site == "QHI")%>%
@@ -251,7 +266,9 @@ Ordination.model1 <- metaMDS(july_enviro_chelsa_temp_wide, distance='bray',  k=2
 plot1 <- ordiplot(Ordination.model1, choices=c(1,2))
 
 three_site_chelsa <-  july_enviro_chelsa %>% 
-  filter(site %in% c("QHI", "Kluane_plateau", "Common_garden"))
+  filter(site %in% c("QHI", "Kluane_plateau", "Common_garden")) %>% 
+  filter(PrecipMeanJuly < 20000) # remove one values that's obscenly high 
+
 
 (climate_space <- ggplot(three_site_chelsa, 
                          aes(x = mean_temp_C, y = mean_precip_mm, color = site, shape =site)) +
