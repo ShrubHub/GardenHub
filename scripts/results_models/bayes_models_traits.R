@@ -1,6 +1,6 @@
 # BAYESIAN traits results models -----
 # Script by Madi
-# Last update: 22/02/2023
+# Last update: 13/03/2023
 
 # libraries ----
 library(plyr) # load before dplyr aka tidyverse 
@@ -9,6 +9,9 @@ library(brms)
 library(ggplot2)
 library(tidybayes)
 library(gridExtra)
+library(sjPlot)
+library(insight)
+library(report)
 
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
@@ -36,6 +39,10 @@ all_CG_source_traits$population <- plyr::revalue(all_CG_source_traits$population
                                                    "Southern"="Southern Garden",
                                                    "source_south"="Southern Source",
                                                    "source_north"="Northern Source"))
+all_CG_source_traits$Species <- ordered(all_CG_source_traits$Species, 
+                                           levels = c("Salix richardsonii", 
+                                                      "Salix pulchra",
+                                                      "Salix arctica"))
 all_CG_source_traits$population <- ordered(all_CG_source_traits$population, 
                                            levels = c("Northern Source", 
                                                       "Northern Garden", 
@@ -51,6 +58,11 @@ all_CG_source_growth$population <- ordered(all_CG_source_growth$population,
                                                       "Northern Garden",
                                                       "Southern Source", 
                                                       "Southern Garden"))
+
+all_CG_source_growth$Species <- ordered(all_CG_source_growth$Species, 
+                                           levels = c("Salix richardsonii", 
+                                                      "Salix pulchra",
+                                                      "Salix arctica"))
 
 # to run separate models per species filter out species: 
 arctica_all_traits <- all_CG_source_traits %>% 
@@ -131,6 +143,7 @@ pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_tr
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
 
 summary(pulchra_SLA) # There were 1 divergent transitions after warmup
+tab_model(pulchra_SLA)
 plot(pulchra_SLA)
 pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 
