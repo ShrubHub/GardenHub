@@ -455,6 +455,7 @@ write.csv(field_source_pop, 'data/source_pops/field_source_pop.csv')
 field_source_pop_new <- read_csv("data/source_pops/field_source_pop_edit_new.csv")
 
 view(field_source_pop_new)
+
 # making date into right format
 field_source_pop_new$SampleDate <- as.POSIXct(field_source_pop_new$SampleDate, format = "%d/%m/%Y")
 str(field_source_pop_new$SampleDate) # right!
@@ -844,6 +845,13 @@ unique_source_mother <- rbind(unique_source_mother_edit_1_3,
 # Saving all source population heights 2017-2022 data as csv file
 write.csv(unique_source_mother, 'data/source_pops/unique_source_mother.csv')
 view(unique_source_mother)
+
+# change site and vairbale as appropriate
+unique_source_explore <- unique_source_mother %>%
+  filter(Site == "Qikiqtaruk")%>%
+  select(mean_leaf_length, SampleYear)
+
+unique(unique_source_explore$SampleYear)
 
 # 3.7.1. Merge source / mother / common garden data ----
 # load files 
