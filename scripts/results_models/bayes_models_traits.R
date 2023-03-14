@@ -135,6 +135,7 @@ arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_tr
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(arctica_SLA) #There were 3 divergent transitions after warmup
 plot(arctica_SLA)
+tab_model(arctica_SLA)
 pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 
 # S. pulchra ----
@@ -166,7 +167,7 @@ pp_check(arctica_LDMC)
 # S. arctica log transformed 
 arctica_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
                           iter = 3000, warmup = 1000, 
-                          control = list(max_treedepth = 15, adapt_delta = 0.99)) #There were 18 divergent transitions after warmup.
+                          control = list(max_treedepth = 15, adapt_delta = 0.99)) #There were 5 divergent transitions after warmup.
 summary(arctica_LDMC_log)
 plot(arctica_LDMC_log)
 pp_check(arctica_LDMC_log) 
@@ -204,7 +205,8 @@ pp_check(rich_LDMC_log)
 # LA ----
 # S. arctica 
 arctica_LA <- brms::brm(log(LA)  ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
-                          iter = 3000, warmup = 1000)
+                          iter = 3000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(arctica_LA) 
 plot(arctica_LA)
 pp_check(arctica_LA) 
@@ -257,10 +259,27 @@ plot(arctica_LL)
 pp_check(arctica_LL) 
 
 arctica_LL_log <- brms::brm(log(mean_leaf_length) ~ population + (1|Year), data = arctica_all_growth, family = gaussian(), chains = 3,
-                        iter = 5000, warmup = 1000)
+                        iter = 5000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+# 2: lol omg 2: There were 862 transitions after warmup that exceeded the maximum treedepth
+# 5: The largest R-hat is 1.67, indicating chains have not mixed.
 summary(arctica_LL_log)
+tab(arctica_LL_log)
 plot(arctica_LL_log)
 pp_check(arctica_LL_log) 
+
+# oh wait this is because we don't have leaf length for Kluane Plateau -- make common garden only model 
+# removing year as random effect bc only two years worth of data 
+arctica_cg_growth <- arctica_all_growth %>% 
+  filter(population %in% c("Northern", "Southern"))
+
+arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population , data = arctica_cg_growth, family = gaussian(), chains = 3,
+                            iter = 5000, warmup = 1000, 
+                            control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(arctica_LL_CG)
+tab(arctica_LL_CG)
+plot(arctica_LL_CG)
+pp_check(arctica_LL_CG)
 
 # S. pulchra
 pulchra_LL <- brms::brm(mean_leaf_length ~ population + (1|Year), data = pulchra_all_growth, family = gaussian(), chains = 3,
