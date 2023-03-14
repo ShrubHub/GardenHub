@@ -210,6 +210,8 @@ arctica_LA <- brms::brm(log(LA)  ~ population + (1|year), data = arctica_all_tra
 summary(arctica_LA) 
 plot(arctica_LA)
 pp_check(arctica_LA) 
+r <- fixef(arctica_LA, probs = c(0.05, 0.95))
+r_df <- as.data.frame(r)
 
 # S. pulchra
 pulchra_LA <- brms::brm(log(LA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
