@@ -150,8 +150,8 @@ arctica_SLA_results_df <- as.data.frame(arctica_LA_results)
 
 
 m <- arctica_SLA %>%
-  spread_draws(condition_mean[condition]) %>%
-  summarise_draws()
+  spread_draws(b_Intercept, sigma) %>%
+  median_qi()
 
 # S. pulchra ----
 pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
