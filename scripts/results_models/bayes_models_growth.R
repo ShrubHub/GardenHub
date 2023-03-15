@@ -404,6 +404,42 @@ plot(garden_arc_biovol) # fine
 pp_check(garden_arc_biovol,  type = "dens_overlay", nsamples = 100) # fine
 
 
+# 3.1 BIOVOLUME over time ------
+# S. Richardsonii -----
+# model
+garden_rich_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|Year) ,
+                                data = all_CG_growth_ric, family = gaussian(), chains = 3,
+                                iter = 5000, warmup = 1000, 
+                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(garden_rich_biovol_time) # significantly larger biovolume for southern shrubs in garden
+plot(garden_rich_biovol_time) # fine
+pp_check(garden_rich_biovol_time,  type = "dens_overlay", ndraws = 100) # fine
+
+# S. Pulchra -----
+garden_pul_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|Year),
+                               data = all_CG_growth_pul, family = gaussian(), chains = 3,
+                               iter = 5000, warmup = 1000, 
+                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(garden_pul_biovol_time) # significantly larger biovolume for southern shrubs in garden
+plot(garden_pul_biovol_time) # fine
+pp_check(garden_pul_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
+
+# S. Arctica -----
+garden_arc_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|Year),
+                                    data = all_CG_growth_arc, family = gaussian(), chains = 3,
+                               iter = 5000, warmup = 1000, 
+                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(garden_arc_biovol_time) # NOT significant diff. 
+plot(garden_arc_biovol_time) # fine
+pp_check(garden_arc_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
+
+
 # 4. WIDTH ------
 # omitting year random effect because only 2 years
 # S. Richardsonii -----
