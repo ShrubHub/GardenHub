@@ -289,8 +289,13 @@ garden_arc_height_results_df <- garden_arc_height_results_df %>%
 
 garden_heights_out <- rbind(garden_rich_height_results_df, garden_pul_height_results_df, 
                             garden_arc_height_results_df)
+garden_heights_out_back <- garden_heights_out %>%
+  mutate(Estimate = 10^Estimate, 
+         Est.Error = 10^Est.Error, 
+         Q5 = 10^Q5,
+         Q95 = 10^Q95)
 
-garden_heights_out %>% 
+garden_heights_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: max. heights of northern vs southern shrubs in the common garden", 
       col.names = c("Species", "Estimate",
                     "Est. Error",
