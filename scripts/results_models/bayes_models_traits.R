@@ -135,7 +135,11 @@ arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_tr
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(arctica_SLA) #There were 3 divergent transitions after warmup
 plot(arctica_SLA)
+tab_model(arctica_SLA)
 pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
+tab_model(arctica_SLA)
+arctica_SLA_results <- fixef(arctica_SLA, probs = c(0.05, 0.95))
+arctica_SLA_results_df <- as.data.frame(arctica_LA_results)
 
 # S. pulchra ----
 pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
@@ -166,10 +170,12 @@ pp_check(arctica_LDMC)
 # S. arctica log transformed 
 arctica_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
                           iter = 3000, warmup = 1000, 
-                          control = list(max_treedepth = 15, adapt_delta = 0.99)) #There were 18 divergent transitions after warmup.
+                          control = list(max_treedepth = 15, adapt_delta = 0.99)) #There were 5 divergent transitions after warmup.
 summary(arctica_LDMC_log)
 plot(arctica_LDMC_log)
 pp_check(arctica_LDMC_log) 
+arctica_LDMC_log_results <- fixef(arctica_LDMC_log, probs = c(0.05, 0.95))
+arctica_LDMC_log_results_df <- as.data.frame(arctica_LA_results)
 
 # S. pulchra ----
 pulchra_LDMC <- brms::brm(LDMC_g_g ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
@@ -202,21 +208,24 @@ plot(rich_LDMC_log)
 pp_check(rich_LDMC_log) 
 
 # LA ----
-# S. arctica 
+# S. arctica ----
 arctica_LA <- brms::brm(log(LA)  ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
-                          iter = 3000, warmup = 1000)
+                          iter = 3000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(arctica_LA) 
 plot(arctica_LA)
 pp_check(arctica_LA) 
+arctica_LA_results <- fixef(arctica_LA, probs = c(0.05, 0.95))
+arctica_LA_results_df <- as.data.frame(arctica_LA_results)
 
-# S. pulchra
+# S. pulchra ----
 pulchra_LA <- brms::brm(log(LA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
 summary(pulchra_LA) 
 plot(pulchra_LA)
 pp_check(pulchra_LA) 
 
-# S. richardsonii 
+# S. richardsonii ----
 rich_LA <- brms::brm(log(LA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
 summary(rich_LA) 
@@ -224,21 +233,21 @@ plot(rich_LA)
 pp_check(rich_LA)
 
 # LMA ----
-# S. arcitca 
+# S. arcitca ----
 arctica_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = arctica_2022_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
 summary(arctica_LMA) 
 plot(arctica_LMA)
 pp_check(arctica_LMA) 
 
-# S. pulchra
+# S. pulchra ----
 pulchra_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = pulchra_2022_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
 summary(pulchra_LMA) 
 plot(pulchra_LMA)
 pp_check(pulchra_LMA) 
 
-# S. richardsonii 
+# S. richardsonii ----
 rich_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = richardsonii_2022_traits, family = gaussian(), chains = 3,
                      iter = 3000, warmup = 1000)
 summary(rich_LMA) 
@@ -246,29 +255,28 @@ plot(rich_LMA)
 pp_check(rich_LMA)
 
 # LEAF LENGTH ----
+# S. arctica ----
 # no leaf length for S. arctic from source pop
-# S. arctica 
-arctica_LL <- brms::brm(mean_leaf_length ~ population + (1|Year), data = arctica_all_growth, family = gaussian(), chains = 3,
-                       iter = 5000, warmup = 1000)
-# 2 divergent transitions after warmup
-# The largest R-hat is 1.66, indicating chains have not mixed
-summary(arctica_LL)
-plot(arctica_LL)
-pp_check(arctica_LL) 
+# make common garden only model 
+# removing year as random effect bc only two years worth of data 
+arctica_cg_growth <- arctica_all_growth %>% 
+  filter(population %in% c("Northern", "Southern"))
 
-arctica_LL_log <- brms::brm(log(mean_leaf_length) ~ population + (1|Year), data = arctica_all_growth, family = gaussian(), chains = 3,
-                        iter = 5000, warmup = 1000)
-summary(arctica_LL_log)
-plot(arctica_LL_log)
-pp_check(arctica_LL_log) 
+arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population , data = arctica_cg_growth, family = gaussian(), chains = 3,
+                            iter = 5000, warmup = 1000, 
+                            control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(arctica_LL_CG)
+tab(arctica_LL_CG)
+plot(arctica_LL_CG)
+pp_check(arctica_LL_CG)
 
-# S. pulchra
+# S. pulchra ----
 pulchra_LL <- brms::brm(mean_leaf_length ~ population + (1|Year), data = pulchra_all_growth, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000) # There were 1 divergent transitions after warmup
 summary(pulchra_LL)
 plot(pulchra_LL)
 pp_check(pulchra_LL) 
-# S. richardsonii 
+# S. richardsonii ----
 rich_LL <- brms::brm(mean_leaf_length ~ population + (1|Year), data = richardsonii_all_growth, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
 summary(rich_LL)
