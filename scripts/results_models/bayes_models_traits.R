@@ -106,6 +106,29 @@ center_scale <- function(x) {
   scale(x, scale = FALSE)
 }
 
+
+# extract model result function =====
+
+model_summ <- function(x) {
+  sols <- summary(x)$solutions  # pull out relevant info from model summary
+  Gcovs <- summary(x)$Gcovariances
+  Rcovs <- summary(x)$Rcovariances
+  
+  fixed <- data.frame(row.names(sols), sols, row.names = NULL)  # convert to dataframes with the row.names as the first col
+  random <- data.frame(row.names(Gcovs), Gcovs, row.names = NULL)
+  residual <- data.frame(row.names(Rcovs), Rcovs, row.names = NULL)
+  
+  names(fixed)[names(fixed) == "row.names.sols."] <- "variable"  # change the columns names to variable, so they all match
+  names(random)[names(random) == "row.names.Gcovs."] <- "variable"
+  names(residual)[names(residual) == "row.names.Rcovs."] <- "variable"
+  
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  random$effect <- "random"
+  residual$effect <- "residual"
+  
+  modelTerms <- as.data.frame(bind_rows(fixed, random, residual))  # merge it all together
+}
+
 # MODELS ----
 # model structure : 
 # mod <- brms::brm(trait ~ population + (1|Year),
@@ -124,6 +147,11 @@ pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good
 tab_model(arctica_SLA)
 arctica_SLA_results <- fixef(arctica_SLA, probs = c(0.05, 0.95))
 arctica_SLA_results_df <- as.data.frame(arctica_LA_results)
+
+
+m <- arctica_SLA %>%
+  spread_draws(condition_mean[condition]) %>%
+  summarise_draws()
 
 # S. pulchra ----
 pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
