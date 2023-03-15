@@ -11,7 +11,8 @@ library(tidybayes)
 library(gridExtra)
 library(sjPlot)
 library(insight)
-library(report)
+library(knitr) # For kable tables
+library(kableExtra) # For kable tables
 
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
@@ -39,30 +40,13 @@ all_CG_source_traits$population <- plyr::revalue(all_CG_source_traits$population
                                                    "Southern"="Southern Garden",
                                                    "source_south"="Southern Source",
                                                    "source_north"="Northern Source"))
-all_CG_source_traits$Species <- ordered(all_CG_source_traits$Species, 
-                                           levels = c("Salix richardsonii", 
-                                                      "Salix pulchra",
-                                                      "Salix arctica"))
-all_CG_source_traits$population <- ordered(all_CG_source_traits$population, 
-                                           levels = c("Northern Source", 
-                                                      "Northern Garden", 
-                                                      "Southern Source",
-                                                      "Southern Garden"))
+
 all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
                                                  c("Northern"="Northern Garden",
                                                    "Southern"="Southern Garden",
                                                    "source_south"="Southern Source",
                                                    "source_north"="Northern Source"))
-all_CG_source_growth$population <- ordered(all_CG_source_growth$population, 
-                                           levels = c("Northern Source", 
-                                                      "Northern Garden",
-                                                      "Southern Source", 
-                                                      "Southern Garden"))
 
-all_CG_source_growth$Species <- ordered(all_CG_source_growth$Species, 
-                                           levels = c("Salix richardsonii", 
-                                                      "Salix pulchra",
-                                                      "Salix arctica"))
 
 # to run separate models per species filter out species: 
 arctica_all_traits <- all_CG_source_traits %>% 
@@ -284,6 +268,24 @@ plot(rich_LL)
 pp_check(rich_LL) 
 
 # PLOTS ---- 
+all_CG_source_traits$population <- ordered(all_CG_source_traits$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden", 
+                                                      "Southern Source",
+                                                      "Southern Garden"))
+
+all_CG_source_growth$population <- ordered(all_CG_source_growth$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden",
+                                                      "Southern Source", 
+                                                      "Southern Garden"))
+
+all_CG_source_growth$Species <- ordered(all_CG_source_growth$Species, 
+                                        levels = c("Salix richardsonii", 
+                                                   "Salix pulchra",
+                                                   "Salix arctica"))
+
+
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", size=12),
                                  axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 45), 
