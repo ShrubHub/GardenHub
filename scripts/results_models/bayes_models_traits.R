@@ -9,10 +9,6 @@ library(brms)
 library(ggplot2)
 library(tidybayes)
 library(gridExtra)
-library(sjPlot)
-library(insight)
-library(knitr) # For kable tables
-library(kableExtra) # For kable tables
 
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
@@ -47,7 +43,6 @@ all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population
                                                    "source_south"="Southern Source",
                                                    "source_north"="Northern Source"))
 
-
 # to run separate models per species filter out species: 
 arctica_all_traits <- all_CG_source_traits %>% 
   filter(Species == "Salix arctica")
@@ -73,7 +68,6 @@ hist(pulchra_all_traits$SLA_log) # mildly better right skew
 hist(richardsonii_all_traits$SLA)# mild right skew
 richardsonii_all_traits$SLA_log <- log(richardsonii_all_traits$SLA)
 hist(richardsonii_all_traits$SLA_log) # better 
-
 # LDMC
 hist(arctica_all_traits$LDMC_g_g) # very mild right skew
 hist(pulchra_all_traits$LDMC_g_g) # mild right skew
@@ -94,7 +88,6 @@ hist(pulchra_all_traits$leaf_mass_per_area_g_m2) # decent
 hist(richardsonii_all_traits$leaf_mass_per_area_g_m2) # mild bimodal  
 richardsonii_all_traits$leaf_mass_per_area_g_m2_log <- log(richardsonii_all_traits$leaf_mass_per_area_g_m2)
 hist(richardsonii_all_traits$leaf_mass_per_area_g_m2_log) # kind of bimodal  
-
 # leaf length 
 hist(arctica_all_growth$mean_leaf_length) # decent
 hist(pulchra_all_growth$mean_leaf_length) # mild right skew
@@ -106,7 +99,6 @@ center_scale <- function(x) {
   scale(x, scale = FALSE)
 }
 
-
 # extract model result function =====
 
 model_summ <- function(x) {
@@ -114,11 +106,11 @@ model_summ <- function(x) {
   fixed = sum$fixed
   sigma = sum$spec_pars
   random = sum$random$year
-  
+
   fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
   random$effect <- "random"
   sigma$effect <- "residual"
-  
+
   row.names(random)[row.names(random) == "sd(Intercept)"] <- "year"
   
   modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge it all together
@@ -126,25 +118,18 @@ model_summ <- function(x) {
 
 # MODELS ----
 # model structure : 
-# mod <- brms::brm(trait ~ population + (1|Year),
-# data = spp_traits, family = gaussian(), chains = 3,
-# iter = 3000 - 5000, warmup = 1000)
+# mod <- brms::brm(trait ~ population + (1|Year), data = spp_traits, 
+# family = gaussian(), chains = 3, iter = 3000 - 5000, warmup = 1000)
 
 # SLA ----
 # S. arctica ----
 arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
-sum_test <- summary(arctica_SLA) 
+S <- summary(arctica_SLA) 
 plot(arctica_SLA)
-tab_model(arctica_SLA)
 pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
-tab_model(arctica_SLA)
-arctica_SLA_results <- fixef(arctica_SLA, probs = c(0.05, 0.95))
-arctica_SLA_results_df <- as.data.frame(arctica_LA_results)
-
-b <- model_summ(arctica_SLA)
-
+arctica_SLA_results <- model_summ(arctica_SLA)
 
 # S. pulchra ----
 pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
