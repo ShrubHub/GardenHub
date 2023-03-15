@@ -848,8 +848,9 @@ view(unique_source_mother)
 
 # change site and vairbale as appropriate
 unique_source_explore <- unique_source_mother %>%
-  filter(Site == "Qikiqtaruk")%>%
-  select(mean_leaf_length, SampleYear)
+  filter(Site == "Kluane")%>%
+  select(mean_leaf_length, SampleYear)%>%
+  na.omit()
 
 unique(unique_source_explore$SampleYear)
 

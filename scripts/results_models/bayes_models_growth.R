@@ -212,6 +212,29 @@ summary(garden_rich_height) # significantly higher canopy heights for southern p
 plot(garden_rich_height) # fine
 pp_check(garden_rich_height,  type = "dens_overlay", nsamples = 100)  # good
 
+# extraction for model output table
+garden_rich_height_results <- fixef(garden_rich_height, probs = c(0.05, 0.95))
+garden_rich_height_results_df <- as.data.frame(garden_rich_height_results)
+rownames(garden_rich_height_results_df) <- c("Intercept", "Southern Garden")
+garden_rich_height_results_df <- garden_rich_height_results_df %>% 
+  mutate(Species = rep("Salix richardsonii"))
+
+garden_rich_height_results_df <- garden_rich_height_results_df %>% 
+  relocate("Species", .before = "Estimate")
+
+library(knitr) # For kable tables
+library(kableExtra) # For kable tables
+
+garden_rich_height_results_df %>% 
+  kbl(caption="Table. Model output - Salix richardsonii height", 
+      col.names = c("Estimate",
+                    "Est. Error",
+                    "Lower 95% CI",
+                    "Upper 95% CI", "Species")) %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+              
+
+
 # S. Pulchra -----
 garden_pul_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sample_age),
                                 data =max_heights_cg_pul, family = gaussian(), chains = 3, 
@@ -222,6 +245,28 @@ summary(garden_pul_height) # significantly higher canopy heights for southern po
 plot(garden_pul_height) # fine
 pp_check(garden_pul_height, type = "dens_overlay", nsamples = 100)  # good) 
 
+
+# extraction for model output table
+garden_pul_height_results <- fixef(garden_pul_height, probs = c(0.05, 0.95))
+garden_pul_height_results_df <- as.data.frame(garden_pul_height_results)
+rownames(garden_pul_height_results_df) <- c("Intercept", "Southern Garden")
+garden_pul_height_results_df <- garden_pul_height_results_df %>% 
+  mutate(Species = rep("Salix pulchra"))
+
+garden_pul_height_results_df <- garden_pul_height_results_df %>% 
+  relocate("Species", .before = "Estimate")
+
+garden_heights_out <- rbind(garden_rich_height_results_df, garden_pul_height_results_df)
+# rownames(garden_heights_out) <- c("Intercept", "Southern Garden","Intercept", "Southern Garden")
+# duplicate 'row.names' are not allowed
+garden_heights_out %>% 
+  kbl(caption="Table. Model output - Salix richardsonii height", 
+      col.names = c("Species", "Estimate",
+                    "Est. Error",
+                    "Lower 95% CI",
+                    "Upper 95% CI")) %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
 # S. Arctica -----
 garden_arc_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sample_age),
                                 data =max_heights_cg_arc, family = gaussian(), chains = 3, 
@@ -231,6 +276,27 @@ garden_arc_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sampl
 summary(garden_arc_height)# NOT significant difference (again makes sense!)
 plot(garden_arc_height) # fine
 pp_check(garden_arc_height, type = "dens_overlay", nsamples = 100)# good
+
+# extraction for model output table
+garden_arc_height_results <- fixef(garden_arc_height, probs = c(0.05, 0.95))
+garden_arc_height_results_df <- as.data.frame(garden_arc_height_results)
+rownames(garden_arc_height_results_df) <- c("Intercept", "Southern Garden")
+garden_arc_height_results_df <- garden_arc_height_results_df %>% 
+  mutate(Species = rep("Salix arctica"))
+
+garden_arc_height_results_df <- garden_arc_height_results_df %>% 
+  relocate("Species", .before = "Estimate")
+
+garden_heights_out <- rbind(garden_rich_height_results_df, garden_pul_height_results_df, 
+                            garden_arc_height_results_df)
+
+garden_heights_out %>% 
+  kbl(caption="Table.xxx BRMS model outputs: max. heights of northern vs southern shrubs in the common garden", 
+      col.names = c("Species", "Estimate",
+                    "Est. Error",
+                    "Lower 95% CI",
+                    "Upper 95% CI")) %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
 
 # 1.1. HEIGHT OVER TIME MODEL -------
 # Salix rich ------
