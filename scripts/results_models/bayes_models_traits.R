@@ -72,8 +72,15 @@ richardsonii_all_traits$SLA_log <- log(richardsonii_all_traits$SLA)
 hist(richardsonii_all_traits$SLA_log) # better 
 # LDMC
 hist(arctica_all_traits$LDMC_g_g) # very mild right skew
-hist(pulchra_all_traits$LDMC_g_g) # mild right skew
+arctica_all_traits$LDMC_log <- log(arctica_all_traits$LDMC_g_g)
+hist(arctica_all_traits$LDMC_log) # very mild right skew
+hist(pulchra_all_traits$LDMC_g_g) # right skew
+pulchra_all_traits$LDMC_log <- log(pulchra_all_traits$LDMC_g_g)
+hist(pulchra_all_traits$LDMC_log) # better 
 hist(richardsonii_all_traits$LDMC_g_g)# decent
+richardsonii_all_traits$LDMC_log <- log(richardsonii_all_traits$LDMC_g_g)
+hist(richardsonii_all_traits$LDMC_log)# ideal 
+
 # LA - compare with log version 
 hist(arctica_all_traits$LA) #  right skew
 arctica_all_traits$LA_log <- log(arctica_all_traits$LA)
@@ -132,12 +139,11 @@ model_summ <- function(x) {
 arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
-S <- summary(arctica_SLA) 
+summary(arctica_SLA) 
 plot(arctica_SLA)
 pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 arctica_SLA_results <- model_summ(arctica_SLA)
-
-S$nobs
+arctica_SLA_results$Species <- "Salix arctica"
 
 # S. pulchra ----
 pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
@@ -148,6 +154,9 @@ summary(pulchra_SLA) # There were 1 divergent transitions after warmup
 tab_model(pulchra_SLA)
 plot(pulchra_SLA)
 pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
+pulchra_SLA_results <- model_summ(pulchra_SLA)
+pulchra_SLA_results$Species <- "Salix pulchra"
+
 
 # S. richardsonii ----
 rich_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
@@ -156,54 +165,154 @@ rich_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_
 summary(rich_SLA) 
 plot(rich_SLA)
 pp_check(rich_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
+rich_SLA_results <- model_summ(rich_SLA)
+rich_SLA_results$Species <- "Salix richardsonii"
+
+# merging all extracted outputs
+garden_sla_out <- rbind(rich_SLA_results, pulchra_SLA_results, arctica_SLA_results)
+
+# back transforming from log
+garden_SLA_out_back <- garden_sla_out %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                 "u_95_CI_log" = "u-95% CI") %>%
+  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
+  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(Estimate), 
+         Est.Error_trans = 10^(Est.Error)) %>% 
+  select(-CI_range)
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_SLA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
+                                       "Year", "Sigma", 
+                                       " Intercept", " Northern Source", " SouthernSource", " Southern Garden", " Year", 
+                                       " Sigma", 
+                                       "Intercept ", "Northern Source ", "SouthernSource ", "Southern Garden ", "Year ", 
+                                       "Sigma ")
+
+# making sure Rhat keeps the .00 
+garden_SLA_out_back$Rhat <- as.character(formatC(garden_SLA_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_SLA <- garden_SLA_out_back %>% 
+  kbl(caption="Table.xxx BRMS model outputs: Specific leaf area of northern garden, northern source, southern garden, southern source willows. 
+      Model structure per species: (log(SLA) ~ population + (1|year). 
+      Model output back-transformed in the table below.", 
+      col.names = c("Estimate",
+                    "Est. Error",
+                    "Lower 95% CI (log)",
+                    "Upper 95% CI (log)", 
+                    "Rhat", 
+                    "Bulk Effective Sample Size",
+                    "Tail Effective Sample Size", 
+                    "Effect",
+                    "Sample Size",
+                    "Species",  
+                    "Lower 95% CI 
+                    (back transformed)", "Upper 95% CI
+                    (back transformed)", 
+                    "Estimate transformed", 
+                    "Error transformed"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_SLA, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+save_kable(kable_SLA, file = "output/SLA_results.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # LDMC ----
-# S. arctica ----
-arctica_LDMC <- brms::brm(LDMC_g_g ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
-                         iter = 3000, warmup = 1000, 
-                         control = list(max_treedepth = 15, adapt_delta = 0.99)) 
-summary(arctica_LDMC)
-plot(arctica_LDMC)
-pp_check(arctica_LDMC) 
-# S. arctica log transformed 
+# S. arctica ---- 
 arctica_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
                           iter = 3000, warmup = 1000, 
                           control = list(max_treedepth = 15, adapt_delta = 0.99)) #There were 5 divergent transitions after warmup.
 summary(arctica_LDMC_log)
 plot(arctica_LDMC_log)
-pp_check(arctica_LDMC_log) 
-arctica_LDMC_log_results <- fixef(arctica_LDMC_log, probs = c(0.05, 0.95))
-arctica_LDMC_log_results_df <- as.data.frame(arctica_LA_results)
+pp_check(arctica_LDMC_log, type = "dens_overlay", ndraws = 100) 
+arctica_LDMC_results <- model_summ(arctica_LDMC_log)
+arctica_LDMC_results$Species <- "Salix arctica"
 
 # S. pulchra ----
-pulchra_LDMC <- brms::brm(LDMC_g_g ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
-                         iter = 5000, warmup = 1000, 
-                         control = list(max_treedepth = 15, adapt_delta = 0.99)) # 4 divergent transitions after warmup
-summary(pulchra_LDMC) 
-plot(pulchra_LDMC)
-pp_check(pulchra_LDMC) 
-
 pulchra_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
-                          iter = 5000, warmup = 1000, 
-                          control = list(max_treedepth = 15, adapt_delta = 0.99)) # There were 6 divergent transitions after warmup
+                          iter = 3000, warmup = 1000, 
+                          control = list(max_treedepth = 15, adapt_delta = 0.99)) 
 summary(pulchra_LDMC_log) 
 plot(pulchra_LDMC_log)
-pp_check(pulchra_LDMC_log) 
+pp_check(pulchra_LDMC_log, type = "dens_overlay", ndraws = 100) 
+pulchra_LDMC_results <- model_summ(pulchra_LDMC_log)
+pulchra_LDMC_results$Species <- "Salix pulchra"
 
 # S. richardsonii ----
-rich_LDMC <- brms::brm(LDMC_g_g ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-                      iter = 5000, warmup = 1000, 
-                      control = list(max_treedepth = 15, adapt_delta = 0.99)) # 11 divergent transitions after warmup
-summary(rich_LDMC)
-plot(rich_LDMC)
-pp_check(rich_LDMC) 
-
 rich_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-                       iter = 5000, warmup = 1000, 
-                       control = list(max_treedepth = 15, adapt_delta = 0.99)) # 13 divergent transitions after warmup
+                       iter = 3000, warmup = 1000, 
+                       control = list(max_treedepth = 15, adapt_delta = 0.99)) # 2 divergent transitions after warmup
 summary(rich_LDMC_log)
 plot(rich_LDMC_log)
-pp_check(rich_LDMC_log) 
+pp_check(rich_LDMC_log, type = "dens_overlay", ndraws = 100) 
+rich_LDMC_results <- model_summ(rich_LDMC_log)
+rich_LDMC_results$Species <- "Salix richardsonii"
+
+# merging all extracted outputs
+garden_ldmc_out <- rbind(rich_LDMC_results, pulchra_LDMC_results, arctica_LDMC_results)
+
+# back transforming from log
+garden_LDMC_out_back <- garden_ldmc_out %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI") %>%
+  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
+  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(Estimate), 
+         Est.Error_trans = 10^(Est.Error)) %>% 
+  select(-CI_range)
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_LDMC_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
+                                   "Year", "Sigma", 
+                                   " Intercept", " Northern Source", " SouthernSource", " Southern Garden", " Year", 
+                                   " Sigma", 
+                                   "Intercept ", "Northern Source ", "SouthernSource ", "Southern Garden ", "Year ", 
+                                   "Sigma ")
+
+# making sure Rhat keeps the .00 
+garden_LDMC_out_back$Rhat <- as.character(formatC(garden_LDMC_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_LDMC <- garden_LDMC_out_back %>% 
+  kbl(caption="Table.xxx BRMS model outputs: Leaf dry matter content of northern garden, northern source, southern garden, southern source willows. 
+      Model structure per species: (log(SLA) ~ population + (1|year). 
+      Model output back-transformed in the table below.", 
+      col.names = c("Estimate",
+                    "Est. Error",
+                    "Lower 95% CI (log)",
+                    "Upper 95% CI (log)", 
+                    "Rhat", 
+                    "Bulk Effective Sample Size",
+                    "Tail Effective Sample Size", 
+                    "Effect",
+                    "Sample Size",
+                    "Species",  
+                    "Lower 95% CI 
+                    (back transformed)", "Upper 95% CI
+                    (back transformed)", 
+                    "Estimate transformed", 
+                    "Error transformed"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_LDMC, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+save_kable(kable_LDMC, file = "output/LDMC_results.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # LA ----
 # S. arctica ----
@@ -212,25 +321,88 @@ arctica_LA <- brms::brm(log(LA)  ~ population + (1|year), data = arctica_all_tra
                         control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(arctica_LA) 
 plot(arctica_LA)
-pp_check(arctica_LA) 
-arctica_LA_results <- fixef(arctica_LA, probs = c(0.05, 0.95))
-arctica_LA_results_df <- as.data.frame(arctica_LA_results)
+pp_check(arctica_LA, type = "dens_overlay", ndraws = 100) 
+arctica_LA_results <- model_summ(arctica_LA)
+arctica_LA_results$Species <- "Salix arctica"
 
 # S. pulchra ----
 pulchra_LA <- brms::brm(log(LA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
-                        iter = 3000, warmup = 1000)
+                        iter = 3000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(pulchra_LA) 
 plot(pulchra_LA)
-pp_check(pulchra_LA) 
+pp_check(pulchra_LA, type = "dens_overlay", ndraws = 100) 
+pulchra_LA_results <- model_summ(pulchra_LA)
+pulchra_LA_results$Species <- "Salix pulchra"
 
 # S. richardsonii ----
 rich_LA <- brms::brm(log(LA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-                        iter = 3000, warmup = 1000)
+                        iter = 3000, warmup = 1000, 
+                     control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(rich_LA) 
 plot(rich_LA)
-pp_check(rich_LA)
+pp_check(rich_LA, type = "dens_overlay", ndraws = 100)
+rich_LA_results <- model_summ(rich_LA)
+rich_LA_results$Species <- "Salix richardsonii"
+
+# merging all extracted outputs
+garden_LA_out <- rbind(rich_LA_results, pulchra_LA_results, arctica_LA_results)
+
+# back transforming from log
+garden_LA_out_back <- garden_LA_out %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI") %>%
+  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
+  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(Estimate), 
+         Est.Error_trans = 10^(Est.Error)) %>% 
+  select(-CI_range)
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_LA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
+                                    "Year", "Sigma", 
+                                    " Intercept", " Northern Source", " SouthernSource", " Southern Garden", " Year", 
+                                    " Sigma", 
+                                    "Intercept ", "Northern Source ", "SouthernSource ", "Southern Garden ", "Year ", 
+                                    "Sigma ")
+
+# making sure Rhat keeps the .00 
+garden_LA_out_back$Rhat <- as.character(formatC(garden_LA_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+# creating table
+kable_LA <- garden_LA_out_back %>% 
+  kbl(caption="Table.xxx BRMS model outputs: Leaf area  of northern garden, northern source, southern garden, southern source willows. 
+      Model structure per species: (log(SLA) ~ population + (1|year). 
+      Model output back-transformed in the table below.", 
+      col.names = c( "Estimate",
+                    "Est. Error",
+                    "Lower 95% CI (log)",
+                    "Upper 95% CI (log)", 
+                    "Rhat", 
+                    "Bulk Effective Sample Size",
+                    "Tail Effective Sample Size", 
+                    "Effect",
+                    "Sample Size",
+                    "Species",  
+                    "Lower 95% CI 
+                    (back transformed)", "Upper 95% CI
+                    (back transformed)", 
+                    "Estimate transformed", 
+                    "Error transformed"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in italics
+column_spec(kable_LA, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+save_kable(kable_LA, file = "output/LA_results.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # LMA ----
+# not including because inverse of SLA
 # S. arcitca ----
 arctica_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = arctica_2022_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
@@ -258,7 +430,7 @@ pp_check(rich_LMA)
 # make common garden only model 
 # removing year as random effect bc only two years worth of data 
 arctica_cg_growth <- arctica_all_growth %>% 
-  filter(population %in% c("Northern", "Southern"))
+  filter(population %in% c("Northern Garden", "Southern Garden"))
 
 arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population , data = arctica_cg_growth, family = gaussian(), chains = 3,
                             iter = 5000, warmup = 1000, 
@@ -266,20 +438,27 @@ arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population , data = arctica_cg_g
 summary(arctica_LL_CG)
 tab(arctica_LL_CG)
 plot(arctica_LL_CG)
-pp_check(arctica_LL_CG)
+pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
+arctica_LL_results <- model_summ(arctica_LL_CG)
+arctica_LL_results$Species <- "Salix arctica"
 
 # S. pulchra ----
 pulchra_LL <- brms::brm(mean_leaf_length ~ population + (1|Year), data = pulchra_all_growth, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000) # There were 1 divergent transitions after warmup
 summary(pulchra_LL)
 plot(pulchra_LL)
-pp_check(pulchra_LL) 
+pp_check(pulchra_LL, type = "dens_overlay", ndraws = 100) 
+pulchra_LL_results <- model_summ(pulchra_LL)
+pulchra_LL_results$Species <- "Salix pulchra"
+
 # S. richardsonii ----
 rich_LL <- brms::brm(mean_leaf_length ~ population + (1|Year), data = richardsonii_all_growth, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000)
 summary(rich_LL)
 plot(rich_LL)
-pp_check(rich_LL) 
+pp_check(rich_LL, type = "dens_overlay", ndraws = 100) 
+rich_LL_results <- model_summ(rich_LL)
+rich_LL_results$Species <- "Salix richardsonii"
 
 # PLOTS ---- 
 all_CG_source_traits$population <- ordered(all_CG_source_traits$population, 
@@ -287,18 +466,15 @@ all_CG_source_traits$population <- ordered(all_CG_source_traits$population,
                                                       "Northern Garden", 
                                                       "Southern Source",
                                                       "Southern Garden"))
-
 all_CG_source_growth$population <- ordered(all_CG_source_growth$population, 
                                            levels = c("Northern Source", 
                                                       "Northern Garden",
                                                       "Southern Source", 
                                                       "Southern Garden"))
-
 all_CG_source_growth$Species <- ordered(all_CG_source_growth$Species, 
                                         levels = c("Salix richardsonii", 
                                                    "Salix pulchra",
                                                    "Salix arctica"))
-
 
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", size=12),
@@ -368,6 +544,5 @@ panel_sla_bayes <- grid.arrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, nrow 
 
 # LMDC ---- 
 # LA ----
-# LMA -----
 # LEAF LENGTH -----
 
