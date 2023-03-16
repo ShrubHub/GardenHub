@@ -7,14 +7,14 @@
 
 # With random effects (currently named random but you could change that)
 # change the RANDOM in sum$random$RANDOM to whatever your random effect is called e.g. "year"
-# note: you can probably easily modify to include mulitple random effects but haven't tried yet  
-# also haven't tried changing to include nested but should be a simple addition 
+# note: you can probably easily modify to include multiple random effects but haven't tried yet  
+# also haven't tried changing to including nested effects but it should be a simple addition 
 
 model_summ <- function(x) {
   sum = summary(x)
   fixed = sum$fixed
   sigma = sum$spec_pars
-  random = sum$random$random
+  random = sum$random$RANDOM # change name of random effect here 
   obs = sum$nobs
   
   fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
@@ -24,7 +24,7 @@ model_summ <- function(x) {
   random$nobs <- obs
   sigma$nobs <- obs
   
-  row.names(random)[row.names(random) == "sd(Intercept)"] <- "random"
+  row.names(random)[row.names(random) == "sd(Intercept)"] <- "random" # could change rowname here of random effect if you'd like 
   
   modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge together
 }
@@ -86,7 +86,7 @@ kable_name <- mod_results %>%
       digits=2, align = "c") %>%  # specify number of significant digits, align numbers at the centre (can also align "l" left/ "r" right)
   kable_classic(full_width=FALSE, html_font="Cambria") # can change fonts
 
-# optional: making specific column text in cursive
+# optional: making specific column text in italics
 column_spec(kable_name, 2, width = NULL, bold = FALSE, italic = TRUE) # 2 is my example column number 
 
 # saving table: from here https://rdrr.io/cran/kableExtra/man/save_kable.html 
