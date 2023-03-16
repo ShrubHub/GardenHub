@@ -9,6 +9,8 @@ library(brms)
 library(ggplot2)
 library(tidybayes)
 library(gridExtra)
+library(knitr) # For kable tables
+library(kableExtra) # For kable tables
 
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
@@ -106,14 +108,18 @@ model_summ <- function(x) {
   fixed = sum$fixed
   sigma = sum$spec_pars
   random = sum$random$year
+  obs = sum$nobs
 
   fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
   random$effect <- "random"
   sigma$effect <- "residual"
-
+  fixed$nobs <- obs  # add column with number of observations
+  random$nobs <- obs
+  sigma$nobs <- obs
+  
   row.names(random)[row.names(random) == "sd(Intercept)"] <- "year"
   
-  modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge it all together
+  modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge together
 }
 
 # MODELS ----
@@ -130,6 +136,8 @@ S <- summary(arctica_SLA)
 plot(arctica_SLA)
 pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 arctica_SLA_results <- model_summ(arctica_SLA)
+
+S$nobs
 
 # S. pulchra ----
 pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
