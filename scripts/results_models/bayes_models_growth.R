@@ -42,10 +42,14 @@ model_summ_growth <- function(x) {
   fixed = sum$fixed
   sigma = sum$spec_pars
   random = sum$random$Sample_age
+  obs = sum$nobs
   
   fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
   random$effect <- "random"
   sigma$effect <- "residual"
+  fixed$nobs <- obs  # add column with number of observations
+  random$nobs <- obs
+  sigma$nobs <- obs
   
   row.names(random)[row.names(random) == "sd(Intercept)"] <- "Sample_age"
   
@@ -255,10 +259,10 @@ rich_extract <- model_summ_growth(garden_rich_height)
 # extraction for model output table
 rownames(rich_extract) <- c("1. Intercept", "1. Southern Garden", "1. Sample age", "1. Sigma")
 rich_extract_df <- rich_extract %>% 
-  mutate(Species = rep("Salix richardsonii"), 
-         "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>% 
-  relocate("Sample Size", .before = "effect")
+  mutate(Species = rep("Salix richardsonii")) %>% 
+        # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")
+  #relocate("Sample Size", .before = "effect")
               
 # S. Pulchra -----
 garden_pul_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sample_age),
@@ -340,6 +344,13 @@ kable_heights <- garden_heights_out_back %>%
 # making species column in cursive
 column_spec(kable_heights, 2, width = NULL, bold = FALSE, italic = TRUE)
 
+save_kable(kable_heights,file = "output/kable_heights.pdf",
+ bs_theme = "simplex",
+  self_contained = TRUE,
+  extra_dependencies = NULL,
+  latex_header_includes = NULL,
+  keep_tex =TRUE,
+  density = 300)
 
 # 1.1. HEIGHT OVER TIME MODEL -------
 # Salix rich ------
