@@ -15,6 +15,9 @@ library(brms)
 library(tidyverse)
 library(tidybayes)
 library(dplyr)
+library(knitr) # For kable tables
+library(kableExtra) # For kable tables
+
 
 # Loading data ---- 
 all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
@@ -24,6 +27,30 @@ max_heights_cg <- read_csv("data/common_garden_data_2022/max_heights_cg.csv")
 max_biovol_cg <- read_csv("data/common_garden_data_2022/max_biovol_cg.csv")
 max_elong_cg <- read_csv("data/common_garden_data_2022/max_elong_cg.csv")
 max_diam_cg <- read_csv("data/common_garden_data_2022/max_diam_cg.csv")
+
+# Functions -------
+# 1. scale function =====
+# centering with 'scale()'
+center_scale <- function(x) {
+  scale(x, scale = FALSE)
+}
+
+# 2. extract model result function =====
+
+model_summ_growth <- function(x) {
+  sum = summary(x)
+  fixed = sum$fixed
+  sigma = sum$spec_pars
+  random = sum$random$Sample_age
+  
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  random$effect <- "random"
+  sigma$effect <- "residual"
+  
+  row.names(random)[row.names(random) == "sd(Intercept)"] <- "Sample_age"
+  
+  modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge it all together
+}
 
 # Wrangle ------
 # max height  -----
@@ -212,26 +239,22 @@ summary(garden_rich_height) # significantly higher canopy heights for southern p
 plot(garden_rich_height) # fine
 pp_check(garden_rich_height,  type = "dens_overlay", nsamples = 100)  # good
 
-# extraction for model output table
-garden_rich_height_results <- fixef(garden_rich_height, probs = c(0.05, 0.95))
-garden_rich_height_results_df <- as.data.frame(garden_rich_height_results)
-rownames(garden_rich_height_results_df) <- c("Intercept", "Southern Garden")
-garden_rich_height_results_df <- garden_rich_height_results_df %>% 
-  mutate(Species = rep("Salix richardsonii"))
+# extract output with function
+rich_extract <- model_summ_growth(garden_rich_height)
 
-garden_rich_height_results_df <- garden_rich_height_results_df %>% 
+# extraction for model output table
+rownames(rich_extract) <- c("1. Intercept", "1. Southern Garden", "1. Sample age", "1. Sigma")
+rich_extract_df <- rich_extract %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
   relocate("Species", .before = "Estimate")
 
-library(knitr) # For kable tables
-library(kableExtra) # For kable tables
-
-garden_rich_height_results_df %>% 
-  kbl(caption="Table. Model output - Salix richardsonii height", 
-      col.names = c("Estimate",
-                    "Est. Error",
-                    "Lower 95% CI",
-                    "Upper 95% CI", "Species")) %>% 
-  kable_classic(full_width=FALSE, html_font="Cambria")
+#rich_extract %>% 
+ # kbl(caption="Table. Model output ", 
+  #    col.names = c("Estimate",
+  #                  "Est. Error",
+  #                  "Lower 95% CI",
+  #                  "Upper 95% CI", "Species")) %>% 
+ # kable_classic(full_width=FALSE, html_font="Cambria")
               
 
 
@@ -245,27 +268,22 @@ summary(garden_pul_height) # significantly higher canopy heights for southern po
 plot(garden_pul_height) # fine
 pp_check(garden_pul_height, type = "dens_overlay", nsamples = 100)  # good) 
 
+# extract output with function
+pul_extract <- model_summ_growth(garden_pul_height)
 
 # extraction for model output table
-garden_pul_height_results <- fixef(garden_pul_height, probs = c(0.05, 0.95))
-garden_pul_height_results_df <- as.data.frame(garden_pul_height_results)
-rownames(garden_pul_height_results_df) <- c("Intercept", "Southern Garden")
-garden_pul_height_results_df <- garden_pul_height_results_df %>% 
-  mutate(Species = rep("Salix pulchra"))
-
-garden_pul_height_results_df <- garden_pul_height_results_df %>% 
+rownames(pul_extract) <- c("2. Intercept", "2. Southern Garden", "2. Sample age", "2. Sigma")
+pul_extract_df <- pul_extract %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
   relocate("Species", .before = "Estimate")
 
-garden_heights_out <- rbind(garden_rich_height_results_df, garden_pul_height_results_df)
-# rownames(garden_heights_out) <- c("Intercept", "Southern Garden","Intercept", "Southern Garden")
-# duplicate 'row.names' are not allowed
-garden_heights_out %>% 
-  kbl(caption="Table. Model output - Salix richardsonii height", 
-      col.names = c("Species", "Estimate",
-                    "Est. Error",
-                    "Lower 95% CI",
-                    "Upper 95% CI")) %>% 
-  kable_classic(full_width=FALSE, html_font="Cambria")
+#garden_heights_out %>% 
+ # kbl(caption="Table. Model output - Salix richardsonii height", 
+    #  col.names = c("Species", "Estimate",
+   #                 "Est. Error",
+      #              "Lower 95% CI",
+       #             "Upper 95% CI")) %>% 
+#  kable_classic(full_width=FALSE, html_font="Cambria")
 
 # S. Arctica -----
 garden_arc_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sample_age),
@@ -273,34 +291,44 @@ garden_arc_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sampl
                                 iter = 5000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(garden_arc_height)# NOT significant difference (again makes sense!)
+summary(garden_arc_height) # NOT significant difference (again makes sense!)
 plot(garden_arc_height) # fine
 pp_check(garden_arc_height, type = "dens_overlay", nsamples = 100)# good
 
-# extraction for model output table
-garden_arc_height_results <- fixef(garden_arc_height, probs = c(0.05, 0.95))
-garden_arc_height_results_df <- as.data.frame(garden_arc_height_results)
-rownames(garden_arc_height_results_df) <- c("Intercept", "Southern Garden")
-garden_arc_height_results_df <- garden_arc_height_results_df %>% 
-  mutate(Species = rep("Salix arctica"))
+# extract output with function
+arc_extract <- model_summ_growth(garden_arc_height)
 
-garden_arc_height_results_df <- garden_arc_height_results_df %>% 
+# extraction for model output table
+rownames(arc_extract) <- c("3. Intercept", "3. Southern Garden", "3. Sample age", "3. Sigma")
+arc_extract_df <- arc_extract %>% 
+  mutate(Species = rep("Salix arctica")) %>%
   relocate("Species", .before = "Estimate")
 
-garden_heights_out <- rbind(garden_rich_height_results_df, garden_pul_height_results_df, 
-                            garden_arc_height_results_df)
+garden_heights_out <- rbind(rich_extract_df, pul_extract_df, 
+                            arc_extract_df) 
+
 garden_heights_out_back <- garden_heights_out %>%
+  dplyr::rename( "l_95_CI" = "l-95% CI", "u_95_CI" ="u-95% CI") %>%
   mutate(Estimate = 10^Estimate, 
          Est.Error = 10^Est.Error, 
-         Q5 = 10^Q5,
-         Q95 = 10^Q95)
+         l_95_CI = 10^l_95_CI,
+         u_95_CI = 10^u_95_CI)
+         
 
 garden_heights_out_back %>% 
-  kbl(caption="Table.xxx BRMS model outputs: max. heights of northern vs southern shrubs in the common garden", 
+  kbl(caption="Table.xxx BRMS model outputs: max. heights of northern vs southern shrubs in the common garden. 
+      Model structure per species: (log(max_canopy_height_cm) ~ population + (1|Sample_age). 
+      Mode output back-transformed in the table below.", 
       col.names = c("Species", "Estimate",
                     "Est. Error",
                     "Lower 95% CI",
-                    "Upper 95% CI")) %>% 
+                    "Upper 95% CI", "Rhat", 
+                    "Bulk Effective 
+                     Sample Size",
+                    "Tail Effective 
+                     Sample Size", 
+                    "Effect"),
+      digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # 1.1. HEIGHT OVER TIME MODEL -------
@@ -313,6 +341,12 @@ height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population + (1|Year
 summary(height_rich) # significant height growth over time
 plot(height_rich)
 pp_check(height_rich, type = "dens_overlay", nsamples = 100) 
+
+height_rich_time <- brms::brm(log(Canopy_Height_cm) ~ population + (1|Year),
+                         data = all_CG_growth_ric,  family = gaussian(), chains = 3,
+                         iter = 5000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(height_rich_time) # significant height growth over time
 
 # Salix pulchra -------
 height_pul <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year),
