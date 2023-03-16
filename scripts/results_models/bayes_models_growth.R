@@ -241,7 +241,7 @@ all_CG_growth_arc <-all_CG_height_growth_rates %>%
 
 # model
 garden_rich_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sample_age),
-                                data =max_heights_cg_rich, family = gaussian(), chains = 3, 
+                                data = max_heights_cg_rich, family = gaussian(), chains = 3, 
                                 iter = 5000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
@@ -255,8 +255,10 @@ rich_extract <- model_summ_growth(garden_rich_height)
 # extraction for model output table
 rownames(rich_extract) <- c("1. Intercept", "1. Southern Garden", "1. Sample age", "1. Sigma")
 rich_extract_df <- rich_extract %>% 
-  mutate(Species = rep("Salix richardsonii")) %>%
-  relocate("Species", .before = "Estimate")
+  mutate(Species = rep("Salix richardsonii"), 
+         "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>% 
+  relocate("Sample Size", .before = "effect")
 
 #rich_extract %>% 
  # kbl(caption="Table. Model output ", 
@@ -284,8 +286,10 @@ pul_extract <- model_summ_growth(garden_pul_height)
 # extraction for model output table
 rownames(pul_extract) <- c("2. Intercept", "2. Southern Garden", "2. Sample age", "2. Sigma")
 pul_extract_df <- pul_extract %>% 
-  mutate(Species = rep("Salix pulchra")) %>%
-  relocate("Species", .before = "Estimate")
+  mutate(Species = rep("Salix pulchra"), 
+         "Sample Size" = rep(141)) %>%
+  relocate("Species", .before = "Estimate")%>% 
+  relocate("Sample Size", .before = "effect")
 
 #garden_heights_out %>% 
  # kbl(caption="Table. Model output - Salix richardsonii height", 
@@ -297,7 +301,7 @@ pul_extract_df <- pul_extract %>%
 
 # S. Arctica -----
 garden_arc_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sample_age),
-                                data =max_heights_cg_arc, family = gaussian(), chains = 3, 
+                                data = max_heights_cg_arc, family = gaussian(), chains = 3, 
                                 iter = 5000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
@@ -311,25 +315,33 @@ arc_extract <- model_summ_growth(garden_arc_height)
 # extraction for model output table
 rownames(arc_extract) <- c("3. Intercept", "3. Southern Garden", "3. Sample age", "3. Sigma")
 arc_extract_df <- arc_extract %>% 
-  mutate(Species = rep("Salix arctica")) %>%
-  relocate("Species", .before = "Estimate")
+  mutate(Species = rep("Salix arctica"), 
+         "Sample Size" = rep(69)) %>%
+  relocate("Species", .before = "Estimate") %>%
+  relocate("Sample Size", .before = "effect")
 
+# merging all extracted outputs
 garden_heights_out <- rbind(rich_extract_df, pul_extract_df, 
                             arc_extract_df) 
-
+# back transforming form log
 garden_heights_out_back <- garden_heights_out %>%
   dplyr::rename( "l_95_CI" = "l-95% CI", "u_95_CI" ="u-95% CI") %>%
   mutate(Estimate = 10^Estimate, 
          Est.Error = 10^Est.Error, 
          l_95_CI = 10^l_95_CI,
          u_95_CI = 10^u_95_CI)
-         
+
+# adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_heights_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
                             "Sigma", " Intercept", " Southern Garden", " Sample age", 
                             " Sigma", "Intercept ", "Southern Garden ", "Sample age ", 
                             "Sigma ")
 
-garden_heights_out_back %>% 
+# making sure Rhat keeps the .00 
+garden_heights_out_back$Rhat <- as.character(formatC(garden_heights_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_heights <- garden_heights_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: max. heights of northern vs southern shrubs in the common garden. 
       Model structure per species: (log(max_canopy_height_cm) ~ population + (1|Sample_age). 
       Mode output back-transformed in the table below.", 
@@ -340,9 +352,13 @@ garden_heights_out_back %>%
                     "Bulk Effective 
                      Sample Size",
                     "Tail Effective 
-                     Sample Size", 
+                     Sample Size", "Sample Size", 
                     "Effect"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_heights, 2, width = NULL, bold = FALSE, italic = TRUE)
+
 
 # 1.1. HEIGHT OVER TIME MODEL -------
 # Salix rich ------
