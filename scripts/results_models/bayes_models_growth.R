@@ -211,14 +211,24 @@ hist(max_diam_cg_arc$max_stem_diam,  breaks = 30)#  right skew
 all_CG_growth <- all_CG_source_growth %>%
   filter(population %in% c("Northern", "Southern"))
 
+# making a growth rate column
+all_CG_height_growth_rates <- all_CG_growth %>%
+  group_by(SampleID_standard) %>% 
+  arrange(Year) %>%
+  mutate(height_growth_diff = Canopy_Height_cm-lag(Canopy_Height_cm)) %>%
+  mutate(height_growth_diffpercent = (height_growth_diff/Canopy_Height_cm)*100) %>%
+  mutate(biovol_growth_diff = biovolume-lag(biovolume)) %>%
+  mutate(biovol_growth_diffpercent = (biovol_growth_diff/biovolume)*100)
+
+
 # Species specific ------
-all_CG_growth_ric <- all_CG_growth %>%
+all_CG_growth_ric <- all_CG_height_growth_rates %>%
   filter(Species == "Salix richardsonii")
 
-all_CG_growth_pul<-  all_CG_growth%>%
+all_CG_growth_pul<-  all_CG_height_growth_rates %>%
   filter(Species == "Salix pulchra")
 
-all_CG_growth_arc <-all_CG_growth%>%
+all_CG_growth_arc <-all_CG_height_growth_rates %>%
   filter(Species == "Salix arctica")
 
 # MODELLING -------
@@ -314,6 +324,10 @@ garden_heights_out_back <- garden_heights_out %>%
          l_95_CI = 10^l_95_CI,
          u_95_CI = 10^u_95_CI)
          
+rownames(garden_heights_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
+                            "Sigma", " Intercept", " Southern Garden", " Sample age", 
+                            " Sigma", "Intercept ", "Southern Garden ", "Sample age ", 
+                            "Sigma ")
 
 garden_heights_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: max. heights of northern vs southern shrubs in the common garden. 
@@ -327,8 +341,7 @@ garden_heights_out_back %>%
                      Sample Size",
                     "Tail Effective 
                      Sample Size", 
-                    "Effect"),
-      digits=2, align = "c") %>% 
+                    "Effect"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # 1.1. HEIGHT OVER TIME MODEL -------
@@ -342,11 +355,14 @@ summary(height_rich) # significant height growth over time
 plot(height_rich)
 pp_check(height_rich, type = "dens_overlay", nsamples = 100) 
 
-height_rich_time <- brms::brm(log(Canopy_Height_cm) ~ population + (1|Year),
+# height growth rate 
+hist(all_CG_growth_ric$height_growth_diff) # normal 
+height_rich_time <- brms::brm(height_growth_diff ~ population + (1|Year),
                          data = all_CG_growth_ric,  family = gaussian(), chains = 3,
                          iter = 5000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(height_rich_time) # significant height growth over time
+summary(height_rich_time) # faster height growth rate over time
+pp_check(height_rich_time, type = "dens_overlay", nsamples = 100) 
 
 # Salix pulchra -------
 height_pul <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year),
@@ -358,6 +374,15 @@ summary(height_pul) # significant height growth over time
 plot(height_pul)
 pp_check(height_pul, type = "dens_overlay", nsamples = 100) 
 
+# height growth rate 
+hist(all_CG_growth_pul$height_growth_diff) # normal 
+height_pul_time <- brms::brm(height_growth_diff ~ population + (1|Year),
+                              data = all_CG_growth_pul,  family = gaussian(), chains = 3,
+                              iter = 5000, warmup = 1000, 
+                              control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(height_pul_time) # no diff
+pp_check(height_pul_time, type = "dens_overlay", nsamples = 100) 
+
 # Salix arctica -------
 height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year),
                         data = all_CG_growth_arc,  family = gaussian(), chains = 3,
@@ -367,6 +392,15 @@ height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year),
 summary(height_arc) # significant growth over time
 plot(height_arc)
 pp_check(height_arc, type = "dens_overlay", nsamples = 100) 
+
+# height growth rate 
+hist(all_CG_growth_arc$height_growth_diff) # normal 
+height_arc_time <- brms::brm(height_growth_diff ~ population + (1|Year),
+                             data = all_CG_growth_arc,  family = gaussian(), chains = 3,
+                             iter = 5000, warmup = 1000, 
+                             control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(height_arc_time) # no difference
+pp_check(height_arc_time, type = "dens_overlay", nsamples = 100) 
 
 
 # 2. STEM ELONGATION ------
@@ -451,6 +485,15 @@ summary(garden_rich_biovol_time) # significantly larger biovolume for southern s
 plot(garden_rich_biovol_time) # fine
 pp_check(garden_rich_biovol_time,  type = "dens_overlay", ndraws = 100) # fine
 
+# biovol growth rate 
+hist(all_CG_growth_ric$biovol_growth_diff) # normal 
+biovol_rich_time <- brms::brm(biovol_growth_diff ~ population + (1|Year),
+                              data = all_CG_growth_ric,  family = gaussian(), chains = 3,
+                              iter = 5000, warmup = 1000, 
+                              control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(biovol_rich_time) # no diff
+pp_check(biovol_rich_time, type = "dens_overlay", nsamples = 100) 
+
 # S. Pulchra -----
 garden_pul_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|Year),
                                data = all_CG_growth_pul, family = gaussian(), chains = 3,
@@ -461,6 +504,15 @@ garden_pul_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|
 summary(garden_pul_biovol_time) # significantly larger biovolume for southern shrubs in garden
 plot(garden_pul_biovol_time) # fine
 pp_check(garden_pul_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
+
+# biovol growth rate 
+hist(all_CG_growth_pul$biovol_growth_diff) # normal 
+biovol_pul_time <- brms::brm(biovol_growth_diff ~ population + (1|Year),
+                              data = all_CG_growth_pul,  family = gaussian(), chains = 3,
+                              iter = 5000, warmup = 1000, 
+                              control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(biovol_pul_time) # no diff
+pp_check(biovol_pul_time, type = "dens_overlay", nsamples = 100) 
 
 # S. Arctica -----
 garden_arc_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|Year),
@@ -473,6 +525,14 @@ summary(garden_arc_biovol_time) # NOT significant diff.
 plot(garden_arc_biovol_time) # fine
 pp_check(garden_arc_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
 
+# biovol growth rate 
+hist(all_CG_growth_arc$biovol_growth_diff) # normal 
+biovol_arc_time <- brms::brm(biovol_growth_diff ~ population + (1|Year),
+                             data = all_CG_growth_arc,  family = gaussian(), chains = 3,
+                             iter = 5000, warmup = 1000, 
+                             control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(biovol_arc_time) # no diff
+pp_check(biovol_arc_time, type = "dens_overlay", nsamples = 100) 
 
 # 4. WIDTH ------
 # omitting year random effect because only 2 years
