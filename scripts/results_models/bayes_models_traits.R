@@ -182,6 +182,9 @@ garden_SLA_out_back <- garden_sla_out %>%
          Est.Error_trans = 10^(Est.Error)) %>% 
   select(-CI_range)
 
+# save df of results 
+write.csv(garden_SLA_out_back, "output/garden_SLA_out_back.csv")
+
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_SLA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
                                        "Year", "Sigma", 
@@ -281,6 +284,9 @@ rownames(garden_LDMC_out_back) <- c("Intercept", "Northern Source", "SouthernSou
 # making sure Rhat keeps the .00 
 garden_LDMC_out_back$Rhat <- as.character(formatC(garden_LDMC_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
+# save df of results 
+write.csv(garden_LDMC_out_back, "output/garden_LDMC_out_back.csv")
+
 # creating table
 kable_LDMC <- garden_LDMC_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: Leaf dry matter content of northern garden, northern source, southern garden, southern source willows. 
@@ -368,6 +374,9 @@ rownames(garden_LA_out_back) <- c("Intercept", "Northern Source", "SouthernSourc
 
 # making sure Rhat keeps the .00 
 garden_LA_out_back$Rhat <- as.character(formatC(garden_LA_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# save df of results 
+write.csv(garden_LA_out_back, "output/garden_LA_out_back.csv")
 # creating table
 kable_LA <- garden_LA_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: Leaf area  of northern garden, northern source, southern garden, southern source willows. 
