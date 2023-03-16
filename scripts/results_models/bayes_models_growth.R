@@ -291,7 +291,7 @@ garden_arc_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sampl
                                 iter = 5000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(garden_arc_height) # NOT significant difference (again makes sense!)
+S <- summary(garden_arc_height) # NOT significant difference (again makes sense!)
 plot(garden_arc_height) # fine
 pp_check(garden_arc_height, type = "dens_overlay", nsamples = 100)# good
 
@@ -309,6 +309,25 @@ arc_extract_df <- arc_extract %>%
 # merging all extracted outputs
 garden_heights_out <- rbind(rich_extract_df, pul_extract_df, 
                             arc_extract_df) 
+
+arc_extract_df$est_trans <- 10^(arc_extract_df$Estimate)
+arc_extract_df$CI_trans_high <- 10^((arc_extract_df$Estimate) + (arc_extract_df$l_95_CI))
+
+arc_extract_df_trans <- arc_extract_df %>% 
+  dplyr::rename( "l_95_CI" = "l-95% CI", "u_95_CI" ="u-95% CI") %>%
+  mutate(est_trans = 10^(Estimate), 
+         error_trans = 10^(Est.Error)) %>% 
+  mutate(CI_range = (Estimate - l_95_CI)) %>% 
+  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(Estimate + CI_range))
+# compare erica's OG version for just arctica 
+arctica_out_back <- arc_extract_df %>%
+  dplyr::rename( "l_95_CI" = "l-95% CI", "u_95_CI" ="u-95% CI") %>%
+  mutate( l_95_CI = 10^(l_95_CI-Estimate),
+          u_95_CI = 10^(u_95_CI+Estimate)) %>%
+  mutate( Estimate = 10^Estimate, Est.Error = 10^Est.Error)
+# CI's are not the same 
+
 # back transforming form log
 garden_heights_out_back <- garden_heights_out %>%
   dplyr::rename( "l_95_CI" = "l-95% CI", "u_95_CI" ="u-95% CI") %>%
