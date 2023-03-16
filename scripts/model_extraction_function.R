@@ -3,12 +3,15 @@
 # Function to extract model info from brms model and add to dataframe that can then be easily formatted 
 
 # with random effects (currently named random but you could change that)
+# change the RANDOM in sum$random$RANDOM to whatever your random effect is called e.g. "year"
+# note: you can probably easily modify to include mulitple random effects but haven't tried yet  
+# also haven't tried changing to include nested but should be a simple addition 
 
 model_summ <- function(x) {
   sum = summary(x)
   fixed = sum$fixed
   sigma = sum$spec_pars
-  random = sum$random$year
+  random = sum$random$random
   obs = sum$nobs
   
   fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
@@ -41,7 +44,7 @@ model_summ_2 <- function(x) {
 
 # to use
 # example model
-mod <- brms::brm(X~Y+(1|year)...)
+mod <- brms::brm(X~Y+(1|RANDOM)...)
 mod_results <- model_summ(mod) # returns data frame with estimates, errors, CIs, tail ESS, bulk ESS and nobs aka number of observations 
 
 
