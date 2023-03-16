@@ -834,6 +834,17 @@ summary(garden_rich_diam) # significantly larger stem diameters for southern shr
 plot(garden_rich_diam) # fine
 pp_check(garden_rich_diam,  type = "dens_overlay", nsamples = 100) # fine
 
+# extract output with function
+rich_extract_diam <- model_summ_growth(garden_rich_diam)
+
+# extraction for model output table
+rownames(rich_extract_diam) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
+rich_extract_diam_df <- rich_extract_diam %>% 
+  mutate(Species = rep("Salix richardsonii")) %>% 
+  # "Sample Size" = rep(81)) %>% 
+  relocate("Species", .before = "Estimate")%>% 
+  relocate("nobs", .before = "effect")
+
 # S. Pulchra -----
 garden_pul_diam <- brms::brm(log(max_stem_diam) ~ population + (1|Sample_age),
                               data = max_diam_cg_pul, family = gaussian(), chains = 3,
@@ -844,6 +855,18 @@ garden_pul_diam <- brms::brm(log(max_stem_diam) ~ population + (1|Sample_age),
 summary(garden_pul_diam) # significantly larger stem diameters for southern shrubs in garden
 plot(garden_pul_diam) # fine
 pp_check(garden_pul_diam,  type = "dens_overlay", nsamples = 100) # fine
+
+# extract output with function
+pul_extract_diam <- model_summ_growth(garden_pul_diam)
+
+# extraction for model output table
+rownames(pul_extract_diam) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
+pul_extract_diam_df <- pul_extract_diam %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  # "Sample Size" = rep(114)) %>%
+  relocate("Species", .before = "Estimate")%>% 
+  relocate("nobs", .before = "effect")
+
 
 # S. Arctica -----
 garden_arc_diam <- brms::brm(log(max_stem_diam) ~ population + (1|Sample_age),
@@ -856,6 +879,68 @@ summary(garden_arc_diam) # no significant diff.
 plot(garden_arc_diam) # fine
 pp_check(garden_arc_diam,  type = "dens_overlay", nsamples = 100) # fine
 
+# extract output with function
+arc_extract_diam <- model_summ_growth(garden_arc_diam)
+
+# extraction for model output table
+rownames(arc_extract_diam) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
+arc_extract_diam_df <- arc_extract_diam %>% 
+  mutate(Species = rep("Salix arctica")) %>% 
+  # "Sample Size" = rep(53)) %>%
+  relocate("Species", .before = "Estimate") %>%
+  relocate("nobs", .before = "effect")
+
+# merging all extracted outputs
+garden_diam_out <- rbind(rich_extract_diam_df, pul_extract_diam_df, 
+                          arc_extract_diam_df) 
+
+# back transforming from log
+garden_diam_out_back <- garden_diam_out %>%
+  dplyr::rename( "l_95_CI_log" = "l-95% CI", "u_95_CI_log" ="u-95% CI") %>%
+  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
+  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
+  mutate(Estimate = 10^(Estimate), 
+         Est.Error = 10^(Est.Error))
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_diam_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
+                                     "Sigma", " Intercept", " Southern Garden", " Sample age", 
+                                     " Sigma", "Intercept ", "Southern Garden ", "Sample age ", 
+                                     "Sigma ")
+
+# making sure Rhat keeps the .00 
+garden_diam_out_back$Rhat <- as.character(formatC(garden_diam_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_diam <- garden_diam_out_back %>% 
+  kbl(caption="Table.xxx BRMS model outputs: max. stem diameter of northern vs southern shrubs in the common garden. 
+      Model structure per species: (log(max_stem_diameter) ~ population + (1|Sample_age). 
+      Model output back-transformed in the table below.", 
+      col.names = c("Species", "Estimate",
+                    "Est. Error",
+                    "Lower 95% CI (log)",
+                    "Upper 95% CI (log)", "Rhat", 
+                    "Bulk Effective 
+                     Sample Size",
+                    "Tail Effective 
+                     Sample Size", "Sample Size", 
+                    "Effect", "95% CI Range 
+                   (back transformed)", "Lower 95% CI 
+                    (back transformed)", "Upper 95% CI
+                    (back transformed)"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_diam, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+save_kable(kable_diam,file = "output/kable_diam.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # DATA VISUALISATION -----
 theme_shrub <- function(){ theme(legend.position = "right",
