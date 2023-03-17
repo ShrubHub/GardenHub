@@ -432,11 +432,11 @@ summary(height_rich_time) # faster height growth rate over time
 pp_check(height_rich_time, type = "dens_overlay", nsamples = 100) 
 z <- model_summ_RE(height_rich_time_test)
 # extract output with function
-rich_extract_time <- model_summ_time(height_rich_time)
+rich_extract_time <- model_summ_RE(height_rich_time)
 
 
 # extraction for model output table
-rownames(rich_extract_time) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+rownames(rich_extract_time) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age", "sigma")
 rich_extract_time_df <- rich_extract_time %>% 
   mutate(Species = rep("Salix richardsonii")) %>% 
   # "Sample Size" = rep(105)) %>% 
@@ -471,10 +471,10 @@ summary(height_pul_time_2) # no diff
 pp_check(height_pul_time_2, type = "dens_overlay", nsamples = 100) 
 
 # extract output with function
-pul_extract_time <- model_summ_time(height_pul_time)
+pul_extract_time <- model_summ_RE(height_pul_time)
 
 # extraction for model output table
-rownames(pul_extract_time) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+rownames(pul_extract_time) <-  c("Intercept", "Southern Garden", "Sample ID", "Sample age", "sigma")
 pul_extract_time_df <- pul_extract_time %>% 
   mutate(Species = rep("Salix pulchra")) %>% 
   # "Sample Size" = rep(105)) %>% 
@@ -501,10 +501,10 @@ summary(height_arc_time) # faster for southern
 pp_check(height_arc_time, type = "dens_overlay", nsamples = 100) 
 
 # extract output with function
-arc_extract_time <- model_summ_time(height_arc_time)
+arc_extract_time <- model_summ_RE(height_arc_time)
 
 # extraction for model output table
-rownames(arc_extract_time) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+rownames(arc_extract_time) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age", "sigma")
 arc_extract_time_df <- arc_extract_time %>% 
   mutate(Species = rep("Salix arctica")) %>% 
   # "Sample Size" = rep(105)) %>% 
@@ -517,9 +517,9 @@ garden_heights_time <- rbind(rich_extract_time_df,pul_extract_time_df,arc_extrac
 write.csv(garden_heights_time, "output/garden_heights_time.csv")
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(garden_heights_time) <- c("Intercept", "Southern Garden", "Year", 
-                                       "Sigma", " Intercept", " Southern Garden", " Year", 
-                                       " Sigma", "Intercept ", "Southern Garden ", "Year ", 
+rownames(garden_heights_time) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age",
+                                       "Sigma", " Intercept", " Southern Garden", " Sample ID", " Sample age",
+                                       " Sigma", "Intercept ", "Southern Garden ", "Sample ID ", "Sample age ",
                                        "Sigma ")
 
 # making sure Rhat keeps the .00 
@@ -804,10 +804,10 @@ summary(biovol_rich_time) # no diff
 pp_check(biovol_rich_time, type = "dens_overlay", nsamples = 100) 
 
 # extract output with function
-rich_extract_timeb <- model_summ_time(biovol_rich_time)
+rich_extract_timeb <- model_summ_RE(biovol_rich_time)
 
 # extraction for model output table
-rownames(rich_extract_timeb) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+rownames(rich_extract_timeb) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age", "Sigma")
 rich_extract_timeb_df <- rich_extract_timeb %>% 
   mutate(Species = rep("Salix richardsonii")) %>% 
   # "Sample Size" = rep(105)) %>% 
@@ -835,10 +835,10 @@ summary(biovol_pul_time) # no diff
 pp_check(biovol_pul_time, type = "dens_overlay", nsamples = 100) 
 
 # extract output with function
-pul_extract_timeb <- model_summ_time(biovol_pul_time)
+pul_extract_timeb <- model_summ_RE(biovol_pul_time)
 
 # extraction for model output table
-rownames(pul_extract_timeb) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+rownames(pul_extract_timeb) <-  c("Intercept", "Southern Garden", "Sample ID", "Sample age", "Sigma")
 pul_extract_timeb_df <- pul_extract_timeb %>% 
   mutate(Species = rep("Salix pulchra")) %>% 
   # "Sample Size" = rep(105)) %>% 
@@ -866,10 +866,10 @@ summary(biovol_arc_time) # no diff
 pp_check(biovol_arc_time, type = "dens_overlay", nsamples = 100) 
 
 # extract output with function
-arc_extract_timeb <- model_summ_time(biovol_arc_time)
+arc_extract_timeb <- model_summ_RE(biovol_arc_time)
 
 # extraction for model output table
-rownames(arc_extract_timeb) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+rownames(arc_extract_timeb) <-c("Intercept", "Southern Garden", "Sample ID", "Sample age", "Sigma")
 arc_extract_timeb_df <- arc_extract_timeb %>% 
   mutate(Species = rep("Salix arctica")) %>% 
   # "Sample Size" = rep(105)) %>% 
@@ -882,10 +882,11 @@ garden_heights_timeb <- rbind(rich_extract_timeb_df,pul_extract_timeb_df,arc_ext
 write.csv(garden_heights_timeb, "output/garden_heights_timeb.csv")
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(garden_heights_timeb) <- c("Intercept", "Southern Garden", "Year", 
-                                   "Sigma", " Intercept", " Southern Garden", " Year", 
-                                   " Sigma", "Intercept ", "Southern Garden ", "Year ", 
-                                   "Sigma ")
+rownames(garden_heights_timeb) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age",
+                                    "Sigma", " Intercept", " Southern Garden", " Sample ID", " Sample age",
+                                    " Sigma", "Intercept ", "Southern Garden ", "Sample ID ", "Sample age ",
+                                    "Sigma ")
+
 
 # making sure Rhat keeps the .00 
 garden_heights_timeb$Rhat <- as.character(formatC(garden_heights_timeb$Rhat, digits = 2, format = 'f')) #new character variable with format specification
