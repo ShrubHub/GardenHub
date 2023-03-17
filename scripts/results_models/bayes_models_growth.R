@@ -17,7 +17,7 @@ library(tidybayes)
 library(dplyr)
 library(knitr) # For kable tables
 library(kableExtra) # For kable tables
-
+library(gridExtra)
 
 # Loading data ---- 
 all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
@@ -56,8 +56,29 @@ model_summ_growth <- function(x) {
   modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge it all together
 }
 
-# Wrangle ------
-# max height  -----
+# 2. extract model result function =====
+
+model_summ_time <- function(x) {
+  sum = summary(x)
+  fixed = sum$fixed
+  sigma = sum$spec_pars
+  random = sum$random$Year
+  obs = sum$nobs
+  
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  random$effect <- "random"
+  sigma$effect <- "residual"
+  fixed$nobs <- obs  # add column with number of observations
+  random$nobs <- obs
+  sigma$nobs <- obs
+  
+  row.names(random)[row.names(random) == "sd(Intercept)"] <- "Year"
+  
+  modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge it all together
+}
+
+# Data wrangling ------
+# max height  
 max_heights_cg$Species <- as.factor(max_heights_cg$Species)
 max_heights_cg$SampleID_standard <- as.factor(max_heights_cg$SampleID_standard)
 max_heights_cg$population <- as.factor(max_heights_cg$population)
@@ -95,7 +116,7 @@ hist(max_heights_cg_rich$max_canopy_height_cm) # right skew
 hist(max_heights_cg_pul$max_canopy_height_cm) #  right skew
 hist(max_heights_cg_arc$max_canopy_height_cm)#  right skew/normal?
 
-# max width -----
+# max width 
 max_widths_cg$Species <- as.factor(max_widths_cg$Species)
 max_widths_cg$SampleID_standard <- as.factor(max_widths_cg$SampleID_standard)
 max_widths_cg$population <- as.factor(max_widths_cg$population)
@@ -124,7 +145,7 @@ hist(max_widths_cg_rich$max_mean_width_cm) # right skew
 hist(max_widths_cg_pul$max_mean_width_cm) #  right skew
 hist(max_widths_cg_arc$max_mean_width_cm)#  right skew
 
-# max stem elongation -----
+# max stem elongation 
 max_elong_cg$Species <- as.factor(max_elong_cg$Species)
 max_elong_cg$SampleID_standard <- as.factor(max_elong_cg$SampleID_standard)
 max_elong_cg$population <- as.factor(max_elong_cg$population)
@@ -153,7 +174,7 @@ hist(max_elong_cg_rich$max_stem_elong) # right skew
 hist(max_elong_cg_pul$max_stem_elong) #  right skew
 hist(max_elong_cg_arc$max_stem_elong)#  right skew
 
-# max biovolume -----
+# max biovolume 
 max_biovol_cg$Species <- as.factor(max_biovol_cg$Species)
 max_biovol_cg$SampleID_standard <- as.factor(max_biovol_cg$SampleID_standard)
 max_biovol_cg$population <- as.factor(max_biovol_cg$population)
@@ -182,7 +203,7 @@ hist(max_biovol_cg_rich$max_biovol) # right skew
 hist(max_biovol_cg_pul$max_biovol, breaks = 30) #  right skew - so weird
 hist(max_biovol_cg_arc$max_biovol)#  right skew
 
-# max stem diameter -----
+# max stem diameter
 max_diam_cg$Species <- as.factor(max_diam_cg$Species)
 max_diam_cg$SampleID_standard <- as.factor(max_diam_cg$SampleID_standard)
 max_diam_cg$population <- as.factor(max_diam_cg$population)
@@ -211,7 +232,7 @@ hist(max_diam_cg_rich$max_stem_diam) # right skew
 hist(max_diam_cg_pul$max_stem_diam, breaks = 30) #  right skew - so weird
 hist(max_diam_cg_arc$max_stem_diam,  breaks = 30)#  right skew
 
-# Filtering data for height over time model ------
+# Filtering data for height over time model 
 all_CG_growth <- all_CG_source_growth %>%
   filter(population %in% c("Northern", "Southern"))
 
@@ -224,8 +245,7 @@ all_CG_height_growth_rates <- all_CG_growth %>%
   mutate(biovol_growth_diff = biovolume-lag(biovolume)) %>%
   mutate(biovol_growth_diffpercent = (biovol_growth_diff/biovolume)*100)
 
-
-# Species specific ------
+# Species specific 
 all_CG_growth_ric <- all_CG_height_growth_rates %>%
   filter(Species == "Salix richardsonii")
 
@@ -383,6 +403,17 @@ height_rich_time <- brms::brm(height_growth_diff ~ population + (1|Year),
 summary(height_rich_time) # faster height growth rate over time
 pp_check(height_rich_time, type = "dens_overlay", nsamples = 100) 
 
+# extract output with function
+rich_extract_time <- model_summ_time(height_rich_time)
+
+# extraction for model output table
+rownames(rich_extract_time) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+rich_extract_time_df <- rich_extract_time %>% 
+  mutate(Species = rep("Salix richardsonii")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
 # Salix pulchra -------
 height_pul <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year),
                         data = all_CG_growth_pul,  family = gaussian(), chains = 3,
@@ -402,6 +433,25 @@ height_pul_time <- brms::brm(height_growth_diff ~ population + (1|Year),
 summary(height_pul_time) # no diff
 pp_check(height_pul_time, type = "dens_overlay", nsamples = 100) 
 
+height_pul_time_2 <- brms::brm(log(Canopy_Height_cm) ~ Year*population,
+                             data = all_CG_growth_pul,  family = gaussian(), chains = 3,
+                             iter = 5000, warmup = 1000, 
+                             control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(height_pul_time_2) # no diff
+pp_check(height_pul_time_2, type = "dens_overlay", nsamples = 100) 
+
+# extract output with function
+pul_extract_time <- model_summ_time(height_pul_time)
+
+# extraction for model output table
+rownames(pul_extract_time) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+pul_extract_time_df <- pul_extract_time %>% 
+  mutate(Species = rep("Salix pulchra")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
 # Salix arctica -------
 height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year),
                         data = all_CG_growth_arc,  family = gaussian(), chains = 3,
@@ -418,8 +468,49 @@ height_arc_time <- brms::brm(height_growth_diff ~ population + (1|Year),
                              data = all_CG_growth_arc,  family = gaussian(), chains = 3,
                              iter = 5000, warmup = 1000, 
                              control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(height_arc_time) # no difference
+summary(height_arc_time) # faster for southern 
 pp_check(height_arc_time, type = "dens_overlay", nsamples = 100) 
+
+# extract output with function
+arc_extract_time <- model_summ_time(height_arc_time)
+
+# extraction for model output table
+rownames(arc_extract_time) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+arc_extract_time_df <- arc_extract_time %>% 
+  mutate(Species = rep("Salix arctica")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+garden_heights_time <- rbind(rich_extract_time_df,pul_extract_time_df,arc_extract_time_df)
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_heights_time) <- c("Intercept", "Southern Garden", "Year", 
+                                       "Sigma", " Intercept", " Southern Garden", " Year", 
+                                       " Sigma", "Intercept ", "Southern Garden ", "Year ", 
+                                       "Sigma ")
+
+# making sure Rhat keeps the .00 
+garden_heights_time$Rhat <- as.character(formatC(garden_heights_time$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_heights_time <- garden_heights_time %>% 
+  kbl(caption="Table.xxx BRMS model outputs: growth rate (height change per year) northern vs southern shrubs in the common garden. 
+      Model structure per species: (height_difference ~ population + (1|Year).", 
+      col.names = c( "Species","Estimate",
+                     "Est. Error",
+                     "Lower 95% CI ",
+                     "Upper 95% CI ", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Sample Size",
+                     "Effect"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_heights_time, 2, width = NULL, bold = FALSE, italic = TRUE)
+
 
 
 # 2. STEM ELONGATION ------
@@ -674,6 +765,17 @@ biovol_rich_time <- brms::brm(biovol_growth_diff ~ population + (1|Year),
 summary(biovol_rich_time) # no diff
 pp_check(biovol_rich_time, type = "dens_overlay", nsamples = 100) 
 
+# extract output with function
+rich_extract_timeb <- model_summ_time(biovol_rich_time)
+
+# extraction for model output table
+rownames(rich_extract_timeb) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+rich_extract_timeb_df <- rich_extract_timeb %>% 
+  mutate(Species = rep("Salix richardsonii")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
 # S. Pulchra -----
 garden_pul_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|Year),
                                data = all_CG_growth_pul, family = gaussian(), chains = 3,
@@ -694,6 +796,17 @@ biovol_pul_time <- brms::brm(biovol_growth_diff ~ population + (1|Year),
 summary(biovol_pul_time) # no diff
 pp_check(biovol_pul_time, type = "dens_overlay", nsamples = 100) 
 
+# extract output with function
+pul_extract_timeb <- model_summ_time(biovol_pul_time)
+
+# extraction for model output table
+rownames(pul_extract_timeb) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+pul_extract_timeb_df <- pul_extract_timeb %>% 
+  mutate(Species = rep("Salix pulchra")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
 # S. Arctica -----
 garden_arc_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|Year),
                                     data = all_CG_growth_arc, family = gaussian(), chains = 3,
@@ -713,6 +826,47 @@ biovol_arc_time <- brms::brm(biovol_growth_diff ~ population + (1|Year),
                              control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(biovol_arc_time) # no diff
 pp_check(biovol_arc_time, type = "dens_overlay", nsamples = 100) 
+
+# extract output with function
+arc_extract_timeb <- model_summ_time(biovol_arc_time)
+
+# extraction for model output table
+rownames(arc_extract_timeb) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+arc_extract_timeb_df <- arc_extract_timeb %>% 
+  mutate(Species = rep("Salix arctica")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+garden_heights_timeb <- rbind(rich_extract_timeb_df,pul_extract_timeb_df,arc_extract_timeb_df)
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_heights_timeb) <- c("Intercept", "Southern Garden", "Year", 
+                                   "Sigma", " Intercept", " Southern Garden", " Year", 
+                                   " Sigma", "Intercept ", "Southern Garden ", "Year ", 
+                                   "Sigma ")
+
+# making sure Rhat keeps the .00 
+garden_heights_timeb$Rhat <- as.character(formatC(garden_heights_timeb$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_biovol_time <- garden_heights_timeb %>% 
+  kbl(caption="Table.xxx BRMS model outputs: growth rate (biovolume change per year) northern vs southern shrubs in the common garden. 
+      Model structure per species: (biovolume_difference ~ population + (1|Year).", 
+      col.names = c( "Species","Estimate",
+                     "Est. Error",
+                     "Lower 95% CI ",
+                     "Upper 95% CI ", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Sample Size",
+                     "Effect"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_biovol_time, 2, width = NULL, bold = FALSE, italic = TRUE)
+
 
 # 4. WIDTH ------
 # S. Richardsonii -----
@@ -1133,3 +1287,40 @@ colnames(ggpred_height) = c('population', 'fit', 'lwr', 'upr', 'dunno')
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     theme_shrub()) # if i log everything it's exactly the same plot as with conditional effects! 
 
+
+# OVER TIME MODELS ----
+(ric_rate_plot <-ggplot() +
+   geom_point(data = all_CG_growth_ric, aes(x = Year, y = height_growth_diff, colour = population),
+              alpha = 0.5)+ # raw data
+   geom_smooth(data = all_CG_growth_ric, aes(x = Year, y = height_growth_diff, colour = population),
+              alpha = 0.5)+ # raw data
+   ylab("Salix richardsonii growth rate (cm/year) \n") +
+   xlab("\n Year" ) +
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   theme_shrub()) 
+
+(pul_rate_plot <-ggplot() +
+    geom_point(data = all_CG_growth_pul, aes(x = Year, y = height_growth_diff, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_smooth(data = all_CG_growth_pul, aes(x = Year, y = height_growth_diff, colour = population),
+                alpha = 0.5)+ # raw data
+    ylab("Salix pulchra growth rate (cm/year) \n") +
+    xlab("\n Year" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub()) 
+
+(arc_rate_plot <-ggplot() +
+    geom_point(data = all_CG_growth_arc, aes(x = Year, y = height_growth_diff, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_smooth(data = all_CG_growth_arc, aes(x = Year, y = height_growth_diff, colour = population),
+                alpha = 0.5)+ # raw data
+    ylab("Salix arctica growth rate (cm/year) \n") +
+    xlab("\n Year" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub()) 
+
+grid.arrange(ric_rate_plot, pul_rate_plot, arc_rate_plot, 
+             nrow=1)
