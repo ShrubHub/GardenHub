@@ -291,7 +291,7 @@ garden_arc_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sampl
                                 iter = 5000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-S <- summary(garden_arc_height) # NOT significant difference (again makes sense!)
+summary(garden_arc_height) # NOT significant difference (again makes sense!)
 plot(garden_arc_height) # fine
 pp_check(garden_arc_height, type = "dens_overlay", nsamples = 100)# good
 
@@ -310,23 +310,17 @@ arc_extract_df <- arc_extract %>%
 garden_heights_out <- rbind(rich_extract_df, pul_extract_df, 
                             arc_extract_df) 
 
-arc_extract_df_trans <- arc_extract_df %>% 
-  dplyr::rename( "l_95_CI" = "l-95% CI", "u_95_CI" ="u-95% CI") %>%
-  mutate(est_trans = 10^(Estimate), 
-         error_trans = 10^(Est.Error)) %>% 
-  mutate(CI_range = (Estimate - l_95_CI)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range))
-
 
 # back transforming from log
 garden_heights_out_back <- garden_heights_out %>%
-  dplyr::rename( "l_95_CI_log" = "l-95% CI", "u_95_CI_log" ="u-95% CI") %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
   mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
   mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate = 10^(Estimate), 
-         Est.Error = 10^(Est.Error))
+  mutate(Estimate_trans = 10^(Estimate), 
+         Est.Error_trans = 10^(Est.Error)) %>% 
+  select(-CI_range)
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_heights_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
@@ -342,18 +336,20 @@ kable_heights <- garden_heights_out_back %>%
   kbl(caption="Table.xxx BRMS model outputs: max. heights of northern vs southern shrubs in the common garden. 
       Model structure per species: (log(max_canopy_height_cm) ~ population + (1|Sample_age). 
       Model output back-transformed in the table below.", 
-      col.names = c("Species", "Estimate",
+      col.names = c( "Species","Estimate",
                     "Est. Error",
                     "Lower 95% CI (log)",
-                    "Upper 95% CI (log)", "Rhat", 
-                    "Bulk Effective 
-                     Sample Size",
-                    "Tail Effective 
-                     Sample Size", "Sample Size", 
-                    "Effect", "95% CI Range 
-                   (back transformed)", "Lower 95% CI 
+                    "Upper 95% CI (log)", 
+                    "Rhat", 
+                    "Bulk Effective Sample Size",
+                    "Tail Effective Sample Size", 
+                    "Sample Size",
+                    "Effect",
+                    "Lower 95% CI 
                     (back transformed)", "Upper 95% CI
-                    (back transformed)"), digits=2, align = "c") %>% 
+                    (back transformed)", 
+                    "Estimate transformed", 
+                    "Error transformed"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in cursive
@@ -498,12 +494,14 @@ garden_elong_out <- rbind(rich_extract_elong_df, pul_extract_elong_df,
 
 # back transforming from log
 garden_elong_out_back <- garden_elong_out %>%
-  dplyr::rename( "l_95_CI_log" = "l-95% CI", "u_95_CI_log" ="u-95% CI") %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
   mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
   mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate = 10^(Estimate), 
-         Est.Error = 10^(Est.Error))
+  mutate(Estimate_trans = 10^(Estimate), 
+         Est.Error_trans = 10^(Est.Error)) %>% 
+  select(-CI_range)
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_elong_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
@@ -519,18 +517,20 @@ kable_elong <- garden_elong_out_back %>%
   kbl(caption="Table.xxx BRMS model outputs: max. stem elongation of northern vs southern shrubs in the common garden. 
       Model structure per species: (log(max_stem_elongation) ~ population + (1|Sample_age). 
       Mode output back-transformed in the table below.", 
-      col.names = c("Species", "Estimate",
-                    "Est. Error",
-                    "Lower 95% CI (log)",
-                    "Upper 95% CI (log)", "Rhat", 
-                    "Bulk Effective 
-                     Sample Size",
-                    "Tail Effective 
-                     Sample Size", "Sample Size", 
-                    "Effect", "95% CI Range 
-                   (back transformed)", "Lower 95% CI 
+      col.names = c( "Species","Estimate",
+                     "Est. Error",
+                     "Lower 95% CI (log)",
+                     "Upper 95% CI (log)", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Sample Size",
+                     "Effect",
+                     "Lower 95% CI 
                     (back transformed)", "Upper 95% CI
-                    (back transformed)"), digits=2, align = "c") %>% 
+                    (back transformed)", 
+                     "Estimate transformed", 
+                     "Error transformed"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in cursive
@@ -610,12 +610,14 @@ garden_biovol_out <- rbind(rich_biovol_extract_df, pul_extract_biovol_df,
 
 # back transforming from log
 garden_biovol_out_back <- garden_biovol_out %>%
-  dplyr::rename( "l_95_CI_log" = "l-95% CI", "u_95_CI_log" ="u-95% CI") %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
   mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
   mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate = 10^(Estimate), 
-         Est.Error = 10^(Est.Error))
+  mutate(Estimate_trans = 10^(Estimate), 
+         Est.Error_trans = 10^(Est.Error)) %>% 
+  select(-CI_range)
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_biovol_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
@@ -631,18 +633,20 @@ kable_biovol <- garden_biovol_out_back %>%
   kbl(caption="Table.xxx BRMS model outputs: max. biovolume (height x width 1 x width 2) of northern vs southern shrubs in the common garden. 
       Model structure per species: (log(max_biovolume) ~ population + (1|Sample_age). 
       Model output back-transformed in the table below.", 
-      col.names = c("Species", "Estimate",
-                    "Est. Error",
-                    "Lower 95% CI (log)",
-                    "Upper 95% CI (log)", "Rhat", 
-                    "Bulk Effective 
-                     Sample Size",
-                    "Tail Effective 
-                     Sample Size", "Sample Size", 
-                    "Effect", "95% CI Range 
-                   (back transformed)", "Lower 95% CI 
+      col.names = c( "Species","Estimate",
+                     "Est. Error",
+                     "Lower 95% CI (log)",
+                     "Upper 95% CI (log)", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Sample Size",
+                     "Effect",
+                     "Lower 95% CI 
                     (back transformed)", "Upper 95% CI
-                    (back transformed)"), digits=2, align = "c") %>% 
+                    (back transformed)", 
+                     "Estimate transformed", 
+                     "Error transformed"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in cursive
@@ -783,12 +787,14 @@ garden_width_out <- rbind(rich_extract_width_df, rich_extract_width_df,
 
 # back transforming from log
 garden_width_out_back <- garden_width_out %>%
-  dplyr::rename( "l_95_CI_log" = "l-95% CI", "u_95_CI_log" ="u-95% CI") %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
   mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
   mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate = 10^(Estimate), 
-         Est.Error = 10^(Est.Error))
+  mutate(Estimate_trans = 10^(Estimate), 
+         Est.Error_trans = 10^(Est.Error)) %>% 
+  select(-CI_range)
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_width_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
@@ -804,18 +810,20 @@ kable_width <- garden_width_out_back %>%
   kbl(caption="Table.xxx BRMS model outputs: max. width of northern vs southern shrubs in the common garden. 
       Model structure per species: (log(max_width) ~ population + (1|Sample_age). 
       Model output back-transformed in the table below.", 
-      col.names = c("Species", "Estimate",
+      col.names = c("Species","Estimate",
                     "Est. Error",
                     "Lower 95% CI (log)",
-                    "Upper 95% CI (log)", "Rhat", 
-                    "Bulk Effective 
-                     Sample Size",
-                    "Tail Effective 
-                     Sample Size", "Sample Size", 
-                    "Effect", "95% CI Range 
-                   (back transformed)", "Lower 95% CI 
+                    "Upper 95% CI (log)", 
+                    "Rhat", 
+                    "Bulk Effective Sample Size",
+                    "Tail Effective Sample Size", 
+                    "Sample Size",
+                    "Effect",
+                    "Lower 95% CI 
                     (back transformed)", "Upper 95% CI
-                    (back transformed)"), digits=2, align = "c") %>% 
+                    (back transformed)", 
+                    "Estimate transformed", 
+                    "Error transformed"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in cursive
@@ -896,12 +904,14 @@ garden_diam_out <- rbind(rich_extract_diam_df, pul_extract_diam_df,
 
 # back transforming from log
 garden_diam_out_back <- garden_diam_out %>%
-  dplyr::rename( "l_95_CI_log" = "l-95% CI", "u_95_CI_log" ="u-95% CI") %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
   mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
   mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate = 10^(Estimate), 
-         Est.Error = 10^(Est.Error))
+  mutate(Estimate_trans = 10^(Estimate), 
+         Est.Error_trans = 10^(Est.Error)) %>% 
+  select(-CI_range)
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_diam_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
@@ -917,18 +927,20 @@ kable_diam <- garden_diam_out_back %>%
   kbl(caption="Table.xxx BRMS model outputs: max. stem diameter of northern vs southern shrubs in the common garden. 
       Model structure per species: (log(max_stem_diameter) ~ population + (1|Sample_age). 
       Model output back-transformed in the table below.", 
-      col.names = c("Species", "Estimate",
+      col.names = c("Species","Estimate",
                     "Est. Error",
                     "Lower 95% CI (log)",
-                    "Upper 95% CI (log)", "Rhat", 
-                    "Bulk Effective 
-                     Sample Size",
-                    "Tail Effective 
-                     Sample Size", "Sample Size", 
-                    "Effect", "95% CI Range 
-                   (back transformed)", "Lower 95% CI 
+                    "Upper 95% CI (log)", 
+                    "Rhat", 
+                    "Bulk Effective Sample Size",
+                    "Tail Effective Sample Size", 
+                    "Sample Size",
+                    "Effect",
+                    "Lower 95% CI 
                     (back transformed)", "Upper 95% CI
-                    (back transformed)"), digits=2, align = "c") %>% 
+                    (back transformed)", 
+                    "Estimate transformed", 
+                    "Error transformed"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in cursive
