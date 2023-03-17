@@ -342,6 +342,9 @@ garden_heights_out_back <- garden_heights_out %>%
          Est.Error_trans = 10^(Est.Error)) %>% 
   select(-CI_range)
 
+# save df of results 
+write.csv(garden_heights_out_back, "output/garden_heights_out_back.csv")
+
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_heights_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
                             "Sigma", " Intercept", " Southern Garden", " Sample age", 
@@ -484,6 +487,9 @@ arc_extract_time_df <- arc_extract_time %>%
 
 garden_heights_time <- rbind(rich_extract_time_df,pul_extract_time_df,arc_extract_time_df)
 
+# save df of results 
+write.csv(garden_heights_time, "output/garden_heights_time.csv")
+
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_heights_time) <- c("Intercept", "Southern Garden", "Year", 
                                        "Sigma", " Intercept", " Southern Garden", " Year", 
@@ -593,6 +599,9 @@ garden_elong_out_back <- garden_elong_out %>%
   mutate(Estimate_trans = 10^(Estimate), 
          Est.Error_trans = 10^(Est.Error)) %>% 
   select(-CI_range)
+
+# save df of results 
+write.csv(garden_elong_out_back, "output/garden_elong_out_back.csv")
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_elong_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
@@ -709,6 +718,9 @@ garden_biovol_out_back <- garden_biovol_out %>%
   mutate(Estimate_trans = 10^(Estimate), 
          Est.Error_trans = 10^(Est.Error)) %>% 
   select(-CI_range)
+
+# save df of results 
+write.csv(garden_biovol_out_back, "output/garden_biovol_out_back.csv")
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_biovol_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
@@ -840,6 +852,9 @@ arc_extract_timeb_df <- arc_extract_timeb %>%
 
 garden_heights_timeb <- rbind(rich_extract_timeb_df,pul_extract_timeb_df,arc_extract_timeb_df)
 
+# save df of results 
+write.csv(garden_heights_timeb, "output/garden_heights_timeb.csv")
+
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_heights_timeb) <- c("Intercept", "Southern Garden", "Year", 
                                    "Sigma", " Intercept", " Southern Garden", " Year", 
@@ -949,6 +964,9 @@ garden_width_out_back <- garden_width_out %>%
   mutate(Estimate_trans = 10^(Estimate), 
          Est.Error_trans = 10^(Est.Error)) %>% 
   select(-CI_range)
+
+# save df of results 
+write.csv(garden_width_out_back, "output/garden_width_out_back.csv")
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_width_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
@@ -1066,6 +1084,9 @@ garden_diam_out_back <- garden_diam_out %>%
   mutate(Estimate_trans = 10^(Estimate), 
          Est.Error_trans = 10^(Est.Error)) %>% 
   select(-CI_range)
+
+# save df of results 
+write.csv(garden_diam_out_back, "output/garden_diam_out_back.csv")
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_diam_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
@@ -1290,34 +1311,70 @@ colnames(ggpred_height) = c('population', 'fit', 'lwr', 'upr', 'dunno')
 
 # OVER TIME MODELS ----
 (ric_rate_plot <-ggplot() +
-   geom_point(data = all_CG_growth_ric, aes(x = Year, y = height_growth_diff, colour = population),
+   geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = height_growth_diff, colour = population),
               alpha = 0.5)+ # raw data
-   geom_smooth(data = all_CG_growth_ric, aes(x = Year, y = height_growth_diff, colour = population),
+   geom_smooth(data = all_CG_growth_ric, aes(x = Sample_age, y = height_growth_diff, colour = population,  fill = population),
               alpha = 0.5)+ # raw data
    ylab("Salix richardsonii growth rate (cm/year) \n") +
-   xlab("\n Year" ) +
+   xlab("\n Sample age" ) +
    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
    theme_shrub()) 
 
 (pul_rate_plot <-ggplot() +
-    geom_point(data = all_CG_growth_pul, aes(x = Year, y = height_growth_diff, colour = population),
+    geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = height_growth_diff, colour = population),
                alpha = 0.5)+ # raw data
-    geom_smooth(data = all_CG_growth_pul, aes(x = Year, y = height_growth_diff, colour = population),
+    geom_smooth(data = all_CG_growth_pul, aes(x = Sample_age, y = height_growth_diff, colour = population,  fill = population),
                 alpha = 0.5)+ # raw data
     ylab("Salix pulchra growth rate (cm/year) \n") +
-    xlab("\n Year" ) +
+    xlab("\n Sample age" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     theme_shrub()) 
 
 (arc_rate_plot <-ggplot() +
-    geom_point(data = all_CG_growth_arc, aes(x = Year, y = height_growth_diff, colour = population),
+    geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = height_growth_diff, colour = population),
                alpha = 0.5)+ # raw data
-    geom_smooth(data = all_CG_growth_arc, aes(x = Year, y = height_growth_diff, colour = population),
+    geom_smooth(data = all_CG_growth_arc, aes(x = Sample_age, y = height_growth_diff, colour = population, fill = population),
                 alpha = 0.5)+ # raw data
     ylab("Salix arctica growth rate (cm/year) \n") +
-    xlab("\n Year" ) +
+    xlab("\n Sample age" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub()) 
+
+grid.arrange(ric_rate_plot, pul_rate_plot, arc_rate_plot, 
+             nrow=1)
+
+(ric_rate_plot <-ggplot() +
+    geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = log(biovol_growth_diff), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_smooth(data = all_CG_growth_ric, aes(x = Sample_age, y = log(biovol_growth_diff), colour = population,  fill = population),
+                alpha = 0.5)+ # raw data
+    ylab("Salix richardsonii biovolume growth rate (log, cm3/year) \n") +
+    xlab("\n Sample age" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub()) 
+
+(pul_rate_plot <-ggplot() +
+    geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = log(biovol_growth_diff), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_smooth(data = all_CG_growth_pul, aes(x = Sample_age, y = log(biovol_growth_diff), colour = population,  fill = population),
+                alpha = 0.5)+ # raw data
+    ylab("Salix pulchra biovolume growth rate (log, cm3/year) \n") +
+    xlab("\n Sample age" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_shrub()) 
+
+(arc_rate_plot <-ggplot() +
+    geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = log(biovol_growth_diff), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_smooth(data = all_CG_growth_arc, aes(x = Sample_age, y =log(biovol_growth_diff), colour = population, fill = population),
+                alpha = 0.5)+ # raw data
+    ylab("Salix arctica biovolume growth rate (log, cm3/year) \n") +
+    xlab("\n Sample age" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     theme_shrub()) 
