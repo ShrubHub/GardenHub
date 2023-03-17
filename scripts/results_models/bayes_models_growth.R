@@ -56,6 +56,30 @@ model_summ_growth <- function(x) {
   modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge it all together
 }
 
+model_summ_RE <- function(x) {
+  sum = summary(x)
+  fixed = sum$fixed
+  sigma = sum$spec_pars
+  random_age = sum$random$Sample_age
+  random_ID = sum$random$SampleID_standard
+  obs = sum$nobs
+  
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  random_age$effect <- "random"
+  random_ID$effect <- "random"
+  sigma$effect <- "residual"
+  
+  fixed$nobs <- obs  # add column with number of observations
+  random_age$nobs <- obs
+  random_ID$nobs <- obs
+  sigma$nobs <- obs
+  
+  row.names(random_ID)[row.names(random_ID) == "sd(Intercept)...3"] <- "Sample_ID"
+  row.names(random_age)[row.names(random_age) == "sd(Intercept)...4"] <- "Sample_age"
+  
+  modelTerms <- as.data.frame(bind_rows(fixed, random_age, random_ID, sigma))  # merge together
+}
+
 # 2. extract model result function =====
 
 model_summ_time <- function(x) {
@@ -406,9 +430,9 @@ height_rich_time <- brms::brm(height_growth_diff ~ population + (1|SampleID_stan
 
 summary(height_rich_time) # faster height growth rate over time
 pp_check(height_rich_time, type = "dens_overlay", nsamples = 100) 
-
+z <- model_summ_RE(height_rich_time_test)
 # extract output with function
-rich_extract_time <- model_summ_time(height_rich_time)
+rich_extract_time <- model_summ_time(height_rich_time) # MADI testing FUNCTION 
 
 # extraction for model output table
 rownames(rich_extract_time) <- c("Intercept", "Southern Garden", "Year", "Sigma")
