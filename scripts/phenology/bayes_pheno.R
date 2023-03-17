@@ -52,22 +52,40 @@ all_phenocam_arctica <- all_phenocam_data_salix %>%
 # SOURCE POP ONLY species specific datasets -----
 all_phenocam_rich_source <- all_phenocam_rich %>%
   filter(population %in% c("Northern Source", "Southern Source"))
+all_phenocam_rich_source$population <- as.character(all_phenocam_rich_source$population)
+all_phenocam_rich_source$population <- as.factor(all_phenocam_rich_source$population)
+unique(all_phenocam_rich_source$population)
 
 all_phenocam_pul_source <- all_phenocam_pulchra %>%
   filter(population %in% c("Northern Source", "Southern Source"))
+all_phenocam_pul_source$population <- as.character(all_phenocam_pul_source$population)
+all_phenocam_pul_source$population <- as.factor(all_phenocam_pul_source$population)
+unique(all_phenocam_pul_source$population)
 
 all_phenocam_arc_source <- all_phenocam_arctica %>%
   filter(population %in% c("Northern Source", "Southern Source"))
+all_phenocam_arc_source$population <- as.character(all_phenocam_arc_source$population)
+all_phenocam_arc_source$population <- as.factor(all_phenocam_arc_source$population)
+unique(all_phenocam_arc_source$population)
 
 # CG only species specific data -----
 all_phenocam_rich_garden <- all_phenocam_rich %>% 
   filter(population %in% c("Northern Garden", "Southern Garden"))
+all_phenocam_rich_garden$population <- as.character(all_phenocam_rich_garden$population)
+all_phenocam_rich_garden$population <- as.factor(all_phenocam_rich_garden$population)
+unique(all_phenocam_rich_garden$population)
 
 all_phenocam_pul_garden <- all_phenocam_pulchra %>% 
   filter(population %in% c("Northern Garden", "Southern Garden"))
+all_phenocam_pul_garden$population <- as.character(all_phenocam_pul_garden$population)
+all_phenocam_pul_garden$population <- as.factor(all_phenocam_pul_garden$population)
+unique(all_phenocam_pul_garden$population)
 
 all_phenocam_arc_garden <- all_phenocam_arctica %>% 
   filter(population %in% c("Northern Garden", "Southern Garden"))
+all_phenocam_arc_garden$population <- as.character(all_phenocam_arc_garden$population)
+all_phenocam_arc_garden$population <- as.factor(all_phenocam_arc_garden$population)
+unique(all_phenocam_arc_garden$population)
 
 # Sp specific growing season data
 all_growing_season_rich <- all_growing_season %>%
@@ -94,6 +112,27 @@ center_scale <- function(x) {
   scale(x, scale = FALSE)
 }
 
+# 2. extract model result function =====
+
+model_summ_pheno <- function(x) {
+  sum = summary(x)
+  fixed = sum$fixed
+  sigma = sum$spec_pars
+  random = sum$random$Year
+  obs = sum$nobs
+  
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  random$effect <- "random"
+  sigma$effect <- "residual"
+  fixed$nobs <- obs  # add column with number of observations
+  random$nobs <- obs
+  sigma$nobs <- obs
+  
+  row.names(random)[row.names(random) == "sd(Intercept)"] <- "Year"
+  
+  modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge it all together
+}
+
 # MODELLING ------
 # 1. LEAF EMERGENCE (only source pops) -------
 
@@ -103,10 +142,21 @@ source_rich_emerg <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
                                iter = 3000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-
 summary(source_rich_emerg) # not significant diff. 
 plot(source_rich_emerg)
 pp_check(source_rich_emerg , type = "dens_overlay", nsamples = 100) # fine??
+
+# extract output with function
+source_rich_emerg_extract <- model_summ_pheno(source_rich_emerg)
+
+# extraction for model output table
+rownames(source_rich_emerg_extract) <- c("Intercept", "Southern Source", "Year", "Sigma")
+
+source_rich_emerg_extract_df <- source_rich_emerg_extract %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  #"Sample Size" = rep(69)) %>%
+  relocate("Species", .before = "Estimate") %>%
+  relocate("nobs", .before = "effect")
 
 # Salix pulchra -------
 source_pul_emerg <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
@@ -117,6 +167,49 @@ source_pul_emerg <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
 summary(source_pul_emerg) # not significant
 plot(source_pul_emerg)
 pp_check(source_pul_emerg, type = "dens_overlay", nsamples = 100) # not too happy with that....
+
+# extract output with function
+source_pul_emerg_extract <- model_summ_pheno(source_pul_emerg)
+
+# extraction for model output table
+rownames(source_pul_emerg_extract) <- c("Intercept", "Southern Source", "Year", "Sigma")
+
+source_pul_emerg_extract_df <- source_pul_emerg_extract %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  #"Sample Size" = rep(69)) %>%
+  relocate("Species", .before = "Estimate") %>%
+  relocate("nobs", .before = "effect")
+
+# merging all extracted outputs
+source_emerg <- rbind(source_rich_emerg_extract_df, source_pul_emerg_extract_df) 
+                        
+# save df of results 
+write.csv(source_emerg, "output/source_emerg.csv")
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(source_emerg) <- c("Intercept", "Southern Source", "Year", 
+                                       "Sigma", " Intercept", " Southern Source", " Year", "Sigma ")
+
+# making sure Rhat keeps the .00 
+source_emerg$Rhat <- as.character(formatC(source_emerg$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_source_emerg <- source_emerg %>% 
+  kbl(caption="Table.xxx BRMS model outputs: first leaf emergence day of year of shrubs in northern (QHI) vs southern (Kluane) source populations. 
+      Model structure per species: First_bud_burst_DOY ~ population + (1|Year). Missing Salix arctica", 
+      col.names = c( "Species","Estimate",
+                     "Est. Error",
+                     "Lower 95% CI (log)",
+                     "Upper 95% CI (log)", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Sample Size",
+                     "Effect"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_source_emerg, 2, width = NULL, bold = FALSE, italic = TRUE)
 
 # Salix arctica -------
 # MISSING KLUANE PLATEAU DATA so cannot run 

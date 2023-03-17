@@ -239,7 +239,7 @@ all_CG_growth <- all_CG_source_growth %>%
 # making a growth rate column
 all_CG_height_growth_rates <- all_CG_growth %>%
   group_by(SampleID_standard) %>% 
-  arrange(Year) %>%
+  arrange(Sample_age) %>%
   mutate(height_growth_diff = Canopy_Height_cm-lag(Canopy_Height_cm)) %>%
   mutate(height_growth_diffpercent = (height_growth_diff/Canopy_Height_cm)*100) %>%
   mutate(biovol_growth_diff = biovolume-lag(biovolume)) %>%
@@ -399,10 +399,11 @@ pp_check(height_rich, type = "dens_overlay", nsamples = 100)
 
 # height growth rate 
 hist(all_CG_growth_ric$height_growth_diff) # normal 
-height_rich_time <- brms::brm(height_growth_diff ~ population + (1|Year),
+height_rich_time <- brms::brm(height_growth_diff ~ population + (1|SampleID_standard) + (1|Sample_age),
                          data = all_CG_growth_ric,  family = gaussian(), chains = 3,
                          iter = 5000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
+
 summary(height_rich_time) # faster height growth rate over time
 pp_check(height_rich_time, type = "dens_overlay", nsamples = 100) 
 
@@ -429,7 +430,7 @@ pp_check(height_pul, type = "dens_overlay", nsamples = 100)
 
 # height growth rate 
 hist(all_CG_growth_pul$height_growth_diff) # normal 
-height_pul_time <- brms::brm(height_growth_diff ~ population + (1|Year),
+height_pul_time <- brms::brm(height_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
                               data = all_CG_growth_pul,  family = gaussian(), chains = 3,
                               iter = 5000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -467,7 +468,7 @@ pp_check(height_arc, type = "dens_overlay", nsamples = 100)
 
 # height growth rate 
 hist(all_CG_growth_arc$height_growth_diff) # normal 
-height_arc_time <- brms::brm(height_growth_diff ~ population + (1|Year),
+height_arc_time <- brms::brm(height_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
                              data = all_CG_growth_arc,  family = gaussian(), chains = 3,
                              iter = 5000, warmup = 1000, 
                              control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -770,7 +771,7 @@ pp_check(garden_rich_biovol_time,  type = "dens_overlay", ndraws = 100) # fine
 
 # biovol growth rate 
 hist(all_CG_growth_ric$biovol_growth_diff) # normal 
-biovol_rich_time <- brms::brm(biovol_growth_diff ~ population + (1|Year),
+biovol_rich_time <- brms::brm(biovol_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
                               data = all_CG_growth_ric,  family = gaussian(), chains = 3,
                               iter = 5000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -801,7 +802,7 @@ pp_check(garden_pul_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
 
 # biovol growth rate 
 hist(all_CG_growth_pul$biovol_growth_diff) # normal 
-biovol_pul_time <- brms::brm(biovol_growth_diff ~ population + (1|Year),
+biovol_pul_time <- brms::brm(biovol_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
                               data = all_CG_growth_pul,  family = gaussian(), chains = 3,
                               iter = 5000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -832,7 +833,7 @@ pp_check(garden_arc_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
 
 # biovol growth rate 
 hist(all_CG_growth_arc$biovol_growth_diff) # normal 
-biovol_arc_time <- brms::brm(biovol_growth_diff ~ population + (1|Year),
+biovol_arc_time <- brms::brm(biovol_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
                              data = all_CG_growth_arc,  family = gaussian(), chains = 3,
                              iter = 5000, warmup = 1000, 
                              control = list(max_treedepth = 15, adapt_delta = 0.99))
