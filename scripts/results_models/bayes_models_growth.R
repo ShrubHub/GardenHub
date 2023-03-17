@@ -432,7 +432,8 @@ summary(height_rich_time) # faster height growth rate over time
 pp_check(height_rich_time, type = "dens_overlay", nsamples = 100) 
 z <- model_summ_RE(height_rich_time_test)
 # extract output with function
-rich_extract_time <- model_summ_time(height_rich_time) # MADI testing FUNCTION 
+rich_extract_time <- model_summ_time(height_rich_time)
+
 
 # extraction for model output table
 rownames(rich_extract_time) <- c("Intercept", "Southern Garden", "Year", "Sigma")
