@@ -1,6 +1,6 @@
 # BAYESIAN phenology script ----
 # BY Erica and Madi 
-# Last update: 01/03/2023
+# Last update: 17/03/2023
 
 # Libraries----
 library(plyr)
@@ -113,7 +113,7 @@ center_scale <- function(x) {
 }
 
 # 2. extract model result function =====
-
+# with random effects:
 model_summ_pheno <- function(x) {
   sum = summary(x)
   fixed = sum$fixed
@@ -132,7 +132,20 @@ model_summ_pheno <- function(x) {
   
   modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge it all together
 }
-
+#without random effects 
+model_summ_pheno_no_rf <- function(x) {
+  sum = summary(x)
+  fixed = sum$fixed
+  sigma = sum$spec_pars
+  obs = sum$nobs
+  
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  sigma$effect <- "residual"
+  fixed$nobs <- obs  # add column with number of observations
+  sigma$nobs <- obs
+  
+  modelTerms <- as.data.frame(bind_rows(fixed, sigma))  # merge it all together
+}
 # MODELLING ------
 # 1. LEAF EMERGENCE (only source pops) -------
 
@@ -263,10 +276,11 @@ garden_rich_emerg <- brms::brm(First_bud_burst_DOY_center ~ population,
                                        iter = 3000, warmup = 1000, 
                                       control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-
 summary(garden_rich_emerg) # no significant difference
 plot(garden_rich_emerg)
-pp_check(garden_rich_emerg,type = "dens_overlay", nsamples = 100) # looks ok
+pp_check(garden_rich_emerg, type = "dens_overlay", ndraws = 100) # looks not great... but limited data
+garden_rich_emerg_results <- model_summ_pheno_no_rf(garden_rich_emerg)
+garden_rich_emerg_results$species <- "Salix richardsonii"
 
 # Salix pulchra -----
 all_phenocam_pul_garden$First_bud_burst_DOY_center <- center_scale(all_phenocam_pul_garden$First_bud_burst_DOY) 
@@ -278,7 +292,9 @@ garden_pul_emerg <- brms::brm(First_bud_burst_DOY ~ population,
 
 summary(garden_pul_emerg) # yes significant. (southern emergence later?)
 plot(garden_pul_emerg)
-pp_check(garden_pul_emerg,type = "dens_overlay", nsamples = 100) # looks ok
+pp_check(garden_pul_emerg,type = "dens_overlay", ndraws = 100) # looks ok
+garden_pul_emerg_results <- model_summ_pheno_no_rf(garden_pul_emerg)
+garden_pul_emerg_results$species <- "Salix pulchra"
 
 # Salix arctica -----
 all_phenocam_arc_garden$First_bud_burst_DOY_center <- center_scale(all_phenocam_arc_garden$First_bud_burst_DOY) 
@@ -290,7 +306,23 @@ garden_arc_emerg <- brms::brm(First_bud_burst_DOY_center ~ population,
 
 summary(garden_arc_emerg) # YEs significant 
 plot(garden_arc_emerg)
-pp_check(garden_arc_emerg,type = "dens_overlay", nsamples = 100) # looks ok
+pp_check(garden_arc_emerg,type = "dens_overlay", ndraws = 100) # looks ok
+garden_arc_emerg_results <- model_summ_pheno_no_rf(garden_arc_emerg)
+garden_arc_emerg_results$species <- "Salix arctica"
+
+# merging all extracted outputs
+garden_emerg_out <- rbind(garden_rich_emerg_results, garden_pul_emerg_results, garden_arc_emerg_results)
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_emerg_out) <- c("Intercept", "Southern Garden", "Sigma", 
+                                    " Intercept", " Southern Garden"," Sigma", 
+                                    "Intercept ","Southern Garden ","Sigma ")
+
+# making sure Rhat keeps the .00 
+garden_emerg_out$Rhat <- as.character(formatC(garden_emerg_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# save df of results 
+write.csv(garden_emerg_out, "output/phenology/garden_leaf_emergence_out.csv")
 
 
 # 2. LEAF YELLOWING (only source pops) -----

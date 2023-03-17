@@ -495,7 +495,7 @@ rownames(garden_LL_out_back) <- c("Intercept", "Northern Source", "SouthernSourc
 garden_LL_out_back$Rhat <- as.character(formatC(garden_LL_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
 # save df of results 
-write.csv(garden_LL_out_back, "output/garden_LL_out_back.csv")
+write.csv(garden_LL_out_back, "output/traits/garden_LL_out_back.csv")
 
 # creating table
 kable_LL <- garden_LL_out_back %>% 
@@ -522,7 +522,7 @@ kable_LL <- garden_LL_out_back %>%
 # making species column in italics
 column_spec(kable_LL, 2, width = NULL, bold = FALSE, italic = TRUE)
 
-save_kable(kable_LL, file = "output/LA_results.pdf",
+save_kable(kable_LL, file = "output/traits/LL_results.pdf",
            bs_theme = "simplex",
            self_contained = TRUE,
            extra_dependencies = NULL,
