@@ -323,7 +323,30 @@ garden_emerg_out$Rhat <- as.character(formatC(garden_emerg_out$Rhat, digits = 2,
 
 # save df of results 
 write.csv(garden_emerg_out, "output/phenology/garden_leaf_emergence_out.csv")
+# creating table
+kable_emerg_garden <- garden_emerg_out %>% 
+  kbl(caption="Table.xxx BRMS model outputs: Day of year (DOY) of northern garden vs southern garden willows. 
+      Model structure per species: DOY leaf emergence ~ population. Data scaled to center on 0.", 
+      col.names = c( "Estimate",
+                     "Est. Error",
+                     "Lower 95% CI (log)",
+                     "Upper 95% CI (log)", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Effect",
+                     "Sample Size",
+                     "Species"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
 
+column_spec(kable_emerg_garden, 2, width = NULL, bold = FALSE, italic = TRUE)
+save_kable(kable_emerg_garden, file = "output/phenology/emerg_garden_results.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # 2. LEAF YELLOWING (only source pops) -----
 # Salix richardsonii -------
