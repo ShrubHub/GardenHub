@@ -1,12 +1,14 @@
 # BAYESIAN phenology script ----
 # BY Erica and Madi 
-# Last update: 17/03/2023
+# Last update: 20/03/2023
 
 # Libraries----
 library(plyr)
 library(tidyverse)
 library(brms)
 library(tidybayes)
+library(knitr) # For kable tables
+library(kableExtra) # For kable tables
 
 # Load data ----
 all_phenocam_data_salix <- read_csv("data/phenology/all_phenocam_update.csv")
