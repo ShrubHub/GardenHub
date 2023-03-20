@@ -1310,9 +1310,9 @@ panel_heights_age
    xlab("\nSample age"))
 
 
-panel_biovol_age <- ggarrange(rich_biovol_plot_new, pul_biovol_plot_new, arc_biovol_plot_new, 
+(panel_biovol_age <- ggarrange(rich_biovol_plot_new, pul_biovol_plot_new, arc_biovol_plot_new, 
                                common.legend = TRUE, legend="bottom",
-                               nrow = 1)
+                               nrow = 1))
 panel_biovol_age
 
 # GROWTH RATE PLOTS------
@@ -1327,7 +1327,7 @@ panel_biovol_age
    scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    theme_shrub() +
-   ylab("Salix richardsonii height growth rate (cm/year)\n") +
+   ylab("Height growth rate (cm/year)\n") +
    xlab("\nSample age"))
 
 # Salix pul -----
@@ -1340,7 +1340,7 @@ panel_biovol_age
    scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    theme_shrub() +
-   ylab("Salix pulchra height growth rate (cm/year)\n") +
+   ylab("Height growth rate (cm/year)\n") +
    xlab("\nSample age"))
 
 # Salix arctica -----
@@ -1356,9 +1356,11 @@ panel_biovol_age
    ylab("Salix arctica height growth rate (cm/year)\n") +
    xlab("\nSample age"))
 
-(panel_growth_rate_height <- ggarrange(pul_rate_plot_new, pul_rate_plot_new, arc_rate_plot_new, 
+(panel_growth_rate_height <- ggarrange(rich_rate_plot_new, pul_rate_plot_new, arc_rate_plot_new, 
                               common.legend = TRUE, legend="bottom",
                               nrow = 1))
+
+
 # Biovolume ------
 # Salix rich -----
 (rich_rate_biovol_plot_new <- all_CG_growth_ric %>%
