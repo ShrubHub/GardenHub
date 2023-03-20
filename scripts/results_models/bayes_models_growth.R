@@ -1287,42 +1287,43 @@ panel_heights_age
    scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    theme_shrub() +
-   ylab("Biovolume (log cm3)\n") +
+   ylab("Salix richardsonii biovolume (log cm3)\n") +
    xlab("\nSample age"))
 
 # Salix pulchra ------
 
-(pul_heights_plot_new <- all_CG_growth_pul %>%
+(pul_biovol_plot_new <- all_CG_growth_pul %>%
    group_by(population) %>%
-   add_predicted_draws(height_pul, allow_new_levels = TRUE) %>%
-   ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
+   add_predicted_draws(garden_pul_biovol_time, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = Sample_age, y = log(biovolume), color = ordered(population), fill = ordered(population))) +
    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
    geom_point(data = all_CG_growth_pul) +
    scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    theme_shrub() +
-   ylab("Pulchra canopy height (log cm)\n") +
+   ylab("Salix pulchra biovolume (log cm3)\n") +
    xlab("\nSample age"))
 
 
 # Salix arctica------
-(arc_heights_plot_new <- all_CG_growth_arc %>%
+(arc_biovol_plot_new <- all_CG_growth_arc %>%
    group_by(population) %>%
-   add_predicted_draws(height_arc,  allow_new_levels = TRUE) %>%
-   ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
+   add_predicted_draws(garden_arc_biovol_time,  allow_new_levels = TRUE) %>%
+   ggplot(aes(x = Sample_age, y = log(biovolume), color = ordered(population), fill = ordered(population))) +
    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
    geom_point(data = all_CG_growth_arc) +
    scale_colour_viridis_d(name = "Garden population", begin = 0.1, end = 0.85) +
    scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    theme_shrub() +
-   ylab("Arctica canopy height (log cm)\n") +
+   ylab("Salix arctica biovolume (log cm)\n") +
    xlab("\nSample age"))
 
 
-panel_heights_age <- ggarrange(rich_heights_plot_new, pul_heights_plot_new, arc_heights_plot_new, 
+panel_biovol_age <- ggarrange(rich_biovol_plot_new, pul_biovol_plot_new, arc_biovol_plot_new, 
                                common.legend = TRUE, legend="bottom",
                                nrow = 1)
-panel_heights_age
+panel_biovol_age
+
 # STEM ELONG richardsonii ----
 rich_elong <- (conditional_effects(garden_rich_elong)) # extracting conditional effects from bayesian model
 rich_elong_data <- rich_elong[[1]] # making the extracted model outputs into a dataset (for plotting)
