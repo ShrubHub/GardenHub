@@ -436,7 +436,6 @@ z <- model_summ_RE(height_rich_time_test)
 # extract output with function
 rich_extract_time <- model_summ_RE(height_rich_time)
 
-
 # extraction for model output table
 rownames(rich_extract_time) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age", "sigma")
 rich_extract_time_df <- rich_extract_time %>% 
@@ -463,14 +462,6 @@ height_pul_time <- brms::brm(height_growth_diff ~ population  + (1|SampleID_stan
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(height_pul_time) # no diff
 pp_check(height_pul_time, type = "dens_overlay", nsamples = 100) 
-
-height_pul_time_2 <- brms::brm(log(Canopy_Height_cm) ~ Year*population,
-                             data = all_CG_growth_pul,  family = gaussian(), chains = 3,
-                             iter = 5000, warmup = 1000, 
-                             control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-summary(height_pul_time_2) # no diff
-pp_check(height_pul_time_2, type = "dens_overlay", nsamples = 100) 
 
 # extract output with function
 pul_extract_time <- model_summ_RE(height_pul_time)
@@ -1323,6 +1314,95 @@ panel_biovol_age <- ggarrange(rich_biovol_plot_new, pul_biovol_plot_new, arc_bio
                                common.legend = TRUE, legend="bottom",
                                nrow = 1)
 panel_biovol_age
+
+# GROWTH RATE PLOTS------
+# Height -----
+# Salix rich -----
+(rich_rate_plot_new <- all_CG_growth_ric %>%
+   group_by(population) %>%
+   add_predicted_draws(height_rich_time, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = Sample_age, y = height_growth_diff, color = ordered(population), fill = ordered(population))) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = all_CG_growth_ric) +
+   scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   theme_shrub() +
+   ylab("Salix richardsonii height growth rate (cm/year)\n") +
+   xlab("\nSample age"))
+
+# Salix pul -----
+(pul_rate_plot_new <- all_CG_growth_pul %>%
+   group_by(population) %>%
+   add_predicted_draws(height_pul_time, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = Sample_age, y = height_growth_diff, color = ordered(population), fill = ordered(population))) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = all_CG_growth_ric) +
+   scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   theme_shrub() +
+   ylab("Salix pulchra height growth rate (cm/year)\n") +
+   xlab("\nSample age"))
+
+# Salix arctica -----
+(arc_rate_plot_new <- all_CG_growth_pul %>%
+   group_by(population) %>%
+   add_predicted_draws(height_arc_time, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = Sample_age, y = height_growth_diff, color = ordered(population), fill = ordered(population))) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = all_CG_growth_ric) +
+   scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   theme_shrub() +
+   ylab("Salix arctica height growth rate (cm/year)\n") +
+   xlab("\nSample age"))
+
+(panel_growth_rate_height <- ggarrange(pul_rate_plot_new, pul_rate_plot_new, arc_rate_plot_new, 
+                              common.legend = TRUE, legend="bottom",
+                              nrow = 1))
+# Biovolume ------
+# Salix rich -----
+(rich_rate_biovol_plot_new <- all_CG_growth_ric %>%
+   group_by(population) %>%
+   add_predicted_draws(biovol_rich_time, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = Sample_age, y = biovol_growth_diff, color = ordered(population), fill = ordered(population))) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = all_CG_growth_ric) +
+   scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   theme_shrub() +
+   ylab("Salix richardsonii biovolume growth rate (cm/year)\n") +
+   xlab("\nSample age"))
+
+# Salix pul -----
+(pul_rate_biovol_plot_new <- all_CG_growth_pul %>%
+   group_by(population) %>%
+   add_predicted_draws(biovol_pul_time, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = Sample_age, y = biovol_growth_diff, color = ordered(population), fill = ordered(population))) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = all_CG_growth_ric) +
+   scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   theme_shrub() +
+   ylab("Salix pulchra biovolume growth rate (cm/year)\n") +
+   xlab("\nSample age"))
+
+# Salix arctica -----
+(arc_rate_biovol_plot_new <- all_CG_growth_pul %>%
+   group_by(population) %>%
+   add_predicted_draws(biovol_arc_time, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = Sample_age, y = biovol_growth_diff, color = ordered(population), fill = ordered(population))) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = all_CG_growth_ric) +
+   scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   theme_shrub() +
+   ylab("Salix arctica biovolume growth rate (cm/year)\n") +
+   xlab("\nSample age"))
+
+(panel_growth_rate_biovol <- ggarrange(rich_rate_biovol_plot_new, pul_rate_biovol_plot_new, arc_rate_biovol_plot_new, 
+                                      common.legend = TRUE, legend="bottom",
+                                      nrow = 1))
+
 
 # STEM ELONG richardsonii ----
 rich_elong <- (conditional_effects(garden_rich_elong)) # extracting conditional effects from bayesian model
