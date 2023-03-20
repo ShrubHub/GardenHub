@@ -18,6 +18,7 @@ library(dplyr)
 library(knitr) # For kable tables
 library(kableExtra) # For kable tables
 library(gridExtra)
+library(ggpubr)
 
 # Loading data ---- 
 all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
@@ -396,11 +397,12 @@ kable_heights <- garden_heights_out_back %>%
                     (back transformed)", "Upper 95% CI
                     (back transformed)", 
                     "Estimate transformed", 
-                    "Error transformed"), digits=2, align = "c") %>% 
+                    "Error transformed"), digits=2, align = "l") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in cursive
 column_spec(kable_heights, 2, width = NULL, bold = FALSE, italic = TRUE)
+row_spec(kable_heights, 1:12, align = "c") 
 
 save_kable(kable_heights,file = "output/kable_heights.pdf",
  bs_theme = "simplex",
@@ -1223,18 +1225,18 @@ arc_height_data <- arc_heights[[1]] # making the extracted model outputs into a
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     theme_shrub())
 
-library(gridExtra)
 panel_heights_bayes <- grid.arrange(ric_height_plot, pul_height_plot, arc_height_plot, nrow = 1)
 
 # HEIGHT OVER TIME PLOTS-----
+# Salix rich -----
 (rich_heights_plot_new <- all_CG_growth_ric %>%
    group_by(population) %>%
-   add_predicted_draws(height_rich) %>%
+   add_predicted_draws(height_rich, allow_new_levels = TRUE) %>%
    ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
    geom_point(data = all_CG_growth_ric) +
-   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    theme_shrub() +
    ylab("Richardsonii canopy height (log cm)\n") +
    xlab("\nSample age"))
@@ -1243,12 +1245,12 @@ panel_heights_bayes <- grid.arrange(ric_height_plot, pul_height_plot, arc_height
 
 (pul_heights_plot_new <- all_CG_growth_pul %>%
    group_by(population) %>%
-   add_predicted_draws(height_pul) %>%
+   add_predicted_draws(height_pul, allow_new_levels = TRUE) %>%
    ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
    geom_point(data = all_CG_growth_pul) +
-   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    theme_shrub() +
    ylab("Pulchra canopy height (log cm)\n") +
    xlab("\nSample age"))
@@ -1257,16 +1259,70 @@ panel_heights_bayes <- grid.arrange(ric_height_plot, pul_height_plot, arc_height
 # Salix arctica------
 (arc_heights_plot_new <- all_CG_growth_arc %>%
    group_by(population) %>%
-   add_predicted_draws(height_arc) %>%
+   add_predicted_draws(height_arc,  allow_new_levels = TRUE) %>%
    ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
    geom_point(data = all_CG_growth_arc) +
-   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-   scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+   scale_colour_viridis_d(name = "Garden population", begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    theme_shrub() +
    ylab("Arctica canopy height (log cm)\n") +
    xlab("\nSample age"))
 
+library(ggpubr)
+
+panel_heights_age <- ggarrange(rich_heights_plot_new, pul_heights_plot_new, arc_heights_plot_new, 
+                                  common.legend = TRUE, legend="bottom",
+                                  nrow = 1)
+panel_heights_age
+
+# BIOVOLUME OVER TIME PLOTS-----
+# Salix rich -----
+(rich_biovol_plot_new <- all_CG_growth_ric %>%
+   group_by(population) %>%
+   add_predicted_draws(garden_rich_biovol_time, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = Sample_age, y = log(biovolume), color = ordered(population), fill = ordered(population))) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = all_CG_growth_ric) +
+   scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   theme_shrub() +
+   ylab("Biovolume (log cm3)\n") +
+   xlab("\nSample age"))
+
+# Salix pulchra ------
+
+(pul_heights_plot_new <- all_CG_growth_pul %>%
+   group_by(population) %>%
+   add_predicted_draws(height_pul, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = all_CG_growth_pul) +
+   scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   theme_shrub() +
+   ylab("Pulchra canopy height (log cm)\n") +
+   xlab("\nSample age"))
+
+
+# Salix arctica------
+(arc_heights_plot_new <- all_CG_growth_arc %>%
+   group_by(population) %>%
+   add_predicted_draws(height_arc,  allow_new_levels = TRUE) %>%
+   ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = all_CG_growth_arc) +
+   scale_colour_viridis_d(name = "Garden population", begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   theme_shrub() +
+   ylab("Arctica canopy height (log cm)\n") +
+   xlab("\nSample age"))
+
+
+panel_heights_age <- ggarrange(rich_heights_plot_new, pul_heights_plot_new, arc_heights_plot_new, 
+                               common.legend = TRUE, legend="bottom",
+                               nrow = 1)
+panel_heights_age
 # STEM ELONG richardsonii ----
 rich_elong <- (conditional_effects(garden_rich_elong)) # extracting conditional effects from bayesian model
 rich_elong_data <- rich_elong[[1]] # making the extracted model outputs into a dataset (for plotting)
