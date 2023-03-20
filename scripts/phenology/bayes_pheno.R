@@ -436,6 +436,7 @@ plot(garden_rich_yellow)
 pp_check(garden_rich_yellow, type = "dens_overlay", nsamples = 100) # looks good
 
 garden_rich_yellow_extract <- model_summ_pheno_no_rf(garden_rich_yellow)
+garden_rich_yellow_extract$Species <- "Salix richardsonii"
 
 # Salix pulchra -------
 all_phenocam_pul_garden$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_pul_garden$First_leaf_yellow_DOY) 
@@ -450,6 +451,7 @@ plot(garden_pul_yellow)
 pp_check(garden_pul_yellow, type = "dens_overlay", ndraws = 100) # looks decent
 
 garden_pul_yellow_extract <- model_summ_pheno_no_rf(garden_pul_yellow)
+garden_pul_yellow_extract$Species <- "Salix pulchra"
 
 # Salix arctica -------
 all_phenocam_arc_garden$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_arc_garden$First_leaf_yellow_DOY) 
@@ -464,7 +466,7 @@ plot(garden_arc_yellow)
 pp_check(garden_arc_yellow, type = "dens_overlay", ndraws = 100) # looks good
 
 garden_arc_yellow_extract <- model_summ_pheno_no_rf(garden_arc_yellow)
-
+garden_arc_yellow_extract$Species <- "Salix arctica"
 
 # merging all extracted outputs
 garden_yellow_out <- rbind(garden_rich_yellow_extract, garden_pul_yellow_extract, garden_arc_yellow_extract)
@@ -480,8 +482,29 @@ garden_yellow_out$Rhat <- as.character(formatC(garden_yellow_out$Rhat, digits = 
 # save df of results 
 write.csv(garden_yellow_out, "output/phenology/garden_leaf_yellow_out.csv")
 
-
-
+# creating table
+kable_yellow_garden <- garden_yellow_out %>% 
+  kbl(caption="Table.xxx BRMS model outputs: Day of year (DOY) of first leaf yellowing northern garden vs southern garden willows. 
+      Model structure per species: DOY leaf emergence ~ population. Data scaled to center on 0.", 
+      col.names = c( "Estimate",
+                     "Est. Error",
+                     "Lower 95% CI (log)",
+                     "Upper 95% CI (log)", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Effect",
+                     "Sample Size",
+                     "Species"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+column_spec(kable_yellow_garden, 2, width = NULL, bold = FALSE, italic = TRUE)
+save_kable(kable_yellow_garden, file = "output/phenology/yellow_garden_results.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # 3. GROWING SEASON LENGTH -----
 # Salix richardsonii ------
