@@ -1,12 +1,14 @@
 # BAYESIAN phenology script ----
 # BY Erica and Madi 
-# Last update: 17/03/2023
+# Last update: 20/03/2023
 
 # Libraries----
 library(plyr)
 library(tidyverse)
 library(brms)
 library(tidybayes)
+library(knitr) # For kable tables
+library(kableExtra) # For kable tables
 
 # Load data ----
 all_phenocam_data_salix <- read_csv("data/phenology/all_phenocam_update.csv")
@@ -20,11 +22,11 @@ all_phenocam_data_salix$population <- plyr::revalue(all_phenocam_data_salix$popu
                                                       "Southern_source"="Southern Source",
                                                       "Northern_source"="Northern Source"))
 
-all_phenocam_data_salix$population <- ordered(all_phenocam_data_salix$population, 
-                                              levels = c("Northern Source", 
-                                                         "Northern Garden", 
-                                                         "Southern Source",
-                                                         "Southern Garden"))
+#all_phenocam_data_salix$population <- ordered(all_phenocam_data_salix$population, 
+#                                              levels = c("Northern Source", 
+#                                                         "Northern Garden", 
+#                                                         "Southern Source",
+#                                                         "Southern Garden"))
 
 all_phenocam_data_salix$Year <- as.factor(all_phenocam_data_salix$Year)
 
@@ -34,11 +36,11 @@ all_growing_season$population <- plyr::revalue(all_growing_season$population,
                                                  "KP"="Southern Source",
                                                  "QHI"="Northern Source"))
 
-all_growing_season$population <- ordered(all_growing_season$population, 
-                                         levels = c("Northern Source", 
-                                                    "Northern Garden", 
-                                                    "Southern Source",
-                                                    "Southern Garden"))
+#all_growing_season$population <- ordered(all_growing_season$population, 
+#                                         levels = c("Northern Source", 
+#                                                    "Northern Garden", 
+#                                                  "Southern Source",
+#                                                    "Southern Garden"))
 # SPECIES SPECIFIC datasets: CG + Sources -----
 all_phenocam_rich <- all_phenocam_data_salix %>%
   filter(Species == "Salix richardsonii")
@@ -350,24 +352,32 @@ save_kable(kable_emerg_garden, file = "output/phenology/emerg_garden_results.pdf
 
 # 2. LEAF YELLOWING (only source pops) -----
 # Salix richardsonii -------
-source_rich_yellow <- brms::brm(First_leaf_yellow_DOY ~ population + (1|Year),
+all_phenocam_rich_source$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_rich_source$First_leaf_yellow_DOY) 
+
+source_rich_yellow <- brms::brm(First_leaf_yellow_DOY_center ~ population + (1|Year),
                                 data = all_phenocam_rich_source, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
 summary(source_rich_yellow) # no significant diff
 plot(source_rich_yellow)
-pp_check(source_rich_yellow, type = "dens_overlay", nsamples = 100) # looks ok
+pp_check(source_rich_yellow, type = "dens_overlay", ndraws = 100) # looks ok
+
+source_rich_yellow_extract <- model_summ_pheno(source_rich_yellow)
 
 # Salix pulchra -------
-source_pul_yellow <- brms::brm(First_leaf_yellow_DOY ~ population + (1|Year),
+all_phenocam_pul_source$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_pul_source$First_leaf_yellow_DOY) 
+
+source_pul_yellow <- brms::brm(First_leaf_yellow_DOY_center ~ population + (1|Year),
                                 data = all_phenocam_pul_source, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
 summary(source_pul_yellow) # no significant diff
 plot(source_pul_yellow)
-pp_check(source_pul_yellow, type = "dens_overlay", nsamples = 100) # looks ok
+pp_check(source_pul_yellow, type = "dens_overlay", ndraws = 100) # looks ok
+
+source_pul_yellow_extract <- model_summ_pheno(source_pul_yellow)
 
 # Salix arctica -------
 # Missing KP data so cannot run
@@ -380,10 +390,11 @@ garden_rich_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ populatio
                                         data = all_phenocam_rich, family = gaussian(), chains = 3,
                                         iter = 3000, warmup = 1000,
                                         control = list(max_treedepth = 15, adapt_delta = 0.99))
-
 summary(garden_rich_yellow_compare)
 plot(garden_rich_yellow_compare)
-pp_check(garden_rich_yellow_compare, type = "dens_overlay", nsamples = 100) # looks good
+pp_check(garden_rich_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
+
+garden_rich_yellow_compare_extract <- model_summ_pheno(garden_rich_yellow_compare)
 
 # Salix pulchra ------
 all_phenocam_pulchra$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_pulchra$First_leaf_yellow_DOY) 
@@ -395,7 +406,9 @@ garden_pul_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ population
 
 summary(garden_pul_yellow_compare)
 plot(garden_pul_yellow_compare)
-pp_check(garden_pul_yellow_compare, type = "dens_overlay", nsamples = 100) # looks good
+pp_check(garden_pul_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
+
+garden_pul_yellow_compare_extract <- model_summ_pheno(garden_pul_yellow_compare)
 
 # Salix arctica ------
 all_phenocam_arctica$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_arctica$First_leaf_yellow_DOY) 
@@ -407,7 +420,9 @@ garden_arc_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ population
 
 summary(garden_arc_yellow_compare)
 plot(garden_arc_yellow_compare)
-pp_check(garden_arc_yellow_compare, type = "dens_overlay", nsamples = 100) # looks good
+pp_check(garden_arc_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
+
+garden_arc_yellow_compare_extract <- model_summ_pheno(garden_arc_yellow_compare)
 
 # 2.2.  LEAF YELLOWING (only CG) -----
 # Salix richardsonii -------
@@ -422,6 +437,9 @@ summary(garden_rich_yellow) # significant (later for southern shrubs?)
 plot(garden_rich_yellow) 
 pp_check(garden_rich_yellow, type = "dens_overlay", nsamples = 100) # looks good
 
+garden_rich_yellow_extract <- model_summ_pheno_no_rf(garden_rich_yellow)
+garden_rich_yellow_extract$Species <- "Salix richardsonii"
+
 # Salix pulchra -------
 all_phenocam_pul_garden$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_pul_garden$First_leaf_yellow_DOY) 
 
@@ -432,7 +450,10 @@ garden_pul_yellow <- brms::brm(First_leaf_yellow_DOY_center ~ population,
 
 summary(garden_pul_yellow) # significant (later for southern shrubs?)
 plot(garden_pul_yellow)
-pp_check(garden_rich_yellow, type = "dens_overlay", nsamples = 100) # looks good
+pp_check(garden_pul_yellow, type = "dens_overlay", ndraws = 100) # looks decent
+
+garden_pul_yellow_extract <- model_summ_pheno_no_rf(garden_pul_yellow)
+garden_pul_yellow_extract$Species <- "Salix pulchra"
 
 # Salix arctica -------
 all_phenocam_arc_garden$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_arc_garden$First_leaf_yellow_DOY) 
@@ -444,8 +465,48 @@ garden_arc_yellow <- brms::brm(First_leaf_yellow_DOY_center ~ population,
 
 summary(garden_arc_yellow) # significant 
 plot(garden_arc_yellow)
-pp_check(garden_arc_yellow, type = "dens_overlay", nsamples = 100) # looks good
+pp_check(garden_arc_yellow, type = "dens_overlay", ndraws = 100) # looks good
 
+garden_arc_yellow_extract <- model_summ_pheno_no_rf(garden_arc_yellow)
+garden_arc_yellow_extract$Species <- "Salix arctica"
+
+# merging all extracted outputs
+garden_yellow_out <- rbind(garden_rich_yellow_extract, garden_pul_yellow_extract, garden_arc_yellow_extract)
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_yellow_out) <- c("Intercept", "Southern Garden", "Sigma", 
+                                " Intercept", " Southern Garden"," Sigma", 
+                                "Intercept ","Southern Garden ","Sigma ")
+
+# making sure Rhat keeps the .00 
+garden_yellow_out$Rhat <- as.character(formatC(garden_yellow_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# save df of results 
+write.csv(garden_yellow_out, "output/phenology/garden_leaf_yellow_out.csv")
+
+# creating table
+kable_yellow_garden <- garden_yellow_out %>% 
+  kbl(caption="Table.xxx BRMS model outputs: Day of year (DOY) of first leaf yellowing northern garden vs southern garden willows. 
+      Model structure per species: DOY leaf emergence ~ population. Data scaled to center on 0.", 
+      col.names = c( "Estimate",
+                     "Est. Error",
+                     "Lower 95% CI (log)",
+                     "Upper 95% CI (log)", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Effect",
+                     "Sample Size",
+                     "Species"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+column_spec(kable_yellow_garden, 2, width = NULL, bold = FALSE, italic = TRUE)
+save_kable(kable_yellow_garden, file = "output/phenology/yellow_garden_results.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # 3. GROWING SEASON LENGTH -----
 # Salix richardsonii ------
