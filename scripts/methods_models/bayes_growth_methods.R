@@ -3,8 +3,15 @@
 # Last update: 21/02/2023
 
 # 1. Loading libraries ----
+
 library(brms)
 library(tidyverse)
+library(tidybayes)
+library(dplyr)
+library(knitr) # For kable tables
+library(kableExtra) # For kable tables
+library(gridExtra)
+library(ggpubr)
 
 # 2. Loading data ---- 
 unique_source_mother <- read_csv("data/source_pops/unique_source_mother.csv")
@@ -592,7 +599,7 @@ rownames(source_biovol_out_back) <- c("Intercept", "Northern source", "Sample ye
 source_biovol_out_back$Rhat <- as.character(formatC(source_biovol_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
 # creating table
-kable_biovol_source <- source_biovol_out_back %>% 
+(kable_biovol_source <- source_biovol_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: biovolume (height x width x width) northern vs southern shrubs in source populations. 
       Model structure per species: log(biovolume) ~ Site + (1|SampleYear). 
       Including model output back-transformed in the table below.", 
@@ -609,11 +616,18 @@ kable_biovol_source <- source_biovol_out_back %>%
                     (back transformed)", "Upper 95% CI
                     (back transformed)", 
                      "Estimate transformed", 
-                     "Error transformed"), digits=2, align = "l") %>% 
-  kable_classic(full_width=FALSE, html_font="Cambria")
-
+                     "Error transformed"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")%>% 
+  column_spec(2, width = NULL, bold = FALSE, italic = TRUE)%>% 
+  row_spec(1:12, align = "r") %>%
+ column_spec(1:2,latex_valign	= "m") )
+  
 # making species column in cursive
 column_spec(kable_biovol_source, 2, width = NULL, bold = FALSE, italic = TRUE)
-row_spec(kable_heights_source, 1:12, align = "c") 
+row_spec(kable_heights_source, 2:12, align = "c") 
 
 
+# merge and plot all ----
+all_source_outputs <- rbind(source_heights_out_back, source_width_out_back,
+                            source_elong_out_back, source_diam_out_back,
+                            source_biovol_out_back)
