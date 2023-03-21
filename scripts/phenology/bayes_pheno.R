@@ -510,34 +510,57 @@ save_kable(kable_yellow_garden, file = "output/phenology/yellow_garden_results.p
 
 # 3. GROWING SEASON LENGTH -----
 # Salix richardsonii ------
-growing_season_rich <- brms::brm(growing_season.y ~ population, 
+growing_season_rich <- brms::brm(growing_season.y ~ population + (1|Year), 
                                 data = all_growing_season_rich, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000,
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
 summary(growing_season_rich) # all different
 plot(growing_season_rich)
-pp_check(growing_season_rich, type = "dens_overlay", nsamples = 100) # looks good
+pp_check(growing_season_rich, type = "dens_overlay", ndraws = 100) # looks good
+season_rich_results <- model_summ_pheno(growing_season_rich)
+season_rich_results$Species <- "Salix richardsonii"
 
 # Salix pulchra ------
-growing_season_pul <- brms::brm(growing_season.y ~ population, 
+growing_season_pul <- brms::brm(growing_season.y ~ population + (1|Year), 
                                  data = all_growing_season_pul, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000,
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
 
 summary(growing_season_pul) # 
 plot(growing_season_pul)
-pp_check(growing_season_pul, type = "dens_overlay", nsamples = 100) # looks good
+pp_check(growing_season_pul, type = "dens_overlay", ndraws = 100) # looks good
+season_pul_results <- model_summ_pheno(growing_season_pul)
+season_pul_results$Species <- "Salix pulchra"
 
 # Salix arctica ------
-growing_season_arc <- brms::brm(growing_season.y ~ population,
+growing_season_arc <- brms::brm(growing_season.y ~ population + (1|Year),
                                 data = all_growing_season_arc, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000,
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
 summary(growing_season_arc)
 plot(growing_season_arc)
-pp_check(growing_season_arc, type = "dens_overlay", nsamples = 100) # looks good
+pp_check(growing_season_arc, type = "dens_overlay", ndraws = 100) # looks good
+season_arc_results <- model_summ_pheno(growing_season_arc)
+season_arc_results$Species <- "Salix arctica"
+
+season_results <- rbind(season_rich_results, season_pul_results, season_arc_results)
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(season_results) <- c("Intercept", "Northern Source", "Southern Garden",  "Southern Source", 
+                             "Year", "Sigma", 
+                             " Intercept", " Northern Source", " Southern Garden", " Southern Source", " Year", 
+                             " Sigma", 
+                             "Intercept ", "Northern Source ", "Southern Garden ", "Year ", 
+                             "Sigma ")
+
+# making sure Rhat keeps the .00 
+season_results$Rhat <- as.character(formatC(season_results$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# save df of results 
+write.csv(season_results, "output/phenology/season_outputs.csv")
+
 
 
 # PLOTS ====
