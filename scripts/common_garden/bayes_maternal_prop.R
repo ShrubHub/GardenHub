@@ -234,9 +234,9 @@ mat_arc_width_results$Species <- "Salix arctica"
 mat_width_results <- rbind(mat_rich_width_results,mat_pul_width_results,mat_arc_width_results)
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(mat_width_results) <- c("Intercept", "log(Mother Canopy Height)", "Site:Qikiqtaruk", "log(Mother Height) * Site", "Sigma",
-                                  " Intercept", " log(Mother Canopy Height)", " Site:Qikiqtaruk", " log(Mother Height) * Site", " Sigma", 
-                                  "Intercept ", "log(Mother Canopy Height) ", "Site:Qikiqtaruk ", "log(Mother Height) * Site ", "Sigma ")
+rownames(mat_width_results) <- c("Intercept", "log(Mother Canopy Width)", "Site:Qikiqtaruk", "log(Mother Width) * Site", "Sigma",
+                                  " Intercept", " log(Mother Canopy Width)", " Site:Qikiqtaruk", " log(Mother Width) * Site", " Sigma", 
+                                  "Intercept ", "log(Mother Canopy Width) ", "Site:Qikiqtaruk ", "log(Mother Width) * Site ", "Sigma ")
 
 
 # making sure Rhat keeps the .00 
@@ -246,7 +246,7 @@ mat_width_results$Rhat <- as.character(formatC(mat_width_results$Rhat, digits = 
 write.csv(mat_width_results, "output/maternal_propagation/maternal_width_output.csv")
 
 kable_mat_width <- mat_width_results %>% 
-  kbl(caption="Table.xxx BRMS model outputs: maternal height effects analysis across species. 
+  kbl(caption="Table.xxx BRMS model outputs: maternal width effects analysis across species. 
       Model structure per species: (log(max height) ~ log(maternal height)*Site.", 
       col.names = c( "Estimate",
                      "Est. Error",
@@ -270,7 +270,6 @@ save_kable(kable_mat_width, file = "output/maternal_propagation/mat_width_result
            latex_header_includes = NULL,
            keep_tex =TRUE,
            density = 300)
-
 
 # BIOVOLUME -------
 maternal_biovol_pulchra_mod <-  lm(mother_biovol_log ~ child_max_biovol_log*Site, data = mother_cg_edit_biovol_pulchra)
@@ -310,16 +309,40 @@ mat_arc_biovol_results$Species <- "Salix arctica"
 
 mat_biovol_results <- rbind(mat_rich_biovol_results,mat_pul_biovol_results,mat_arc_biovol_results)
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(mat_biovol_results) <- c("Intercept", "log(Mother Canopy Height)", "Site:Qikiqtaruk", "log(Mother Height) * Site", "Sigma",
-                                 " Intercept", " log(Mother Canopy Height)", " Site:Qikiqtaruk", " log(Mother Height) * Site", " Sigma", 
-                                 "Intercept ", "log(Mother Canopy Height) ", "Site:Qikiqtaruk ", "log(Mother Height) * Site ", "Sigma ")
-
+rownames(mat_biovol_results) <- c("Intercept", "log(Mother Canopy Biovolume)", "Site:Qikiqtaruk", "log(Mother Biovolume) * Site", "Sigma",
+                                 " Intercept", " log(Mother Canopy Biovolume)", " Site:Qikiqtaruk", " log(Mother Biovolume) * Site", " Sigma", 
+                                 "Intercept ", "log(Mother Canopy Biovolume) ", "Site:Qikiqtaruk ", "log(Mother Biovolume) * Site ", "Sigma ")
 
 # making sure Rhat keeps the .00 
 mat_biovol_results$Rhat <- as.character(formatC(mat_biovol_results$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
 # save df of results 
 write.csv(mat_biovol_results, "output/maternal_propagation/maternal_biovol_output.csv")
+kable_mat_biovol <- mat_biovol_results %>% 
+  kbl(caption="Table.xxx BRMS model outputs: maternal biovolume effects analysis across species. 
+      Model structure per species: (log(max biovolume) ~ log(maternal biovolume)*Site.", 
+      col.names = c( "Estimate",
+                     "Est. Error",
+                     "Lower 95% CI (log)",
+                     "Upper 95% CI (log)", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Effect",
+                     "Sample Size",
+                     "Species"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in italics
+column_spec(kable_mat_biovol, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+save_kable(kable_mat_biovol, file = "output/maternal_propagation/mat_biovol_results.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # 4.2. PROPAGATION EFFECTS ------
 
@@ -332,6 +355,8 @@ prop_rich <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
 summary(prop_rich) # not significant
 plot(prop_rich)
 pp_check(prop_rich, type = "dens_overlay", ndraws = 100)  # good 
+prop_rich_results <- model_summ_simple(prop_rich)
+prop_rich_results$Species <- "Salix richardsonii"
 
 # Salix pulchra -------
 prop_pul <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
@@ -341,6 +366,8 @@ prop_pul <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
 summary(prop_pul) # not significant
 plot(prop_pul)
 pp_check(prop_pul, type = "dens_overlay", ndraws = 100)  # good 
+prop_pul_results <- model_summ_simple(prop_pul)
+prop_pul_results$Species <- "Salix pulchra"
 
 # Salix arctica --------
 prop_arc <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
@@ -350,6 +377,45 @@ prop_arc <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
 summary(prop_arc) # not significant
 plot(prop_arc)
 pp_check(prop_arc, type = "dens_overlay", ndraws = 100)  # okay? kind of wonky 
+prop_arc_results <- model_summ_simple(prop_arc)
+prop_arc_results$Species <- "Salix arctica"
+
+prop_results <- rbind(prop_rich_results,prop_pul_results,prop_arc_results)
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(prop_results) <- c("Intercept", "log(Cutting length)", "Site:Qikiqtaruk", "log(Cutting length) * Site", "Sigma",
+                                  " Intercept", " log(Cutting length)", " Site:Qikiqtaruk", " log(Cutting length) * Site", " Sigma", 
+                                  "Intercept ", "log(Cutting length) ", "Site:Qikiqtaruk ", "log(Cutting length) * Site ", "Sigma ")
+
+# making sure Rhat keeps the .00 
+prop_results$Rhat <- as.character(formatC(prop_results$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+# save df of results 
+write.csv(prop_results, "output/maternal_propagation/prop_height_output.csv")
+
+kable_prop_height <- prop_results %>% 
+  kbl(caption="Table.xxx BRMS model outputs: propagation effects on maximum height analysis across species. 
+      Model structure per species: (log(max height) ~ log(cutting length)*Site.", 
+      col.names = c( "Estimate",
+                     "Est. Error",
+                     "Lower 95% CI (log)",
+                     "Upper 95% CI (log)", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Effect",
+                     "Sample Size",
+                     "Species"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in italics
+column_spec(kable_prop_height, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+save_kable(kable_prop_height, file = "output/maternal_propagation/kable_prop_height.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # Biovolume vs Cutting length ------
 # Salix richardsonii ------
@@ -445,24 +511,26 @@ theme_shrub <- function(){ theme(legend.position = "right",
            geom_point(data = mother_cg_rich) +
            theme_shrub() +
            ylab("Child canopy height (log, cm) \n") +
-           xlab("\nMother canopy height (log, cm) "))
+           xlab("\nMother canopy height (log, cm) ")+ 
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95))
 
 #Salix pulchra child height vs mother height ----
-pul_height_maternal <- (conditional_effects(maternal_pul_height)) # extracting conditional effects from bayesian model
-pul_height_maternal_data <- pul_height_maternal[[1]] # making the extracted model outputs into a dataset (for plotting)
+#pul_height_maternal <- (conditional_effects(maternal_pul_height)) # extracting conditional effects from bayesian model
+#pul_height_maternal_data <- pul_height_maternal[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
 
-(pul_height_mat_plot <-ggplot(pul_height_maternal_data) +
-    geom_point(data = mother_cg_pulchra, aes(x = log(Mother_Canopy_Height_cm), y = log(max_canopy_height_cm)),
-               alpha = 0.5)+ # raw data
-    geom_line(aes(x = effect1__, y = estimate__))+
-    geom_ribbon(aes(x = effect1__, ymin = lower__, ymax = upper__),
-                alpha = 0.2) +
-    ylab("Child canopy height (log, cm) \n") +
-    xlab("\nMother canopy height (log, cm) " ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
-    theme_shrub())
+#(pul_height_mat_plot <-ggplot(pul_height_maternal_data) +
+#    geom_point(data = mother_cg_pulchra, aes(x = log(Mother_Canopy_Height_cm), y = log(max_canopy_height_cm)),
+#               alpha = 0.5)+ # raw data
+#    geom_line(aes(x = effect1__, y = estimate__))+
+#    geom_ribbon(aes(x = effect1__, ymin = lower__, ymax = upper__),
+#                alpha = 0.2) +
+#    ylab("Child canopy height (log, cm) \n") +
+#    xlab("\nMother canopy height (log, cm) " ) +
+#    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+#    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+#    theme_shrub())
 
 (pul_height_mat_plot <-  mother_cg_pulchra %>%
     add_predicted_draws(maternal_pul_height, allow_new_levels = TRUE) %>%
@@ -471,5 +539,20 @@ pul_height_maternal_data <- pul_height_maternal[[1]] # making the extracted mod
     geom_point(data = mother_cg_rich) +
     theme_shrub() +
     ylab("Child canopy height (log, cm) \n") +
-    xlab("\nMother canopy height (log, cm) "))
+    xlab("\nMother canopy height (log, cm) ")+ 
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95))
+
+# Salix arctica maximum height vs maternal height ----
+(arc_height_mat_plot <-  mother_cg_arctica %>%
+    add_predicted_draws(maternal_arc_height, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Mother_Canopy_Height_cm), y = log(max_canopy_height_cm), color = Site, fill = Site)) +
+    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+    geom_point(data = mother_cg_rich) +
+    theme_shrub() +
+    ylab("Child canopy height (log, cm) \n") +
+    xlab("\nMother canopy height (log, cm) ") + 
+   scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.95))
+
 
