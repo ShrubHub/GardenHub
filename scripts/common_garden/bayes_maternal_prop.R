@@ -5,6 +5,12 @@
 # 1. Loading libraries ----
 library(brms)
 library(tidyverse)
+library(ggplot2)
+library(tidybayes)
+library(gridExtra)
+library(ggpubr)
+library(knitr) # For kable tables
+library(kableExtra) # For kable tables
 
 # with random effect: 
 model_summ <- function(x) {
@@ -484,7 +490,7 @@ theme_shrub <- function(){ theme(legend.position = "right",
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5),
+                                 plot.title = element_text(color = "black", size = 12, face = "italic", hjust = 0.5),
                                  plot.margin = unit(c(1,1,1,1), units = , "cm"))}
 
 #Salix richardsonii child height vs mother height ----
@@ -513,7 +519,8 @@ theme_shrub <- function(){ theme(legend.position = "right",
            ylab("Child canopy height (log, cm) \n") +
            xlab("\nMother canopy height (log, cm) ")+ 
    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-   scale_fill_viridis_d(begin = 0.1, end = 0.95))
+   scale_fill_viridis_d(begin = 0.1, end = 0.95)+ 
+   labs(title = "Salix richardsonii"))
 
 #Salix pulchra child height vs mother height ----
 #pul_height_maternal <- (conditional_effects(maternal_pul_height)) # extracting conditional effects from bayesian model
@@ -541,7 +548,8 @@ theme_shrub <- function(){ theme(legend.position = "right",
     ylab("Child canopy height (log, cm) \n") +
     xlab("\nMother canopy height (log, cm) ")+ 
    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-   scale_fill_viridis_d(begin = 0.1, end = 0.95))
+   scale_fill_viridis_d(begin = 0.1, end = 0.95) + 
+   labs(title = "Salix pulchra"))
 
 # Salix arctica maximum height vs maternal height ----
 (arc_height_mat_plot <-  mother_cg_arctica %>%
@@ -553,6 +561,10 @@ theme_shrub <- function(){ theme(legend.position = "right",
     ylab("Child canopy height (log, cm) \n") +
     xlab("\nMother canopy height (log, cm) ") + 
    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-   scale_fill_viridis_d(begin = 0.1, end = 0.95))
+   scale_fill_viridis_d(begin = 0.1, end = 0.95)+ 
+   labs(title = "Salix arctica"))
 
-
+# arrange maternal height and max height figure 
+(mat_height_plots <- ggarrange(rich_height_mat_plot, pul_height_mat_plot, arc_height_mat_plot, 
+                              common.legend = TRUE, legend = "bottom",
+                              ncol = 3, nrow = 1))
