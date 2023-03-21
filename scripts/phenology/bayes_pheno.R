@@ -7,6 +7,7 @@ library(plyr)
 library(tidyverse)
 library(brms)
 library(tidybayes)
+library(ggplot2)
 library(knitr) # For kable tables
 library(kableExtra) # For kable tables
 
