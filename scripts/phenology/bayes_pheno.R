@@ -515,7 +515,7 @@ growing_season_rich <- brms::brm(growing_season.y ~ population + (1|Year),
                                 iter = 3000, warmup = 1000,
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(growing_season_rich) # all different
+summary(growing_season_rich) 
 plot(growing_season_rich)
 pp_check(growing_season_rich, type = "dens_overlay", ndraws = 100) # looks good
 season_rich_results <- model_summ_pheno(growing_season_rich)
