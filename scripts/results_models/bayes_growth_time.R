@@ -302,6 +302,16 @@ summary(garden_rich_biovol_time) # significantly larger biovolume for southern s
 plot(garden_rich_biovol_time) # fine
 pp_check(garden_rich_biovol_time,  type = "dens_overlay", ndraws = 100) # fine
 
+# extract outputs
+rich_biovol_time_extract <- model_summ_time(garden_rich_biovol_time)
+
+# extraction for model output table
+rownames(rich_biovol_time_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
+rich_biovol_time_extract_df <- rich_biovol_time_extract %>% 
+  mutate(Species = rep("Salix richardsonii")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
 
 # S. Pulchra -----
 garden_pul_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|Year),
@@ -314,6 +324,16 @@ summary(garden_pul_biovol_time) # significantly larger biovolume for southern sh
 plot(garden_pul_biovol_time) # fine
 pp_check(garden_pul_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
 
+# extract outputs
+pul_biovol_time_extract <- model_summ_time(garden_pul_biovol_time)
+
+# extraction for model output table
+rownames(pul_biovol_time_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
+pul_biovol_time_extract_df <- pul_biovol_time_extract %>% 
+  mutate(Species = rep("Salix pulchra")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
 
 # S. Arctica -----
 garden_arc_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|Year),
@@ -325,6 +345,65 @@ garden_arc_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|
 summary(garden_arc_biovol_time) # NOT significant diff. 
 plot(garden_arc_biovol_time) # fine
 pp_check(garden_arc_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
+
+# extract outputs
+arc_biovol_time_extract <- model_summ_time(garden_arc_biovol_time)
+
+# extraction for model output table
+rownames(arc_biovol_time_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
+arc_biovol_time_extract_df <- arc_biovol_time_extract %>% 
+  mutate(Species = rep("Salix arctica")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+garden_biovol_interact <- rbind(rich_biovol_time_extract_df,pul_biovol_time_extract_df,arc_biovol_time_extract_df)
+
+# back transforming from log
+garden_biovol_interact_back <- garden_biovol_interact %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI") %>%
+  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
+  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(Estimate), 
+         Est.Error_trans = 10^(Est.Error)) %>% 
+  select(-CI_range)
+
+# save df of results 
+write.csv(garden_biovol_interact_back, "output/garden_biovol_interact_back.csv")
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_biovol_interact_back) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma", 
+                                            " Intercept", " Sample age", " Southern Garden", " Sample age*Southern Garden", " Year", " sigma",
+                                            "Intercept ", "Sample age ", "Southern Garden ", "Sample age*Southern Garden ", "Year ", "sigma ")
+
+
+# making sure Rhat keeps the .00 
+garden_biovol_interact_back$Rhat <- as.character(formatC(garden_biovol_interact_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_time_interact_biovol <- garden_biovol_interact_back %>% 
+  kbl(caption="Table.xxx BRMS model outputs: biovolume (log cm3) over time of northern vs southern shrubs in the common garden. 
+      Model structure per species:log(biovolume) ~ Sample_age*population+ (1|Year)", 
+      col.names = c("Species","Estimate",
+                    "Est. Error",
+                    "Lower 95% CI (log)",
+                    "Upper 95% CI (log)", 
+                    "Rhat", 
+                    "Bulk Effective Sample Size",
+                    "Tail Effective Sample Size", 
+                    "Sample Size",
+                    "Effect",
+                    "Lower 95% CI 
+                    (back transformed)", "Upper 95% CI
+                    (back transformed)", 
+                    "Estimate transformed", 
+                    "Error transformed"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_time_interact_biovol, 2, width = NULL, bold = FALSE, italic = TRUE)
 
 #2.1. BIOVOL GROWTH RATE -------
 
