@@ -265,6 +265,17 @@ pp_check(prop_cutting_arc, type = "dens_overlay", nsamples = 100)  # good)
 
 # 5. DATA VISUALISATION --------
 
+theme_shrub <- function(){ theme(legend.position = "right",
+                                 axis.title.x = element_text(face="bold", size=12),
+                                 axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 45), 
+                                 axis.title.y = element_text(face="bold", size=12),
+                                 axis.text.y  = element_text(vjust=0.5, size=12, colour = "black"),
+                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
+                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
+                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+                                 plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5),
+                                 plot.margin = unit(c(1,1,1,1), units = , "cm"))}
+
 #Salix richardsonii child height vs mother height ----
 rich_height_maternal <- (conditional_effects(maternal_rich_height_site)) # extracting conditional effects from bayesian model
 rich_height_maternal_data <- rich_height_maternal[[1]] # making the extracted model outputs into a dataset (for plotting)
