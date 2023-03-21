@@ -5,6 +5,40 @@
 # 1. Loading libraries ----
 library(brms)
 library(tidyverse)
+# with random effect: 
+model_summ <- function(x) {
+  sum = summary(x)
+  fixed = sum$fixed
+  sigma = sum$spec_pars
+  random = sum$random$Sample_age
+  obs = sum$nobs
+  
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  random$effect <- "random"
+  sigma$effect <- "residual"
+  fixed$nobs <- obs  # add column with number of observations
+  random$nobs <- obs
+  sigma$nobs <- obs
+  
+  row.names(random)[row.names(random) == "sd(Intercept)"] <- "Sample_age"
+  
+  modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge it all together
+}
+
+# with NO random effects: 
+model_summ <- function(x) {
+  sum = summary(x)
+  fixed = sum$fixed
+  sigma = sum$spec_pars
+  obs = sum$nobs
+  
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  sigma$effect <- "residual"
+  fixed$nobs <- obs  # add column with number of observations
+  sigma$nobs <- obs
+  
+  modelTerms <- as.data.frame(bind_rows(fixed, sigma))  # merge it all together
+}
 
 # 2. Loading data ---- 
 mother_cg <- read_csv("data/source_pops/mother_cg.csv")
