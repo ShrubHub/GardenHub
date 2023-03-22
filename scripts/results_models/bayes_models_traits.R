@@ -1,6 +1,6 @@
 # BAYESIAN traits results models -----
 # Script by Madi
-# Last update: 17/03/2023
+# Last update: 22/03/2023
 
 # libraries ----
 library(plyr) # load before dplyr aka tidyverse 
@@ -8,6 +8,7 @@ library(tidyverse)
 library(brms)
 library(ggplot2)
 library(tidybayes)
+library(ggpubr)
 library(gridExtra)
 library(knitr) # For kable tables
 library(kableExtra) # For kable tables
@@ -134,15 +135,15 @@ model_summ <- function(x) {
 # family = gaussian(), chains = 3, iter = 3000 - 5000, warmup = 1000)
 
 # SLA ----
-# S. arctica ----
-arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
-                                iter = 3000, warmup = 1000, 
-                         control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(arctica_SLA) 
-plot(arctica_SLA)
-pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
-arctica_SLA_results <- model_summ(arctica_SLA)
-arctica_SLA_results$Species <- "Salix arctica"
+# S. richardsonii ----
+rich_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
+                      iter = 3000, warmup = 1000, 
+                      control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(rich_SLA) 
+plot(rich_SLA)
+pp_check(rich_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
+rich_SLA_results <- model_summ(rich_SLA)
+rich_SLA_results$Species <- "Salix richardsonii"
 
 # S. pulchra ----
 pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
@@ -156,16 +157,16 @@ pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # pretty good
 pulchra_SLA_results <- model_summ(pulchra_SLA)
 pulchra_SLA_results$Species <- "Salix pulchra"
 
+# S. arctica ----
+arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
+                                iter = 3000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(arctica_SLA) 
+plot(arctica_SLA)
+pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
+arctica_SLA_results <- model_summ(arctica_SLA)
+arctica_SLA_results$Species <- "Salix arctica"
 
-# S. richardsonii ----
-rich_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-                      iter = 3000, warmup = 1000, 
-                      control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(rich_SLA) 
-plot(rich_SLA)
-pp_check(rich_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
-rich_SLA_results <- model_summ(rich_SLA)
-rich_SLA_results$Species <- "Salix richardsonii"
 
 # merging all extracted outputs
 garden_sla_out <- rbind(rich_SLA_results, pulchra_SLA_results, arctica_SLA_results)
@@ -531,20 +532,21 @@ save_kable(kable_LL, file = "output/traits/LL_results.pdf",
            density = 300)
 
 # PLOTS ---- 
-all_CG_source_traits$population <- ordered(all_CG_source_traits$population, 
-                                           levels = c("Northern Source", 
-                                                      "Northern Garden", 
-                                                      "Southern Source",
-                                                      "Southern Garden"))
-all_CG_source_growth$population <- ordered(all_CG_source_growth$population, 
-                                           levels = c("Northern Source", 
-                                                      "Northern Garden",
-                                                      "Southern Source", 
-                                                      "Southern Garden"))
-all_CG_source_growth$Species <- ordered(all_CG_source_growth$Species, 
-                                        levels = c("Salix richardsonii", 
-                                                   "Salix pulchra",
-                                                   "Salix arctica"))
+# note: always put richardsonii, pulchra then arctica 
+#all_CG_source_traits$population <- ordered(all_CG_source_traits$population, 
+#                                           levels = c("Northern Source", 
+#                                                      "Northern Garden", 
+#                                                      "Southern Source",
+#                                                      "Southern Garden"))
+#all_CG_source_growth$population <- ordered(all_CG_source_growth$population, 
+#                                           levels = c("Northern Source", 
+#                                                      "Northern Garden",
+#                                                      "Southern Source", 
+#                                                      "Southern Garden"))
+#all_CG_source_growth$Species <- ordered(all_CG_source_growth$Species, 
+#                                        levels = c("Salix richardsonii", 
+#                                                   "Salix pulchra",
+#                                                   "Salix arctica"))
 
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", size=12),
@@ -554,16 +556,16 @@ theme_shrub <- function(){ theme(legend.position = "right",
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5),
+                                 plot.title = element_text(color = "black", size = 16, face = "bold.italic", hjust = 0.5),
                                  plot.margin = unit(c(1,1,1,1), units = , "cm"))}
 # SLA ---- 
-# arctica ----
-arc_sla <- (conditional_effects(arctica_SLA)) # extracting conditional effects from bayesian model
-arc_sla_data <- arc_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
+# richardsonii ----
+richard_sla <- (conditional_effects(rich_SLA)) # extracting conditional effects from bayesian model
+richard_sla_data <- richard_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
 
-(arc_sla_plot <-ggplot(arc_sla_data) +
-    geom_point(data = arctica_all_traits, aes(x = population, y = log(SLA), colour = population),
+(rich_sla_plot <-ggplot(richard_sla_data) +
+    geom_point(data = richardsonii_all_traits, aes(x = population, y = log(SLA), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
@@ -572,6 +574,7 @@ arc_sla_data <- arc_sla[[1]] # making the extracted model outputs into a dataset
     xlab("\n Population" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    labs(title = "Salix richardsonii") +
     theme_shrub())
 # pulchra ----
 pul_sla <- (conditional_effects(pulchra_SLA)) # extracting conditional effects from bayesian model
@@ -588,14 +591,15 @@ pul_sla_data <- pul_sla[[1]] # making the extracted model outputs into a dataset
     xlab("\n Population" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    labs(title = "Salix pulchra") +
     theme_shrub())
-# richardsonii ----
-richard_sla <- (conditional_effects(rich_SLA)) # extracting conditional effects from bayesian model
-richard_sla_data <- richard_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
+# arctica ----
+arc_sla <- (conditional_effects(arctica_SLA)) # extracting conditional effects from bayesian model
+arc_sla_data <- arc_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
 
-(rich_sla_plot <-ggplot(richard_sla_data) +
-    geom_point(data = richardsonii_all_traits, aes(x = population, y = log(SLA), colour = population),
+(arc_sla_plot <-ggplot(arc_sla_data) +
+    geom_point(data = arctica_all_traits, aes(x = population, y = log(SLA), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
@@ -604,9 +608,8 @@ richard_sla_data <- richard_sla[[1]] # making the extracted model outputs into a
     xlab("\n Population" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    labs(title = "Salix arctica") +
     theme_shrub())
-
-panel_sla_bayes <- grid.arrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, nrow = 1)
 
 (sla_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, 
                            labels = c("A", "B", "C"), common.legend = TRUE, legend = "bottom",
