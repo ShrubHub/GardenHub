@@ -555,21 +555,20 @@ pulchra_all_growth$population <- ordered(pulchra_all_growth$population,
                                                          "Southern Source", 
                                                          "Southern Garden"))
 arctica_cg_growth$population <- ordered(arctica_cg_growth$population, 
-                                              levels = c("Northern Source", 
-                                                         "Northern Garden",
-                                                         "Southern Source", 
+                                              levels = c("Northern Garden",
                                                          "Southern Garden"))
+
 
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", size=12),
-                                 axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 45), 
+                                 axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 60), 
                                  axis.title.y = element_text(face="bold", size=12),
                                  axis.text.y  = element_text(vjust=0.5, size=12, colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 16, face = "bold.italic", hjust = 0.5),
-                                 plot.margin = unit(c(1,1,1,1), units = , "cm"))}
+                                 plot.title = element_text(color = "black", size = 12, face = "bold.italic", hjust = 0.5),
+                                 plot.margin = unit(c(0.1,0.1,0.1,0.1), units = , "cm"))}
 # SLA ---- 
 # richardsonii ----
 richard_sla <- (conditional_effects(rich_SLA)) # extracting conditional effects from bayesian model
@@ -582,8 +581,8 @@ richard_sla_data <- richard_sla[[1]] # making the extracted model outputs into a
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
                   size = 1, alpha = 1) +
-    ylab("Specific Leaf Area (log, UNIT)\n") +
-    xlab("\n Population" ) +
+    ylab("SLA (log, UNIT)\n") +
+    xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix richardsonii") +
@@ -599,8 +598,8 @@ pul_sla_data <- pul_sla[[1]] # making the extracted model outputs into a dataset
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                   size = 1, alpha = 1) +
-    ylab("Specific Leaf Area (log, UNIT)\n") +
-    xlab("\n Population" ) +
+    ylab("") +
+    xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix pulchra") +
@@ -616,8 +615,8 @@ arc_sla_data <- arc_sla[[1]] # making the extracted model outputs into a dataset
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                   size = 1, alpha = 1) +
-    ylab("Specific Leaf Area (log, UNIT)\n") +
-    xlab("\n Population" ) +
+    ylab("") +
+    xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix arctica") +
@@ -639,8 +638,8 @@ richard_ldmc_data <- richard_ldmc[[1]] # making the extracted model outputs into
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
                   size = 1, alpha = 1) +
-    ylab("Leaf dry matter content (log, UNIT)\n") +
-    xlab("\n Population" ) +
+    ylab("LDMC (log, UNIT)\n") +
+    xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix richardsonii") +
@@ -656,8 +655,8 @@ pul_ldmc_data <- pul_ldmc[[1]] # making the extracted model outputs into a datas
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                   size = 1, alpha = 1) +
-    ylab("Leaf dry matter content (log, UNIT)\n") +
-    xlab("\n Population" ) +
+    ylab("") +
+    xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix pulchra") +
@@ -673,8 +672,8 @@ arc_ldmc_data <- arc_ldmc[[1]] # making the extracted model outputs into a datas
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                   size = 1, alpha = 1) +
-    ylab("Leaf dry matter content (log, UNIT)\n") +
-    xlab("\n Population" ) +
+    ylab("") +
+    xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix arctica") +
@@ -696,7 +695,7 @@ richard_la_data <- richard_la[[1]] # making the extracted model outputs into a d
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
                   size = 1, alpha = 1) +
     ylab("Leaf Area (log, UNIT)\n") +
-    xlab("\n Population" ) +
+    xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix richardsonii") +
@@ -712,8 +711,8 @@ pul_la_data <- pul_la[[1]] # making the extracted model outputs into a dataset (
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                   size = 1, alpha = 1) +
-    ylab("Leaf Area (log, UNIT)\n") +
-    xlab("\n Population" ) +
+    ylab("") +
+    xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix pulchra") +
@@ -729,8 +728,8 @@ arc_la_data <- arc_la[[1]] # making the extracted model outputs into a dataset (
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                   size = 1, alpha = 1) +
-    ylab("Leaf Area (log, UNIT)\n") +
-    xlab("\n Population" ) +
+    ylab("") +
+    xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix arctica") +
@@ -753,8 +752,8 @@ richard_ll_data <- richard_ll[[1]] # making the extracted model outputs into a d
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
                   size = 1, alpha = 1) +
-    ylab("Leaf Length (log, mm)\n") +
-    xlab("\n Population" ) +
+    ylab("Leaf Length (mm)\n") +
+    xlab("") +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix richardsonii") +
@@ -770,8 +769,8 @@ pul_ll_data <- pul_ll[[1]] # making the extracted model outputs into a dataset (
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                   size = 1, alpha = 1) +
-    ylab("Leaf Length (log, mm)\n") +
-    xlab("\n Population" ) +
+    ylab("") +
+    xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix pulchra") +
@@ -781,18 +780,21 @@ arc_ll <- (conditional_effects(arctica_LL_CG)) # extracting conditional effects 
 arc_ll_data <- arc_ll[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
 
+pal <-c("#2A788EFF", "#FDE725FF")
+
 (arc_ll_plot <-ggplot(arc_ll_data) +
     geom_point(data = arctica_cg_growth, aes(x = population, y = mean_leaf_length, colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                   size = 1, alpha = 1) +
-    ylab("Leaf Length (log, mm)\n") +
-    xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    ylab("") +
+    xlab("" ) +
+    scale_colour_manual(values = pal) +
+    scale_fill_manual(values = pal) +
     labs(title = "Salix arctica") +
     theme_shrub())
+
 
 (ll_panel <- ggarrange(rich_ll_plot, pul_ll_plot, arc_ll_plot, 
                        common.legend = TRUE, legend = "bottom",
@@ -803,6 +805,6 @@ arc_ll_data <- arc_ll[[1]] # making the extracted model outputs into a dataset (
   rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot,
   rich_la_plot, pul_la_plot, arc_la_plot,
   rich_ll_plot, pul_ll_plot, arc_ll_plot, 
-                          common.legend = TRUE, legend = "bottom",
-                          ncol = 6, nrow = 2))
+                          common.legend = TRUE, legend = "bottom", 
+  ncol = 6, nrow = 2))
 
