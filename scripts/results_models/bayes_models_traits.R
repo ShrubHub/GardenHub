@@ -798,5 +798,11 @@ arc_ll_data <- arc_ll[[1]] # making the extracted model outputs into a dataset (
                        common.legend = TRUE, legend = "bottom",
                        ncol = 3, nrow = 1))
 
-(trait_panel <- ggarrange(sla_panel, ldmc_panel, la_panel, ll_panel), 
-  ncol = 2, nrow = 2))
+
+(trait_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot,
+  rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot,
+  rich_la_plot, pul_la_plot, arc_la_plot,
+  rich_ll_plot, pul_ll_plot, arc_ll_plot, 
+                          common.legend = TRUE, legend = "bottom",
+                          ncol = 6, nrow = 2))
+
