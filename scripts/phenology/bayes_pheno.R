@@ -561,17 +561,72 @@ season_results$Rhat <- as.character(formatC(season_results$Rhat, digits = 2, for
 
 # save df of results 
 write.csv(season_results, "output/phenology/season_outputs.csv")
+season_results <- read.csv("output/phenology/season_outputs.csv", row.names=1)
 
+kable_season_garden <- season_results %>% 
+  kbl(caption="Table.xxx BRMS model outputs: Growing season length northern vs southern willows in common garden and source populations. 
+      Model structure per species: Growing season length ~ population. Data scaled to center on 0.", 
+      col.names = c( "Estimate",
+                     "Est. Error",
+                     "Lower 95% CI (log)",
+                     "Upper 95% CI (log)", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Effect",
+                     "Sample Size",
+                     "Species"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+column_spec(kable_season_garden, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+save_kable(kable_season_garden, file = "output/phenology/season__length_results.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 
 # PLOTS ====
+theme_shrub <- function(){ theme(legend.position = "right",
+                                 axis.title.x = element_text(face="bold", size=12),
+                                 axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 45), 
+                                 axis.title.y = element_text(face="bold", size=12),
+                                 axis.text.y  = element_text(vjust=0.5, size=12, colour = "black"),
+                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
+                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
+                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+                                 plot.title = element_text(color = "black", size = 12, face = "bold.italic", hjust = 0.5),
+                                 plot.margin = unit(c(1,1,1,1), units = , "cm"))}
+# reorder levels to be consistent
+all_growing_season_rich$population <- ordered(all_growing_season_rich$population, 
+                                         levels = c("Northern Source", 
+                                                    "Northern Garden", 
+                                                    "Southern Source",  
+                                                    "Southern Garden"))
+all_growing_season_pul$population <- ordered(all_growing_season_pul$population, 
+                                              levels = c("Northern Source", 
+                                                         "Northern Garden", 
+                                                         "Southern Source",  
+                                                         "Southern Garden"))
+all_growing_season_arc$population <- ordered(all_growing_season_arc$population, 
+                                              levels = c("Northern Source", 
+                                                         "Northern Garden", 
+                                                         "Southern Source",  
+                                                         "Southern Garden"))
 # bud burst ----
 # S. richardsonii
 # S. pulchra 
 # S. arctica 
+# panel
 # first yellow leaf ----
 # S. richardsonii
 # S. pulchra 
 # S. arctica 
-
-
+# panel 
+# growing season
+# S. richardsonii
+# S. pulchra 
+# S. arctica 
+# panel 
