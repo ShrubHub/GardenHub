@@ -468,19 +468,8 @@ arctica_LL_results$Species <- "Salix arctica"
 # merging all extracted outputs
 garden_LL_out <- rbind(rich_LL_results, pulchra_LL_results, arctica_LL_results)
 
-# back transforming from log
-garden_LL_out_back <- garden_LL_out %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(Estimate), 
-         Est.Error_trans = 10^(Est.Error)) %>% 
-  select(-CI_range)
-
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(garden_LL_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
+rownames(garden_LL_out) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
                                     "Year", "Sigma", 
                                     " Intercept", " Northern Source", " SouthernSource", " Southern Garden", " Year", 
                                     " Sigma", 
@@ -488,13 +477,12 @@ rownames(garden_LL_out_back) <- c("Intercept", "Northern Source", "SouthernSourc
                                     "Sigma ")
 
 # making sure Rhat keeps the .00 
-garden_LL_out_back$Rhat <- as.character(formatC(garden_LL_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+garden_LL_out$Rhat <- as.character(formatC(garden_LL_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
 # save df of results 
-write.csv(garden_LL_out_back, "output/traits/garden_LL_out_back.csv")
-
+write.csv(garden_LL_out, "output/traits/garden_LL_out_back.csv")
 # creating table
-kable_LL <- garden_LL_out_back %>% 
+kable_LL <- garden_LL_out %>% 
   kbl(caption="Table.xxx BRMS model outputs: Leaf length  of northern garden, northern source, southern garden, southern source willows. 
       Model structure per species: (log(SLA) ~ population + (1|year). Note S. arctica only comparing garden populations. 
       Model output back-transformed in the table below.", 
@@ -507,12 +495,7 @@ kable_LL <- garden_LL_out_back %>%
                      "Tail Effective Sample Size", 
                      "Effect",
                      "Sample Size",
-                     "Species",  
-                     "Lower 95% CI 
-                    (back transformed)", "Upper 95% CI
-                    (back transformed)", 
-                     "Estimate transformed", 
-                     "Error transformed"), digits=2, align = "c") %>% 
+                     "Species"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in italics
@@ -775,6 +758,11 @@ pul_ll_data <- pul_ll[[1]] # making the extracted model outputs into a dataset (
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix pulchra") +
     theme_shrub())
+
+garden_LL_out_pop <- tibble::rownames_to_column(garden_LL_out, "population") %>% 
+  filter(population %in% c("Intercept", "Northern Source", "SouthernSource", "Southern Garden"))
+
+
 # arctica ----
 arc_ll <- (conditional_effects(arctica_LL_CG)) # extracting conditional effects from bayesian model
 arc_ll_data <- arc_ll[[1]] # making the extracted model outputs into a dataset (for plotting)
