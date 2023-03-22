@@ -493,7 +493,8 @@ theme_shrub <- function(){ theme(legend.position = "right",
                                  plot.title = element_text(color = "black", size = 12, face = "italic", hjust = 0.5),
                                  plot.margin = unit(c(1,1,1,1), units = , "cm"))}
 
-#Salix richardsonii child height vs mother height ----
+# Maternal heights ------
+#Salix richardsonii child height vs mother height
 #rich_height_maternal <- (conditional_effects(maternal_rich_height_site)) # extracting conditional effects from bayesian model
 #rich_height_maternal_data <- rich_height_maternal[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
@@ -522,7 +523,7 @@ theme_shrub <- function(){ theme(legend.position = "right",
    scale_fill_viridis_d(begin = 0.1, end = 0.95)+ 
    labs(title = "Salix richardsonii"))
 
-#Salix pulchra child height vs mother height ----
+#Salix pulchra child height vs mother height
 #pul_height_maternal <- (conditional_effects(maternal_pul_height)) # extracting conditional effects from bayesian model
 #pul_height_maternal_data <- pul_height_maternal[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
@@ -551,7 +552,7 @@ theme_shrub <- function(){ theme(legend.position = "right",
    scale_fill_viridis_d(begin = 0.1, end = 0.95) + 
    labs(title = "Salix pulchra"))
 
-# Salix arctica maximum height vs maternal height ----
+# Salix arctica maximum height vs maternal height 
 (arc_height_mat_plot <-  mother_cg_arctica %>%
     add_predicted_draws(maternal_arc_height, allow_new_levels = TRUE) %>%
     ggplot(aes(x = log(Mother_Canopy_Height_cm), y = log(max_canopy_height_cm), color = Site, fill = Site)) +
@@ -568,3 +569,215 @@ theme_shrub <- function(){ theme(legend.position = "right",
 (mat_height_plots <- ggarrange(rich_height_mat_plot, pul_height_mat_plot, arc_height_mat_plot, 
                               common.legend = TRUE, legend = "bottom",
                               ncol = 3, nrow = 1))
+
+# Maternal biovol ------
+(rich_biovol_mat_plot <-  mother_cg_rich %>%
+    add_predicted_draws(maternal_rich_biovol, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Mother_biovolume), y = log(max_biovol), color = Site, fill = Site)) +
+    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+    geom_point(data = mother_cg_rich) +
+    theme_shrub() +
+    ylab("Child biovolume (log, cm3) \n") +
+    xlab("\nMother biovolume (log, cm3) ")+ 
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+    labs(title = "Salix richardsonii"))
+
+(pul_biovol_mat_plot <-  mother_cg_pulchra %>%
+    add_predicted_draws(maternal_pul_biovol, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Mother_biovolume), y = log(max_biovol), color = Site, fill = Site)) +
+    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+    geom_point(data = mother_cg_pulchra) +
+    theme_shrub() +
+    ylab("Child biovolume (log, cm3) \n") +
+    xlab("\nMother biovolume (log, cm3) ")+ 
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+    labs(title = "Salix pulchra"))
+
+(arc_biovol_mat_plot <-  mother_cg_arctica %>%
+    add_predicted_draws(maternal_arc_biovol, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Mother_biovolume), y = log(max_biovol), color = Site, fill = Site)) +
+    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+    geom_point(data = mother_cg_arctica) +
+    theme_shrub() +
+    ylab("Child biovolume (log, cm3) \n") +
+    xlab("\nMother biovolume (log, cm3) ")+ 
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+    labs(title = "Salix arctica"))
+
+# arrange maternal width fig. 
+(mat_biovol_plots <- ggarrange(rich_biovol_mat_plot, pul_biovol_mat_plot, arc_biovol_mat_plot, 
+                               common.legend = TRUE, legend = "bottom",
+                               ncol = 3, nrow = 1))
+
+# Maternal width ------
+(rich_width_mat_plot <-  mother_cg_rich %>%
+   add_predicted_draws(maternal_rich_width, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = log(Mother_mean_width), y = log(max_mean_width_cm), color = Site, fill = Site)) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = mother_cg_rich) +
+   theme_shrub() +
+   ylab("Child canopy width (log, cm) \n") +
+   xlab("\nMother canopy width (log, cm) ")+ 
+   scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+   labs(title = "Salix richardsonii"))
+
+(pul_width_mat_plot <-  mother_cg_pulchra %>%
+    add_predicted_draws(maternal_pul_width, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Mother_mean_width), y = log(max_mean_width_cm), color = Site, fill = Site)) +
+    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+    geom_point(data = mother_cg_pulchra) +
+    theme_shrub() +
+    ylab("Child canopy width (log, cm) \n") +
+    xlab("\nMother canopy width (log, cm) ")+ 
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+    labs(title = "Salix pulchra"))
+
+(arc_width_mat_plot <-  mother_cg_arctica %>%
+    add_predicted_draws(maternal_arc_width, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Mother_mean_width), y = log(max_mean_width_cm), color = Site, fill = Site)) +
+    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+    geom_point(data = mother_cg_arctica) +
+    theme_shrub() +
+    ylab("Child canopy width (log, cm) \n") +
+    xlab("\nMother canopy width (log, cm) ")+ 
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+    labs(title = "Salix arctica"))
+
+# arrange maternal width fig. 
+(mat_width_plots <- ggarrange(rich_width_mat_plot, pul_width_mat_plot, arc_width_mat_plot, 
+                              common.legend = TRUE, legend = "bottom",
+                              ncol = 3, nrow = 1))
+
+# Propagation: Height vs cutting length------
+(rich_prop_1 <-  mother_cg_rich %>%
+   add_predicted_draws(prop_rich, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = log(Cutting_length), y = log(max_canopy_height_cm), color = Site, fill = Site)) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = mother_cg_rich) +
+   theme_shrub() +
+   ylab("Child canopy height (log, cm) \n") +
+   xlab("\nMother cutting length (log, cm) ")+ 
+   scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+   labs(title = "Salix richardsonii"))
+
+(pul_prop_1 <-  mother_cg_pulchra %>%
+    add_predicted_draws(prop_pul, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Cutting_length), y = log(max_canopy_height_cm), color = Site, fill = Site)) +
+    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+    geom_point(data = mother_cg_pulchra) +
+    theme_shrub() +
+    ylab("Child canopy height (log, cm) \n") +
+    xlab("\nMother cutting length (log, cm) ")+ 
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+    labs(title = "Salix pulchra"))
+
+(arc_prop_1 <-  mother_cg_arctica %>%
+    add_predicted_draws(prop_arc, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Cutting_length), y = log(max_canopy_height_cm), color = Site, fill = Site)) +
+    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+    geom_point(data = mother_cg_arctica) +
+    theme_shrub() +
+    ylab("Child canopy height (log, cm) \n") +
+    xlab("\nMother cutting length (log, cm) ")+ 
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+    labs(title = "Salix arctica"))
+
+# arrange maternal width fig. 
+(prop_plots_1 <- ggarrange(rich_prop_1, pul_prop_1, arc_prop_1, 
+                              common.legend = TRUE, legend = "bottom",
+                              ncol = 3, nrow = 1))
+
+# Propagation:biovol vs cutting length------
+(rich_prop_2 <-  mother_cg_rich %>%
+   add_predicted_draws(prop_biovol_rich, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = log(Cutting_length), y = log(max_biovol), color = Site, fill = Site)) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = mother_cg_rich) +
+   theme_shrub() +
+   ylab("Child biovolume (log, cm3) \n") +
+   xlab("\nMother cutting length (log, cm) ")+ 
+   scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+   labs(title = "Salix richardsonii"))
+
+(pul_prop_2 <-  mother_cg_pulchra %>%
+    add_predicted_draws(prop_biovol_pul, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Cutting_length), y = log(max_biovol), color = Site, fill = Site)) +
+    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+    geom_point(data = mother_cg_pulchra) +
+    theme_shrub() +
+    ylab("Child biovolume (log, cm3) \n") +
+    xlab("\nMother cutting length (log, cm) ")+ 
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+    labs(title = "Salix pulchra"))
+
+(arc_prop_2 <-  mother_cg_arctica %>%
+    group_by(Site) %>%
+    add_predicted_draws(prop_biovol_arc, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Cutting_length), y = log(max_biovol), color = Site, fill = Site)) +
+    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+    geom_point(data = mother_cg_arctica) +
+    theme_shrub() +
+    ylab("Child biovolume (log, cm3) \n") +
+    xlab("\nMother cutting length (log, cm) ")+ 
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+    labs(title = "Salix arctica"))
+
+
+# arrange maternal width fig. 
+(prop_plots_2 <- ggarrange(rich_prop_2, pul_prop_2, arc_prop_2, 
+                           common.legend = TRUE, legend = "bottom",
+                           ncol = 3, nrow = 1))
+
+# Propagation:Cutting length vs mother canopy height -----
+(rich_prop_3 <-  mother_cg_rich %>%
+   add_predicted_draws(prop_cutting_rich, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = log(Mother_Canopy_Height_cm), y = log(Cutting_length), color = Site, fill = Site)) +
+   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   geom_point(data = mother_cg_rich) +
+   theme_shrub() +
+   ylab("Mother cutting length (log, cm) \n") +
+   xlab("\nMother canopy height (log, cm) ")+ 
+   scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+   scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+   labs(title = "Salix richardsonii"))
+
+(pul_prop_3 <-  mother_cg_pulchra %>%
+    add_predicted_draws(prop_cutting_pul, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Mother_Canopy_Height_cm), y = log(Cutting_length), color = Site, fill = Site)) +
+    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+    geom_point(data = mother_cg_pulchra) +
+    theme_shrub() +
+    ylab("Mother cutting length (log, cm) \n") +
+    xlab("\nMother canopy height (log, cm) ")+ 
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+    labs(title = "Salix pulchra"))
+
+(arc_prop_3 <-  mother_cg_arctica %>%
+    add_predicted_draws(prop_cutting_arc, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Mother_Canopy_Height_cm), y = log(Cutting_length), color = Site, fill = Site)) +
+    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+    geom_point(data = mother_cg_arctica) +
+    theme_shrub() +
+    ylab("Mother cutting length (log, cm) \n") +
+    xlab("\nMother canopy height (log, cm) ")+ 
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
+    labs(title = "Salix arctica"))
+
+# arrange maternal width fig. 
+(prop_plots_3 <- ggarrange(rich_prop_3, pul_prop_3, arc_prop_3, 
+                           common.legend = TRUE, legend = "bottom",
+                           ncol = 3, nrow = 1))
