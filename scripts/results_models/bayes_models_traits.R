@@ -230,15 +230,15 @@ save_kable(kable_SLA, file = "output/SLA_results.pdf",
            density = 300)
 
 # LDMC ----
-# S. arctica ---- 
-arctica_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
-                          iter = 3000, warmup = 1000, 
-                          control = list(max_treedepth = 15, adapt_delta = 0.99)) #There were 5 divergent transitions after warmup.
-summary(arctica_LDMC_log)
-plot(arctica_LDMC_log)
-pp_check(arctica_LDMC_log, type = "dens_overlay", ndraws = 100) 
-arctica_LDMC_results <- model_summ(arctica_LDMC_log)
-arctica_LDMC_results$Species <- "Salix arctica"
+# S. richardsonii ----
+rich_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
+                           iter = 3000, warmup = 1000, 
+                           control = list(max_treedepth = 15, adapt_delta = 0.99)) # 2 divergent transitions after warmup
+summary(rich_LDMC_log)
+plot(rich_LDMC_log)
+pp_check(rich_LDMC_log, type = "dens_overlay", ndraws = 100) 
+rich_LDMC_results <- model_summ(rich_LDMC_log)
+rich_LDMC_results$Species <- "Salix richardsonii"
 
 # S. pulchra ----
 pulchra_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
@@ -250,15 +250,15 @@ pp_check(pulchra_LDMC_log, type = "dens_overlay", ndraws = 100)
 pulchra_LDMC_results <- model_summ(pulchra_LDMC_log)
 pulchra_LDMC_results$Species <- "Salix pulchra"
 
-# S. richardsonii ----
-rich_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-                       iter = 3000, warmup = 1000, 
-                       control = list(max_treedepth = 15, adapt_delta = 0.99)) # 2 divergent transitions after warmup
-summary(rich_LDMC_log)
-plot(rich_LDMC_log)
-pp_check(rich_LDMC_log, type = "dens_overlay", ndraws = 100) 
-rich_LDMC_results <- model_summ(rich_LDMC_log)
-rich_LDMC_results$Species <- "Salix richardsonii"
+# S. arctica ---- 
+arctica_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
+                              iter = 3000, warmup = 1000, 
+                              control = list(max_treedepth = 15, adapt_delta = 0.99)) #There were 5 divergent transitions after warmup.
+summary(arctica_LDMC_log)
+plot(arctica_LDMC_log)
+pp_check(arctica_LDMC_log, type = "dens_overlay", ndraws = 100) 
+arctica_LDMC_results <- model_summ(arctica_LDMC_log)
+arctica_LDMC_results$Species <- "Salix arctica"
 
 # merging all extracted outputs
 garden_ldmc_out <- rbind(rich_LDMC_results, pulchra_LDMC_results, arctica_LDMC_results)
@@ -321,16 +321,15 @@ save_kable(kable_LDMC, file = "output/LDMC_results.pdf",
            density = 300)
 
 # LA ----
-# S. arctica ----
-arctica_LA <- brms::brm(log(LA)  ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
-                          iter = 3000, warmup = 1000, 
-                        control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(arctica_LA) 
-plot(arctica_LA)
-pp_check(arctica_LA, type = "dens_overlay", ndraws = 100) 
-arctica_LA_results <- model_summ(arctica_LA)
-arctica_LA_results$Species <- "Salix arctica"
-
+# S. richardsonii ----
+rich_LA <- brms::brm(log(LA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
+                     iter = 3000, warmup = 1000, 
+                     control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(rich_LA) 
+plot(rich_LA)
+pp_check(rich_LA, type = "dens_overlay", ndraws = 100)
+rich_LA_results <- model_summ(rich_LA)
+rich_LA_results$Species <- "Salix richardsonii"
 # S. pulchra ----
 pulchra_LA <- brms::brm(log(LA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000, 
@@ -340,16 +339,15 @@ plot(pulchra_LA)
 pp_check(pulchra_LA, type = "dens_overlay", ndraws = 100) 
 pulchra_LA_results <- model_summ(pulchra_LA)
 pulchra_LA_results$Species <- "Salix pulchra"
-
-# S. richardsonii ----
-rich_LA <- brms::brm(log(LA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-                        iter = 3000, warmup = 1000, 
-                     control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(rich_LA) 
-plot(rich_LA)
-pp_check(rich_LA, type = "dens_overlay", ndraws = 100)
-rich_LA_results <- model_summ(rich_LA)
-rich_LA_results$Species <- "Salix richardsonii"
+# S. arctica ----
+arctica_LA <- brms::brm(log(LA)  ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
+                          iter = 3000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(arctica_LA) 
+plot(arctica_LA)
+pp_check(arctica_LA, type = "dens_overlay", ndraws = 100) 
+arctica_LA_results <- model_summ(arctica_LA)
+arctica_LA_results$Species <- "Salix arctica"
 
 # merging all extracted outputs
 garden_LA_out <- rbind(rich_LA_results, pulchra_LA_results, arctica_LA_results)
@@ -434,21 +432,15 @@ plot(rich_LMA)
 pp_check(rich_LMA)
 
 # LEAF LENGTH ----
-# S. arctica ----
-# no leaf length for S. arctic from source pop
-# make common garden only model 
-arctica_cg_growth <- arctica_all_growth %>% 
-  filter(population %in% c("Northern Garden", "Southern Garden"))
-
-arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population + (1|year), data = arctica_cg_growth, family = gaussian(), chains = 3,
-                            iter = 5000, warmup = 1000, 
-                            control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(arctica_LL_CG)
-plot(arctica_LL_CG)
-pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
-arctica_LL_results <- model_summ(arctica_LL_CG)
-arctica_LL_results$Species <- "Salix arctica"
-
+# S. richardsonii ----
+rich_LL <- brms::brm(mean_leaf_length ~ population + (1|year), data = richardsonii_all_growth, family = gaussian(), chains = 3,
+                     iter = 3000, warmup = 1000, 
+                     control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(rich_LL)
+plot(rich_LL)
+pp_check(rich_LL, type = "dens_overlay", ndraws = 100) 
+rich_LL_results <- model_summ(rich_LL)
+rich_LL_results$Species <- "Salix richardsonii"
 # S. pulchra ----
 pulchra_LL <- brms::brm(mean_leaf_length ~ population + (1|year), data = pulchra_all_growth, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000, 
@@ -459,17 +451,20 @@ pp_check(pulchra_LL, type = "dens_overlay", ndraws = 100)
 pulchra_LL_results <- model_summ(pulchra_LL)
 pulchra_LL_results$Species <- "Salix pulchra"
 
-# S. richardsonii ----
-rich_LL <- brms::brm(mean_leaf_length ~ population + (1|year), data = richardsonii_all_growth, family = gaussian(), chains = 3,
-                        iter = 3000, warmup = 1000, 
-                     control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(rich_LL)
-plot(rich_LL)
-pp_check(rich_LL, type = "dens_overlay", ndraws = 100) 
-rich_LL_results <- model_summ(rich_LL)
-rich_LL_results$Species <- "Salix richardsonii"
+# S. arctica ----
+# no leaf length for S. arctic from source pop
+# make common garden only model 
+arctica_cg_growth <- arctica_all_growth %>% 
+  filter(population %in% c("Northern Garden", "Southern Garden"))
 
-
+arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population + (1|year), data = arctica_cg_growth, family = gaussian(), chains = 3,
+                           iter = 5000, warmup = 1000, 
+                           control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(arctica_LL_CG)
+plot(arctica_LL_CG)
+pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
+arctica_LL_results <- model_summ(arctica_LL_CG)
+arctica_LL_results$Species <- "Salix arctica"
 # merging all extracted outputs
 garden_LL_out <- rbind(rich_LL_results, pulchra_LL_results, arctica_LL_results)
 
@@ -533,20 +528,37 @@ save_kable(kable_LL, file = "output/traits/LL_results.pdf",
 
 # PLOTS ---- 
 # note: always put richardsonii, pulchra then arctica 
-#all_CG_source_traits$population <- ordered(all_CG_source_traits$population, 
-#                                           levels = c("Northern Source", 
-#                                                      "Northern Garden", 
-#                                                      "Southern Source",
-#                                                      "Southern Garden"))
-#all_CG_source_growth$population <- ordered(all_CG_source_growth$population, 
-#                                           levels = c("Northern Source", 
-#                                                      "Northern Garden",
-#                                                      "Southern Source", 
-#                                                      "Southern Garden"))
-#all_CG_source_growth$Species <- ordered(all_CG_source_growth$Species, 
-#                                        levels = c("Salix richardsonii", 
-#                                                   "Salix pulchra",
-#                                                   "Salix arctica"))
+# reordering levels to go northern source, northern garden, southern source, southern garden
+pulchra_all_traits$population <- ordered(pulchra_all_traits$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden", 
+                                                      "Southern Source",  
+                                                      "Southern Garden"))
+richardsonii_all_traits$population <- ordered(richardsonii_all_traits$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden",
+                                                      "Southern Source", 
+                                                      "Southern Garden"))
+arctica_all_traits$population <- ordered(arctica_all_traits$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden",
+                                                      "Southern Source", 
+                                                      "Southern Garden"))
+richardsonii_all_growth$population <- ordered(richardsonii_all_growth$population, 
+                                           levels = c("Northern Source", 
+                                                      "Northern Garden",
+                                                      "Southern Source", 
+                                                      "Southern Garden"))
+pulchra_all_growth$population <- ordered(pulchra_all_growth$population, 
+                                              levels = c("Northern Source", 
+                                                         "Northern Garden",
+                                                         "Southern Source", 
+                                                         "Southern Garden"))
+arctica_cg_growth$population <- ordered(arctica_cg_growth$population, 
+                                              levels = c("Northern Source", 
+                                                         "Northern Garden",
+                                                         "Southern Source", 
+                                                         "Southern Garden"))
 
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", size=12),
@@ -567,10 +579,10 @@ richard_sla_data <- richard_sla[[1]] # making the extracted model outputs into a
 (rich_sla_plot <-ggplot(richard_sla_data) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = log(SLA), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
-                  alpha = 1) +
-    ylab("Salix arctica SLA (log, UNIT)\n") +
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
+                  size = 1, alpha = 1) +
+    ylab("Specific Leaf Area (log, UNIT)\n") +
     xlab("\n Population" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -584,10 +596,10 @@ pul_sla_data <- pul_sla[[1]] # making the extracted model outputs into a dataset
 (pul_sla_plot <-ggplot(pul_sla_data) +
     geom_point(data = pulchra_all_traits, aes(x = population, y = log(SLA), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
-                  alpha = 1) +
-    ylab("Salix arctica SLA (log, UNIT)\n") +
+                  size = 1, alpha = 1) +
+    ylab("Specific Leaf Area (log, UNIT)\n") +
     xlab("\n Population" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -601,10 +613,10 @@ arc_sla_data <- arc_sla[[1]] # making the extracted model outputs into a dataset
 (arc_sla_plot <-ggplot(arc_sla_data) +
     geom_point(data = arctica_all_traits, aes(x = population, y = log(SLA), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 4)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
-                  alpha = 1) +
-    ylab("Salix arctica SLA (log, UNIT)\n") +
+                  size = 1, alpha = 1) +
+    ylab("Specific Leaf Area (log, UNIT)\n") +
     xlab("\n Population" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -612,10 +624,179 @@ arc_sla_data <- arc_sla[[1]] # making the extracted model outputs into a dataset
     theme_shrub())
 
 (sla_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, 
-                           labels = c("A", "B", "C"), common.legend = TRUE, legend = "bottom",
+                       common.legend = TRUE, legend = "bottom",
                            ncol = 3, nrow = 1))
 
 # LMDC ---- 
+# richardsonii ----
+richard_ldmc <- (conditional_effects(rich_LDMC_log)) # extracting conditional effects from bayesian model
+richard_ldmc_data <- richard_ldmc[[1]] # making the extracted model outputs into a dataset (for plotting)
+#[[1]] is to extract the first term in the model which in our case is population
+
+(rich_ldmc_plot <-ggplot(richard_ldmc_data) +
+    geom_point(data = richardsonii_all_traits, aes(x = population, y = log(LDMC_g_g), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
+                  size = 1, alpha = 1) +
+    ylab("Leaf dry matter content (log, UNIT)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    labs(title = "Salix richardsonii") +
+    theme_shrub())
+# pulchra ----
+pul_ldmc <- (conditional_effects(pulchra_LDMC_log)) # extracting conditional effects from bayesian model
+pul_ldmc_data <- pul_ldmc[[1]] # making the extracted model outputs into a dataset (for plotting)
+#[[1]] is to extract the first term in the model which in our case is population
+
+(pul_ldmc_plot <-ggplot(pul_ldmc_data) +
+    geom_point(data = pulchra_all_traits, aes(x = population, y = log(LDMC_g_g), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  size = 1, alpha = 1) +
+    ylab("Leaf dry matter content (log, UNIT)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    labs(title = "Salix pulchra") +
+    theme_shrub())
+# arctica ----
+arc_ldmc <- (conditional_effects(arctica_LDMC_log)) # extracting conditional effects from bayesian model
+arc_ldmc_data <- arc_ldmc[[1]] # making the extracted model outputs into a dataset (for plotting)
+#[[1]] is to extract the first term in the model which in our case is population
+
+(arc_ldmc_plot <-ggplot(arc_ldmc_data) +
+    geom_point(data = arctica_all_traits, aes(x = population, y = log(LDMC_g_g), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  size = 1, alpha = 1) +
+    ylab("Leaf dry matter content (log, UNIT)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    labs(title = "Salix arctica") +
+    theme_shrub())
+
+(ldmc_panel <- ggarrange(rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot, 
+                        common.legend = TRUE, legend = "bottom",
+                        ncol = 3, nrow = 1))
 # LA ----
+# richardsonii ----
+richard_la <- (conditional_effects(rich_LA)) # extracting conditional effects from bayesian model
+richard_la_data <- richard_la[[1]] # making the extracted model outputs into a dataset (for plotting)
+#[[1]] is to extract the first term in the model which in our case is population
+
+(rich_la_plot <-ggplot(richard_la_data) +
+    geom_point(data = richardsonii_all_traits, aes(x = population, y = log(LA), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
+                  size = 1, alpha = 1) +
+    ylab("Leaf Area (log, UNIT)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    labs(title = "Salix richardsonii") +
+    theme_shrub())
+# pulchra ----
+pul_la <- (conditional_effects(pulchra_LA)) # extracting conditional effects from bayesian model
+pul_la_data <- pul_la[[1]] # making the extracted model outputs into a dataset (for plotting)
+#[[1]] is to extract the first term in the model which in our case is population
+
+(pul_la_plot <-ggplot(pul_la_data) +
+    geom_point(data = pulchra_all_traits, aes(x = population, y = log(LA), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  size = 1, alpha = 1) +
+    ylab("Leaf Area (log, UNIT)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    labs(title = "Salix pulchra") +
+    theme_shrub())
+# arctica ----
+arc_la <- (conditional_effects(arctica_LA)) # extracting conditional effects from bayesian model
+arc_la_data <- arc_la[[1]] # making the extracted model outputs into a dataset (for plotting)
+#[[1]] is to extract the first term in the model which in our case is population
+
+(arc_la_plot <-ggplot(arc_la_data) +
+    geom_point(data = arctica_all_traits, aes(x = population, y = log(LA), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  size = 1, alpha = 1) +
+    ylab("Leaf Area (log, UNIT)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    labs(title = "Salix arctica") +
+    theme_shrub())
+
+(la_panel <- ggarrange(rich_la_plot, pul_la_plot, arc_la_plot, 
+                         common.legend = TRUE, legend = "bottom",
+                         ncol = 3, nrow = 1))
+
 # LEAF LENGTH -----
 
+# richardsonii ----
+richard_ll <- (conditional_effects(rich_LL)) # extracting conditional effects from bayesian model
+richard_ll_data <- richard_ll[[1]] # making the extracted model outputs into a dataset (for plotting)
+#[[1]] is to extract the first term in the model which in our case is population
+
+(rich_ll_plot <-ggplot(richard_ll_data) +
+    geom_point(data = richardsonii_all_growth, aes(x = population, y = mean_leaf_length, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
+                  size = 1, alpha = 1) +
+    ylab("Leaf Length (log, mm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    labs(title = "Salix richardsonii") +
+    theme_shrub())
+# pulchra ----
+pul_ll <- (conditional_effects(pulchra_LL)) # extracting conditional effects from bayesian model
+pul_ll_data <- pul_ll[[1]] # making the extracted model outputs into a dataset (for plotting)
+#[[1]] is to extract the first term in the model which in our case is population
+
+(pul_ll_plot <-ggplot(pul_ll_data) +
+    geom_point(data = pulchra_all_growth, aes(x = population, y = mean_leaf_length, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  size = 1, alpha = 1) +
+    ylab("Leaf Length (log, mm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    labs(title = "Salix pulchra") +
+    theme_shrub())
+# arctica ----
+arc_ll <- (conditional_effects(arctica_LL_CG)) # extracting conditional effects from bayesian model
+arc_ll_data <- arc_ll[[1]] # making the extracted model outputs into a dataset (for plotting)
+#[[1]] is to extract the first term in the model which in our case is population
+
+(arc_ll_plot <-ggplot(arc_ll_data) +
+    geom_point(data = arctica_cg_growth, aes(x = population, y = mean_leaf_length, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  size = 1, alpha = 1) +
+    ylab("Leaf Length (log, mm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    labs(title = "Salix arctica") +
+    theme_shrub())
+
+(ll_panel <- ggarrange(rich_ll_plot, pul_ll_plot, arc_ll_plot, 
+                       common.legend = TRUE, legend = "bottom",
+                       ncol = 3, nrow = 1))
+
+(trait_panel <- ggarrange(sla_panel, ldmc_panel, la_panel, ll_panel), 
+  ncol = 2, nrow = 2))
