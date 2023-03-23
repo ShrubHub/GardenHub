@@ -627,7 +627,310 @@ column_spec(kable_biovol_source, 2, width = NULL, bold = FALSE, italic = TRUE)
 row_spec(kable_heights_source, 2:12, align = "c") 
 
 
-# merge and plot all ----
+# merge all outputs 
 all_source_outputs <- rbind(source_heights_out_back, source_width_out_back,
                             source_elong_out_back, source_diam_out_back,
                             source_biovol_out_back)
+
+
+# DATA VISUALISATION --------
+
+# CANOPY HEIGHT -------
+# S.rich ----
+rich_source_height <- (conditional_effects(source_rich_height)) # extracting conditional effects from bayesian model
+rich_source_height_data <- rich_source_height[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(rich_source_height_plot <-ggplot(rich_source_height_data) +
+    geom_violin(data = unique_source_mother_rich, aes(x = Site, y = log(Canopy_Height_cm), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = log(Canopy_Height_cm), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Canopy height (log, cm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix richardsonii"))
+
+# S. pul----
+pul_source_height <- (conditional_effects(source_pul_height)) # extracting conditional effects from bayesian model
+pul_source_height_data <- pul_source_height[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(pul_source_height_plot <-ggplot(pul_source_height_data) +
+    geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = log(Canopy_Height_cm), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = log(Canopy_Height_cm), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Canopy height (log, cm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix pulchra"))
+
+# S.arctica -----
+arc_source_height <- (conditional_effects(source_arc_height)) # extracting conditional effects from bayesian model
+arc_source_height_data <- arc_source_height[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(arc_source_height_plot <-ggplot(arc_source_height_data) +
+    geom_violin(data = unique_source_mother_arctica, aes(x = Site, y = log(Canopy_Height_cm), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = log(Canopy_Height_cm), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Canopy height (log, cm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix arctica"))
+
+# STEM ELONG -----
+# S.rich ----
+rich_source_elong <- (conditional_effects(source_rich_elong)) # extracting conditional effects from bayesian model
+rich_source_elong_data <- rich_source_elong[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(rich_source_elong_plot <-ggplot(rich_source_elong_data) +
+    geom_violin(data = unique_source_mother_rich, aes(x = Site, y = log(mean_stem_elong), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = log(mean_stem_elong), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Mean stem elongation (log, mm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix richardsonii"))
+
+# S. pul----
+pul_source_elong <- (conditional_effects(source_pul_elong)) # extracting conditional effects from bayesian model
+pul_source_elong_data <- pul_source_elong[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(pul_source_elong_plot <-ggplot(pul_source_elong_data) +
+    geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = log(mean_stem_elong), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = log(mean_stem_elong), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Mean stem elongation (log, mm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix pulchra"))
+
+
+# WIDTH -----
+# S.rich ----
+rich_source_width <- (conditional_effects(source_rich_width)) # extracting conditional effects from bayesian model
+rich_source_width_data <- rich_source_width[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(rich_source_width_plot <-ggplot(rich_source_width_data) +
+    geom_violin(data = unique_source_mother_rich, aes(x = Site, y = log(mean_width), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = log(mean_width), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Mean width (log, cm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix richardsonii"))
+
+# S. pul----
+pul_source_width <- (conditional_effects(source_pul_width)) # extracting conditional effects from bayesian model
+pul_source_width_data <- pul_source_width[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(pul_source_width_plot <-ggplot(pul_source_width_data) +
+    geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = log(mean_width), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = log(mean_width), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Mean width (log, cm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix pulchra"))
+
+# S.arctica -----
+arc_source_width <- (conditional_effects(source_arc_width)) # extracting conditional effects from bayesian model
+arc_source_width_data <- arc_source_width[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(arc_source_width_plot <-ggplot(arc_source_width_data) +
+    geom_violin(data = unique_source_mother_arctica, aes(x = Site, y = log(mean_width), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = log(mean_width), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Mean width (log, cm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix arctica"))
+
+
+
+# STEM DIAM -----
+# S.rich ----
+rich_source_diam <- (conditional_effects(source_rich_diam)) # extracting conditional effects from bayesian model
+rich_source_diam_data <- rich_source_diam[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(rich_source_diam_plot <-ggplot(rich_source_diam_data) +
+    geom_violin(data = unique_source_mother_rich, aes(x = Site, y = log(Stem_diameter), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = log(Stem_diameter), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Stem diameter (log, mm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix richardsonii"))
+
+# S. pul----
+pul_source_diam <- (conditional_effects(source_pul_diam)) # extracting conditional effects from bayesian model
+pul_source_diam_data <- pul_source_diam[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(pul_source_diam_plot <-ggplot(pul_source_diam_data) +
+    geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = log(Stem_diameter), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = log(Stem_diameter), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Stem diameter (log, mm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix pulchra"))
+
+
+# BIOVOLUME ------
+# S.rich ----
+rich_source_biovol <- (conditional_effects(source_rich_biovol)) # extracting conditional effects from bayesian model
+rich_source_biovol_data <- rich_source_biovol[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(rich_source_biovol_plot <-ggplot(rich_source_biovol_data) +
+    geom_violin(data = unique_source_mother_rich, aes(x = Site, y = log(biovolume), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = log(biovolume), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Biovolume (log, cm3)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix richardsonii"))
+
+# S. pul----
+pul_source_biovol <- (conditional_effects(source_pul_biovol)) # extracting conditional effects from bayesian model
+pul_source_biovol_data <- pul_source_biovol[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(pul_source_biovol_plot <-ggplot(pul_source_biovol_data) +
+    geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = log(biovolume), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = log(biovolume), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Biovolume (log, cm3)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix pulchra"))
+
+# S.arctica -----
+arc_source_biovol <- (conditional_effects(source_arc_biovol)) # extracting conditional effects from bayesian model
+arc_source_biovol_data <- arc_source_biovol[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(arc_source_biovol_plot <-ggplot(arc_source_biovol_data) +
+    geom_violin(data = unique_source_mother_arctica, aes(x = Site, y = log(biovolume), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = log(biovolume), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Biovolume (log, cm3)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix arctica"))
+
+# PANEL ----
+(growth_source_panel <- ggarrange(rich_source_height_plot, pul_source_height_plot,arc_source_height_plot, 
+                            rich_source_elong_plot, pul_source_elong_plot,
+                            rich_source_width_plot, pul_source_width_plot,arc_source_width_plot,
+                          rich_source_diam_plot, pul_source_diam_plot,
+                          rich_source_biovol_plot, pul_source_biovol_plot, arc_source_biovol_plot, 
+                          common.legend = TRUE, legend = "bottom", 
+                          ncol = 6, nrow = 3))
+
+(source_height_panel <- ggarrange(rich_source_height_plot, pul_source_height_plot, arc_source_height_plot, 
+                       common.legend = TRUE, legend = "bottom",
+                       ncol = 3, nrow = 1))
+
+(source_elong_panel <- ggarrange( rich_source_elong_plot, pul_source_elong_plot,
+                                  common.legend = TRUE, legend = "bottom",
+                                  ncol = 2, nrow = 1))
+
+(source_width_panel <- ggarrange( rich_source_width_plot, pul_source_width_plot,arc_source_width_plot,
+                                  common.legend = TRUE, legend = "bottom",
+                                  ncol = 3, nrow = 1))
+
+(source_diam_panel <- ggarrange( rich_source_diam_plot, pul_source_diam_plot,
+                                  common.legend = TRUE, legend = "bottom",
+                                  ncol = 2, nrow = 1))
+
+
+(source_biovol_panel <- ggarrange( rich_source_biovol_plot, pul_source_biovol_plot, arc_source_biovol_plot, 
+                                 common.legend = TRUE, legend = "bottom",
+                                 ncol = 3, nrow = 1))
+
