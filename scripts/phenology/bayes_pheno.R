@@ -750,7 +750,67 @@ arc_yellow_data <- arc_yellow[[1]] # making the extracted model outputs into a 
                                common.legend = TRUE, legend = "bottom",
                                ncol = 3, nrow = 1))
 # GROWING SEASON -------
-# S. richardsonii
-# S. pulchra 
-# S. arctica 
-# panel 
+# S. richardsonii -------
+ric_grow <- (conditional_effects(growing_season_rich)) # extracting conditional effects from bayesian model
+ric_grow_data <- ric_grow[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(ric_growing_plot <-ggplot(ric_grow_data) +
+    #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
+    #          alpha = 0.1)+ # raw data
+    geom_jitter(data = all_growing_season_rich, aes(x = population, y = growing_season.y, colour = population),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1,  width=.5) +
+    ylab("Growing season length (days) \n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix richardsonii"))
+
+# S. pulchra ----------
+pul_grow <- (conditional_effects(growing_season_pul)) # extracting conditional effects from bayesian model
+pul_grow_data <- pul_grow[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(pul_growing_plot <-ggplot(pul_grow_data) +
+    #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
+    #          alpha = 0.1)+ # raw data
+    geom_jitter(data = all_growing_season_pul, aes(x = population, y = growing_season.y, colour = population),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1,  width=.5) +
+    ylab("Growing season length (days) \n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix pulchra"))
+
+# S. arctica --------
+arc_grow <- (conditional_effects(growing_season_arc)) # extracting conditional effects from bayesian model
+arc_grow_data <- arc_grow[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(arc_growing_plot <-ggplot(arc_grow_data) +
+    #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
+    #          alpha = 0.1)+ # raw data
+    geom_jitter(data = all_growing_season_arc, aes(x = population, y = growing_season.y, colour = population),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1,  width=.5) +
+    ylab("Growing season length (days) \n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix arctica"))
+
+# arrange 
+(growing_season_panel <- ggarrange(ric_growing_plot, pul_growing_plot, arc_growing_plot, 
+                                common.legend = TRUE, legend = "bottom",
+                                ncol = 3, nrow = 1))
