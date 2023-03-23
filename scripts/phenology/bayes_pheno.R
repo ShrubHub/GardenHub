@@ -599,6 +599,7 @@ theme_shrub <- function(){ theme(legend.position = "right",
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
                                  plot.title = element_text(color = "black", size = 12, face = "bold.italic", hjust = 0.5),
                                  plot.margin = unit(c(1,1,1,1), units = , "cm"))}
+
 # reorder levels to be consistent
 all_growing_season_rich$population <- ordered(all_growing_season_rich$population, 
                                          levels = c("Northern Source", 
@@ -615,17 +616,140 @@ all_growing_season_arc$population <- ordered(all_growing_season_arc$population,
                                                          "Northern Garden", 
                                                          "Southern Source",  
                                                          "Southern Garden"))
-# bud burst ----
-# S. richardsonii
-# S. pulchra 
-# S. arctica 
-# panel
-# first yellow leaf ----
-# S. richardsonii
-# S. pulchra 
-# S. arctica 
-# panel 
-# growing season
+
+
+# LEAF EMERGENCE CG vs SOURCES ----
+# S. richardsonii ------
+ric_emerg <- (conditional_effects(garden_rich_emerg_compare)) # extracting conditional effects from bayesian model
+ric_emerg_data <- ric_emerg[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(ric_emerg_plot <-ggplot(ric_emerg_data) +
+    #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
+      #          alpha = 0.1)+ # raw data
+    geom_jitter(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, colour = population),
+               alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1,  width=.5) +
+    ylab("First leaf emergence DOY (centered) \n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix richardsonii"))
+
+# S. pulchra ------
+pul_emerg <- (conditional_effects(garden_pul_emerg_compare)) # extracting conditional effects from bayesian model
+pul_emerg_data <- pul_emerg[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(pul_emerg_plot <-ggplot(pul_emerg_data) +
+    #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
+    #          alpha = 0.1)+ # raw data
+    geom_jitter(data = all_phenocam_pulchra, aes(x = population, y = First_bud_burst_DOY_center, colour = population),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1,  width=.5) +
+    ylab("First leaf emergence DOY (centered) \n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix pulchra"))
+
+# S. arctica -------
+arc_emerg <- (conditional_effects(garden_arc_emerg_compare)) # extracting conditional effects from bayesian model
+arc_emerg_data <- arc_emerg[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(arc_emerg_plot <-ggplot(arc_emerg_data) +
+    #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
+    #          alpha = 0.1)+ # raw data
+    geom_jitter(data = all_phenocam_arctica, aes(x = population, y = First_bud_burst_DOY_center, colour = population),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1,  width=.5) +
+    ylab("First leaf emergence DOY (centered) \n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix arctica"))
+
+# arrange 
+(leaf_emerg_panel <- ggarrange(ric_emerg_plot, pul_emerg_plot, arc_emerg_plot, 
+                             common.legend = TRUE, legend = "bottom",
+                             ncol = 3, nrow = 1))
+
+# LEAF YELLOW ----
+# S. richardsonii-----
+ric_yellow <- (conditional_effects(garden_rich_yellow_compare)) # extracting conditional effects from bayesian model
+ric_yellow_data <- ric_yellow[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(ric_yellow_plot <-ggplot(ric_yellow_data) +
+    #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
+    #          alpha = 0.1)+ # raw data
+    geom_jitter(data = all_phenocam_rich, aes(x = population, y = First_leaf_yellow_DOY_center, colour = population),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1,  width=.5) +
+    ylab("First leaf yellowing DOY (centered) \n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix richardsonii"))
+
+# S. pulchra -----
+pul_yellow <- (conditional_effects(garden_pul_yellow_compare)) # extracting conditional effects from bayesian model
+pul_yellow_data <- pul_yellow[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(pul_yellow_plot <-ggplot(pul_yellow_data) +
+    #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
+    #          alpha = 0.1)+ # raw data
+    geom_jitter(data = all_phenocam_pulchra, aes(x = population, y = First_leaf_yellow_DOY_center, colour = population),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1,  width=.5) +
+    ylab("First leaf yellowing DOY (centered) \n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix pulchra"))
+
+# S. arctica ------
+arc_yellow <- (conditional_effects(garden_arc_yellow_compare)) # extracting conditional effects from bayesian model
+arc_yellow_data <- arc_yellow[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(arc_yellow_plot <-ggplot(arc_yellow_data) +
+    #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
+    #          alpha = 0.1)+ # raw data
+    geom_jitter(data = all_phenocam_arctica, aes(x = population, y = First_leaf_yellow_DOY_center, colour = population),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1,  width=.5) +
+    ylab("First leaf yellowing DOY (centered) \n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix arctica"))
+
+# arrange 
+(leaf_yellow_panel <- ggarrange(ric_yellow_plot, pul_yellow_plot, arc_yellow_plot, 
+                               common.legend = TRUE, legend = "bottom",
+                               ncol = 3, nrow = 1))
+# GROWING SEASON -------
 # S. richardsonii
 # S. pulchra 
 # S. arctica 
