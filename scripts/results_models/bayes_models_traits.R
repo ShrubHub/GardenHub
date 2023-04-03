@@ -1,6 +1,6 @@
 # BAYESIAN traits results models -----
 # Script by Madi
-# Last update: 22/03/2023
+# Last update: 03/04/2023
 
 # libraries ----
 library(plyr) # load before dplyr aka tidyverse 
@@ -35,16 +35,16 @@ all_CG_source_traits$year <- as.factor(all_CG_source_traits$year)
 
 # rename levels of variables for easier interpretation 
 all_CG_source_traits$population <- plyr::revalue(all_CG_source_traits$population, 
-                                                 c("Northern"="Northern Garden",
-                                                   "Southern"="Southern Garden",
-                                                   "source_south"="Southern Source",
-                                                   "source_north"="Northern Source"))
+                                                 c("Northern"="N. Garden",
+                                                   "Southern"="S. Garden",
+                                                   "source_south"="S. Source",
+                                                   "source_north"="N. Source"))
 
 all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
-                                                 c("Northern"="Northern Garden",
-                                                   "Southern"="Southern Garden",
-                                                   "source_south"="Southern Source",
-                                                   "source_north"="Northern Source")) 
+                                                 c("Northern"="N. Garden",
+                                                   "Southern"="S. Garden",
+                                                   "source_south"="S. Source",
+                                                   "source_north"="N. Source")) 
 # to run separate models per species filter out species: 
 arctica_all_traits <- all_CG_source_traits %>% 
   filter(Species == "Salix arctica")
@@ -130,10 +130,6 @@ model_summ <- function(x) {
 }
 
 # MODELS ----
-# model structure : 
-# mod <- brms::brm(trait ~ population + (1|Year), data = spp_traits, 
-# family = gaussian(), chains = 3, iter = 3000 - 5000, warmup = 1000)
-
 # SLA ----
 # S. richardsonii ----
 rich_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
@@ -513,65 +509,38 @@ save_kable(kable_LL, file = "output/traits/LL_results.pdf",
 # note: always put richardsonii, pulchra then arctica 
 # reordering levels to go northern source, northern garden, southern source, southern garden
 pulchra_all_traits$population <- ordered(pulchra_all_traits$population, 
-                                           levels = c("Northern Source", 
-                                                      "Northern Garden", 
-                                                      "Southern Source",  
-                                                      "Southern Garden"))
-# shorten to N instead of northern 
-pulchra_all_traits$population <- plyr::revalue(pulchra_all_traits$population, 
-                                                 c("Northern Source"="N. Source",
-                                                   "Northern Garden"="N. Garden",
-                                                   "Southern Source"="S. Source",
-                                                   "Southern Garden"="S. Garden"))
+                                           levels = c("N. Source", 
+                                                      "N. Garden", 
+                                                      "S. Source",  
+                                                      "S. Garden"))
 
 richardsonii_all_traits$population <- ordered(richardsonii_all_traits$population, 
-                                           levels = c("Northern Source", 
-                                                      "Northern Garden",
-                                                      "Southern Source", 
-                                                      "Southern Garden"))
-richardsonii_all_traits$population <- plyr::revalue(richardsonii_all_traits$population, 
-                                               c("Northern Source"="N. Source",
-                                                 "Northern Garden"="N. Garden",
-                                                 "Southern Source"="S. Source",
-                                                 "Southern Garden"="S. Garden"))
+                                           levels = c("N. Source", 
+                                                      "N. Garden",
+                                                      "S. Source", 
+                                                      "S. Garden"))
+
 arctica_all_traits$population <- ordered(arctica_all_traits$population, 
-                                           levels = c("Northern Source", 
-                                                      "Northern Garden",
-                                                      "Southern Source", 
-                                                      "Southern Garden"))
-arctica_all_traits$population <- plyr::revalue(arctica_all_traits$population, 
-                                                    c("Northern Source"="N. Source",
-                                                      "Northern Garden"="N. Garden",
-                                                      "Southern Source"="S. Source",
-                                                      "Southern Garden"="S. Garden"))
+                                           levels = c("N. Source", 
+                                                      "N. Garden",
+                                                      "S. Source", 
+                                                      "S. Garden"))
+
 richardsonii_all_growth$population <- ordered(richardsonii_all_growth$population, 
-                                           levels = c("Northern Source", 
-                                                      "Northern Garden",
-                                                      "Southern Source", 
-                                                      "Southern Garden"))
-richardsonii_all_growth$population <- plyr::revalue(richardsonii_all_growth$population, 
-                                               c("Northern Source"="N. Source",
-                                                 "Northern Garden"="N. Garden",
-                                                 "Southern Source"="S. Source",
-                                                 "Southern Garden"="S. Garden"))
+                                           levels = c("N. Source", 
+                                                      "N. Garden",
+                                                      "S. Source", 
+                                                      "S. Garden"))
+
 pulchra_all_growth$population <- ordered(pulchra_all_growth$population, 
-                                              levels = c("Northern Source", 
-                                                         "Northern Garden",
-                                                         "Southern Source", 
-                                                         "Southern Garden"))
-pulchra_all_growth$population <- plyr::revalue(pulchra_all_growth$population, 
-                                                    c("Northern Source"="N. Source",
-                                                      "Northern Garden"="N. Garden",
-                                                      "Southern Source"="S. Source",
-                                                      "Southern Garden"="S. Garden"))
+                                              levels = c("N. Source", 
+                                                         "N. Garden",
+                                                         "S. Source", 
+                                                         "S. Garden"))
+
 arctica_cg_growth$population <- ordered(arctica_cg_growth$population, 
-                                              levels = c("Northern Garden",
-                                                         "Southern Garden"))
-arctica_cg_growth$population <- plyr::revalue(arctica_cg_growth$population, 
-                                               c("Northern Garden"="N. Garden",
-                                                 "Southern Garden"="S. Garden"))
-
-
+                                              levels = c("N. Garden",
+                                                         "S. Garden"))
 
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", size=12),
@@ -588,12 +557,20 @@ theme_shrub <- function(){ theme(legend.position = "right",
 richard_sla <- (conditional_effects(rich_SLA)) # extracting conditional effects from bayesian model
 richard_sla_data <- richard_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
+richard_sla_data_trans <- richard_sla_data %>% 
+  mutate(CI_range = (estimate__ - lower__)) %>% 
+  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(estimate__), 
+         Est.Error_trans = 10^(se__)) %>% 
+  select(-CI_range)
 
-(rich_sla_plot <-ggplot(richard_sla_data) +
+
+(rich_sla_plot <-ggplot(richard_sla_data_trans) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = log(SLA), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
+    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
     ylab("SLA (log, UNIT)\n") +
     xlab("" ) +
