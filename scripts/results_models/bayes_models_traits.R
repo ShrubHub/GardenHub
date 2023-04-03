@@ -572,7 +572,7 @@ richard_sla_data_trans <- richard_sla_data %>%
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
-    ylab("SLA (log, UNIT)\n") +
+    ylab("SLA (UNIT)\n") +
     xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -582,12 +582,19 @@ richard_sla_data_trans <- richard_sla_data %>%
 pul_sla <- (conditional_effects(pulchra_SLA)) # extracting conditional effects from bayesian model
 pul_sla_data <- pul_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
+pul_sla_data_trans <- pul_sla_data %>% 
+  mutate(CI_range = (estimate__ - lower__)) %>% 
+  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(estimate__), 
+         Est.Error_trans = 10^(se__)) %>% 
+  select(-CI_range)
 
-(pul_sla_plot <-ggplot(pul_sla_data) +
+(pul_sla_plot <-ggplot(pul_sla_data_trans) +
     geom_point(data = pulchra_all_traits, aes(x = population, y = log(SLA), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
     ylab("") +
     xlab("" ) +
@@ -599,12 +606,19 @@ pul_sla_data <- pul_sla[[1]] # making the extracted model outputs into a dataset
 arc_sla <- (conditional_effects(arctica_SLA)) # extracting conditional effects from bayesian model
 arc_sla_data <- arc_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
+arc_sla_data_trans <- arc_sla_data %>% 
+  mutate(CI_range = (estimate__ - lower__)) %>% 
+  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(estimate__), 
+         Est.Error_trans = 10^(se__)) %>% 
+  select(-CI_range)
 
-(arc_sla_plot <-ggplot(arc_sla_data) +
+(arc_sla_plot <-ggplot(arc_sla_data_trans) +
     geom_point(data = arctica_all_traits, aes(x = population, y = log(SLA), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
     ylab("") +
     xlab("" ) +
@@ -616,20 +630,26 @@ arc_sla_data <- arc_sla[[1]] # making the extracted model outputs into a dataset
 (sla_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, 
                        common.legend = TRUE, legend = "bottom",
                            ncol = 3, nrow = 1))
-
 # LMDC ---- 
 # richardsonii ----
 richard_ldmc <- (conditional_effects(rich_LDMC_log)) # extracting conditional effects from bayesian model
 richard_ldmc_data <- richard_ldmc[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
+richard_ldmc_data_trans <- richard_ldmc_data %>% 
+  mutate(CI_range = (estimate__ - lower__)) %>% 
+  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(estimate__), 
+         Est.Error_trans = 10^(se__)) %>% 
+  select(-CI_range)
 
-(rich_ldmc_plot <-ggplot(richard_ldmc_data) +
+(rich_ldmc_plot <-ggplot(richard_ldmc_data_trans) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = log(LDMC_g_g), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
+    geom_point(aes(x = effect1__, y = CI_high_trans, colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
-    ylab("LDMC (log, UNIT)\n") +
+    ylab("LDMC (UNIT)\n") +
     xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -639,12 +659,19 @@ richard_ldmc_data <- richard_ldmc[[1]] # making the extracted model outputs into
 pul_ldmc <- (conditional_effects(pulchra_LDMC_log)) # extracting conditional effects from bayesian model
 pul_ldmc_data <- pul_ldmc[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
+pul_ldmc_data_trans <- pul_ldmc_data %>% 
+  mutate(CI_range = (estimate__ - lower__)) %>% 
+  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(estimate__), 
+         Est.Error_trans = 10^(se__)) %>% 
+  select(-CI_range)
 
-(pul_ldmc_plot <-ggplot(pul_ldmc_data) +
+(pul_ldmc_plot <-ggplot(pul_ldmc_data_trans) +
     geom_point(data = pulchra_all_traits, aes(x = population, y = log(LDMC_g_g), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
     ylab("") +
     xlab("" ) +
@@ -656,12 +683,19 @@ pul_ldmc_data <- pul_ldmc[[1]] # making the extracted model outputs into a datas
 arc_ldmc <- (conditional_effects(arctica_LDMC_log)) # extracting conditional effects from bayesian model
 arc_ldmc_data <- arc_ldmc[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
+arc_ldmc_data_trans <- arc_ldmc_data %>% 
+  mutate(CI_range = (estimate__ - lower__)) %>% 
+  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(estimate__), 
+         Est.Error_trans = 10^(se__)) %>% 
+  select(-CI_range)
 
-(arc_ldmc_plot <-ggplot(arc_ldmc_data) +
+(arc_ldmc_plot <-ggplot(arc_ldmc_data_trans) +
     geom_point(data = arctica_all_traits, aes(x = population, y = log(LDMC_g_g), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
     ylab("") +
     xlab("" ) +
@@ -678,14 +712,22 @@ arc_ldmc_data <- arc_ldmc[[1]] # making the extracted model outputs into a datas
 richard_la <- (conditional_effects(rich_LA)) # extracting conditional effects from bayesian model
 richard_la_data <- richard_la[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
+richard_la_data_trans <- richard_la_data %>% 
+  mutate(CI_range = (estimate__ - lower__)) %>% 
+  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(estimate__), 
+         Est.Error_trans = 10^(se__)) %>% 
+  select(-CI_range)
 
-(rich_la_plot <-ggplot(richard_la_data) +
+
+(rich_la_plot <-ggplot(richard_la_data_trans) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = log(LA), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
+    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
-    ylab("Leaf Area (log, UNIT)\n") +
+    ylab("Leaf Area (UNIT)\n") +
     xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -695,12 +737,19 @@ richard_la_data <- richard_la[[1]] # making the extracted model outputs into a d
 pul_la <- (conditional_effects(pulchra_LA)) # extracting conditional effects from bayesian model
 pul_la_data <- pul_la[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
+pul_la_data_trans <- pul_la_data %>% 
+  mutate(CI_range = (estimate__ - lower__)) %>% 
+  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(estimate__), 
+         Est.Error_trans = 10^(se__)) %>% 
+  select(-CI_range)
 
-(pul_la_plot <-ggplot(pul_la_data) +
+(pul_la_plot <-ggplot(pul_la_data_trans) +
     geom_point(data = pulchra_all_traits, aes(x = population, y = log(LA), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+    geom_point(aes(x = effect1__, y = Estimate_trans,colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
     ylab("") +
     xlab("" ) +
@@ -712,12 +761,19 @@ pul_la_data <- pul_la[[1]] # making the extracted model outputs into a dataset (
 arc_la <- (conditional_effects(arctica_LA)) # extracting conditional effects from bayesian model
 arc_la_data <- arc_la[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
+arc_la_data_trans <- arc_la_data %>% 
+  mutate(CI_range = (estimate__ - lower__)) %>% 
+  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(estimate__), 
+         Est.Error_trans = 10^(se__)) %>% 
+  select(-CI_range)
 
-(arc_la_plot <-ggplot(arc_la_data) +
+(arc_la_plot <-ggplot(arc_la_data_trans) +
     geom_point(data = arctica_all_traits, aes(x = population, y = log(LA), colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
                   size = 1, alpha = 1) +
     ylab("") +
     xlab("" ) +
