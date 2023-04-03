@@ -517,29 +517,60 @@ pulchra_all_traits$population <- ordered(pulchra_all_traits$population,
                                                       "Northern Garden", 
                                                       "Southern Source",  
                                                       "Southern Garden"))
+# shorten to N instead of northern 
+pulchra_all_traits$population <- plyr::revalue(pulchra_all_traits$population, 
+                                                 c("Northern Source"="N. Source",
+                                                   "Northern Garden"="N. Garden",
+                                                   "Southern Source"="S. Source",
+                                                   "Southern Garden"="S. Garden"))
+
 richardsonii_all_traits$population <- ordered(richardsonii_all_traits$population, 
                                            levels = c("Northern Source", 
                                                       "Northern Garden",
                                                       "Southern Source", 
                                                       "Southern Garden"))
+richardsonii_all_traits$population <- plyr::revalue(richardsonii_all_traits$population, 
+                                               c("Northern Source"="N. Source",
+                                                 "Northern Garden"="N. Garden",
+                                                 "Southern Source"="S. Source",
+                                                 "Southern Garden"="S. Garden"))
 arctica_all_traits$population <- ordered(arctica_all_traits$population, 
                                            levels = c("Northern Source", 
                                                       "Northern Garden",
                                                       "Southern Source", 
                                                       "Southern Garden"))
+arctica_all_traits$population <- plyr::revalue(arctica_all_traits$population, 
+                                                    c("Northern Source"="N. Source",
+                                                      "Northern Garden"="N. Garden",
+                                                      "Southern Source"="S. Source",
+                                                      "Southern Garden"="S. Garden"))
 richardsonii_all_growth$population <- ordered(richardsonii_all_growth$population, 
                                            levels = c("Northern Source", 
                                                       "Northern Garden",
                                                       "Southern Source", 
                                                       "Southern Garden"))
+richardsonii_all_growth$population <- plyr::revalue(richardsonii_all_growth$population, 
+                                               c("Northern Source"="N. Source",
+                                                 "Northern Garden"="N. Garden",
+                                                 "Southern Source"="S. Source",
+                                                 "Southern Garden"="S. Garden"))
 pulchra_all_growth$population <- ordered(pulchra_all_growth$population, 
                                               levels = c("Northern Source", 
                                                          "Northern Garden",
                                                          "Southern Source", 
                                                          "Southern Garden"))
+pulchra_all_growth$population <- plyr::revalue(pulchra_all_growth$population, 
+                                                    c("Northern Source"="N. Source",
+                                                      "Northern Garden"="N. Garden",
+                                                      "Southern Source"="S. Source",
+                                                      "Southern Garden"="S. Garden"))
 arctica_cg_growth$population <- ordered(arctica_cg_growth$population, 
                                               levels = c("Northern Garden",
                                                          "Southern Garden"))
+arctica_cg_growth$population <- plyr::revalue(arctica_cg_growth$population, 
+                                               c("Northern Garden"="N. Garden",
+                                                 "Southern Garden"="S. Garden"))
+
 
 
 theme_shrub <- function(){ theme(legend.position = "right",
