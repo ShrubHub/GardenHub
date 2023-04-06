@@ -575,6 +575,7 @@ richard_sla_data_trans <- richard_sla_data %>%
     ylab("SLA (UNIT)\n") +
     xlab("" ) +
     scale_color_manual(values=pal) +
+    coord_cartesian(ylim=c(5, 25)) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
 # pulchra ----
@@ -597,8 +598,8 @@ pul_sla_data_trans <- pul_sla_data %>%
                   size = 1, alpha = 1) +
     ylab("\n") +
     xlab("" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    scale_color_manual(values=pal) +
+    coord_cartesian(ylim=c(5, 25)) +
     labs(title = "Salix pulchra") +
     theme_shrub())
 # arctica ----
@@ -621,8 +622,8 @@ arc_sla_data_trans <- arc_sla_data %>%
                   size = 1, alpha = 1) +
     ylab("\n") +
     xlab("" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    scale_color_manual(values=pal) +
+    coord_cartesian(ylim=c(5, 25)) +
     labs(title = "Salix arctica") +
     theme_shrub())
 
@@ -672,8 +673,8 @@ richard_ldmc_data_trans <- richard_ldmc_data %>%
                   size = 1, alpha = 1) +
     ylab("LDMC (UNIT)\n") +
     xlab("" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    coord_cartesian(ylim=c(0, 0.9)) +
+    scale_color_manual(values=pal) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
 # pulchra ----
@@ -695,9 +696,9 @@ pul_ldmc_data_trans <- pul_ldmc_data %>%
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
     ylab("\n") +
-    xlab("" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    xlab("" )     +
+    coord_cartesian(ylim=c(0, 0.9)) +
+  scale_color_manual(values=pal) +
     labs(title = "Salix pulchra") +
     theme_shrub())
 # arctica ----
@@ -720,8 +721,8 @@ arc_ldmc_data_trans <- arc_ldmc_data %>%
                   size = 1, alpha = 1) +
     ylab("\n") +
     xlab("" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    scale_color_manual(values=pal) +
+    coord_cartesian(ylim=c(0, 0.9)) +
     labs(title = "Salix arctica") +
     theme_shrub())
 
@@ -750,8 +751,7 @@ richard_la_data_trans <- richard_la_data %>%
                   size = 1, alpha = 1) +
     ylab("Leaf Area (UNIT)\n") +
     xlab("" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    scale_color_manual(values=pal) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
 # pulchra ----
@@ -798,8 +798,7 @@ arc_la_data_trans <- arc_la_data %>%
                   size = 1, alpha = 1) +
     ylab("") +
     xlab("" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    scale_color_manual(values=pal) +
     labs(title = "Salix arctica") +
     theme_shrub())
 
@@ -822,8 +821,7 @@ richard_ll_data <- richard_ll[[1]] # making the extracted model outputs into a d
                   size = 1, alpha = 1) +
     ylab("Leaf Length (mm)\n") +
     xlab("") +
-    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    scale_color_manual(values=pal) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
 # pulchra ----
@@ -839,8 +837,7 @@ pul_ll_data <- pul_ll[[1]] # making the extracted model outputs into a dataset (
                   size = 1, alpha = 1) +
     ylab("") +
     xlab("" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    scale_color_manual(values=pal) +
     labs(title = "Salix pulchra") +
     theme_shrub())
 
@@ -853,7 +850,7 @@ arc_ll <- (conditional_effects(arctica_LL_CG)) # extracting conditional effects 
 arc_ll_data <- arc_ll[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
 
-pal <-c("#2A788EFF", "#FDE725FF")
+pal_garden <-c("#440154FF", "#7AD151FF")
 
 (arc_ll_plot <-ggplot(arc_ll_data) +
     geom_point(data = arctica_cg_growth, aes(x = population, y = mean_leaf_length, colour = population),
@@ -884,4 +881,5 @@ pal <-c("#2A788EFF", "#FDE725FF")
 (sla_ldmc_panel <- ggarrange(sla_panel, ldmc_panel, 
                           common.legend = TRUE, legend = "bottom", 
                           ncol = 1, nrow = 2))
+# save 
 ggsave("figures/sla_ldmc_panel.png", height = 10, width = 12, dpi = 300)
