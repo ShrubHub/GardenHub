@@ -540,6 +540,8 @@ arctica_cg_growth$population <- ordered(arctica_cg_growth$population,
                                               levels = c("N. Garden",
                                                          "S. Garden"))
 
+pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#7AD151FF")
+
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", size=14),
                                  axis.text.x  = element_text(vjust=0.5, size=14, colour = "black", angle = 60), 
@@ -572,8 +574,7 @@ richard_sla_data_trans <- richard_sla_data %>%
                   size = 1, alpha = 1) +
     ylab("SLA (UNIT)\n") +
     xlab("" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    scale_color_manual(values=pal) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
 # pulchra ----
@@ -628,7 +629,7 @@ arc_sla_data_trans <- arc_sla_data %>%
 (sla_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, 
                        common.legend = TRUE, legend = "none",
                            ncol = 3, nrow = 1))
-
+# raw data for reference 
 (sla_plot <- ggplot(all_CG_source_traits) +
     geom_boxplot(aes(x= population, y = SLA, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
     # facet_grid(cols = vars(Species)) +
