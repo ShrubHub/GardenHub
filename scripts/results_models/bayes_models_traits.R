@@ -626,7 +626,7 @@ arc_sla_data_trans <- arc_sla_data %>%
     theme_shrub())
 
 (sla_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, 
-                       common.legend = TRUE, legend = "bottom",
+                       common.legend = TRUE, legend = "none",
                            ncol = 3, nrow = 1))
 
 (sla_plot <- ggplot(all_CG_source_traits) +
@@ -693,7 +693,7 @@ pul_ldmc_data_trans <- pul_ldmc_data %>%
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
-    ylab("") +
+    ylab("\n") +
     xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -717,7 +717,7 @@ arc_ldmc_data_trans <- arc_ldmc_data %>%
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
-    ylab("") +
+    ylab("\n") +
     xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -883,4 +883,4 @@ pal <-c("#2A788EFF", "#FDE725FF")
 (sla_ldmc_panel <- ggarrange(sla_panel, ldmc_panel, 
                           common.legend = TRUE, legend = "bottom", 
                           ncol = 1, nrow = 2))
-
+ggsave("figures/sla_ldmc_panel.png", height = 10, width = 12, dpi = 300)
