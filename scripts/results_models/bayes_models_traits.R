@@ -147,7 +147,6 @@ pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_tr
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
 
 summary(pulchra_SLA) # There were 1 divergent transitions after warmup
-tab_model(pulchra_SLA)
 plot(pulchra_SLA)
 pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 pulchra_SLA_results <- model_summ(pulchra_SLA)
@@ -163,7 +162,6 @@ pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good
 arctica_SLA_results <- model_summ(arctica_SLA)
 arctica_SLA_results$Species <- "Salix arctica"
 
-
 # merging all extracted outputs
 garden_sla_out <- rbind(rich_SLA_results, pulchra_SLA_results, arctica_SLA_results)
 
@@ -172,10 +170,10 @@ garden_SLA_out_back <- garden_sla_out %>%
   dplyr::rename("l_95_CI_log" = "l-95% CI", 
                  "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(Estimate), 
-         Est.Error_trans = 10^(Est.Error)) %>% 
+  mutate(CI_low_trans = exp(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = exp(Estimate + CI_range)) %>% 
+  mutate(Estimate_trans = exp(Estimate), 
+         Est.Error_trans = exp(Est.Error)) %>% 
   select(-CI_range)
 
 # save df of results 
@@ -264,10 +262,10 @@ garden_LDMC_out_back <- garden_ldmc_out %>%
   dplyr::rename("l_95_CI_log" = "l-95% CI", 
                 "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(Estimate), 
-         Est.Error_trans = 10^(Est.Error)) %>% 
+  mutate(CI_low_trans = exp(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = exp(Estimate + CI_range)) %>% 
+  mutate(Estimate_trans = exp(Estimate), 
+         Est.Error_trans = exp(Est.Error)) %>% 
   select(-CI_range)
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_LDMC_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
@@ -353,10 +351,10 @@ garden_LA_out_back <- garden_LA_out %>%
   dplyr::rename("l_95_CI_log" = "l-95% CI", 
                 "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(Estimate), 
-         Est.Error_trans = 10^(Est.Error)) %>% 
+  mutate(CI_low_trans = exp(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = exp(Estimate + CI_range)) %>% 
+  mutate(Estimate_trans = exp(Estimate), 
+         Est.Error_trans = exp(Est.Error)) %>% 
   select(-CI_range)
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_LA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
@@ -543,15 +541,16 @@ arctica_cg_growth$population <- ordered(arctica_cg_growth$population,
                                                          "S. Garden"))
 
 theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", size=12),
-                                 axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 60), 
-                                 axis.title.y = element_text(face="bold", size=12),
-                                 axis.text.y  = element_text(vjust=0.5, size=12, colour = "black"),
+                                 axis.title.x = element_text(face="bold", size=14),
+                                 axis.text.x  = element_text(vjust=0.5, size=14, colour = "black", angle = 60), 
+                                 axis.title.y = element_text(face="bold", size=14),
+                                 axis.text.y  = element_text(vjust=0.5, size=14, colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 12, face = "bold.italic", hjust = 0.5),
-                                 plot.margin = unit(c(0.1,0.1,0.1,0.1), units = , "cm"))}
+                                 plot.title = element_text(color = "black", size = 16, face = "bold.italic", hjust = 0.5),
+                                 legend.title=element_text(size=14),
+                                 legend.text=element_text(size = 13))}
 # SLA ---- 
 # richardsonii ----
 richard_sla <- (conditional_effects(rich_SLA)) # extracting conditional effects from bayesian model
@@ -559,15 +558,14 @@ richard_sla_data <- richard_sla[[1]] # making the extracted model outputs into a
 #[[1]] is to extract the first term in the model which in our case is population
 richard_sla_data_trans <- richard_sla_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(estimate__), 
-         Est.Error_trans = 10^(se__)) %>% 
+  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = exp(estimate__), 
+         Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
 
-
 (rich_sla_plot <-ggplot(richard_sla_data_trans) +
-    geom_point(data = richardsonii_all_traits, aes(x = population, y = log(SLA), colour = population),
+    geom_point(data = richardsonii_all_traits, aes(x = population, y = SLA, colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
@@ -584,19 +582,19 @@ pul_sla_data <- pul_sla[[1]] # making the extracted model outputs into a dataset
 #[[1]] is to extract the first term in the model which in our case is population
 pul_sla_data_trans <- pul_sla_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(estimate__), 
-         Est.Error_trans = 10^(se__)) %>% 
+  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = exp(estimate__), 
+         Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
 
 (pul_sla_plot <-ggplot(pul_sla_data_trans) +
-    geom_point(data = pulchra_all_traits, aes(x = population, y = log(SLA), colour = population),
+    geom_point(data = pulchra_all_traits, aes(x = population, y = SLA, colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
-    ylab("") +
+    ylab("\n") +
     xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -608,19 +606,19 @@ arc_sla_data <- arc_sla[[1]] # making the extracted model outputs into a dataset
 #[[1]] is to extract the first term in the model which in our case is population
 arc_sla_data_trans <- arc_sla_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(estimate__), 
-         Est.Error_trans = 10^(se__)) %>% 
+  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = exp(estimate__), 
+         Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
 
 (arc_sla_plot <-ggplot(arc_sla_data_trans) +
-    geom_point(data = arctica_all_traits, aes(x = population, y = log(SLA), colour = population),
+    geom_point(data = arctica_all_traits, aes(x = population, y = (SLA), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
-    ylab("") +
+    ylab("\n") +
     xlab("" ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
@@ -630,6 +628,28 @@ arc_sla_data_trans <- arc_sla_data %>%
 (sla_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, 
                        common.legend = TRUE, legend = "bottom",
                            ncol = 3, nrow = 1))
+
+(sla_plot <- ggplot(all_CG_source_traits) +
+    geom_boxplot(aes(x= population, y = SLA, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species) +
+    ylab("Specific leaf area ()") +
+    xlab("") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
+
 # LMDC ---- 
 # richardsonii ----
 richard_ldmc <- (conditional_effects(rich_LDMC_log)) # extracting conditional effects from bayesian model
@@ -637,16 +657,16 @@ richard_ldmc_data <- richard_ldmc[[1]] # making the extracted model outputs into
 #[[1]] is to extract the first term in the model which in our case is population
 richard_ldmc_data_trans <- richard_ldmc_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(estimate__), 
-         Est.Error_trans = 10^(se__)) %>% 
+  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = exp(estimate__), 
+         Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
 
 (rich_ldmc_plot <-ggplot(richard_ldmc_data_trans) +
-    geom_point(data = richardsonii_all_traits, aes(x = population, y = log(LDMC_g_g), colour = population),
+    geom_point(data = richardsonii_all_traits, aes(x = population, y = LDMC_g_g, colour = population),
                alpha = 0.5)+ # raw data
-    geom_point(aes(x = effect1__, y = CI_high_trans, colour = population), size = 6)+
+    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
     ylab("LDMC (UNIT)\n") +
@@ -661,14 +681,14 @@ pul_ldmc_data <- pul_ldmc[[1]] # making the extracted model outputs into a datas
 #[[1]] is to extract the first term in the model which in our case is population
 pul_ldmc_data_trans <- pul_ldmc_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(estimate__), 
-         Est.Error_trans = 10^(se__)) %>% 
+  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = exp(estimate__), 
+         Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
 
 (pul_ldmc_plot <-ggplot(pul_ldmc_data_trans) +
-    geom_point(data = pulchra_all_traits, aes(x = population, y = log(LDMC_g_g), colour = population),
+    geom_point(data = pulchra_all_traits, aes(x = population, y = (LDMC_g_g), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
@@ -685,14 +705,14 @@ arc_ldmc_data <- arc_ldmc[[1]] # making the extracted model outputs into a datas
 #[[1]] is to extract the first term in the model which in our case is population
 arc_ldmc_data_trans <- arc_ldmc_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(estimate__), 
-         Est.Error_trans = 10^(se__)) %>% 
+  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = exp(estimate__), 
+         Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
 
 (arc_ldmc_plot <-ggplot(arc_ldmc_data_trans) +
-    geom_point(data = arctica_all_traits, aes(x = population, y = log(LDMC_g_g), colour = population),
+    geom_point(data = arctica_all_traits, aes(x = population, y = (LDMC_g_g), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
@@ -714,10 +734,10 @@ richard_la_data <- richard_la[[1]] # making the extracted model outputs into a d
 #[[1]] is to extract the first term in the model which in our case is population
 richard_la_data_trans <- richard_la_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(estimate__), 
-         Est.Error_trans = 10^(se__)) %>% 
+  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = exp(estimate__), 
+         Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
 
 
@@ -739,10 +759,10 @@ pul_la_data <- pul_la[[1]] # making the extracted model outputs into a dataset (
 #[[1]] is to extract the first term in the model which in our case is population
 pul_la_data_trans <- pul_la_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(estimate__), 
-         Est.Error_trans = 10^(se__)) %>% 
+  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = exp(estimate__), 
+         Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
 
 (pul_la_plot <-ggplot(pul_la_data_trans) +
@@ -763,10 +783,10 @@ arc_la_data <- arc_la[[1]] # making the extracted model outputs into a dataset (
 #[[1]] is to extract the first term in the model which in our case is population
 arc_la_data_trans <- arc_la_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = 10^(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(estimate__ + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(estimate__), 
-         Est.Error_trans = 10^(se__)) %>% 
+  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
+  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = exp(estimate__), 
+         Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
 
 (arc_la_plot <-ggplot(arc_la_data_trans) +
@@ -859,4 +879,8 @@ pal <-c("#2A788EFF", "#FDE725FF")
   rich_ll_plot, pul_ll_plot, arc_ll_plot, 
                           common.legend = TRUE, legend = "bottom", 
   ncol = 6, nrow = 2))
+# SLA LDMC panel 
+(sla_ldmc_panel <- ggarrange(sla_panel, ldmc_panel, 
+                          common.legend = TRUE, legend = "bottom", 
+                          ncol = 1, nrow = 2))
 
