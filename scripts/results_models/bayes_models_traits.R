@@ -177,7 +177,7 @@ garden_SLA_out_back <- garden_sla_out %>%
   select(-CI_range)
 
 # save df of results 
-write.csv(garden_SLA_out_back, "output/garden_SLA_out_back.csv")
+write.csv(garden_SLA_out_back, "output/traits/garden_SLA_out_back.csv")
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_SLA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
@@ -215,7 +215,7 @@ kable_SLA <- garden_SLA_out_back %>%
 # making species column in cursive
 column_spec(kable_SLA, 2, width = NULL, bold = FALSE, italic = TRUE)
 
-save_kable(kable_SLA, file = "output/SLA_results.pdf",
+save_kable(kable_SLA, file = "output/traits/SLA_results.pdf",
            bs_theme = "simplex",
            self_contained = TRUE,
            extra_dependencies = NULL,
@@ -229,6 +229,7 @@ rich_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = richard
                            iter = 3000, warmup = 1000, 
                            control = list(max_treedepth = 15, adapt_delta = 0.99)) # 2 divergent transitions after warmup
 summary(rich_LDMC_log)
+tab_model(rich_LDMC_log)
 plot(rich_LDMC_log)
 pp_check(rich_LDMC_log, type = "dens_overlay", ndraws = 100) 
 rich_LDMC_results <- model_summ(rich_LDMC_log)
@@ -239,6 +240,7 @@ pulchra_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = pulc
                           iter = 3000, warmup = 1000, 
                           control = list(max_treedepth = 15, adapt_delta = 0.99)) 
 summary(pulchra_LDMC_log) 
+tab_model(pulchra_LDMC_log)
 plot(pulchra_LDMC_log)
 pp_check(pulchra_LDMC_log, type = "dens_overlay", ndraws = 100) 
 pulchra_LDMC_results <- model_summ(pulchra_LDMC_log)
@@ -249,6 +251,7 @@ arctica_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = arct
                               iter = 3000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99)) #There were 5 divergent transitions after warmup.
 summary(arctica_LDMC_log)
+tab_model(arctica_LDMC_log)
 plot(arctica_LDMC_log)
 pp_check(arctica_LDMC_log, type = "dens_overlay", ndraws = 100) 
 arctica_LDMC_results <- model_summ(arctica_LDMC_log)
@@ -279,7 +282,7 @@ rownames(garden_LDMC_out_back) <- c("Intercept", "Northern Source", "SouthernSou
 garden_LDMC_out_back$Rhat <- as.character(formatC(garden_LDMC_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
 # save df of results 
-write.csv(garden_LDMC_out_back, "output/garden_LDMC_out_back.csv")
+write.csv(garden_LDMC_out_back, "output/traits/garden_LDMC_out_back.csv")
 
 # creating table
 kable_LDMC <- garden_LDMC_out_back %>% 
@@ -306,7 +309,7 @@ kable_LDMC <- garden_LDMC_out_back %>%
 # making species column in cursive
 column_spec(kable_LDMC, 2, width = NULL, bold = FALSE, italic = TRUE)
 
-save_kable(kable_LDMC, file = "output/LDMC_results.pdf",
+save_kable(kable_LDMC, file = "output/traits/LDMC_results.pdf",
            bs_theme = "simplex",
            self_contained = TRUE,
            extra_dependencies = NULL,
@@ -543,16 +546,16 @@ arctica_cg_growth$population <- ordered(arctica_cg_growth$population,
 pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#7AD151FF")
 
 theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", size=14),
-                                 axis.text.x  = element_text(vjust=0.5, size=14, colour = "black", angle = 60), 
-                                 axis.title.y = element_text(face="bold", size=14),
-                                 axis.text.y  = element_text(vjust=0.5, size=14, colour = "black"),
+                                 axis.title.x = element_text(face="bold", size=16),
+                                 axis.text.x  = element_text(vjust=0.5, size=16, colour = "black", angle = 60), 
+                                 axis.title.y = element_text(face="bold", size=16),
+                                 axis.text.y  = element_text(vjust=0.5, size=16, colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
                                  plot.title = element_text(color = "black", size = 16, face = "bold.italic", hjust = 0.5),
-                                 legend.title=element_text(size=14),
-                                 legend.text=element_text(size = 13))}
+                                 legend.title=element_text(size=16),
+                                 legend.text=element_text(size = 15))}
 # SLA ---- 
 # richardsonii ----
 richard_sla <- (conditional_effects(rich_SLA)) # extracting conditional effects from bayesian model

@@ -159,6 +159,17 @@ garden_heights_interact_back <- garden_heights_interact %>%
          Est.Error_trans = 10^(Est.Error)) %>% 
   select(-CI_range)
 
+# madi thinks to back transform you exp(#) ?
+garden_heights_interact_back_mad <- garden_heights_interact %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI") %>%
+  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
+  mutate(CI_low_trans = exp(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = exp(Estimate + CI_range)) %>% 
+  mutate(Estimate_trans = exp(Estimate), 
+         Est.Error_trans = exp(Est.Error)) %>% 
+  select(-CI_range)
+
 # save df of results 
 write.csv(garden_heights_interact_back, "output/garden_heights_interact_back.csv")
 
@@ -501,6 +512,10 @@ kable_biovol_time <- garden_heights_timeb %>%
 column_spec(kable_biovol_time, 2, width = NULL, bold = FALSE, italic = TRUE)
 
 # DATA VISUALISATION -----
+# color palette for garden only
+pal_garden <- c("#440154FF", "#7AD151FF")
+
+
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", size=12),
                                  axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 45), 
@@ -519,8 +534,8 @@ theme_shrub <- function(){ theme(legend.position = "right",
    ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
    geom_point(data = all_CG_growth_ric) +
-   scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
-   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_color_manual(values=pal_garden) +
+   scale_fill_manual(values=pal_garden) +
    theme_shrub() +
    ylab("Richardsonii canopy height (log cm)\n") +
    xlab("\nSample age"))
