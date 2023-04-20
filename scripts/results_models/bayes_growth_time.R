@@ -526,18 +526,34 @@ theme_shrub <- function(){ theme(legend.position = "right",
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
                                  plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5),
                                  plot.margin = unit(c(1,1,1,1), units = , "cm"))}
+
+theme_shrub <- function(){ theme(legend.position = "right",
+                                 axis.title.x = element_text(face="bold", size=16),
+                                 axis.text.x  = element_text(vjust=0.5, size=16, colour = "black", angle = 60), 
+                                 axis.title.y = element_text(face="bold", size=16),
+                                 axis.text.y  = element_text(vjust=0.5, size=16, colour = "black"),
+                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
+                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
+                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+                                 plot.title = element_text(color = "black", size = 16, face = "bold.italic", hjust = 0.5),
+                                 legend.title=element_text(size=16),
+                                 legend.text=element_text(size = 15))}
 # HEIGHT OVER TIME PLOTS-----
+pp_draws <- posterior_predict(height_rich, draws = 500)
+back_transformed_draws <- exp(pp_draws)
+
 # Salix rich -----
 (rich_heights_plot_new <- all_CG_growth_ric %>%
    group_by(population) %>%
    add_predicted_draws(height_rich, allow_new_levels = TRUE) %>%
-   ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
-   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   ggplot(aes(x = Sample_age, y = (Canopy_Height_cm), color = population, fill = population)) +
+   stat_lineribbon(aes(y = exp(.prediction)), .width = c(.5), alpha = 1/4) +
    geom_point(data = all_CG_growth_ric) +
    scale_color_manual(values=pal_garden) +
    scale_fill_manual(values=pal_garden) +
    theme_shrub() +
-   ylab("Richardsonii canopy height (log cm)\n") +
+   ylab("Canopy height (cm)\n") +
+  labs(title = "Salix richardsonii") +
    xlab("\nSample age"))
 
 # Salix pulchra ------
@@ -545,15 +561,16 @@ theme_shrub <- function(){ theme(legend.position = "right",
 (pul_heights_plot_new <- all_CG_growth_pul %>%
    group_by(population) %>%
    add_predicted_draws(height_pul, allow_new_levels = TRUE) %>%
-   ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
-   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   ggplot(aes(x = Sample_age, y = (Canopy_Height_cm), color = population, fill = population)) +
+   stat_lineribbon(aes(y = exp(.prediction)), .width = c(.50), alpha = 1/4) +
    geom_point(data = all_CG_growth_pul) +
-   scale_colour_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
-   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_color_manual(values=pal_garden) +
+   scale_fill_manual(values=pal_garden) +
    theme_shrub() +
-   ylab("Pulchra canopy height (log cm)\n") +
+   labs(title = "Salix pulchra") +
+   coord_cartesian(ylim=c(0, 200)) +
+   ylab("\n") +
    xlab("\nSample age"))
-
 
 # Salix arctica------
 (arc_heights_plot_new <- all_CG_growth_arc %>%
@@ -565,7 +582,7 @@ theme_shrub <- function(){ theme(legend.position = "right",
    scale_colour_viridis_d(name = "Garden population", begin = 0.1, end = 0.85) +
    scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    theme_shrub() +
-   ylab("Arctica canopy height (log cm)\n") +
+   ylab("\n") +
    xlab("\nSample age"))
 
 library(ggpubr)
