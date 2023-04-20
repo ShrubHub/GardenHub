@@ -554,43 +554,48 @@ back_transformed_draws <- exp(pp_draws)
    theme_shrub() +
    ylab("Canopy height (cm)\n") +
   labs(title = "Salix richardsonii") +
-   xlab("\nSample age"))
+   xlab("\nSample age") +
+   scale_x_continuous(breaks = seq(0, 9, by = 1)))
 
 # Salix pulchra ------
 
 (pul_heights_plot_new <- all_CG_growth_pul %>%
    group_by(population) %>%
    add_predicted_draws(height_pul, allow_new_levels = TRUE) %>%
-   ggplot(aes(x = Sample_age, y = (Canopy_Height_cm), color = population, fill = population)) +
+   ggplot(aes(x = Sample_age, y = Canopy_Height_cm, color = population, fill = population)) +
    stat_lineribbon(aes(y = exp(.prediction)), .width = c(.50), alpha = 1/4) +
    geom_point(data = all_CG_growth_pul) +
    scale_color_manual(values=pal_garden) +
    scale_fill_manual(values=pal_garden) +
    theme_shrub() +
    labs(title = "Salix pulchra") +
-   coord_cartesian(ylim=c(0, 200)) +
-   ylab("\n") +
-   xlab("\nSample age"))
+   ylab("Canopy height (cm)\n") +
+   xlab("\nSample age") +
+   scale_x_continuous(breaks = seq(0, 9, by = 1)))
 
 # Salix arctica------
 (arc_heights_plot_new <- all_CG_growth_arc %>%
    group_by(population) %>%
    add_predicted_draws(height_arc,  allow_new_levels = TRUE) %>%
-   ggplot(aes(x = Sample_age, y = log(Canopy_Height_cm), color = ordered(population), fill = ordered(population))) +
-   stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
+   ggplot(aes(x = Sample_age, y = Canopy_Height_cm, color = population, fill = population)) +
+   stat_lineribbon(aes(y = exp(.prediction)), .width = c(.50), alpha = 1/4) +
    geom_point(data = all_CG_growth_arc) +
-   scale_colour_viridis_d(name = "Garden population", begin = 0.1, end = 0.85) +
-   scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
+   scale_color_manual(values=pal_garden) +
+   scale_fill_manual(values=pal_garden) +
    theme_shrub() +
-   ylab("\n") +
-   xlab("\nSample age"))
+   labs(title = "Salix arctica") +
+   ylab("Canopy height (cm)\n") +
+   xlab("\nSample age") + scale_x_continuous(breaks = seq(0, 9, by = 1)))
+
 
 library(ggpubr)
 
-panel_heights_age <- ggarrange(rich_heights_plot_new, pul_heights_plot_new, arc_heights_plot_new, 
+(panel_heights_age <- ggarrange(rich_heights_plot_new, pul_heights_plot_new, arc_heights_plot_new, 
                                common.legend = TRUE, legend="bottom",
-                               nrow = 1)
+                               nrow = 1))
 panel_heights_age
+# save 
+ggsave("figures/height_time_panel.png", height = 10, width = 12, dpi = 300)
 
 # BIOVOLUME OVER TIME PLOTS-----
 # Salix rich -----
@@ -632,8 +637,7 @@ panel_heights_age
    scale_fill_viridis_d(name = "Garden population",begin = 0.1, end = 0.85) +
    theme_shrub() +
    ylab("Salix arctica biovolume (log cm)\n") +
-   xlab("\nSample age"))
-
+   xlab("\nSample age")) 
 
 (panel_biovol_age <- ggarrange(rich_biovol_plot_new, pul_biovol_plot_new, arc_biovol_plot_new, 
                                common.legend = TRUE, legend="bottom",
