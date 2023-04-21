@@ -17,11 +17,11 @@ all_growing_season <- read_csv("data/phenology/all_growing_season_salix.csv")
 
 # Wrangle data ------
 # ordering levels so source and garden populations side by side
-all_phenocam_data_salix$population <- plyr::revalue(all_phenocam_data_salix$population, 
-                                                    c("QHI"="Northern Garden",
-                                                      "Kluane"="Southern Garden",
-                                                      "Southern_source"="Southern Source",
-                                                      "Northern_source"="Northern Source"))
+# all_phenocam_data_salix$population <- plyr::revalue(all_phenocam_data_salix$population, 
+#                                                    c("QHI"="Northern Garden",
+#                                                      "Kluane"="Southern Garden",
+#                                                      "Southern_source"="Southern Source",
+#                                                      "Northern_source"="Northern Source"))
 
 #all_phenocam_data_salix$population <- ordered(all_phenocam_data_salix$population, 
 #                                              levels = c("Northern Source", 
@@ -105,6 +105,13 @@ hist(all_phenocam_pul_source$First_bud_burst_DOY, breaks=30) # defo not normal
 hist(all_phenocam_rich_source$First_bud_burst_DOY, breaks=30) # defo not normal
 hist(all_phenocam_arc_source$First_bud_burst_DOY, breaks=30) # defo not normal
 
+all_growing_season_arc$first
+
+hist(all_phenocam_pul_source_scaled$First_bud_burst_DOY, breaks=30) # defo not normal
+hist(all_phenocam_rich_source_scaled$First_bud_burst_DOY, breaks=30) # defo not normal
+hist(all_phenocam_arc_source_scaled$First_bud_burst_DOY, breaks=30) # defo not normal
+
+
 hist(all_phenocam_pul_source$First_leaf_yellow_DOY, breaks=30) # defo not normal
 hist(all_phenocam_rich_source$First_leaf_yellow_DOY, breaks=30) # defo not normal
 hist(all_phenocam_arc_source$First_leaf_yellow_DOY, breaks=30) # defo not normal
@@ -153,6 +160,13 @@ model_summ_pheno_no_rf <- function(x) {
 # 1. LEAF EMERGENCE (only source pops) -------
 
 # Salix richardsonii -------
+all_phenocam_rich_source$First_bud_burst_DOY_scaled <- center_scale(all_phenocam_rich_source$First_bud_burst_DOY)
+source_rich_emerg_scaled <- brms::brm(First_bud_burst_DOY_scaled ~ population + (1|Year),
+                               data = all_phenocam_rich_source, family = gaussian(), chains = 3,
+                               iter = 3000, warmup = 1000, 
+                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(source_rich_emerg_scaled)
+
 source_rich_emerg <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
                                data = all_phenocam_rich_source, family = gaussian(), chains = 3,
                                iter = 3000, warmup = 1000, 
@@ -273,7 +287,6 @@ pp_check(garden_arc_emerg_compare, type = "dens_overlay", nsamples = 100) # look
 # 1.2. LEAF EMERGENCE (CG ONLY MODELS) ------
 # Salix richardsonii -----
 all_phenocam_rich_garden$First_bud_burst_DOY_center <- center_scale(all_phenocam_rich_garden$First_bud_burst_DOY) 
-
 garden_rich_emerg <- brms::brm(First_bud_burst_DOY_center ~ population,
                                        data = all_phenocam_rich_garden, family = gaussian(), chains = 3,
                                        iter = 3000, warmup = 1000, 
@@ -419,7 +432,7 @@ garden_arc_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ population
                                        iter = 3000, warmup = 1000,
                                        control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(garden_arc_yellow_compare)
+summary(garden_arc_yellow_compare)hat
 plot(garden_arc_yellow_compare)
 pp_check(garden_arc_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
 
@@ -518,9 +531,19 @@ growing_season_rich <- brms::brm(growing_season.y ~ population + (1|Year),
 
 summary(growing_season_rich) 
 plot(growing_season_rich)
-pp_check(growing_season_rich, type = "dens_overlay", ndraws = 100) # looks good
+pp_check(growing_season_rich, type = "dens_overlay", ndraws = 100) # looks decent
 season_rich_results <- model_summ_pheno(growing_season_rich)
 season_rich_results$Species <- "Salix richardsonii"
+
+# center on 0
+all_growing_season_rich$growing_season_scale <- all_growing_season_rich$growing_season.y
+growing_season_rich_scale <- brms::brm(growing_season_scale ~ population + (1|Year), 
+                                 data = all_growing_season_rich, family = gaussian(), chains = 3,
+                                 iter = 3000, warmup = 1000,
+                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(growing_season_rich_scale) 
+plot(growing_season_rich_scale)
+pp_check(growing_season_rich_scale, type = "dens_overlay", ndraws = 100) # looks decent
 
 # Salix pulchra ------
 growing_season_pul <- brms::brm(growing_season.y ~ population + (1|Year), 
@@ -530,9 +553,19 @@ growing_season_pul <- brms::brm(growing_season.y ~ population + (1|Year),
 
 summary(growing_season_pul) # 
 plot(growing_season_pul)
-pp_check(growing_season_pul, type = "dens_overlay", ndraws = 100) # looks good
+pp_check(growing_season_pul, type = "dens_overlay", ndraws = 100) # looks decent
 season_pul_results <- model_summ_pheno(growing_season_pul)
 season_pul_results$Species <- "Salix pulchra"
+# center on 0
+all_growing_season_pul$growing_season_scale <- all_growing_season_pul$growing_season.y
+growing_season_pul_scaled <- brms::brm(growing_season_scale ~ population + (1|Year), 
+                                data = all_growing_season_pul, family = gaussian(), chains = 3,
+                                iter = 3000, warmup = 1000,
+                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(growing_season_pul_scaled) # 
+plot(growing_season_pul_scaled)
+pp_check(growing_season_pul_scaled, type = "dens_overlay", ndraws = 100) # looks decent
 
 # Salix arctica ------
 growing_season_arc <- brms::brm(growing_season.y ~ population + (1|Year),
@@ -546,6 +579,16 @@ pp_check(growing_season_arc, type = "dens_overlay", ndraws = 100) # looks good
 season_arc_results <- model_summ_pheno(growing_season_arc)
 season_arc_results$Species <- "Salix arctica"
 
+# center on 0
+all_growing_season_arc$growing_season_scale <- all_growing_season_arc$growing_season.y
+growing_season_arc_scaled <- brms::brm(growing_season_scale ~ population + (1|Year), 
+                                       data = all_growing_season_arc, family = gaussian(), chains = 3,
+                                       iter = 3000, warmup = 1000,
+                                       control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(growing_season_pul_scaled) # 
+plot(growing_season_pul_scaled)
+pp_check(growing_season_pul_scaled, type = "dens_overlay", ndraws = 100) # looks decent
+# compile non-scaled results, should change to scaled though I think (Madi)
 season_results <- rbind(season_rich_results, season_pul_results, season_arc_results)
 
 # adding spaces before/after each name so they let me repeat them in the table
@@ -589,15 +632,19 @@ save_kable(kable_season_garden, file = "output/phenology/season__length_results.
 
 
 # PLOTS ====
+pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#7AD151FF") # four all levels 
+pal_garden <- c("#440154FF", "#7AD151FF") # for only garden 
+pal_arc  <- c("#2A788EFF", "#440154FF", "#7AD151FF") # for when southern source is missing  
+
 theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", size=12),
-                                 axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 45), 
-                                 axis.title.y = element_text(face="bold", size=12),
-                                 axis.text.y  = element_text(vjust=0.5, size=12, colour = "black"),
+                                 axis.title.x = element_text(face="bold", size=16),
+                                 axis.text.x  = element_text(vjust=0.5, size=16, colour = "black", angle = 45), 
+                                 axis.title.y = element_text(face="bold", size=16),
+                                 axis.text.y  = element_text(vjust=0.5, size=16, colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 12, face = "bold.italic", hjust = 0.5),
+                                 plot.title = element_text(color = "black", size = 16, face = "bold.italic", hjust = 0.5),
                                  plot.margin = unit(c(1,1,1,1), units = , "cm"))}
 
 # reorder levels to be consistent
@@ -623,12 +670,11 @@ all_growing_season_arc$population <- ordered(all_growing_season_arc$population,
 ric_emerg <- (conditional_effects(garden_rich_emerg_compare)) # extracting conditional effects from bayesian model
 ric_emerg_data <- ric_emerg[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
-
 (ric_emerg_plot <-ggplot(ric_emerg_data) +
     #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
-      #          alpha = 0.1)+ # raw data
+    #          alpha = 0.1)+ # raw data
     geom_jitter(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, colour = population),
-               alpha = 0.8)+
+                alpha = 0.8)+
     geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                   alpha = 1,  width=.5) +
@@ -638,6 +684,30 @@ ric_emerg_data <- ric_emerg[[1]] # making the extracted model outputs into a da
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
     theme_shrub() +
     labs(title = "Salix richardsonii"))
+
+richard_sla_data_trans <- ric_emerg %>% 
+  mutate(CI_range = (estimate__ - lower__)) %>% 
+  mutate(CI_low_trans = attr((estimate__ - CI_range), 'scaled:center"') %>% 
+  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(Estimate_trans = exp(estimate__), 
+         Est.Error_trans = exp(se__)) %>% 
+  select(-CI_range)
+
+(ric_emerg_plot_sclaed <-ggplot(ric_emerg_data) +
+    #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
+    #          alpha = 0.1)+ # raw data
+    geom_jitter(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, colour = population),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+                  alpha = 1,  width=.5) +
+    ylab("First leaf emergence DOY \n") +
+    xlab("\n" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix richardsonii"))
+
 
 # S. pulchra ------
 pul_emerg <- (conditional_effects(garden_pul_emerg_compare)) # extracting conditional effects from bayesian model
