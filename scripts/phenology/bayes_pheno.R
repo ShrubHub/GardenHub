@@ -105,13 +105,6 @@ hist(all_phenocam_pul_source$First_bud_burst_DOY, breaks=30) # defo not normal
 hist(all_phenocam_rich_source$First_bud_burst_DOY, breaks=30) # defo not normal
 hist(all_phenocam_arc_source$First_bud_burst_DOY, breaks=30) # defo not normal
 
-all_growing_season_arc$first
-
-hist(all_phenocam_pul_source_scaled$First_bud_burst_DOY, breaks=30) # defo not normal
-hist(all_phenocam_rich_source_scaled$First_bud_burst_DOY, breaks=30) # defo not normal
-hist(all_phenocam_arc_source_scaled$First_bud_burst_DOY, breaks=30) # defo not normal
-
-
 hist(all_phenocam_pul_source$First_leaf_yellow_DOY, breaks=30) # defo not normal
 hist(all_phenocam_rich_source$First_leaf_yellow_DOY, breaks=30) # defo not normal
 hist(all_phenocam_arc_source$First_leaf_yellow_DOY, breaks=30) # defo not normal
@@ -685,13 +678,15 @@ ric_emerg_data <- ric_emerg[[1]] # making the extracted model outputs into a da
     theme_shrub() +
     labs(title = "Salix richardsonii"))
 
-richard_sla_data_trans <- ric_emerg %>% 
-  mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = attr((estimate__ - CI_range), 'scaled:center"') %>% 
-  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
-  mutate(Estimate_trans = exp(estimate__), 
-         Est.Error_trans = exp(se__)) %>% 
-  select(-CI_range)
+m_rich_emerg <- mean(all_phenocam_rich$First_bud_burst_DOY, na.rm = T)
+
+richard_emerg_trans <- ric_emerg_data %>% 
+  dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
+  dplyr::mutate(CI_low_trans = ((estimate__ - CI_range) + m_rich_emerg) %>% 
+                  dplyr::mutate(CI_high_trans = (estimate__ + CI_range) + m_rich_emerg) %>% 
+                  dplyr::mutate(Estimate_trans = (estimate__ + m_rich_emerg), 
+         Est.Error_trans = (se__ + m_rich_emerg)) %>% 
+           dplyr::select(-CI_range) 
 
 (ric_emerg_plot_sclaed <-ggplot(ric_emerg_data) +
     #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
