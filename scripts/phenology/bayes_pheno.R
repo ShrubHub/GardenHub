@@ -625,7 +625,7 @@ save_kable(kable_season_garden, file = "output/phenology/season__length_results.
 
 
 # PLOTS ====
-pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#7AD151FF") # four all levels 
+pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#7AD151FF") # for reall levels 
 pal_garden <- c("#440154FF", "#7AD151FF") # for only garden 
 pal_arc  <- c("#2A788EFF", "#440154FF", "#7AD151FF") # for when southern source is missing  
 
@@ -657,6 +657,21 @@ all_growing_season_arc$population <- ordered(all_growing_season_arc$population,
                                                          "Southern Source",  
                                                          "Southern Garden"))
 
+all_phenocam_rich$population <- ordered(all_phenocam_rich$population, 
+                                        levels = c("Northern Source", 
+                                                   "Northern Garden", 
+                                                   "Southern Source",  
+                                                   "Southern Garden"))
+all_phenocam_pulchra$population <- ordered(all_phenocam_pulchra$population, 
+                                        levels = c("Northern Source", 
+                                                   "Northern Garden", 
+                                                   "Southern Source",  
+                                                   "Southern Garden"))
+all_phenocam_arctica$population <- ordered(all_phenocam_arctica$population, 
+                                        levels = c("Northern Source", 
+                                                   "Northern Garden", 
+                                                   "Southern Source",  
+                                                   "Southern Garden"))
 
 # LEAF EMERGENCE CG vs SOURCES ----
 # S. richardsonii ------
@@ -673,8 +688,7 @@ ric_emerg_data <- ric_emerg[[1]] # making the extracted model outputs into a da
                   alpha = 1,  width=.5) +
     ylab("First leaf emergence DOY (centered) \n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    scale_color_manual(values=pal) +
     theme_shrub() +
     labs(title = "Salix richardsonii"))
 
@@ -682,27 +696,23 @@ m_rich_emerg <- mean(all_phenocam_rich$First_bud_burst_DOY, na.rm = T)
 
 richard_emerg_trans <- ric_emerg_data %>% 
   dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
-  dplyr::mutate(CI_low_trans = ((estimate__ - CI_range) + m_rich_emerg) %>% 
-                  dplyr::mutate(CI_high_trans = (estimate__ + CI_range) + m_rich_emerg) %>% 
+  dplyr::mutate(CI_low_trans = ((estimate__ - CI_range) + m_rich_emerg)) %>% 
+                  dplyr::mutate(CI_high_trans = ((estimate__ + CI_range) + m_rich_emerg)) %>% 
                   dplyr::mutate(Estimate_trans = (estimate__ + m_rich_emerg), 
          Est.Error_trans = (se__ + m_rich_emerg)) %>% 
            dplyr::select(-CI_range) 
 
-(ric_emerg_plot_sclaed <-ggplot(ric_emerg_data) +
-    #geom_violin(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, fill = population, colour = population),
-    #          alpha = 0.1)+ # raw data
-    geom_jitter(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY_center, colour = population),
-                alpha = 0.8)+
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+(ric_emerg_plot_sclaed <-ggplot(richard_emerg_trans) +
+    geom_point(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY, colour = population),
+               alpha = 0.5)+
+    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
                   alpha = 1,  width=.5) +
     ylab("First leaf emergence DOY \n") +
     xlab("\n" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    scale_color_manual(values=pal) +
     theme_shrub() +
     labs(title = "Salix richardsonii"))
-
 
 # S. pulchra ------
 pul_emerg <- (conditional_effects(garden_pul_emerg_compare)) # extracting conditional effects from bayesian model

@@ -571,7 +571,7 @@ richard_sla_data_trans <- richard_sla_data %>%
 
 (rich_sla_plot <-ggplot(richard_sla_data_trans) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = SLA, colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5) + # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
