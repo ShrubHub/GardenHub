@@ -973,6 +973,7 @@ ric_grow_data <- ric_grow[[1]] # making the extracted model outputs into a data
     theme_shrub() +
     labs(title = "Salix richardsonii"))
 
+
 # S. pulchra ----------
 pul_grow <- (conditional_effects(growing_season_pul)) # extracting conditional effects from bayesian model
 pul_grow_data <- pul_grow[[1]] # making the extracted model outputs into a dataset (for plotting)
@@ -1032,13 +1033,14 @@ rich_grow_trans <- ric_grow_data %>%
                 Est.Error_trans = (se__ + m_rich_grow)) %>% 
   dplyr::select(-CI_range) 
 
+
 (rich_grow_plot_scaled <-ggplot(rich_grow_trans) +
     geom_point(data = all_phenocam_rich, aes(x = population, y = growing_season_length, colour = population),
                alpha = 0.5)+
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), width=0.5, size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
                   alpha = 1,  width=.5) +
-    ylab("Growing season length (# days) \n") +
+    ylab("Growing season length \n (# days) \n") +
     xlab("\n" ) +
     scale_color_manual(values=pal) +
     theme_shrub() +
@@ -1056,13 +1058,13 @@ pulchra_grow_trans <- pul_grow_data %>%
                 Est.Error_trans = (se__ + m_pul_grow)) %>% 
   dplyr::select(-CI_range) 
 
-(pul_yellow_plot_scaled <-ggplot(pulchra_grow_trans) +
+(pul_grow_plot_scaled <-ggplot(pulchra_grow_trans) +
     geom_point(data = all_phenocam_pulchra, aes(x = population, y = growing_season_length, colour = population),
                alpha = 0.5)+
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), width=0.5, size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
                   alpha = 1,  width=.5) +
-    ylab("Growing season length (# days) \n") +
+    ylab("Growing season length \n (# days) \n") +
     xlab("\n" ) +
     scale_color_manual(values=pal) +
     theme_shrub() +
@@ -1081,20 +1083,20 @@ arctica_grow_trans <- arc_grow_data %>%
                 Est.Error_trans = (se__ + m_arc_grow)) %>% 
   dplyr::select(-CI_range) 
 
-(arc_yellow_plot_scaled <-ggplot(arctica_grow_trans) +
+(arc_grow_plot_scaled <-ggplot(arctica_grow_trans) +
     geom_point(data = all_phenocam_arctica, aes(x = population, y = growing_season_length, colour = population),
                alpha = 0.5)+
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), width=0.5, size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
                   alpha = 1,  width=.5) +
-    ylab("Growing season length (# days) \n") +
+    ylab("Growing season length \n (# days) \n") +
     xlab("\n" ) +
     scale_color_manual(values=pal_arc) +
     theme_shrub() +
     labs(title = "Salix arctica"))
 
 # arrange 
-(growing_season_panel_unscaled <- ggarrange(ric_growing_plot, pul_growing_plot, arc_growing_plot, 
+(growing_season_panel_unscaled <- ggarrange(rich_grow_plot_scaled, pul_grow_plot_scaled, arc_grow_plot_scaled, 
                                    common.legend = TRUE, legend = "bottom",
                                    ncol = 3, nrow = 1))
 ggsave("figures/phenology/grow_season_panel.png", height = 10, width = 12, dpi = 300)
