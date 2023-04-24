@@ -452,9 +452,9 @@ pulchra_LL_results$Species <- "Salix pulchra"
 # no leaf length for S. arctic from source pop
 # make common garden only model 
 arctica_cg_growth <- arctica_all_growth %>% 
-  filter(population %in% c("Northern Garden", "Southern Garden"))
+  filter(population %in% c("N. Garden", "S. Garden"))
 
-arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population + (1|year), data = arctica_cg_growth, family = gaussian(), chains = 3,
+arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population + (1|year) + (1|SampleID_standard), data = arctica_cg_growth, family = gaussian(), chains = 3,
                            iter = 5000, warmup = 1000, 
                            control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(arctica_LL_CG)
@@ -462,6 +462,7 @@ plot(arctica_LL_CG)
 pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
 arctica_LL_results <- model_summ(arctica_LL_CG)
 arctica_LL_results$Species <- "Salix arctica"
+
 # merging all extracted outputs
 garden_LL_out <- rbind(rich_LL_results, pulchra_LL_results, arctica_LL_results)
 
@@ -546,14 +547,14 @@ arctica_cg_growth$population <- ordered(arctica_cg_growth$population,
 pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#7AD151FF")
 
 theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", size=16),
-                                 axis.text.x  = element_text(vjust=0.5, size=16, colour = "black", angle = 60), 
-                                 axis.title.y = element_text(face="bold", size=16),
-                                 axis.text.y  = element_text(vjust=0.5, size=16, colour = "black"),
+                                 axis.title.x = element_text(face="bold", size=20),
+                                 axis.text.x  = element_text(vjust=0.5, size=20, colour = "black", angle = 60), 
+                                 axis.title.y = element_text(face="bold", size=20),
+                                 axis.text.y  = element_text(vjust=0.5, size=20, colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 16, face = "bold.italic", hjust = 0.5),
+                                 plot.title = element_text(color = "black", size = 20, face = "bold.italic", hjust = 0.5),
                                  legend.title=element_text(size=16),
                                  legend.text=element_text(size = 15))}
 # SLA ---- 
@@ -575,7 +576,7 @@ richard_sla_data_trans <- richard_sla_data %>%
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
-    ylab("SLA (UNIT)\n") +
+    ylab(expression(paste("\n Specific Leaf Area (",mm^{2}," ",mg^{-1},")"))) +
     xlab("" ) +
     scale_color_manual(values=pal) +
     coord_cartesian(ylim=c(5, 25)) +
@@ -674,7 +675,7 @@ richard_ldmc_data_trans <- richard_ldmc_data %>%
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
-    ylab("LDMC (UNIT)\n") +
+    ylab(expression(paste("\n Leaf dry matter content (",g," ",g^{-1},")"))) +
     xlab("" ) +
     coord_cartesian(ylim=c(0, 0.9)) +
     scale_color_manual(values=pal) +
@@ -730,7 +731,7 @@ arc_ldmc_data_trans <- arc_ldmc_data %>%
     theme_shrub())
 
 (ldmc_panel <- ggarrange(rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot, 
-                        common.legend = TRUE, legend = "bottom",
+                        common.legend = TRUE, legend = "none",
                         ncol = 3, nrow = 1))
 # LA ----
 # richardsonii ----
@@ -747,14 +748,27 @@ richard_la_data_trans <- richard_la_data %>%
 
 
 (rich_la_plot <-ggplot(richard_la_data_trans) +
-    geom_point(data = richardsonii_all_traits, aes(x = population, y = log(LA), colour = population),
+    geom_point(data = richardsonii_all_traits, aes(x = population, y = (LA), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
-    ylab("Leaf Area (UNIT)\n") +
+    ylab(expression(paste("\n Leaf area (",mm^{2},")"))) +
     xlab("" ) +
     scale_color_manual(values=pal) +
+    labs(title = "Salix richardsonii") +
+    theme_shrub())
+# keep it logged 
+(rich_la_plot_log <-ggplot(richard_la_data) +
+    geom_point(data = richardsonii_all_traits, aes(x = population, y = log(LA), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__, colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
+                  size = 1, alpha = 1) +
+    ylab(expression(paste("\n Leaf area (",mm^{2},")"))) +
+    xlab("" ) +
+    scale_color_manual(values=pal) +
+    coord_cartesian(ylim=c(3, 10)) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
 # pulchra ----
@@ -770,7 +784,7 @@ pul_la_data_trans <- pul_la_data %>%
   select(-CI_range)
 
 (pul_la_plot <-ggplot(pul_la_data_trans) +
-    geom_point(data = pulchra_all_traits, aes(x = population, y = log(LA), colour = population),
+    geom_point(data = pulchra_all_traits, aes(x = population, y = (LA), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
@@ -781,6 +795,21 @@ pul_la_data_trans <- pul_la_data %>%
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
     labs(title = "Salix pulchra") +
     theme_shrub())
+# keep it log transformed 
+(pul_la_plot_log <-ggplot(pul_la_data) +
+    geom_point(data = pulchra_all_traits, aes(x = population, y = log(LA), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__, colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
+                  size = 1, alpha = 1) +
+    ylab("") +
+    xlab("" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    coord_cartesian(ylim=c(3, 10)) +
+    labs(title = "Salix pulchra") +
+    theme_shrub())
+
 # arctica ----
 arc_la <- (conditional_effects(arctica_LA)) # extracting conditional effects from bayesian model
 arc_la_data <- arc_la[[1]] # making the extracted model outputs into a dataset (for plotting)
@@ -794,7 +823,7 @@ arc_la_data_trans <- arc_la_data %>%
   select(-CI_range)
 
 (arc_la_plot <-ggplot(arc_la_data_trans) +
-    geom_point(data = arctica_all_traits, aes(x = population, y = log(LA), colour = population),
+    geom_point(data = arctica_all_traits, aes(x = population, y = (LA), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
@@ -805,10 +834,26 @@ arc_la_data_trans <- arc_la_data %>%
     labs(title = "Salix arctica") +
     theme_shrub())
 
+# keep it log transformed 
+(arc_la_plot_log <-ggplot(arc_la_data) +
+    geom_point(data = arctica_all_traits, aes(x = population, y = log(LA), colour = population),
+               alpha = 0.5)+ # raw data
+    geom_point(aes(x = effect1__, y = estimate__, colour = population), size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
+                  size = 1, alpha = 1) +
+    ylab("") +
+    xlab("" ) +
+    scale_color_manual(values=pal) +
+    coord_cartesian(ylim=c(3, 10)) +
+    labs(title = "Salix arctica") +
+    theme_shrub())
+
 (la_panel <- ggarrange(rich_la_plot, pul_la_plot, arc_la_plot, 
                          common.legend = TRUE, legend = "bottom",
                          ncol = 3, nrow = 1))
-
+(la_panel_log <- ggarrange(rich_la_plot_log, pul_la_plot_log, arc_la_plot_log, 
+                       common.legend = TRUE, legend = "none",
+                       ncol = 3, nrow = 1))
 # LEAF LENGTH -----
 
 # richardsonii ----
@@ -822,9 +867,10 @@ richard_ll_data <- richard_ll[[1]] # making the extracted model outputs into a d
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
                   size = 1, alpha = 1) +
-    ylab("Leaf Length (mm)\n") +
+    ylab("\n Leaf Length (mm)\n") +
     xlab("") +
     scale_color_manual(values=pal) +
+    coord_cartesian(ylim=c(0, 90)) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
 # pulchra ----
@@ -841,12 +887,9 @@ pul_ll_data <- pul_ll[[1]] # making the extracted model outputs into a dataset (
     ylab("") +
     xlab("" ) +
     scale_color_manual(values=pal) +
+    coord_cartesian(ylim=c(0, 90)) +
     labs(title = "Salix pulchra") +
     theme_shrub())
-
-garden_LL_out_pop <- tibble::rownames_to_column(garden_LL_out, "population") %>% 
-  filter(population %in% c("Intercept", "Northern Source", "SouthernSource", "Southern Garden"))
-
 
 # arctica ----
 arc_ll <- (conditional_effects(arctica_LL_CG)) # extracting conditional effects from bayesian model
@@ -866,11 +909,11 @@ pal_garden <-c("#440154FF", "#7AD151FF")
     scale_colour_manual(values = pal) +
     scale_fill_manual(values = pal) +
     labs(title = "Salix arctica") +
+    coord_cartesian(ylim=c(0, 90)) +
     theme_shrub())
 
-
 (ll_panel <- ggarrange(rich_ll_plot, pul_ll_plot, arc_ll_plot, 
-                       common.legend = TRUE, legend = "bottom",
+                       common.legend = TRUE, legend = "none",
                        ncol = 3, nrow = 1))
 
 
@@ -880,6 +923,17 @@ pal_garden <-c("#440154FF", "#7AD151FF")
   rich_ll_plot, pul_ll_plot, arc_ll_plot, 
                           common.legend = TRUE, legend = "bottom", 
   ncol = 6, nrow = 2))
+
+(traits_plot <-ggarrange(sla_panel, ldmc_panel,la_panel_log,  ll_panel, 
+                               common.legend = TRUE, legend = "none", 
+                               ncol = 2, nrow = 2))
+
+# leaf length + area panel 
+(size_trait_panel <- ggarrange(la_panel_log, ll_panel, 
+                               common.legend = TRUE, legend = "bottom", 
+                               ncol = 1, nrow = 2))
+ggsave("figures/size_trait_panel.png", height = 10, width = 12, dpi = 300) 
+
 # SLA LDMC panel 
 (sla_ldmc_panel <- ggarrange(sla_panel, ldmc_panel, 
                           common.legend = TRUE, legend = "bottom", 
