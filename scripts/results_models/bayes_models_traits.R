@@ -705,12 +705,10 @@ arc_ldmc <- (conditional_effects(arctica_LDMC_log)) # extracting conditional eff
 arc_ldmc_data <- arc_ldmc[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
 arc_ldmc_data_trans <- arc_ldmc_data %>% 
-  mutate(CI_range = (estimate__ - lower__)) %>% 
   mutate(CI_low_trans = exp(lower__)) %>% 
   mutate(CI_high_trans = exp(upper__)) %>% 
   mutate(Estimate_trans = exp(estimate__), 
-         Est.Error_trans = exp(se__)) %>% 
-  select(-CI_range)
+         Est.Error_trans = exp(se__)) 
 
 (arc_ldmc_plot <-ggplot(arc_ldmc_data_trans) +
     geom_point(data = arctica_all_traits, aes(x = population, y = (LDMC_g_g), colour = population),
@@ -734,14 +732,11 @@ richard_la <- (conditional_effects(rich_LA)) # extracting conditional effects fr
 richard_la_data <- richard_la[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
 richard_la_data_trans <- richard_la_data %>% 
-  mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(lower__) %>% 
-  mutate(CI_high_trans = exp(upper__)) %>% 
-  mutate(Estimate_trans = exp(estimate__), 
-         Est.Error_trans = exp(se__)) %>% 
-  select(-CI_range)
-
-
+    mutate(CI_low_trans = exp(lower__)) %>% 
+    mutate(CI_high_trans = exp(upper__)) %>% 
+    mutate(Estimate_trans = exp(estimate__), 
+           Est.Error_trans = exp(se__)) 
+  
 (rich_la_plot <-ggplot(richard_la_data_trans) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = (LA), colour = population),
                alpha = 0.5)+ # raw data
@@ -760,7 +755,7 @@ richard_la_data_trans <- richard_la_data %>%
     geom_point(aes(x = effect1__, y = estimate__, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
                   size = 1, alpha = 1) +
-    ylab(expression(paste("\n Leaf area (",mm^{2},")"))) +
+    ylab(expression(paste("\n log Leaf area (",mm^{2},")"))) +
     xlab("" ) +
     scale_color_manual(values=pal) +
     coord_cartesian(ylim=c(3, 10)) +
@@ -771,12 +766,10 @@ pul_la <- (conditional_effects(pulchra_LA)) # extracting conditional effects fro
 pul_la_data <- pul_la[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
 pul_la_data_trans <- pul_la_data %>% 
-  mutate(CI_range = (estimate__ - lower__)) %>% 
   mutate(CI_low_trans = exp(lower__)) %>% 
   mutate(CI_high_trans = exp(upper__)) %>% 
   mutate(Estimate_trans = exp(estimate__), 
-         Est.Error_trans = exp(se__)) %>% 
-  select(-CI_range)
+         Est.Error_trans = exp(se__)) 
 
 (pul_la_plot <-ggplot(pul_la_data_trans) +
     geom_point(data = pulchra_all_traits, aes(x = population, y = (LA), colour = population),
@@ -810,12 +803,10 @@ arc_la <- (conditional_effects(arctica_LA)) # extracting conditional effects fro
 arc_la_data <- arc_la[[1]] # making the extracted model outputs into a dataset (for plotting)
 #[[1]] is to extract the first term in the model which in our case is population
 arc_la_data_trans <- arc_la_data %>% 
-  mutate(CI_range = (estimate__ - lower__)) %>% 
   mutate(CI_low_trans = exp(lower__)) %>% 
   mutate(CI_high_trans = exp(upper__)) %>% 
   mutate(Estimate_trans = exp(estimate__), 
-         Est.Error_trans = exp(se__)) %>% 
-  select(-CI_range)
+         Est.Error_trans = exp(se__)) 
 
 (arc_la_plot <-ggplot(arc_la_data_trans) +
     geom_point(data = arctica_all_traits, aes(x = population, y = (LA), colour = population),
