@@ -169,13 +169,10 @@ garden_sla_out <- rbind(rich_SLA_results, pulchra_SLA_results, arctica_SLA_resul
 garden_SLA_out_back <- garden_sla_out %>%
   dplyr::rename("l_95_CI_log" = "l-95% CI", 
                  "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = exp(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = exp(Estimate + CI_range)) %>% 
+  mutate(CI_low_trans = exp(l_95_CI_log)) %>% 
+  mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
   mutate(Estimate_trans = exp(Estimate), 
-         Est.Error_trans = exp(Est.Error)) %>% 
-  select(-CI_range)
-
+         Est.Error_trans = exp(Est.Error)) 
 # save df of results 
 write.csv(garden_SLA_out_back, "output/traits/garden_SLA_out_back.csv")
 
@@ -264,12 +261,10 @@ garden_ldmc_out <- rbind(rich_LDMC_results, pulchra_LDMC_results, arctica_LDMC_r
 garden_LDMC_out_back <- garden_ldmc_out %>%
   dplyr::rename("l_95_CI_log" = "l-95% CI", 
                 "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = exp(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = exp(Estimate + CI_range)) %>% 
+  mutate(CI_low_trans = exp(l_95_CI_log)) %>% 
+  mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
   mutate(Estimate_trans = exp(Estimate), 
-         Est.Error_trans = exp(Est.Error)) %>% 
-  select(-CI_range)
+         Est.Error_trans = exp(Est.Error))
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_LDMC_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
                                    "Year", "Sigma", 
@@ -354,8 +349,8 @@ garden_LA_out_back <- garden_LA_out %>%
   dplyr::rename("l_95_CI_log" = "l-95% CI", 
                 "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = exp(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = exp(Estimate + CI_range)) %>% 
+  mutate(CI_low_trans = exp(l_95_CI_log)) %>% 
+  mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
   mutate(Estimate_trans = exp(Estimate), 
          Est.Error_trans = exp(Est.Error)) %>% 
   select(-CI_range)
@@ -482,12 +477,12 @@ write.csv(garden_LL_out, "output/traits/garden_LL_out_back.csv")
 # creating table
 kable_LL <- garden_LL_out %>% 
   kbl(caption="Table.xxx BRMS model outputs: Leaf length  of northern garden, northern source, southern garden, southern source willows. 
-      Model structure per species: (log(SLA) ~ population + (1|year). Note S. arctica only comparing garden populations. 
+      Model structure per species: leaf length ~ population + (1|year) + (1|sample_id). Note S. arctica only comparing garden populations. 
       Model output back-transformed in the table below.", 
       col.names = c( "Estimate",
                      "Est. Error",
-                     "Lower 95% CI (log)",
-                     "Upper 95% CI (log)", 
+                     "Lower 95% CI",
+                     "Upper 95% CI", 
                      "Rhat", 
                      "Bulk Effective Sample Size",
                      "Tail Effective Sample Size", 
@@ -564,8 +559,8 @@ richard_sla_data <- richard_sla[[1]] # making the extracted model outputs into a
 #[[1]] is to extract the first term in the model which in our case is population
 richard_sla_data_trans <- richard_sla_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(CI_high_trans = exp(upper__)) %>% 
+  mutate(CI_low_trans = exp(lower__)) %>% 
   mutate(Estimate_trans = exp(estimate__), 
          Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
@@ -588,8 +583,8 @@ pul_sla_data <- pul_sla[[1]] # making the extracted model outputs into a dataset
 #[[1]] is to extract the first term in the model which in our case is population
 pul_sla_data_trans <- pul_sla_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(CI_low_trans = exp(lower__)) %>% 
+  mutate(CI_high_trans = exp(upper__)) %>% 
   mutate(Estimate_trans = exp(estimate__), 
          Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
@@ -612,8 +607,8 @@ arc_sla_data <- arc_sla[[1]] # making the extracted model outputs into a dataset
 #[[1]] is to extract the first term in the model which in our case is population
 arc_sla_data_trans <- arc_sla_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(CI_low_trans = exp(lower__)) %>% 
+  mutate(CI_high_trans = exp(upper__)) %>% 
   mutate(Estimate_trans = exp(estimate__), 
          Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
@@ -663,8 +658,8 @@ richard_ldmc_data <- richard_ldmc[[1]] # making the extracted model outputs into
 #[[1]] is to extract the first term in the model which in our case is population
 richard_ldmc_data_trans <- richard_ldmc_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(CI_low_trans = exp(lower__)) %>% 
+  mutate(CI_high_trans = exp(upper__)) %>% 
   mutate(Estimate_trans = exp(estimate__), 
          Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
@@ -687,8 +682,8 @@ pul_ldmc_data <- pul_ldmc[[1]] # making the extracted model outputs into a datas
 #[[1]] is to extract the first term in the model which in our case is population
 pul_ldmc_data_trans <- pul_ldmc_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(CI_low_trans = exp(lower__)) %>% 
+  mutate(CI_high_trans = exp(upper__)) %>% 
   mutate(Estimate_trans = exp(estimate__), 
          Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
@@ -711,8 +706,8 @@ arc_ldmc_data <- arc_ldmc[[1]] # making the extracted model outputs into a datas
 #[[1]] is to extract the first term in the model which in our case is population
 arc_ldmc_data_trans <- arc_ldmc_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(CI_low_trans = exp(lower__)) %>% 
+  mutate(CI_high_trans = exp(upper__)) %>% 
   mutate(Estimate_trans = exp(estimate__), 
          Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
@@ -740,8 +735,8 @@ richard_la_data <- richard_la[[1]] # making the extracted model outputs into a d
 #[[1]] is to extract the first term in the model which in our case is population
 richard_la_data_trans <- richard_la_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(CI_low_trans = exp(lower__) %>% 
+  mutate(CI_high_trans = exp(upper__)) %>% 
   mutate(Estimate_trans = exp(estimate__), 
          Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
@@ -777,8 +772,8 @@ pul_la_data <- pul_la[[1]] # making the extracted model outputs into a dataset (
 #[[1]] is to extract the first term in the model which in our case is population
 pul_la_data_trans <- pul_la_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(CI_low_trans = exp(lower__)) %>% 
+  mutate(CI_high_trans = exp(upper__)) %>% 
   mutate(Estimate_trans = exp(estimate__), 
          Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
@@ -816,8 +811,8 @@ arc_la_data <- arc_la[[1]] # making the extracted model outputs into a dataset (
 #[[1]] is to extract the first term in the model which in our case is population
 arc_la_data_trans <- arc_la_data %>% 
   mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(estimate__ - CI_range)) %>% 
-  mutate(CI_high_trans = exp(estimate__ + CI_range)) %>% 
+  mutate(CI_low_trans = exp(lower__)) %>% 
+  mutate(CI_high_trans = exp(upper__)) %>% 
   mutate(Estimate_trans = exp(estimate__), 
          Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
