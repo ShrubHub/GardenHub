@@ -267,7 +267,7 @@ hist(max_diam_cg_arc$max_stem_diam,  breaks = 30)#  right skew
 # all_CG_source_growth_garden_rich_height$Canopy_Height_cm_scale <- scale(all_CG_source_growth_garden_rich_height$Canopy_Height_cm, center = T)  # scaling time
 
 # model
-garden_rich_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sample_age),
+garden_rich_height <- brms::brm(log(max_canopy_height_cm) ~ population +(1|Sample_age),
                                 data = max_heights_cg_rich, family = gaussian(), chains = 3, 
                                 iter = 5000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -275,6 +275,17 @@ garden_rich_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Samp
 summary(garden_rich_height) # significantly higher canopy heights for southern pop.
 plot(garden_rich_height) # fine
 pp_check(garden_rich_height,  type = "dens_overlay", nsamples = 100)  # good
+saveRDS(garden_rich_height, file = "output/models/garden_rich_height.rds")
+
+# estimate for northern: 2.3801895 = exp(2.3801895) = 10.80695
+# estimate for southern: 2.3801895+1.1569109=3.5371 -> exp(3.5371) = 34.36711
+# %diff
+(34.36711-10.80695)/10.80695
+# 2.180093
+
+# times larger
+34.36711/10.80695
+# 3.180093
 
 # extract output with function
 rich_extract <- model_summ_growth(garden_rich_height)
@@ -296,6 +307,17 @@ garden_pul_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sampl
 summary(garden_pul_height) # significantly higher canopy heights for southern pop.
 plot(garden_pul_height) # fine
 pp_check(garden_pul_height, type = "dens_overlay", nsamples = 100)  # good) 
+saveRDS(garden_pul_height, file = "output/models/garden_pul_height.rds")
+
+# estimate for northern: 2.2889943 = exp(2.2889943) = 9.865011
+# estimate for southern: 2.2889943+0.9149186=3.203913 -> exp(3.203913) = 24.62871
+# %diff
+(24.62871-9.865011)/9.865011
+# 1.496572
+
+# times larger
+24.62871/9.865011
+# 2.496572
 
 # extract output with function
 pul_extract <- model_summ_growth(garden_pul_height)
@@ -317,6 +339,7 @@ garden_arc_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sampl
 summary(garden_arc_height) # NOT significant difference (again makes sense!)
 plot(garden_arc_height) # fine
 pp_check(garden_arc_height, type = "dens_overlay", nsamples = 100)# good
+saveRDS(garden_arc_height, file = "output/models/garden_arc_height.rds")
 
 # extract output with function
 arc_extract <- model_summ_growth(garden_arc_height)
@@ -339,10 +362,10 @@ garden_heights_out_back <- garden_heights_out %>%
   dplyr::rename("l_95_CI_log" = "l-95% CI", 
                 "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(Estimate), 
-         Est.Error_trans = 10^(Est.Error)) %>% 
+  mutate(CI_low_trans = exp(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = exp(Estimate + CI_range)) %>% 
+  mutate(Estimate_trans = exp(Estimate), 
+         Est.Error_trans = exp(Est.Error)) %>% 
   select(-CI_range)
 
 # save df of results 
@@ -877,14 +900,14 @@ save_kable(kable_diam,file = "output/kable_diam.pdf",
 
 # DATA VISUALISATION -----
 theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", size=12),
-                                 axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 45), 
-                                 axis.title.y = element_text(face="bold", size=12),
-                                 axis.text.y  = element_text(vjust=0.5, size=12, colour = "black"),
+                                 axis.title.x = element_text(size=18),
+                                 axis.text.x  = element_text(angle = 35, vjust=0.5, size=14, colour = "black"), 
+                                 axis.title.y = element_text(size=18),
+                                 axis.text.y  = element_text(vjust=0.5, size=14, colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 15, face = "italic", hjust = 0.5),
+                                 plot.title = element_text(color = "black", size = 16, face = "bold", hjust = 0.5),
                                  plot.margin = unit(c(1,1,1,1), units = , "cm"))}
 
 # plot model output
@@ -896,39 +919,42 @@ ric_height_data <- ric_heights[[1]] # making the extracted model outputs into a
 # [[1]] is to extract the first term in the model which in our case is population
 
 (ric_height_plot <-ggplot(ric_height_data) +
-    geom_violin(data = max_heights_cg_rich, aes(x = population, y = log(max_canopy_height_cm), fill = population, colour = population),
-               alpha = 0.1)+ # raw data
-    geom_jitter(data = max_heights_cg_rich, aes(x = population, y = log(max_canopy_height_cm), colour = population),
-                 alpha = 0.8)+
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
-                  alpha = 1,  width=.5) +
-    ylab("Max. canopy height (log, cm)\n") +
+    #geom_violin(data = max_heights_cg_pul, aes(x = population, y = log(max_canopy_height_cm), fill = population, colour = population),
+    #           alpha = 0.1)+ # raw data
+    geom_jitter(data = max_heights_cg_rich, aes(x = population, y = max_canopy_height_cm, colour = population),
+                alpha = 0.2)+
+    geom_point(aes(x = effect1__, y = exp(estimate__),colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = exp(lower__), ymax = exp(upper__),colour = population),
+                  linewidth = 1, alpha = 1) +
+    ylab("Max. canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_shrub() +
-    labs(title = "Salix richardsonii"))
-
+    scale_colour_viridis_d(begin = 0.1, end = 0.75) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.75) +
+    theme_shrub()+
+    ggtitle(expression(italic("Salix richardsonii"))) +
+    theme(text=element_text(family="Helvetica Light")) )
+   
+    
 # S. pulchra ----
 pul_heights <- (conditional_effects(garden_pul_height)) # extracting conditional effects from bayesian model
 pul_height_data <- pul_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
 
 (pul_height_plot <-ggplot(pul_height_data) +
-    geom_violin(data = max_heights_cg_pul, aes(x = population, y = log(max_canopy_height_cm), fill = population, colour = population),
-                alpha = 0.1)+ # raw data
-    geom_jitter(data = max_heights_cg_rich, aes(x = population, y = log(max_canopy_height_cm), colour = population),
-                alpha = 0.8)+
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
-                  alpha = 1,  width=.5) +
-    ylab("Max. canopy height (log, cm)\n") +
+    #geom_violin(data = max_heights_cg_pul, aes(x = population, y = log(max_canopy_height_cm), fill = population, colour = population),
+     #           alpha = 0.1)+ # raw data
+    geom_jitter(data = max_heights_cg_pul, aes(x = population, y = max_canopy_height_cm, colour = population),
+                alpha = 0.2)+
+    geom_point(aes(x = effect1__, y = exp(estimate__),colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = exp(lower__), ymax = exp(upper__),colour = population),
+                  linewidth = 1, alpha = 1) +
+    ylab("Max. canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.75) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.75) +
     theme_shrub() +
-    labs(title = "Salix pulchra"))
+    ggtitle(expression(italic("Salix pulchra")))+
+    theme(text=element_text(family="Helvetica Light")) )
 
 # S. arctica ----
 arc_heights <- (conditional_effects(garden_arc_height)) # extracting conditional effects from bayesian model
@@ -936,19 +962,20 @@ arc_height_data <- arc_heights[[1]] # making the extracted model outputs into a
 # [[1]] is to extract the first term in the model which in our case is population
 
 (arc_height_plot <-ggplot(arc_height_data) +
-    geom_violin(data = max_heights_cg_arc, aes(x = population, y = log(max_canopy_height_cm), fill = population, colour = population),
-                alpha = 0.1)+ # raw data
-    geom_jitter(data = max_heights_cg_arc, aes(x = population, y = log(max_canopy_height_cm), colour = population),
-                alpha = 0.8)+
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), width=0.5, size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
-                  alpha = 1,  width=.5) +
-    ylab("Max. canopy height (log, cm)\n") +
+   # geom_violin(data = max_heights_cg_arc, aes(x = population, y = log(max_canopy_height_cm), fill = population, colour = population),
+           #     alpha = 0.1)+ # raw data
+    geom_jitter(data = max_heights_cg_arc, aes(x = population, y = max_canopy_height_cm, colour = population),
+                alpha = 0.2)+
+    geom_point(aes(x = effect1__, y = exp(estimate__),colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = exp(lower__), ymax = exp(upper__),colour = population),
+                  linewidth = 1, alpha = 1) +
+    ylab("Max. canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.75) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.75) +
     theme_shrub() +
-    labs(title = "Salix arctica"))
+    ggtitle(expression(italic("Salix arctica")))+
+    theme(text=element_text(family="Helvetica Light")) )
 
 # arrange 
 (growth_maxheights <- ggarrange(ric_height_plot, pul_height_plot, arc_height_plot, 
@@ -956,6 +983,7 @@ arc_height_data <- arc_heights[[1]] # making the extracted model outputs into a
                            ncol = 3, nrow = 1))
 
 
+ggsave(growth_maxheights, filename ="output/figures/growth_maxheights.png", width = 14.67, height = 6.53, units = "in")
 
 # STEM ELONG  --------
 # S. richardsonii ----
