@@ -232,8 +232,8 @@ kable_source_emerg <- source_emerg %>%
       Model structure per species: First_bud_burst_DOY ~ population + (1|Year). Missing Salix arctica", 
       col.names = c( "Species","Estimate",
                      "Est. Error",
-                     "Lower 95% CI (log)",
-                     "Upper 95% CI (log)", 
+                     "Lower 95% CI (scaled)",
+                     "Upper 95% CI (scaled)", 
                      "Rhat", 
                      "Bulk Effective Sample Size",
                      "Tail Effective Sample Size", 
@@ -349,8 +349,8 @@ kable_emerg_garden <- garden_emerg_out %>%
       Model structure per species: DOY leaf emergence ~ population. Data scaled to center on 0.", 
       col.names = c( "Estimate",
                      "Est. Error",
-                     "Lower 95% CI (log)",
-                     "Upper 95% CI (log)", 
+                     "Lower 95% CI (scaled)",
+                     "Upper 95% CI (scaled)", 
                      "Rhat", 
                      "Bulk Effective Sample Size",
                      "Tail Effective Sample Size", 
@@ -508,8 +508,8 @@ kable_yellow_garden <- garden_yellow_out %>%
       Model structure per species: DOY leaf emergence ~ population. Data scaled to center on 0.", 
       col.names = c( "Estimate",
                      "Est. Error",
-                     "Lower 95% CI (log)",
-                     "Upper 95% CI (log)", 
+                     "Lower 95% CI (scaled)",
+                     "Upper 95% CI (scaled)", 
                      "Rhat", 
                      "Bulk Effective Sample Size",
                      "Tail Effective Sample Size", 
@@ -616,8 +616,8 @@ kable_season_garden <- season_results %>%
       Model structure per species: Growing season length ~ population. Data scaled to center on 0.", 
       col.names = c( "Estimate",
                      "Est. Error",
-                     "Lower 95% CI (log)",
-                     "Upper 95% CI (log)", 
+                     "Lower 95% CI (scaled)",
+                     "Upper 95% CI (scaled)", 
                      "Rhat", 
                      "Bulk Effective Sample Size",
                      "Tail Effective Sample Size", 
@@ -705,13 +705,14 @@ ric_emerg_data <- ric_emerg[[1]] # making the extracted model outputs into a da
     labs(title = "Salix richardsonii"))
 # back transform scaled data for figure 
 m_rich_emerg <- mean(all_phenocam_rich$First_bud_burst_DOY, na.rm = T)
+
 richard_emerg_trans <- ric_emerg_data %>% 
   dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
-  dplyr::mutate(CI_low_trans = ((estimate__ - CI_range) + m_rich_emerg)) %>% 
-                  dplyr::mutate(CI_high_trans = ((estimate__ + CI_range) + m_rich_emerg)) %>% 
-                  dplyr::mutate(Estimate_trans = (estimate__ + m_rich_emerg), 
-         Est.Error_trans = (se__ + m_rich_emerg)) %>% 
-           dplyr::select(-CI_range) 
+  dplyr::mutate(CI_low_trans = ((lower__) + m_rich_emerg)) %>% 
+  dplyr::mutate(CI_high_trans = ((upper__) + m_rich_emerg)) %>% 
+  dplyr::mutate(Estimate_trans = (estimate__ + m_rich_emerg), 
+                Est.Error_trans = (se__ + m_rich_emerg)) %>% 
+  dplyr::select(-CI_range) 
 
 (ric_emerg_plot_scaled <-ggplot(richard_emerg_trans) +
     geom_point(data = all_phenocam_rich, aes(x = population, y = First_bud_burst_DOY, colour = population),
@@ -748,8 +749,8 @@ pul_emerg_data <- pul_emerg[[1]] # making the extracted model outputs into a da
 m_pul_emerg <- mean(all_phenocam_pulchra$First_bud_burst_DOY, na.rm = T)
 pulchra_emerg_trans <- pul_emerg_data %>% 
   dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
-  dplyr::mutate(CI_low_trans = ((estimate__ - CI_range) + m_pul_emerg)) %>% 
-  dplyr::mutate(CI_high_trans = ((estimate__ + CI_range) + m_pul_emerg)) %>% 
+  dplyr::mutate(CI_low_trans = ((lower__) + m_pul_emerg)) %>% 
+  dplyr::mutate(CI_high_trans = ((upper__) + m_pul_emerg)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_pul_emerg), 
                 Est.Error_trans = (se__ + m_pul_emerg)) %>% 
   dplyr::select(-CI_range) 
@@ -789,8 +790,8 @@ arc_emerg_data <- arc_emerg[[1]] # making the extracted model outputs into a da
 m_arc_emerg <- mean(all_phenocam_arctica$First_bud_burst_DOY, na.rm = T)
 arc_emerg_trans <- arc_emerg_data %>% 
   dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
-  dplyr::mutate(CI_low_trans = ((estimate__ - CI_range) + m_arc_emerg)) %>% 
-  dplyr::mutate(CI_high_trans = ((estimate__ + CI_range) + m_arc_emerg)) %>% 
+  dplyr::mutate(CI_low_trans = ((lower__) + m_arc_emerg)) %>% 
+  dplyr::mutate(CI_high_trans = ((upper__) + m_arc_emerg)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_arc_emerg), 
                 Est.Error_trans = (se__ + m_arc_emerg)) %>% 
   dplyr::select(-CI_range) 
@@ -842,8 +843,8 @@ ric_yellow_data <- ric_yellow[[1]] # making the extracted model outputs into a 
 m_rich_yellow <- mean(all_phenocam_rich$First_leaf_yellow_DOY, na.rm = T)
 richard_yellow_trans <- ric_yellow_data %>% 
   dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
-  dplyr::mutate(CI_low_trans = ((estimate__ - CI_range) + m_rich_yellow)) %>% 
-  dplyr::mutate(CI_high_trans = ((estimate__ + CI_range) + m_rich_yellow)) %>% 
+  dplyr::mutate(CI_low_trans = ((lower__) + m_rich_yellow)) %>% 
+  dplyr::mutate(CI_high_trans = ((upper__) + m_rich_yellow)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_rich_yellow), 
                 Est.Error_trans = (se__ + m_rich_yellow)) %>% 
   dplyr::select(-CI_range) 
@@ -884,8 +885,8 @@ pul_yellow_data <- pul_yellow[[1]] # making the extracted model outputs into a 
 m_pul_yellow <- mean(all_phenocam_pulchra$First_leaf_yellow_DOY, na.rm = T)
 pulchra_yellow_trans <- pul_yellow_data %>% 
   dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
-  dplyr::mutate(CI_low_trans = ((estimate__ - CI_range) + m_pul_yellow)) %>% 
-  dplyr::mutate(CI_high_trans = ((estimate__ + CI_range) + m_pul_yellow)) %>% 
+  dplyr::mutate(CI_low_trans = ((lower__) + m_pul_yellow)) %>% 
+  dplyr::mutate(CI_high_trans = ((upper__) + m_pul_yellow)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_pul_yellow), 
                 Est.Error_trans = (se__ + m_pul_yellow)) %>% 
   dplyr::select(-CI_range) 
@@ -925,8 +926,8 @@ arc_yellow_data <- arc_yellow[[1]] # making the extracted model outputs into a 
 m_arc_yellow <- mean(all_phenocam_arctica$First_leaf_yellow_DOY, na.rm = T)
 arctica_yellow_trans <- arc_yellow_data %>% 
   dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
-  dplyr::mutate(CI_low_trans = ((estimate__ - CI_range) + m_arc_yellow)) %>% 
-  dplyr::mutate(CI_high_trans = ((estimate__ + CI_range) + m_arc_yellow)) %>% 
+  dplyr::mutate(CI_low_trans = ((lower__) + m_arc_yellow)) %>% 
+  dplyr::mutate(CI_high_trans = ((upper__) + m_arc_yellow)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_arc_yellow), 
                 Est.Error_trans = (se__ + m_arc_yellow)) %>% 
   dplyr::select(-CI_range) 
@@ -1028,8 +1029,8 @@ ric_grow_data <- ric_grow[[1]] # making the extracted model outputs into a datas
 m_rich_grow <- mean(all_phenocam_rich$growing_season_length, na.rm = T)
 rich_grow_trans <- ric_grow_data %>% 
   dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
-  dplyr::mutate(CI_low_trans = ((estimate__ - CI_range) + m_rich_grow)) %>% 
-  dplyr::mutate(CI_high_trans = ((estimate__ + CI_range) + m_rich_grow)) %>% 
+  dplyr::mutate(CI_low_trans = ((lower__) + m_rich_grow)) %>% 
+  dplyr::mutate(CI_high_trans = ((upper__) + m_rich_grow)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_rich_grow), 
                 Est.Error_trans = (se__ + m_rich_grow)) %>% 
   dplyr::select(-CI_range) 
@@ -1053,8 +1054,8 @@ pul_grow_data <- pul_grow_scale[[1]] # making the extracted model outputs into a
 m_pul_grow <- mean(all_phenocam_pulchra$growing_season_length, na.rm = T)
 pulchra_grow_trans <- pul_grow_data %>% 
   dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
-  dplyr::mutate(CI_low_trans = ((estimate__ - CI_range) + m_pul_grow)) %>% 
-  dplyr::mutate(CI_high_trans = ((estimate__ + CI_range) + m_pul_grow)) %>% 
+  dplyr::mutate(CI_low_trans = ((lower__) + m_pul_grow)) %>% 
+  dplyr::mutate(CI_high_trans = ((upper__) + m_pul_grow)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_pul_grow), 
                 Est.Error_trans = (se__ + m_pul_grow)) %>% 
   dplyr::select(-CI_range) 
@@ -1078,8 +1079,8 @@ arc_grow_data <- arc_grow_scale[[1]] # making the extracted model outputs into a
 m_arc_grow <- mean(all_phenocam_arctica$growing_season_length, na.rm = T)
 arctica_grow_trans <- arc_grow_data %>% 
   dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
-  dplyr::mutate(CI_low_trans = ((estimate__ - CI_range) + m_arc_grow)) %>% 
-  dplyr::mutate(CI_high_trans = ((estimate__ + CI_range) + m_arc_grow)) %>% 
+  dplyr::mutate(CI_low_trans = ((lower__) + m_arc_grow)) %>% 
+  dplyr::mutate(CI_high_trans = ((upper__) + m_arc_grow)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_arc_grow), 
                 Est.Error_trans = (se__ + m_arc_grow)) %>% 
   dplyr::select(-CI_range) 
