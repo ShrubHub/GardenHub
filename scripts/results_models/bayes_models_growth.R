@@ -265,7 +265,6 @@ hist(max_diam_cg_arc$max_stem_diam,  breaks = 30)#  right skew
 
 # S. Richardsonii ----
 # all_CG_source_growth_garden_rich_height$Canopy_Height_cm_scale <- scale(all_CG_source_growth_garden_rich_height$Canopy_Height_cm, center = T)  # scaling time
-
 # model
 garden_rich_height <- brms::brm(log(max_canopy_height_cm) ~ population +(1|Sample_age),
                                 data = max_heights_cg_rich, family = gaussian(), chains = 3, 
