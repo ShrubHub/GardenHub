@@ -560,6 +560,7 @@ plot(growing_season_pul)
 pp_check(growing_season_pul, type = "dens_overlay", ndraws = 100) # looks decent
 season_pul_results <- model_summ_pheno(growing_season_pul)
 season_pul_results$Species <- "Salix pulchra"
+
 # center on 0
 all_phenocam_pulchra$growing_season_length_scale <- center_scale(all_phenocam_pulchra$growing_season_length)
 growing_season_pul_scaled <- brms::brm(growing_season_length_scale ~ population + (1|Year), 

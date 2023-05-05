@@ -114,8 +114,8 @@ max_heights_cg$Sample_age <- as.factor(max_heights_cg$Sample_age)
 
 # ordering levels
 max_heights_cg$population <- plyr::revalue(max_heights_cg$population , 
-                                          c("Northern"="Northern Garden",
-                                            "Southern"="Southern Garden"))
+                                          c("Northern"="N. Garden",
+                                            "Southern"="S. Garden"))
 
 # Separating into 3 datasets: one per spp.
 max_heights_cg_rich <- max_heights_cg %>%
@@ -900,7 +900,7 @@ save_kable(kable_diam,file = "output/kable_diam.pdf",
 # DATA VISUALISATION -----
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(size=18),
-                                 axis.text.x  = element_text(angle = 35, vjust=0.5, size=14, colour = "black"), 
+                                 axis.text.x  = element_text(angle = 45, vjust=0.5, size=14, colour = "black"), 
                                  axis.title.y = element_text(size=18),
                                  axis.text.y  = element_text(vjust=0.5, size=14, colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
@@ -909,7 +909,10 @@ theme_shrub <- function(){ theme(legend.position = "right",
                                  plot.title = element_text(color = "black", size = 16, face = "bold", hjust = 0.5),
                                  plot.margin = unit(c(1,1,1,1), units = , "cm"))}
 
-# plot model output
+
+max_heights_cg_rich$population <- ordered(max_heights_cg_rich$population, 
+                                      levels = c( "N. Garden", 
+                                                  "S. Garden"))
 
 # CANOPY HEIGHT -----
 # S. Richardsonii ----
