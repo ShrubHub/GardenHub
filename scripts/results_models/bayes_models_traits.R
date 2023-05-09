@@ -173,8 +173,6 @@ garden_SLA_out_back <- garden_sla_out %>%
   mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
   mutate(Estimate_trans = exp(Estimate), 
          Est.Error_trans = exp(Est.Error)) 
-# save df of results 
-write.csv(garden_SLA_out_back, "output/traits/garden_SLA_out_back.csv")
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_SLA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
@@ -186,6 +184,9 @@ rownames(garden_SLA_out_back) <- c("Intercept", "Northern Source", "SouthernSour
 
 # making sure Rhat keeps the .00 
 garden_SLA_out_back$Rhat <- as.character(formatC(garden_SLA_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# save df of results 
+write.csv(garden_SLA_out_back, "output/traits/garden_SLA_out_back.csv")
 
 # creating table
 kable_SLA <- garden_SLA_out_back %>% 
@@ -366,7 +367,7 @@ rownames(garden_LA_out_back) <- c("Intercept", "Northern Source", "SouthernSourc
 garden_LA_out_back$Rhat <- as.character(formatC(garden_LA_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
 # save df of results 
-write.csv(garden_LA_out_back, "output/garden_LA_out_back.csv")
+write.csv(garden_LA_out_back, "output/traits/garden_LA_out_back.csv")
 # creating table
 kable_LA <- garden_LA_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: Leaf area  of northern garden, northern source, southern garden, southern source willows. 
@@ -392,7 +393,7 @@ kable_LA <- garden_LA_out_back %>%
 # making species column in italics
 column_spec(kable_LA, 2, width = NULL, bold = FALSE, italic = TRUE)
 
-save_kable(kable_LA, file = "output/LA_results.pdf",
+save_kable(kable_LA, file = "output/traits/LA_results.pdf",
            bs_theme = "simplex",
            self_contained = TRUE,
            extra_dependencies = NULL,
