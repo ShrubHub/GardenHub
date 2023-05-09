@@ -259,6 +259,7 @@ garden_rich_emerg_compare <- brms::brm(First_bud_burst_DOY_center ~ population +
 summary(garden_rich_emerg_compare)
 plot(garden_rich_emerg_compare)
 pp_check(garden_rich_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
+saveRDS(garden_rich_emerg_compare, file = "output/models/garden_rich_emerg_compare.rds")
 
 # Salix pulchra -----
 all_phenocam_pulchra$First_bud_burst_DOY_center <- center_scale(all_phenocam_pulchra$First_bud_burst_DOY) 
@@ -272,6 +273,7 @@ garden_pul_emerg_compare <- brms::brm(First_bud_burst_DOY_center ~ population + 
 summary(garden_pul_emerg_compare)
 plot(garden_pul_emerg_compare)
 pp_check(garden_pul_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
+saveRDS(garden_pul_emerg_compare, file = "output/models/garden_pul_emerg_compare.rds")
 
 # Salix arctica -----
 all_phenocam_arctica$First_bud_burst_DOY_center <- center_scale(all_phenocam_arctica$First_bud_burst_DOY) 
@@ -286,6 +288,7 @@ summary(garden_arc_emerg_compare)
 tab_model(garden_arc_emerg_compare)
 plot(garden_arc_emerg_compare)
 pp_check(garden_arc_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
+saveRDS(garden_arc_emerg_compare, file = "output/models/garden_arc_emerg_compare.rds")
 
 
 # 1.2. LEAF EMERGENCE (CG ONLY MODELS) ------
@@ -411,7 +414,7 @@ garden_rich_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ populatio
 summary(garden_rich_yellow_compare)
 plot(garden_rich_yellow_compare)
 pp_check(garden_rich_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
-
+saveRDS(garden_rich_yellow_compare, file = "output/models/garden_rich_yellow_compare.rds")
 garden_rich_yellow_compare_extract <- model_summ_pheno(garden_rich_yellow_compare)
 
 # Salix pulchra ------
@@ -425,6 +428,7 @@ garden_pul_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ population
 summary(garden_pul_yellow_compare)
 plot(garden_pul_yellow_compare)
 pp_check(garden_pul_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
+saveRDS(garden_pul_yellow_compare, file = "output/models/garden_pul_yellow_compare.rds")
 
 garden_pul_yellow_compare_extract <- model_summ_pheno(garden_pul_yellow_compare)
 
@@ -439,7 +443,7 @@ garden_arc_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ population
 summary(garden_arc_yellow_compare)
 plot(garden_arc_yellow_compare)
 pp_check(garden_arc_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
-
+saveRDS(garden_arc_yellow_compare, file = "output/models/garden_arc_yellow_compare.rds")
 garden_arc_yellow_compare_extract <- model_summ_pheno(garden_arc_yellow_compare)
 
 # 2.2.  LEAF YELLOWING (only CG) -----
