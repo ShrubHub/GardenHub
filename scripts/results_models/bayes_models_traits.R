@@ -173,8 +173,6 @@ garden_SLA_out_back <- garden_sla_out %>%
   mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
   mutate(Estimate_trans = exp(Estimate), 
          Est.Error_trans = exp(Est.Error)) 
-# save df of results 
-write.csv(garden_SLA_out_back, "output/traits/garden_SLA_out_back.csv")
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_SLA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
@@ -186,6 +184,9 @@ rownames(garden_SLA_out_back) <- c("Intercept", "Northern Source", "SouthernSour
 
 # making sure Rhat keeps the .00 
 garden_SLA_out_back$Rhat <- as.character(formatC(garden_SLA_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# save df of results 
+write.csv(garden_SLA_out_back, "output/traits/garden_SLA_out_back.csv")
 
 # creating table
 kable_SLA <- garden_SLA_out_back %>% 
