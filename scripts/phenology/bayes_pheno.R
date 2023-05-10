@@ -823,7 +823,7 @@ ggsave("figures/phenology/green_up_panel.png", height = 10, width = 12, dpi = 30
 (leaf_emerg_panel_unscale <- ggarrange(ric_emerg_plot_scaled, pul_emerg_plot_scaled, arc_emerg_plot_scaled, 
                                common.legend = TRUE, legend = "bottom",
                                ncol = 3, nrow = 1))
-ggsave("figures/phenology/green_up_panel.png", height = 10, width = 12, dpi = 300)
+ggsave("figures/phenology/green_up_unscale_panel.png", height = 5, width = 12, dpi = 300)
 
 # LEAF YELLOW ----
 # S. richardsonii-----
