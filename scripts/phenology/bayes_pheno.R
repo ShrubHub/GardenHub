@@ -817,6 +817,8 @@ arc_emerg_trans <- arc_emerg_data %>%
 (leaf_emerg_panel <- ggarrange(ric_emerg_plot, pul_emerg_plot, arc_emerg_plot, 
                              common.legend = TRUE, legend = "bottom",
                              ncol = 3, nrow = 1))
+ggsave("figures/phenology/green_up_panel.png", height = 10, width = 12, dpi = 300)
+
 # arrange unscaled data 
 (leaf_emerg_panel_unscale <- ggarrange(ric_emerg_plot_scaled, pul_emerg_plot_scaled, arc_emerg_plot_scaled, 
                                common.legend = TRUE, legend = "bottom",
@@ -956,7 +958,7 @@ arctica_yellow_trans <- arc_yellow_data %>%
 (leaf_yellow_panel_unscale <- ggarrange(ric_yellow_plot_scaled, pul_yellow_plot_scaled, arc_yellow_plot_scaled, 
                                 common.legend = TRUE, legend = "bottom",
                                 ncol = 3, nrow = 1))
-ggsave("figures/phenology/yellowing_panel.png", height = 10, width = 12, dpi = 300)
+ggsave("figures/phenology/yellowing_panel.png", height = 5, width = 12, dpi = 300)
 
 # GROWING SEASON -------
 # S. richardsonii -------
@@ -1105,4 +1107,10 @@ arctica_grow_trans <- arc_grow_data %>%
 (growing_season_panel_unscaled <- ggarrange(rich_grow_plot_scaled, pul_grow_plot_scaled, arc_grow_plot_scaled, 
                                    common.legend = TRUE, legend = "bottom",
                                    ncol = 3, nrow = 1))
-ggsave("figures/phenology/grow_season_panel.png", height = 10, width = 12, dpi = 300)
+ggsave("figures/phenology/grow_season_panel.png", height = 5, width = 12, dpi = 300)
+
+# arrange all 
+(pheno_panel_unscaled <- ggarrange(leaf_emerg_panel_unscale, leaf_yellow_panel_unscale, growing_season_panel_unscaled, 
+                                            common.legend = TRUE, legend = "bottom",
+                                            ncol = 1, nrow = 3))
+
