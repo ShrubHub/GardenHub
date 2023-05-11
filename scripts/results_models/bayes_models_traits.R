@@ -17,6 +17,10 @@ library(kableExtra) # For kable tables
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
 all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv") # leaf length
 
+# omit one anamonolously higher LMDC value from QHI 2015 
+all_CG_source_traits <- all_CG_source_traits %>% 
+  filter(LDMC_g_g < 0.76 | is.na(LDMC_g_g))
+
 str(all_CG_source_traits)
 str(all_CG_source_growth)
 
@@ -727,6 +731,28 @@ arc_ldmc_data_trans <- arc_ldmc_data %>%
 (ldmc_panel <- ggarrange(rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot, 
                         common.legend = TRUE, legend = "none",
                         ncol = 3, nrow = 1))
+
+# raw data for reference 
+(ldmc_plot <- ggplot(all_CG_source_traits) +
+    geom_boxplot(aes(x= population, y = LDMC_g_g, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species) +
+    ylab("LDMC ()") +
+    xlab("") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
 # LA ----
 # richardsonii ----
 richard_la <- (conditional_effects(rich_LA)) # extracting conditional effects from bayesian model
@@ -762,6 +788,7 @@ richard_la_data_trans <- richard_la_data %>%
     coord_cartesian(ylim=c(3, 10)) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
+
 # pulchra ----
 pul_la <- (conditional_effects(pulchra_LA)) # extracting conditional effects from bayesian model
 pul_la_data <- pul_la[[1]] # making the extracted model outputs into a dataset (for plotting)
