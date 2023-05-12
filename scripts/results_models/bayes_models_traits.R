@@ -142,6 +142,7 @@ rich_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_
 summary(rich_SLA) 
 plot(rich_SLA)
 pp_check(rich_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
+saveRDS(rich_SLA, file = "output/traits/models/sla_richardsonii_compare.rds")
 rich_SLA_results <- model_summ(rich_SLA)
 rich_SLA_results$Species <- "Salix richardsonii"
 
