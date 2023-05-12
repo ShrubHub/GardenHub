@@ -303,7 +303,7 @@ column_spec(kable_heights_time, 2, width = NULL, bold = FALSE, italic = TRUE)
 # 1. BIOVOLUME over time ------
 # S. Richardsonii -----
 # model
-garden_rich_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|Year) ,
+garden_rich_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (Sample_age|SampleID_standard),
                                      data = all_CG_growth_ric, family = gaussian(), chains = 3,
                                      iter = 5000, warmup = 1000, 
                                      control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -313,6 +313,24 @@ summary(garden_rich_biovol_time) # significantly larger biovolume for southern s
 plot(garden_rich_biovol_time) # fine
 pp_check(garden_rich_biovol_time,  type = "dens_overlay", ndraws = 100) # fine
 
+ggpred_biovol_ric <- ggpredict(garden_rich_biovol_time, terms = c("Sample_age", "population"))
+colnames(ggpred_biovol_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_biovol_ric_plot <-ggplot(ggpred_biovol_ric) +
+    geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = biovolume, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Biovolume (cm3)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    ggtitle(expression(italic("Salix richardsonii"))) +
+    theme_shrub_e()+ theme(text=element_text(family="Helvetica Light")) +
+    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+
+# extract outputs
 # extract outputs
 rich_biovol_time_extract <- model_summ_time(garden_rich_biovol_time)
 
@@ -325,7 +343,7 @@ rich_biovol_time_extract_df <- rich_biovol_time_extract %>%
   relocate("nobs", .before = "effect")
 
 # S. Pulchra -----
-garden_pul_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|Year),
+garden_pul_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (Sample_age|SampleID_standard),
                                     data = all_CG_growth_pul, family = gaussian(), chains = 3,
                                     iter = 5000, warmup = 1000, 
                                     control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -334,6 +352,23 @@ garden_pul_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|
 summary(garden_pul_biovol_time) # significantly larger biovolume for southern shrubs in garden
 plot(garden_pul_biovol_time) # fine
 pp_check(garden_pul_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
+
+ggpred_biovol_pul <- ggpredict(garden_pul_biovol_time, terms = c("Sample_age", "population"))
+colnames(ggpred_biovol_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_biovol_pul_plot <-ggplot(ggpred_biovol_pul) +
+    geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = biovolume, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Biovolume (cm3)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    ggtitle(expression(italic("Salix pulchra"))) +
+    theme_shrub_e()+ theme(text=element_text(family="Helvetica Light")) +
+    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
 
 # extract outputs
 pul_biovol_time_extract <- model_summ_time(garden_pul_biovol_time)
@@ -347,7 +382,7 @@ pul_biovol_time_extract_df <- pul_biovol_time_extract %>%
   relocate("nobs", .before = "effect")
 
 # S. Arctica -----
-garden_arc_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|Year),
+garden_arc_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population +  (Sample_age|SampleID_standard),
                                     data = all_CG_growth_arc, family = gaussian(), chains = 3,
                                     iter = 5000, warmup = 1000, 
                                     control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -356,6 +391,31 @@ garden_arc_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (1|
 summary(garden_arc_biovol_time) # NOT significant diff. 
 plot(garden_arc_biovol_time) # fine
 pp_check(garden_arc_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
+
+library(ggeffects)
+ggpred_biovol_arc <- ggpredict(garden_arc_biovol_time, terms = c("Sample_age", "population"))
+colnames(ggpred_biovol_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_biovol_arc_plot <-ggplot(ggpred_biovol_arc) +
+    geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = biovolume, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Biovolume (cm3)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    ggtitle(expression(italic("Salix arctica"))) +
+    theme_shrub_e()+ theme(text=element_text(family="Helvetica Light")) +
+    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+
+ggpred_CG_biovol_panel <- ggarrange(ggpred_biovol_ric_plot,
+                                    ggpred_biovol_pul_plot, 
+                                    ggpred_biovol_arc_plot, nrow = 1,
+                                    common.legend = TRUE, legend="none")
+
+ggsave("output/figures/ggpred_CG_biovol_panel.png", width = 14.67, height = 6.53, units = "in")
 
 # extract outputs
 arc_biovol_time_extract <- model_summ_time(garden_arc_biovol_time)
@@ -538,6 +598,20 @@ theme_shrub <- function(){ theme(legend.position = "right",
                                  plot.title = element_text(color = "black", size = 16, face = "bold.italic", hjust = 0.5),
                                  legend.title=element_text(size=16),
                                  legend.text=element_text(size = 15))}
+
+theme_shrub_e <- function(){ theme(legend.position = "right",
+                                axis.title.x = element_text(size=18),
+                                axis.text.x  = element_text(angle = 35, vjust=0.5, size=14, colour = "black"), 
+                                axis.title.y = element_text(size=18),
+                                axis.text.y  = element_text(vjust=0.5, size=14, colour = "black"),
+                                panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
+                                panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
+                                panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+                                plot.title = element_text(color = "black", size = 16, face = "bold", hjust = 0.5),
+                                plot.margin = unit(c(1,1,1,1), units = , "cm"))}
+
+# reorder levels to be consistent
+
 # HEIGHT OVER TIME PLOTS-----
 pp_draws <- posterior_predict(height_rich, draws = 500)
 back_transformed_draws <- exp(pp_draws)
