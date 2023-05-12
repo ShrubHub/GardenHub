@@ -154,6 +154,7 @@ pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_tr
 summary(pulchra_SLA) # There were 1 divergent transitions after warmup
 plot(pulchra_SLA)
 pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
+saveRDS(pulchra_SLA, file = "output/traits/models/sla_pulchra_compare.rds")
 pulchra_SLA_results <- model_summ(pulchra_SLA)
 pulchra_SLA_results$Species <- "Salix pulchra"
 
@@ -164,6 +165,7 @@ arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_tr
 summary(arctica_SLA) 
 plot(arctica_SLA)
 pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
+saveRDS(arctica_SLA, file = "output/traits/models/sla_arctica_compare.rds")
 arctica_SLA_results <- model_summ(arctica_SLA)
 arctica_SLA_results$Species <- "Salix arctica"
 
