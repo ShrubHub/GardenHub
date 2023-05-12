@@ -237,6 +237,7 @@ summary(rich_LDMC_log)
 tab_model(rich_LDMC_log)
 plot(rich_LDMC_log)
 pp_check(rich_LDMC_log, type = "dens_overlay", ndraws = 100) 
+saveRDS(rich_LDMC_log, file = "output/traits/models/ldmc_richardsonii_compare.rds")
 rich_LDMC_results <- model_summ(rich_LDMC_log)
 rich_LDMC_results$Species <- "Salix richardsonii"
 
@@ -248,6 +249,7 @@ summary(pulchra_LDMC_log)
 tab_model(pulchra_LDMC_log)
 plot(pulchra_LDMC_log)
 pp_check(pulchra_LDMC_log, type = "dens_overlay", ndraws = 100) 
+saveRDS(pulchra_LDMC_log, file = "output/traits/models/ldmc_pulchra_compare.rds")
 pulchra_LDMC_results <- model_summ(pulchra_LDMC_log)
 pulchra_LDMC_results$Species <- "Salix pulchra"
 
@@ -259,6 +261,7 @@ summary(arctica_LDMC_log)
 tab_model(arctica_LDMC_log)
 plot(arctica_LDMC_log)
 pp_check(arctica_LDMC_log, type = "dens_overlay", ndraws = 100) 
+saveRDS(arctica_LDMC_log, file = "output/traits/models/ldmc_arctica_compare.rds")
 arctica_LDMC_results <- model_summ(arctica_LDMC_log)
 arctica_LDMC_results$Species <- "Salix arctica"
 
