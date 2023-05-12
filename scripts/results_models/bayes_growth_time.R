@@ -324,6 +324,7 @@ colnames(ggpred_biovol_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
                 alpha = 0.2) +
     ylab("Biovolume (cm3)\n") +
     xlab("\n Sample age " ) +
+    ylim(0, 2376000.000)+
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
     ggtitle(expression(italic("Salix richardsonii"))) +
@@ -364,6 +365,7 @@ colnames(ggpred_biovol_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
                 alpha = 0.2) +
     ylab("Biovolume (cm3)\n") +
     xlab("\n Sample age " ) +
+    ylim(0, 466096.890)+
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
     ggtitle(expression(italic("Salix pulchra"))) +
