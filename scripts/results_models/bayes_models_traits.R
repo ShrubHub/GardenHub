@@ -424,6 +424,7 @@ rich_LL <- brms::brm(mean_leaf_length ~ population + (1|year), data = richardson
 summary(rich_LL)
 plot(rich_LL)
 pp_check(rich_LL, type = "dens_overlay", ndraws = 100) 
+saveRDS(rich_LL, file = "output/traits/models/ll_richardsonii_compare.rds")
 rich_LL_results <- model_summ(rich_LL)
 rich_LL_results$Species <- "Salix richardsonii"
 # S. pulchra ----
@@ -433,6 +434,7 @@ pulchra_LL <- brms::brm(mean_leaf_length ~ population + (1|year), data = pulchra
 summary(pulchra_LL)
 plot(pulchra_LL)
 pp_check(pulchra_LL, type = "dens_overlay", ndraws = 100) 
+saveRDS(pulchra_LL, file = "output/traits/models/ll_pulchra_compare.rds")
 pulchra_LL_results <- model_summ(pulchra_LL)
 pulchra_LL_results$Species <- "Salix pulchra"
 
@@ -448,6 +450,7 @@ arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population + (1|year) + (1|Sampl
 summary(arctica_LL_CG)
 plot(arctica_LL_CG)
 pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
+saveRDS(arctica_LL_CG, file = "output/traits/models/ll_arctica_compare.rds")
 arctica_LL_results <- model_summ(arctica_LL_CG)
 arctica_LL_results$Species <- "Salix arctica"
 
@@ -665,7 +668,7 @@ richard_ldmc_data_trans <- richard_ldmc_data %>%
                   size = 1, alpha = 1) +
     ylab(expression(paste("\n Leaf dry matter content (%)"))) +
     xlab("" ) +
-    coord_cartesian(ylim=c(0, 0.9)) +
+    coord_cartesian(ylim=c(0.15, 0.9)) +
     scale_color_manual(values=pal) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
@@ -689,7 +692,7 @@ pul_ldmc_data_trans <- pul_ldmc_data %>%
                   size = 1, alpha = 1) +
     ylab("\n") +
     xlab("" )     +
-    coord_cartesian(ylim=c(0, 0.9)) +
+    coord_cartesian(ylim=c(0.15, 0.9)) +
   scale_color_manual(values=pal) +
     labs(title = "Salix pulchra") +
     theme_shrub())
@@ -712,7 +715,7 @@ arc_ldmc_data_trans <- arc_ldmc_data %>%
     ylab("\n") +
     xlab("" ) +
     scale_color_manual(values=pal) +
-    coord_cartesian(ylim=c(0, 0.9)) +
+    coord_cartesian(ylim=c(0.15, 0.9)) +
     labs(title = "Salix arctica") +
     theme_shrub())
 
