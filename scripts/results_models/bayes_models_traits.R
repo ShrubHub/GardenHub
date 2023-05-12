@@ -17,6 +17,12 @@ library(kableExtra) # For kable tables
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
 all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv") # leaf length
 
+# omit one anamonolously higher LMDC value from QHI 2015 
+all_CG_source_traits <- all_CG_source_traits %>% 
+  filter(LDMC_g_g < 0.76 | is.na(LDMC_g_g)) %>% 
+  mutate(LDMC_percent = (LDMC_g_g *100)) %>% # change LDMC into percent instead
+  mutate(LA_cm2 = (LA/100))
+
 str(all_CG_source_traits)
 str(all_CG_source_growth)
 
@@ -138,6 +144,7 @@ rich_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_
 summary(rich_SLA) 
 plot(rich_SLA)
 pp_check(rich_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
+saveRDS(rich_SLA, file = "output/traits/models/sla_richardsonii_compare.rds")
 rich_SLA_results <- model_summ(rich_SLA)
 rich_SLA_results$Species <- "Salix richardsonii"
 
@@ -149,6 +156,7 @@ pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_tr
 summary(pulchra_SLA) # There were 1 divergent transitions after warmup
 plot(pulchra_SLA)
 pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
+saveRDS(pulchra_SLA, file = "output/traits/models/sla_pulchra_compare.rds")
 pulchra_SLA_results <- model_summ(pulchra_SLA)
 pulchra_SLA_results$Species <- "Salix pulchra"
 
@@ -159,6 +167,7 @@ arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_tr
 summary(arctica_SLA) 
 plot(arctica_SLA)
 pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
+saveRDS(arctica_SLA, file = "output/traits/models/sla_arctica_compare.rds")
 arctica_SLA_results <- model_summ(arctica_SLA)
 arctica_SLA_results$Species <- "Salix arctica"
 
@@ -223,35 +232,38 @@ save_kable(kable_SLA, file = "output/traits/SLA_results.pdf",
 
 # LDMC ----
 # S. richardsonii ----
-rich_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
+rich_LDMC_log <- brms::brm(log(LDMC_percent) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
                            iter = 3000, warmup = 1000, 
                            control = list(max_treedepth = 15, adapt_delta = 0.99)) # 2 divergent transitions after warmup
 summary(rich_LDMC_log)
 tab_model(rich_LDMC_log)
 plot(rich_LDMC_log)
 pp_check(rich_LDMC_log, type = "dens_overlay", ndraws = 100) 
+saveRDS(rich_LDMC_log, file = "output/traits/models/ldmc_richardsonii_compare.rds")
 rich_LDMC_results <- model_summ(rich_LDMC_log)
 rich_LDMC_results$Species <- "Salix richardsonii"
 
 # S. pulchra ----
-pulchra_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
+pulchra_LDMC_log <- brms::brm(log(LDMC_percent) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
                           iter = 3000, warmup = 1000, 
                           control = list(max_treedepth = 15, adapt_delta = 0.99)) 
 summary(pulchra_LDMC_log) 
 tab_model(pulchra_LDMC_log)
 plot(pulchra_LDMC_log)
 pp_check(pulchra_LDMC_log, type = "dens_overlay", ndraws = 100) 
+saveRDS(pulchra_LDMC_log, file = "output/traits/models/ldmc_pulchra_compare.rds")
 pulchra_LDMC_results <- model_summ(pulchra_LDMC_log)
 pulchra_LDMC_results$Species <- "Salix pulchra"
 
 # S. arctica ---- 
-arctica_LDMC_log <- brms::brm(log(LDMC_g_g) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
+arctica_LDMC_log <- brms::brm(log(LDMC_percent) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
                               iter = 3000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99)) #There were 5 divergent transitions after warmup.
 summary(arctica_LDMC_log)
 tab_model(arctica_LDMC_log)
 plot(arctica_LDMC_log)
 pp_check(arctica_LDMC_log, type = "dens_overlay", ndraws = 100) 
+saveRDS(arctica_LDMC_log, file = "output/traits/models/ldmc_arctica_compare.rds")
 arctica_LDMC_results <- model_summ(arctica_LDMC_log)
 arctica_LDMC_results$Species <- "Salix arctica"
 
@@ -315,30 +327,33 @@ save_kable(kable_LDMC, file = "output/traits/LDMC_results.pdf",
 
 # LA ----
 # S. richardsonii ----
-rich_LA <- brms::brm(log(LA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
+rich_LA <- brms::brm(log(LA_cm2) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
                      iter = 3000, warmup = 1000, 
                      control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(rich_LA) 
 plot(rich_LA)
 pp_check(rich_LA, type = "dens_overlay", ndraws = 100)
+saveRDS(rich_LA, file = "output/traits/models/la_richardsonii_compare.rds")
 rich_LA_results <- model_summ(rich_LA)
 rich_LA_results$Species <- "Salix richardsonii"
 # S. pulchra ----
-pulchra_LA <- brms::brm(log(LA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
+pulchra_LA <- brms::brm(log(LA_cm2) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000, 
                         control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(pulchra_LA) 
 plot(pulchra_LA)
 pp_check(pulchra_LA, type = "dens_overlay", ndraws = 100) 
+saveRDS(pulchra_LA, file = "output/traits/models/la_pulchra_compare.rds")
 pulchra_LA_results <- model_summ(pulchra_LA)
 pulchra_LA_results$Species <- "Salix pulchra"
 # S. arctica ----
-arctica_LA <- brms::brm(log(LA)  ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
+arctica_LA <- brms::brm(log(LA_cm2)  ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
                           iter = 3000, warmup = 1000, 
                         control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(arctica_LA) 
 plot(arctica_LA)
 pp_check(arctica_LA, type = "dens_overlay", ndraws = 100) 
+saveRDS(arctica_LA, file = "output/traits/models/la_arctica_compare.rds")
 arctica_LA_results <- model_summ(arctica_LA)
 arctica_LA_results$Species <- "Salix arctica"
 
@@ -401,29 +416,6 @@ save_kable(kable_LA, file = "output/traits/LA_results.pdf",
            keep_tex =TRUE,
            density = 300)
 
-# LMA ----
-# not including because inverse of SLA
-# S. arcitca ----
-arctica_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = arctica_2022_traits, family = gaussian(), chains = 3,
-                        iter = 3000, warmup = 1000)
-summary(arctica_LMA) 
-plot(arctica_LMA)
-pp_check(arctica_LMA) 
-
-# S. pulchra ----
-pulchra_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = pulchra_2022_traits, family = gaussian(), chains = 3,
-                        iter = 3000, warmup = 1000)
-summary(pulchra_LMA) 
-plot(pulchra_LMA)
-pp_check(pulchra_LMA) 
-
-# S. richardsonii ----
-rich_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = richardsonii_2022_traits, family = gaussian(), chains = 3,
-                     iter = 3000, warmup = 1000)
-summary(rich_LMA) 
-plot(rich_LMA)
-pp_check(rich_LMA)
-
 # LEAF LENGTH ----
 # S. richardsonii ----
 rich_LL <- brms::brm(mean_leaf_length ~ population + (1|year), data = richardsonii_all_growth, family = gaussian(), chains = 3,
@@ -432,6 +424,7 @@ rich_LL <- brms::brm(mean_leaf_length ~ population + (1|year), data = richardson
 summary(rich_LL)
 plot(rich_LL)
 pp_check(rich_LL, type = "dens_overlay", ndraws = 100) 
+saveRDS(rich_LL, file = "output/traits/models/ll_richardsonii_compare.rds")
 rich_LL_results <- model_summ(rich_LL)
 rich_LL_results$Species <- "Salix richardsonii"
 # S. pulchra ----
@@ -441,6 +434,7 @@ pulchra_LL <- brms::brm(mean_leaf_length ~ population + (1|year), data = pulchra
 summary(pulchra_LL)
 plot(pulchra_LL)
 pp_check(pulchra_LL, type = "dens_overlay", ndraws = 100) 
+saveRDS(pulchra_LL, file = "output/traits/models/ll_pulchra_compare.rds")
 pulchra_LL_results <- model_summ(pulchra_LL)
 pulchra_LL_results$Species <- "Salix pulchra"
 
@@ -456,6 +450,7 @@ arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population + (1|year) + (1|Sampl
 summary(arctica_LL_CG)
 plot(arctica_LL_CG)
 pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
+saveRDS(arctica_LL_CG, file = "output/traits/models/ll_arctica_compare.rds")
 arctica_LL_results <- model_summ(arctica_LL_CG)
 arctica_LL_results$Species <- "Salix arctica"
 
@@ -666,14 +661,14 @@ richard_ldmc_data_trans <- richard_ldmc_data %>%
   select(-CI_range)
 
 (rich_ldmc_plot <-ggplot(richard_ldmc_data_trans) +
-    geom_point(data = richardsonii_all_traits, aes(x = population, y = LDMC_g_g, colour = population),
+    geom_point(data = richardsonii_all_traits, aes(x = population, y = LDMC_percent, colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
-    ylab(expression(paste("\n Leaf dry matter content (",g," ",g^{-1},")"))) +
+    ylab(expression(paste("\n Leaf dry matter content (%)"))) +
     xlab("" ) +
-    coord_cartesian(ylim=c(0, 0.9)) +
+    coord_cartesian(ylim=c(0.15, 0.9)) +
     scale_color_manual(values=pal) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
@@ -690,14 +685,14 @@ pul_ldmc_data_trans <- pul_ldmc_data %>%
   select(-CI_range)
 
 (pul_ldmc_plot <-ggplot(pul_ldmc_data_trans) +
-    geom_point(data = pulchra_all_traits, aes(x = population, y = (LDMC_g_g), colour = population),
+    geom_point(data = pulchra_all_traits, aes(x = population, y = (LDMC_percent), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
     ylab("\n") +
     xlab("" )     +
-    coord_cartesian(ylim=c(0, 0.9)) +
+    coord_cartesian(ylim=c(0.15, 0.9)) +
   scale_color_manual(values=pal) +
     labs(title = "Salix pulchra") +
     theme_shrub())
@@ -712,7 +707,7 @@ arc_ldmc_data_trans <- arc_ldmc_data %>%
          Est.Error_trans = exp(se__)) 
 
 (arc_ldmc_plot <-ggplot(arc_ldmc_data_trans) +
-    geom_point(data = arctica_all_traits, aes(x = population, y = (LDMC_g_g), colour = population),
+    geom_point(data = arctica_all_traits, aes(x = population, y = (LDMC_percent), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
@@ -720,13 +715,35 @@ arc_ldmc_data_trans <- arc_ldmc_data %>%
     ylab("\n") +
     xlab("" ) +
     scale_color_manual(values=pal) +
-    coord_cartesian(ylim=c(0, 0.9)) +
+    coord_cartesian(ylim=c(0.15, 0.9)) +
     labs(title = "Salix arctica") +
     theme_shrub())
 
 (ldmc_panel <- ggarrange(rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot, 
                         common.legend = TRUE, legend = "none",
                         ncol = 3, nrow = 1))
+
+# raw data for reference 
+(ldmc_plot <- ggplot(all_CG_source_traits) +
+    geom_boxplot(aes(x= population, y = LDMC_percent, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
+    # facet_grid(cols = vars(Species)) +
+    facet_wrap(~Species) +
+    ylab("LDMC (%)") +
+    xlab("") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.95) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
+          axis.text.y = element_text(size = 12, colour = "black")))
+
 # LA ----
 # richardsonii ----
 richard_la <- (conditional_effects(rich_LA)) # extracting conditional effects from bayesian model
@@ -739,7 +756,7 @@ richard_la_data_trans <- richard_la_data %>%
            Est.Error_trans = exp(se__)) 
   
 (rich_la_plot <-ggplot(richard_la_data_trans) +
-    geom_point(data = richardsonii_all_traits, aes(x = population, y = (LA), colour = population),
+    geom_point(data = richardsonii_all_traits, aes(x = population, y = (LA_cm2), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
@@ -751,17 +768,18 @@ richard_la_data_trans <- richard_la_data %>%
     theme_shrub())
 # keep it logged 
 (rich_la_plot_log <-ggplot(richard_la_data) +
-    geom_point(data = richardsonii_all_traits, aes(x = population, y = log(LA), colour = population),
+    geom_point(data = richardsonii_all_traits, aes(x = population, y = log(LA_cm2), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = estimate__, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
                   size = 1, alpha = 1) +
-    ylab(expression(paste("\n log Leaf area (",mm^{2},")"))) +
+    ylab(expression(paste("\n log Leaf area (",cm^{2},")"))) +
     xlab("" ) +
     scale_color_manual(values=pal) +
     coord_cartesian(ylim=c(3, 10)) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
+
 # pulchra ----
 pul_la <- (conditional_effects(pulchra_LA)) # extracting conditional effects from bayesian model
 pul_la_data <- pul_la[[1]] # making the extracted model outputs into a dataset (for plotting)
@@ -773,7 +791,7 @@ pul_la_data_trans <- pul_la_data %>%
          Est.Error_trans = exp(se__)) 
 
 (pul_la_plot <-ggplot(pul_la_data_trans) +
-    geom_point(data = pulchra_all_traits, aes(x = population, y = (LA), colour = population),
+    geom_point(data = pulchra_all_traits, aes(x = population, y = (LA_cm2), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
@@ -786,7 +804,7 @@ pul_la_data_trans <- pul_la_data %>%
     theme_shrub())
 # keep it log transformed 
 (pul_la_plot_log <-ggplot(pul_la_data) +
-    geom_point(data = pulchra_all_traits, aes(x = population, y = log(LA), colour = population),
+    geom_point(data = pulchra_all_traits, aes(x = population, y = log(LA_cm2), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = estimate__, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
@@ -810,7 +828,7 @@ arc_la_data_trans <- arc_la_data %>%
          Est.Error_trans = exp(se__)) 
 
 (arc_la_plot <-ggplot(arc_la_data_trans) +
-    geom_point(data = arctica_all_traits, aes(x = population, y = (LA), colour = population),
+    geom_point(data = arctica_all_traits, aes(x = population, y = (LA_cm2), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
@@ -823,7 +841,7 @@ arc_la_data_trans <- arc_la_data %>%
 
 # keep it log transformed 
 (arc_la_plot_log <-ggplot(arc_la_data) +
-    geom_point(data = arctica_all_traits, aes(x = population, y = log(LA), colour = population),
+    geom_point(data = arctica_all_traits, aes(x = population, y = log(LA_cm2), colour = population),
                alpha = 0.5)+ # raw data
     geom_point(aes(x = effect1__, y = estimate__, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
