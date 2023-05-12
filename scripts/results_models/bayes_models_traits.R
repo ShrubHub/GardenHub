@@ -333,6 +333,7 @@ rich_LA <- brms::brm(log(LA_cm2) ~ population + (1|year), data = richardsonii_al
 summary(rich_LA) 
 plot(rich_LA)
 pp_check(rich_LA, type = "dens_overlay", ndraws = 100)
+saveRDS(rich_LA, file = "output/traits/models/la_richardsonii_compare.rds")
 rich_LA_results <- model_summ(rich_LA)
 rich_LA_results$Species <- "Salix richardsonii"
 # S. pulchra ----
@@ -342,6 +343,7 @@ pulchra_LA <- brms::brm(log(LA_cm2) ~ population + (1|year), data = pulchra_all_
 summary(pulchra_LA) 
 plot(pulchra_LA)
 pp_check(pulchra_LA, type = "dens_overlay", ndraws = 100) 
+saveRDS(pulchra_LA, file = "output/traits/models/la_pulchra_compare.rds")
 pulchra_LA_results <- model_summ(pulchra_LA)
 pulchra_LA_results$Species <- "Salix pulchra"
 # S. arctica ----
@@ -351,6 +353,7 @@ arctica_LA <- brms::brm(log(LA_cm2)  ~ population + (1|year), data = arctica_all
 summary(arctica_LA) 
 plot(arctica_LA)
 pp_check(arctica_LA, type = "dens_overlay", ndraws = 100) 
+saveRDS(arctica_LA, file = "output/traits/models/la_arctica_compare.rds")
 arctica_LA_results <- model_summ(arctica_LA)
 arctica_LA_results$Species <- "Salix arctica"
 
@@ -412,29 +415,6 @@ save_kable(kable_LA, file = "output/traits/LA_results.pdf",
            latex_header_includes = NULL,
            keep_tex =TRUE,
            density = 300)
-
-# LMA ----
-# not including because inverse of SLA
-# S. arcitca ----
-arctica_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = arctica_2022_traits, family = gaussian(), chains = 3,
-                        iter = 3000, warmup = 1000)
-summary(arctica_LMA) 
-plot(arctica_LMA)
-pp_check(arctica_LMA) 
-
-# S. pulchra ----
-pulchra_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = pulchra_2022_traits, family = gaussian(), chains = 3,
-                        iter = 3000, warmup = 1000)
-summary(pulchra_LMA) 
-plot(pulchra_LMA)
-pp_check(pulchra_LMA) 
-
-# S. richardsonii ----
-rich_LMA <- brms::brm(leaf_mass_per_area_g_m2 ~ population + (1|year), data = richardsonii_2022_traits, family = gaussian(), chains = 3,
-                     iter = 3000, warmup = 1000)
-summary(rich_LMA) 
-plot(rich_LMA)
-pp_check(rich_LMA)
 
 # LEAF LENGTH ----
 # S. richardsonii ----
