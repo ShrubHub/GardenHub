@@ -745,7 +745,7 @@ arc_ldmc_data_trans <- arc_ldmc_data %>%
     geom_boxplot(aes(x= population, y = LDMC_percent, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
     # facet_grid(cols = vars(Species)) +
     facet_wrap(~Species) +
-    ylab("LDMC ()") +
+    ylab("LDMC (%)") +
     xlab("") +
     scale_colour_viridis_d(begin = 0.1, end = 0.95) +
     scale_fill_viridis_d(begin = 0.1, end = 0.95) +
