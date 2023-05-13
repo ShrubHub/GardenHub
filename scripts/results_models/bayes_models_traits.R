@@ -563,7 +563,7 @@ richard_sla_data_trans <- richard_sla_data %>%
 
 (rich_sla_plot <-ggplot(richard_sla_data_trans) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = SLA, colour = population),
-               alpha = 0.5) + # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0)) + # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
@@ -587,7 +587,7 @@ pul_sla_data_trans <- pul_sla_data %>%
 
 (pul_sla_plot <-ggplot(pul_sla_data_trans) +
     geom_point(data = pulchra_all_traits, aes(x = population, y = SLA, colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
@@ -611,7 +611,7 @@ arc_sla_data_trans <- arc_sla_data %>%
 
 (arc_sla_plot <-ggplot(arc_sla_data_trans) +
     geom_point(data = arctica_all_traits, aes(x = population, y = (SLA), colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
@@ -662,7 +662,7 @@ richard_ldmc_data_trans <- richard_ldmc_data %>%
 
 (rich_ldmc_plot <-ggplot(richard_ldmc_data_trans) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = LDMC_percent, colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
@@ -686,7 +686,7 @@ pul_ldmc_data_trans <- pul_ldmc_data %>%
 
 (pul_ldmc_plot <-ggplot(pul_ldmc_data_trans) +
     geom_point(data = pulchra_all_traits, aes(x = population, y = (LDMC_percent), colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
@@ -708,7 +708,7 @@ arc_ldmc_data_trans <- arc_ldmc_data %>%
 
 (arc_ldmc_plot <-ggplot(arc_ldmc_data_trans) +
     geom_point(data = arctica_all_traits, aes(x = population, y = (LDMC_percent), colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
@@ -757,7 +757,7 @@ richard_la_data_trans <- richard_la_data %>%
   
 (rich_la_plot <-ggplot(richard_la_data_trans) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = (LA_cm2), colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
@@ -769,7 +769,7 @@ richard_la_data_trans <- richard_la_data %>%
 # keep it logged 
 (rich_la_plot_log <-ggplot(richard_la_data) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = log(LA_cm2), colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = estimate__, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
                   size = 1, alpha = 1) +
@@ -792,7 +792,7 @@ pul_la_data_trans <- pul_la_data %>%
 
 (pul_la_plot <-ggplot(pul_la_data_trans) +
     geom_point(data = pulchra_all_traits, aes(x = population, y = (LA_cm2), colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
                   size = 1, alpha = 1) +
@@ -805,7 +805,7 @@ pul_la_data_trans <- pul_la_data %>%
 # keep it log transformed 
 (pul_la_plot_log <-ggplot(pul_la_data) +
     geom_point(data = pulchra_all_traits, aes(x = population, y = log(LA_cm2), colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = estimate__, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
                   size = 1, alpha = 1) +
@@ -829,7 +829,7 @@ arc_la_data_trans <- arc_la_data %>%
 
 (arc_la_plot <-ggplot(arc_la_data_trans) +
     geom_point(data = arctica_all_traits, aes(x = population, y = (LA_cm2), colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
                   size = 1, alpha = 1) +
@@ -842,7 +842,7 @@ arc_la_data_trans <- arc_la_data %>%
 # keep it log transformed 
 (arc_la_plot_log <-ggplot(arc_la_data) +
     geom_point(data = arctica_all_traits, aes(x = population, y = log(LA_cm2), colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = estimate__, colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
                   size = 1, alpha = 1) +
@@ -868,7 +868,7 @@ richard_ll_data <- richard_ll[[1]] # making the extracted model outputs into a d
 
 (rich_ll_plot <-ggplot(richard_ll_data) +
     geom_point(data = richardsonii_all_growth, aes(x = population, y = mean_leaf_length, colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
                   size = 1, alpha = 1) +
@@ -885,7 +885,7 @@ pul_ll_data <- pul_ll[[1]] # making the extracted model outputs into a dataset (
 
 (pul_ll_plot <-ggplot(pul_ll_data) +
     geom_point(data = pulchra_all_growth, aes(x = population, y = mean_leaf_length, colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                   size = 1, alpha = 1) +
@@ -905,7 +905,7 @@ pal_garden <-c("#440154FF", "#7AD151FF")
 
 (arc_ll_plot <-ggplot(arc_ll_data) +
     geom_point(data = arctica_cg_growth, aes(x = population, y = mean_leaf_length, colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
                   size = 1, alpha = 1) +
