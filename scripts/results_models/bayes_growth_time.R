@@ -325,6 +325,7 @@ colnames(ggpred_biovol_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
     ylab("Biovolume (cm3)\n") +
     xlab("\n Sample age " ) +
     ylim(0, 2376000.000)+
+    xlim(3, 9)+
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
     ggtitle(expression(italic("Salix richardsonii"))) +
@@ -366,6 +367,7 @@ colnames(ggpred_biovol_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
     ylab("Biovolume (cm3)\n") +
     xlab("\n Sample age " ) +
     ylim(0, 466096.890)+
+    xlim(3, 9)+
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
     ggtitle(expression(italic("Salix pulchra"))) +
@@ -406,6 +408,7 @@ colnames(ggpred_biovol_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
                 alpha = 0.2) +
     ylab("Biovolume (cm3)\n") +
     xlab("\n Sample age " ) +
+    xlim(3, 7)+
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
     ggtitle(expression(italic("Salix arctica"))) +
@@ -572,6 +575,107 @@ kable_biovol_time <- garden_heights_timeb %>%
 
 # making species column in cursive
 column_spec(kable_biovol_time, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+# ERICA's MSC height over time models -------
+
+# Salix richardsonii -------
+height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
+                         data = all_CG_growth_ric,  family = gaussian(), chains = 3,
+                         iter = 5000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+saveRDS(height_rich, file = "outputs/models/height_rich.rds")
+height_rich <- readRDS("outputs/models/height_rich.rds")
+
+library(ggeffects)
+ggpred_height_ric <- ggpredict(height_rich, terms = c("Sample_age", "population"))
+colnames(ggpred_height_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+
+(ggpred_height_rich_plot <-ggplot(ggpred_height_ric) +
+    geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Canopy height (cm)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    ggtitle(expression(italic("Salix richardsonii"))) +
+    theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
+    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+
+# Salix pulchra -----
+height_pul <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
+                        data = all_CG_growth_pul,  family = gaussian(), chains = 3,
+                        iter = 5000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+saveRDS(height_pul, file = "outputs/models/height_pul.rds")
+height_pul <- readRDS("outputs/models/height_pul.rds")
+
+summary(height_pul)
+# estimate for northern sample age: 1.99-0.02=1.97 --> exp(1.97)= 7.170676 cm in year 1
+# estimate for s sample age: (1.99+0.95) + (-0.02+0.03)= 2.95, exp(2.95)= 19.10595 cm per sample age
+# estimate for s. sample age at year 9: (1.99+0.95) + (-0.02*9+0.03*9)= 3.03, exp(3.03)= 20.69 in year 9 --> 2.299692 per year
+# estimate for northern sample age at year 9: 1.99-0.02*9=1.97= 3.03, exp(3.03)= 6.110447 in year 9 --> 0.6789386 per year
+
+
+ggpred_height_pul <- ggpredict(height_pul, terms = c("Sample_age", "population"))
+colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+
+(ggpred_height_pul_plot <-ggplot(ggpred_height_pul) +
+    geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Canopy height (cm)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    ggtitle(expression(italic("Salix pulchra"))) +
+    theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
+    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+
+# Salix arctica -------
+height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
+                        data = all_CG_growth_arc,  family = gaussian(), chains = 3,
+                        iter = 5000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+saveRDS(height_arc, file = "outputs/models/height_arc.rds")
+height_arc <- readRDS("outputs/models/height_arc.rds")
+
+summary(height_arc) # significant growth over time
+# estimate for northern sample age 9: 0.86+0.08*9= exp(1.58) = 4.854956 -->0.5394396
+# estimate for s. sample age: 0.86-0.28 + 0.08*9 + 0.11*9 = 2.29= exp(2.29)=  9.874938 --> 1.097215
+
+ggpred_height_arc <- ggpredict(height_arc, terms = c("Sample_age", "population"))
+colnames(ggpred_height_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_height_arc_plot <-ggplot(ggpred_height_arc) +
+    geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Canopy height (cm)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    ggtitle(expression(italic("Salix arctica"))) +
+    theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
+    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+
+ggpred_CG_height_panel <- ggarrange(ggpred_height_rich_plot,
+                                    ggpred_height_pul_plot, 
+                                    ggpred_height_arc_plot, nrow = 1,
+                                    common.legend = TRUE, legend="none")
+
+ggsave(ggpred_CG_height_panel, filename ="outputs/figures/ggpred_CG_height_panel.png", width = 14.67, height = 6.53, units = "in")
+
 
 # DATA VISUALISATION -----
 # color palette for garden only
