@@ -530,8 +530,12 @@ summary(arctica_LL_CG)
 plot(arctica_LL_CG)
 pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
 saveRDS(arctica_LL_CG, file = "output/traits/models/ll_arctica_compare.rds")
+arctica_LL_CG <- readRDS("output/traits/models/ll_arctica_compare.rds")
 arctica_LL_results <- model_summ(arctica_LL_CG)
 arctica_LL_results$Species <- "Salix arctica"
+# interpretation 
+# N Garden = estimate = 23.16 , CI = 16.13 to 29.90 
+# S Garden = estimate = 26.19, CI = 14.93 to 37.17
 
 # merging all extracted outputs
 garden_LL_out <- rbind(rich_LL_results, pulchra_LL_results, arctica_LL_results)
