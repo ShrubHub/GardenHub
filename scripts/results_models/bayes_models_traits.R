@@ -20,6 +20,7 @@ all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv") # leaf length
 # omit one anamonolously higher LMDC value from QHI 2015 
 all_CG_source_traits <- all_CG_source_traits %>% 
   filter(LDMC_g_g < 0.76 | is.na(LDMC_g_g)) %>% 
+  filter(SLA < 26 | is.na(SLA)) %>% 
   mutate(LDMC_percent = (LDMC_g_g *100)) %>% # change LDMC into percent instead
   mutate(LA_cm2 = (LA/100))
 
@@ -295,7 +296,7 @@ write.csv(garden_LDMC_out_back, "output/traits/garden_LDMC_out_back.csv")
 # creating table
 kable_LDMC <- garden_LDMC_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: Leaf dry matter content of northern garden, northern source, southern garden, southern source willows. 
-      Model structure per species: (log(SLA) ~ population + (1|year). 
+      Model structure per species: (log(LDMC) ~ population + (1|year). 
       Model output back-transformed in the table below.", 
       col.names = c("Estimate",
                     "Est. Error",
@@ -386,7 +387,7 @@ write.csv(garden_LA_out_back, "output/traits/garden_LA_out_back.csv")
 # creating table
 kable_LA <- garden_LA_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: Leaf area  of northern garden, northern source, southern garden, southern source willows. 
-      Model structure per species: (log(SLA) ~ population + (1|year). 
+      Model structure per species: (log(LA) ~ population + (1|year). 
       Model output back-transformed in the table below.", 
       col.names = c( "Estimate",
                     "Est. Error",
