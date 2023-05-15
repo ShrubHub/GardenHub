@@ -539,16 +539,16 @@ arctica_cg_growth$population <- ordered(arctica_cg_growth$population,
 pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#7AD151FF")
 
 theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", size=20),
-                                 axis.text.x  = element_text(vjust=0.5, size=20, colour = "black", angle = 60), 
-                                 axis.title.y = element_text(face="bold", size=20),
-                                 axis.text.y  = element_text(vjust=0.5, size=20, colour = "black"),
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 60), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 20, face = "bold.italic", hjust = 0.5),
-                                 legend.title=element_text(size=16),
-                                 legend.text=element_text(size = 15))}
+                                 plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 legend.title=element_text(size=16, family = "Helvetica Light"),
+                                 legend.text=element_text(size = 15, family = "Helvetica Light"))}
 # SLA ---- 
 # richardsonii ----
 richard_sla <- (conditional_effects(rich_SLA)) # extracting conditional effects from bayesian model
@@ -669,10 +669,11 @@ richard_ldmc_data_trans <- richard_ldmc_data %>%
                   size = 1, alpha = 1) +
     ylab(expression(paste("\n Leaf dry matter content (%)"))) +
     xlab("" ) +
-    coord_cartesian(ylim=c(0.15, 0.9)) +
+    coord_cartesian(ylim=c(15, 80)) +
     scale_color_manual(values=pal) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
+
 # pulchra ----
 pul_ldmc <- (conditional_effects(pulchra_LDMC_log)) # extracting conditional effects from bayesian model
 pul_ldmc_data <- pul_ldmc[[1]] # making the extracted model outputs into a dataset (for plotting)
@@ -693,7 +694,7 @@ pul_ldmc_data_trans <- pul_ldmc_data %>%
                   size = 1, alpha = 1) +
     ylab("\n") +
     xlab("" )     +
-    coord_cartesian(ylim=c(0.15, 0.9)) +
+    coord_cartesian(ylim=c(15, 80)) +
   scale_color_manual(values=pal) +
     labs(title = "Salix pulchra") +
     theme_shrub())
@@ -716,12 +717,12 @@ arc_ldmc_data_trans <- arc_ldmc_data %>%
     ylab("\n") +
     xlab("" ) +
     scale_color_manual(values=pal) +
-    coord_cartesian(ylim=c(0.15, 0.9)) +
+    coord_cartesian(ylim=c(15, 80)) +
     labs(title = "Salix arctica") +
     theme_shrub())
 
 (ldmc_panel <- ggarrange(rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot, 
-                        common.legend = TRUE, legend = "none",
+                        common.legend = TRUE, legend = "bottom",
                         ncol = 3, nrow = 1))
 
 # raw data for reference 
