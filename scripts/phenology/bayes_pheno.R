@@ -1114,3 +1114,119 @@ ggsave("figures/phenology/grow_season_panel.png", height = 5, width = 12, dpi = 
                                             common.legend = TRUE, legend = "bottom",
                                             ncol = 1, nrow = 3))
 
+# NEW overall figure-----
+# S.rich ----
+richard_emerg_trans_2 <- richard_emerg_trans %>%
+  dplyr::rename("DOY" = "First_bud_burst_DOY_center")
+
+richard_yellow_trans_2 <- richard_yellow_trans %>%
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY_center")
+
+richard_emerg_yellow <- rbind(richard_emerg_trans_2,richard_yellow_trans_2)
+
+all_phenocam_rich_1 <- all_phenocam_rich %>%
+  dplyr::rename("DOY" = "First_bud_burst_DOY")%>%
+  dplyr::select(-First_leaf_yellow_DOY) 
+
+all_phenocam_rich_2 <- all_phenocam_rich %>%
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY") %>%
+  dplyr::select(-First_bud_burst_DOY)
+
+all_phenocam_rich_all <- rbind(all_phenocam_rich_1, all_phenocam_rich_2)
+
+(richard_emerg_yellow_plot_scaled <-ggplot(richard_emerg_yellow) +
+    geom_point(data = all_phenocam_rich_all, aes(x = population, y = DOY, colour = population),
+               alpha = 0.2)+
+    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
+                  linewidth = 0.4, alpha = 0.5, width=0.2)+
+    geom_line(aes(x = effect1__, y = Estimate_trans, group = population, colour = population), 
+              linewidth = 1, alpha = 1)+
+    ylab("\nDOY") +
+    xlab("Population\n" ) +
+    coord_cartesian(ylim=c(120, 250))+
+    scale_color_manual(values=pal)+
+    coord_flip() + 
+    theme_shrub() +
+    ggtitle(expression(italic("Salix richardsonii"))) +
+    theme(text=element_text(family="Helvetica Light")))
+
+
+# S. pul----
+pul_emerg_trans_1 <-pulchra_emerg_trans %>%
+  dplyr::rename("DOY" = "First_bud_burst_DOY_center")
+
+pul_yellow_trans_2 <- pulchra_yellow_trans %>%
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY_center")
+
+pul_emerg_yellow <- rbind(pul_yellow_trans_2,pul_emerg_trans_1)
+
+all_phenocam_pul_1 <- all_phenocam_pulchra %>%
+  dplyr::rename("DOY" = "First_bud_burst_DOY")%>%
+  dplyr::select(-First_leaf_yellow_DOY) 
+
+all_phenocam_pul_2 <- all_phenocam_pulchra %>%
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY") %>%
+  dplyr::select(-First_bud_burst_DOY)
+
+all_phenocam_pul_all <- rbind(all_phenocam_pul_1, all_phenocam_pul_2)
+
+(pul_emerg_yellow_plot_scaled <-ggplot(pul_emerg_yellow) +
+    geom_point(data = all_phenocam_pul_all, aes(x = population, y = DOY, colour = population),
+               alpha = 0.2)+
+    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
+                  linewidth = 0.4, alpha = 0.5, width=0.2)+
+    geom_line(aes(x = effect1__, y = Estimate_trans, group = population, colour = population), 
+              linewidth = 1, alpha = 1)+
+    ylab("\nDOY") +
+    xlab("Population\n" ) +
+    coord_cartesian(ylim=c(120, 250))+
+    scale_color_manual(values=pal)+
+    coord_flip() + 
+    theme_shrub() +
+    ggtitle(expression(italic("Salix pulchra"))) +
+    theme(text=element_text(family="Helvetica Light")))
+
+# S. arc----
+arc_emerg_trans_1 <-arc_emerg_trans %>%
+  dplyr::rename("DOY" = "First_bud_burst_DOY_center")
+
+arc_yellow_trans_2 <- arctica_yellow_trans %>%
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY_center")
+
+arc_emerg_yellow <- rbind(arc_emerg_trans_1,arc_yellow_trans_2)
+
+all_phenocam_arc_1 <- all_phenocam_arctica %>%
+  dplyr::rename("DOY" = "First_bud_burst_DOY")%>%
+  dplyr::select(-First_leaf_yellow_DOY) 
+
+all_phenocam_arc_2 <- all_phenocam_arctica %>%
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY") %>%
+  dplyr::select(-First_bud_burst_DOY)
+
+all_phenocam_arc_all <- rbind(all_phenocam_arc_1, all_phenocam_arc_2)
+
+(arc_emerg_yellow_plot_scaled <-ggplot(arc_emerg_yellow) +
+    geom_point(data = all_phenocam_arc_all, aes(x = population, y = DOY, colour = population),
+               alpha = 0.2)+
+    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
+                  linewidth = 0.4, alpha = 0.5, width=0.2)+
+    geom_line(aes(x = effect1__, y = Estimate_trans, group = population, colour = population), 
+              linewidth = 1, alpha = 1)+
+    ylab("\nDOY") +
+    xlab("Population\n" ) +
+    coord_cartesian(ylim=c(120, 250))+
+    scale_color_manual(values=pal)+
+    coord_flip() + 
+    theme_shrub() +
+    ggtitle(expression(italic("Salix arctica"))) +
+    theme(text=element_text(family="Helvetica Light")))
+# arrange 
+(pheno_panel_new <- ggarrange(richard_emerg_yellow_plot_scaled, pul_emerg_yellow_plot_scaled, arc_emerg_yellow_plot_scaled, 
+                              common.legend = TRUE, legend = "bottom",
+                              ncol = 3, nrow = 1))
+ggsave(pheno_panel_new, filename ="outputs/figures/pheno_panel_new.png", width = 20, height = 6.53, units = "in")
+
+
