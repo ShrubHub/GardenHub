@@ -584,8 +584,8 @@ height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_a
                          iter = 5000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-saveRDS(height_rich, file = "outputs/models/height_rich.rds")
-height_rich <- readRDS("outputs/models/height_rich.rds")
+saveRDS(height_rich, file = "output/models/height_rich.rds")
+height_rich <- readRDS("output/models/height_rich.rds")
 
 library(ggeffects)
 ggpred_height_ric <- ggpredict(height_rich, terms = c("Sample_age", "population"))
@@ -612,8 +612,8 @@ height_pul <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_ag
                         iter = 5000, warmup = 1000, 
                         control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-saveRDS(height_pul, file = "outputs/models/height_pul.rds")
-height_pul <- readRDS("outputs/models/height_pul.rds")
+saveRDS(height_pul, file = "output/models/height_pul.rds")
+height_pul <- readRDS("output/models/height_pul.rds")
 
 summary(height_pul)
 # estimate for northern sample age: 1.99-0.02=1.97 --> exp(1.97)= 7.170676 cm in year 1
@@ -645,8 +645,8 @@ height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_ag
                         data = all_CG_growth_arc,  family = gaussian(), chains = 3,
                         iter = 5000, warmup = 1000, 
                         control = list(max_treedepth = 15, adapt_delta = 0.99))
-saveRDS(height_arc, file = "outputs/models/height_arc.rds")
-height_arc <- readRDS("outputs/models/height_arc.rds")
+saveRDS(height_arc, file = "output/models/height_arc.rds")
+height_arc <- readRDS("output/models/height_arc.rds")
 
 summary(height_arc) # significant growth over time
 # estimate for northern sample age 9: 0.86+0.08*9= exp(1.58) = 4.854956 -->0.5394396
