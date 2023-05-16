@@ -584,8 +584,8 @@ height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_a
                          iter = 5000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-saveRDS(height_rich, file = "outputs/models/height_rich.rds")
-height_rich <- readRDS("outputs/models/height_rich.rds")
+saveRDS(height_rich, file = "output/models/height_rich.rds")
+height_rich <- readRDS("output/models/height_rich.rds")
 
 library(ggeffects)
 ggpred_height_ric <- ggpredict(height_rich, terms = c("Sample_age", "population"))
@@ -606,21 +606,25 @@ colnames(ggpred_height_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
     theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
     theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
 
+# estimate for northern sample age: 1.50+0.09*1 = exp(1.59) = 4.903749 cm, in year 1
+# estimate for southern sample age: (1.50+0.91)+(0.09*1+0.16*1) = exp(2.66) = 14.29629 in year 1
+# estimate for southern sample age in year 9: (1.50+0.91)+(0.09*9 +0.16*9) = exp(4.66) = 105.6361 in year 9 -->105.6361/9 = 11.73734 cm/year
+# estimate for n sample age in year 9: 1.50+0.09*9 = exp(2.31) = 10.07442 in year 9 --> 10.07442/9= 1.11938 cm/year
+
 # Salix pulchra -----
 height_pul <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
                         data = all_CG_growth_pul,  family = gaussian(), chains = 3,
                         iter = 5000, warmup = 1000, 
                         control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-saveRDS(height_pul, file = "outputs/models/height_pul.rds")
-height_pul <- readRDS("outputs/models/height_pul.rds")
+saveRDS(height_pul, file = "output/models/height_pul.rds")
+height_pul <- readRDS("output/models/height_pul.rds")
 
 summary(height_pul)
 # estimate for northern sample age: 1.99-0.02=1.97 --> exp(1.97)= 7.170676 cm in year 1
 # estimate for s sample age: (1.99+0.95) + (-0.02+0.03)= 2.95, exp(2.95)= 19.10595 cm per sample age
 # estimate for s. sample age at year 9: (1.99+0.95) + (-0.02*9+0.03*9)= 3.03, exp(3.03)= 20.69 in year 9 --> 2.299692 per year
 # estimate for northern sample age at year 9: 1.99-0.02*9=1.97= 3.03, exp(3.03)= 6.110447 in year 9 --> 0.6789386 per year
-
 
 ggpred_height_pul <- ggpredict(height_pul, terms = c("Sample_age", "population"))
 colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
@@ -645,8 +649,8 @@ height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_ag
                         data = all_CG_growth_arc,  family = gaussian(), chains = 3,
                         iter = 5000, warmup = 1000, 
                         control = list(max_treedepth = 15, adapt_delta = 0.99))
-saveRDS(height_arc, file = "outputs/models/height_arc.rds")
-height_arc <- readRDS("outputs/models/height_arc.rds")
+saveRDS(height_arc, file = "output/models/height_arc.rds")
+height_arc <- readRDS("output/models/height_arc.rds")
 
 summary(height_arc) # significant growth over time
 # estimate for northern sample age 9: 0.86+0.08*9= exp(1.58) = 4.854956 -->0.5394396

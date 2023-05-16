@@ -20,6 +20,7 @@ all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv") # leaf length
 # omit one anamonolously higher LMDC value from QHI 2015 
 all_CG_source_traits <- all_CG_source_traits %>% 
   filter(LDMC_g_g < 0.76 | is.na(LDMC_g_g)) %>% 
+  filter(SLA < 26 | is.na(SLA)) %>% 
   mutate(LDMC_percent = (LDMC_g_g *100)) %>% # change LDMC into percent instead
   mutate(LA_cm2 = (LA/100))
 
@@ -145,8 +146,33 @@ summary(rich_SLA)
 plot(rich_SLA)
 pp_check(rich_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 saveRDS(rich_SLA, file = "output/traits/models/sla_richardsonii_compare.rds")
+rich_SLA <- readRDS("output/traits/models/sla_richardsonii_compare.rds")
 rich_SLA_results <- model_summ(rich_SLA)
 rich_SLA_results$Species <- "Salix richardsonii"
+
+rich_SLA.pred <- ggpredict(rich_SLA, terms = c('population'))
+
+rich_SLA_results <- rich_SLA_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+# change estimates by adding estimate to other rows 
+rich_SLA_results[2,1] <- rich_SLA_results[2,1] + rich_SLA_results[1,1]
+rich_SLA_results[3,1] <- rich_SLA_results[3,1] + rich_SLA_results[1,1]
+rich_SLA_results[4,1] <- rich_SLA_results[4,1] + rich_SLA_results[1,1]
+# change lower CI by adding 
+rich_SLA_results[2,3] <- rich_SLA_results[2,3] + rich_SLA_results[1,3]
+rich_SLA_results[3,3] <- rich_SLA_results[3,3] + rich_SLA_results[1,3]
+rich_SLA_results[4,3] <- rich_SLA_results[4,3] + rich_SLA_results[1,3]
+# change upper CI
+rich_SLA_results[2,4] <- rich_SLA_results[2,4] + rich_SLA_results[1,4]
+rich_SLA_results[3,4] <- rich_SLA_results[3,4] + rich_SLA_results[1,4]
+rich_SLA_results[4,4] <- rich_SLA_results[4,4] + rich_SLA_results[1,4]
+
+# interpretation (none are sig diff from each other)
+# N Garden = estimate 2.70 , CI = 2.54 to 2.85
+# N Source = estimate 2.70+(-0.24) = 2.46, CI = 2.13 to 2.81
+# S Source = estimate = 2.75, CI = 2.46 to 3.04
+# S Garden = estimate = 2.57, CI = 2.29 to 2.85
 
 # S. pulchra ----
 pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
@@ -157,8 +183,34 @@ summary(pulchra_SLA) # There were 1 divergent transitions after warmup
 plot(pulchra_SLA)
 pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 saveRDS(pulchra_SLA, file = "output/traits/models/sla_pulchra_compare.rds")
+pulchra_SLA <- readRDS("output/traits/models/sla_pulchra_compare.rds")
 pulchra_SLA_results <- model_summ(pulchra_SLA)
 pulchra_SLA_results$Species <- "Salix pulchra"
+
+pul_SLA.pred <- ggpredict(pulchra_SLA, terms = c('population'))
+
+pulchra_SLA_results <- pulchra_SLA_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+pulchra_SLA_results[2,1] <- pulchra_SLA_results[2,1] + pulchra_SLA_results[1,1]
+pulchra_SLA_results[3,1] <- pulchra_SLA_results[3,1] + pulchra_SLA_results[1,1]
+pulchra_SLA_results[4,1] <- pulchra_SLA_results[4,1] + pulchra_SLA_results[1,1]
+# change lower CI by adding 
+pulchra_SLA_results[2,3] <- pulchra_SLA_results[2,3] + pulchra_SLA_results[1,3]
+pulchra_SLA_results[3,3] <- pulchra_SLA_results[3,3] + pulchra_SLA_results[1,3]
+pulchra_SLA_results[4,3] <- pulchra_SLA_results[4,3] + pulchra_SLA_results[1,3]
+# change upper CI
+pulchra_SLA_results[2,4] <- pulchra_SLA_results[2,4] + pulchra_SLA_results[1,4]
+pulchra_SLA_results[3,4] <- pulchra_SLA_results[3,4] + pulchra_SLA_results[1,4]
+pulchra_SLA_results[4,4] <- pulchra_SLA_results[4,4] + pulchra_SLA_results[1,4]
+
+# interpretation 
+# N Garden = estimate = 2.74 , CI = 2.62 to 2.85
+# N Source = estimate = 2.33, CI = 2.07 to 2.58 **
+# S Source = estimate = 2.75, CI = 2.50 to 2.99 
+# S Garden = estimate = 2.56, CI = 2.32 to 2.78 *
 
 # S. arctica ----
 arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
@@ -168,20 +220,43 @@ summary(arctica_SLA)
 plot(arctica_SLA)
 pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 saveRDS(arctica_SLA, file = "output/traits/models/sla_arctica_compare.rds")
+arctica_SLA <- readRDS("output/traits/models/sla_arctica_compare.rds")
 arctica_SLA_results <- model_summ(arctica_SLA)
 arctica_SLA_results$Species <- "Salix arctica"
+arc_SLA.pred <- ggpredict(arctica_SLA, terms = c('population'))
+
+arctica_SLA_results <- arctica_SLA_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+arctica_SLA_results[2,1] <- arctica_SLA_results[2,1] + arctica_SLA_results[1,1]
+arctica_SLA_results[3,1] <- arctica_SLA_results[3,1] + arctica_SLA_results[1,1]
+arctica_SLA_results[4,1] <- arctica_SLA_results[4,1] + arctica_SLA_results[1,1]
+# change lower CI by adding 
+arctica_SLA_results[2,3] <- arctica_SLA_results[2,3] + arctica_SLA_results[1,3]
+arctica_SLA_results[3,3] <- arctica_SLA_results[3,3] + arctica_SLA_results[1,3]
+arctica_SLA_results[4,3] <- arctica_SLA_results[4,3] + arctica_SLA_results[1,3]
+# change upper CI
+arctica_SLA_results[2,4] <- arctica_SLA_results[2,4] + arctica_SLA_results[1,4]
+arctica_SLA_results[3,4] <- arctica_SLA_results[3,4] + arctica_SLA_results[1,4]
+arctica_SLA_results[4,4] <- arctica_SLA_results[4,4] + pulchra_SLA_results[1,4]
+
+# interpretation (none sig diff)
+# N Garden = estimate = 2.41 , CI = 2.18 to 2.64
+# N Source = estimate = 2.45, CI = 2.07 to 2.84 
+# S Source = estimate = 2.59, CI = 2.22 to 2.96 
+# S Garden = estimate = 2.34, CI = 1.97 to 2.70 
 
 # merging all extracted outputs
 garden_sla_out <- rbind(rich_SLA_results, pulchra_SLA_results, arctica_SLA_results)
 
 # back transforming from log
 garden_SLA_out_back <- garden_sla_out %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                 "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_low_trans = exp(l_95_CI_log)) %>% 
   mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
-  mutate(Estimate_trans = exp(Estimate), 
-         Est.Error_trans = exp(Est.Error)) 
+  mutate(Estimate_trans = exp(Estimate)) %>% 
+  select(-Est.Error)
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_SLA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
@@ -203,7 +278,6 @@ kable_SLA <- garden_SLA_out_back %>%
       Model structure per species: (log(SLA) ~ population + (1|year). 
       Model output back-transformed in the table below.", 
       col.names = c("Estimate",
-                    "Est. Error",
                     "Lower 95% CI (log)",
                     "Upper 95% CI (log)", 
                     "Rhat", 
@@ -215,8 +289,7 @@ kable_SLA <- garden_SLA_out_back %>%
                     "Lower 95% CI 
                     (back transformed)", "Upper 95% CI
                     (back transformed)", 
-                    "Estimate transformed", 
-                    "Error transformed"), digits=2, align = "c") %>% 
+                    "Estimate transformed"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in cursive
@@ -240,8 +313,32 @@ tab_model(rich_LDMC_log)
 plot(rich_LDMC_log)
 pp_check(rich_LDMC_log, type = "dens_overlay", ndraws = 100) 
 saveRDS(rich_LDMC_log, file = "output/traits/models/ldmc_richardsonii_compare.rds")
+rich_LDMC_log <- readRDS("output/traits/models/ldmc_richardsonii_compare.rds")
 rich_LDMC_results <- model_summ(rich_LDMC_log)
 rich_LDMC_results$Species <- "Salix richardsonii"
+
+rich_LDMC_results <- rich_LDMC_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+rich_LDMC_results[2,1] <- rich_LDMC_results[2,1] + rich_LDMC_results[1,1]
+rich_LDMC_results[3,1] <- rich_LDMC_results[3,1] + rich_LDMC_results[1,1]
+rich_LDMC_results[4,1] <- rich_LDMC_results[4,1] + rich_LDMC_results[1,1]
+# change lower CI by adding 
+rich_LDMC_results[2,3] <- rich_LDMC_results[2,3] + rich_LDMC_results[1,3]
+rich_LDMC_results[3,3] <- rich_LDMC_results[3,3] + rich_LDMC_results[1,3]
+rich_LDMC_results[4,3] <- rich_LDMC_results[4,3] + rich_LDMC_results[1,3]
+# change upper CI
+rich_LDMC_results[2,4] <- rich_LDMC_results[2,4] + rich_LDMC_results[1,4]
+rich_LDMC_results[3,4] <- rich_LDMC_results[3,4] + rich_LDMC_results[1,4]
+rich_LDMC_results[4,4] <- rich_LDMC_results[4,4] + rich_LDMC_results[1,4]
+
+# interpretation (none sig diff)
+# N Garden = estimate = 3.42 , CI = 3.07 to 3.76
+# N Source = estimate = 3.48, CI = 2.89 to 4.04
+# S Source = estimate = 3.36, CI = 2.90 to 3.81
+# S Garden = estimate = 3.48, CI = 3.04 to 3.90 
 
 # S. pulchra ----
 pulchra_LDMC_log <- brms::brm(log(LDMC_percent) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
@@ -252,8 +349,32 @@ tab_model(pulchra_LDMC_log)
 plot(pulchra_LDMC_log)
 pp_check(pulchra_LDMC_log, type = "dens_overlay", ndraws = 100) 
 saveRDS(pulchra_LDMC_log, file = "output/traits/models/ldmc_pulchra_compare.rds")
+pulchra_LDMC_log <- readRDS("output/traits/models/ldmc_pulchra_compare.rds")
 pulchra_LDMC_results <- model_summ(pulchra_LDMC_log)
 pulchra_LDMC_results$Species <- "Salix pulchra"
+
+pulchra_LDMC_results <- pulchra_LDMC_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+pulchra_LDMC_results[2,1] <- pulchra_LDMC_results[2,1] + pulchra_LDMC_results[1,1]
+pulchra_LDMC_results[3,1] <- pulchra_LDMC_results[3,1] + pulchra_LDMC_results[1,1]
+pulchra_LDMC_results[4,1] <- pulchra_LDMC_results[4,1] + pulchra_LDMC_results[1,1]
+# change lower CI by adding 
+pulchra_LDMC_results[2,3] <- pulchra_LDMC_results[2,3] + pulchra_LDMC_results[1,3]
+pulchra_LDMC_results[3,3] <- pulchra_LDMC_results[3,3] + pulchra_LDMC_results[1,3]
+pulchra_LDMC_results[4,3] <- pulchra_LDMC_results[4,3] + pulchra_LDMC_results[1,3]
+# change upper CI
+pulchra_LDMC_results[2,4] <- pulchra_LDMC_results[2,4] + pulchra_LDMC_results[1,4]
+pulchra_LDMC_results[3,4] <- pulchra_LDMC_results[3,4] + pulchra_LDMC_results[1,4]
+pulchra_LDMC_results[4,4] <- pulchra_LDMC_results[4,4] + pulchra_LDMC_results[1,4]
+
+# interpretation (none sig diff)
+# N Garden = estimate = 3.63 , CI = 3.18 to 4.07
+# N Source = estimate = 3.78, CI = 3.07 to 4.48
+# S Source = estimate = 3.50, CI = 2.90 to 4.09
+# S Garden = estimate = 3.61, CI = 3.05 to 4.16 
 
 # S. arctica ---- 
 arctica_LDMC_log <- brms::brm(log(LDMC_percent) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
@@ -264,20 +385,42 @@ tab_model(arctica_LDMC_log)
 plot(arctica_LDMC_log)
 pp_check(arctica_LDMC_log, type = "dens_overlay", ndraws = 100) 
 saveRDS(arctica_LDMC_log, file = "output/traits/models/ldmc_arctica_compare.rds")
+arctica_LDMC_log <- readRDS("output/traits/models/ldmc_arctica_compare.rds")
 arctica_LDMC_results <- model_summ(arctica_LDMC_log)
 arctica_LDMC_results$Species <- "Salix arctica"
+
+arctica_LDMC_results <- arctica_LDMC_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+arctica_LDMC_results[2,1] <- arctica_LDMC_results[2,1] + arctica_LDMC_results[1,1]
+arctica_LDMC_results[3,1] <- arctica_LDMC_results[3,1] + arctica_LDMC_results[1,1]
+arctica_LDMC_results[4,1] <- arctica_LDMC_results[4,1] + arctica_LDMC_results[1,1]
+# change lower CI by adding 
+arctica_LDMC_results[2,3] <- arctica_LDMC_results[2,3] + arctica_LDMC_results[1,3]
+arctica_LDMC_results[3,3] <- arctica_LDMC_results[3,3] + arctica_LDMC_results[1,3]
+arctica_LDMC_results[4,3] <- arctica_LDMC_results[4,3] + arctica_LDMC_results[1,3]
+# change upper CI
+arctica_LDMC_results[2,4] <- arctica_LDMC_results[2,4] + arctica_LDMC_results[1,4]
+arctica_LDMC_results[3,4] <- arctica_LDMC_results[3,4] + arctica_LDMC_results[1,4]
+arctica_LDMC_results[4,4] <- arctica_LDMC_results[4,4] + arctica_LDMC_results[1,4]
+# interpretation (none sig diff)
+# N Garden = estimate = 3.46 , CI = 2.87 to 4.00
+# N Source = estimate = 3.54, CI = 2.79 to 4.23
+# S Source = estimate = 3.35, CI = 2.64 to 4.01
+# S Garden = estimate = 3.55, CI = 2.86 to 4.18 
 
 # merging all extracted outputs
 garden_ldmc_out <- rbind(rich_LDMC_results, pulchra_LDMC_results, arctica_LDMC_results)
 
 # back transforming from log
 garden_LDMC_out_back <- garden_ldmc_out %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_low_trans = exp(l_95_CI_log)) %>% 
   mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
-  mutate(Estimate_trans = exp(Estimate), 
-         Est.Error_trans = exp(Est.Error))
+  mutate(Estimate_trans = exp(Estimate)) %>% 
+  select(-Est.Error)
+
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_LDMC_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
                                    "Year", "Sigma", 
@@ -295,10 +438,9 @@ write.csv(garden_LDMC_out_back, "output/traits/garden_LDMC_out_back.csv")
 # creating table
 kable_LDMC <- garden_LDMC_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: Leaf dry matter content of northern garden, northern source, southern garden, southern source willows. 
-      Model structure per species: (log(SLA) ~ population + (1|year). 
+      Model structure per species: (log(LDMC) ~ population + (1|year). 
       Model output back-transformed in the table below.", 
       col.names = c("Estimate",
-                    "Est. Error",
                     "Lower 95% CI (log)",
                     "Upper 95% CI (log)", 
                     "Rhat", 
@@ -310,8 +452,7 @@ kable_LDMC <- garden_LDMC_out_back %>%
                     "Lower 95% CI 
                     (back transformed)", "Upper 95% CI
                     (back transformed)", 
-                    "Estimate transformed", 
-                    "Error transformed"), digits=2, align = "c") %>% 
+                    "Estimate transformed"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in cursive
@@ -334,8 +475,32 @@ summary(rich_LA)
 plot(rich_LA)
 pp_check(rich_LA, type = "dens_overlay", ndraws = 100)
 saveRDS(rich_LA, file = "output/traits/models/la_richardsonii_compare.rds")
+rich_LA <- readRDS("output/traits/models/la_richardsonii_compare.rds")
 rich_LA_results <- model_summ(rich_LA)
 rich_LA_results$Species <- "Salix richardsonii"
+
+rich_LA_results <- rich_LA_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+# change estimates by adding estimate to other rows 
+rich_LA_results[2,1] <- rich_LA_results[2,1] + rich_LA_results[1,1]
+rich_LA_results[3,1] <- rich_LA_results[3,1] + rich_LA_results[1,1]
+rich_LA_results[4,1] <- rich_LA_results[4,1] + rich_LA_results[1,1]
+# change lower CI by adding 
+rich_LA_results[2,3] <- rich_LA_results[2,3] + rich_LA_results[1,3]
+rich_LA_results[3,3] <- rich_LA_results[3,3] + rich_LA_results[1,3]
+rich_LA_results[4,3] <- rich_LA_results[4,3] + rich_LA_results[1,3]
+# change upper CI
+rich_LA_results[2,4] <- rich_LA_results[2,4] + rich_LA_results[1,4]
+rich_LA_results[3,4] <- rich_LA_results[3,4] + rich_LA_results[1,4]
+rich_LA_results[4,4] <- rich_LA_results[4,4] + rich_LA_results[1,4]
+
+# interpretation 
+# N Garden = estimate = 1.64 , CI = 0.05 to 3.17
+# N Source = estimate = 3.14, CI = 1.25 to 4.96
+# S Source = estimate = 2.69, CI = 0.84 to 4.46
+# S Garden = estimate = 2.64, CI = 0.86 to 4.37
+
 # S. pulchra ----
 pulchra_LA <- brms::brm(log(LA_cm2) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000, 
@@ -344,8 +509,32 @@ summary(pulchra_LA)
 plot(pulchra_LA)
 pp_check(pulchra_LA, type = "dens_overlay", ndraws = 100) 
 saveRDS(pulchra_LA, file = "output/traits/models/la_pulchra_compare.rds")
+pulchra_LA <- readRDS("output/traits/models/la_pulchra_compare.rds")
 pulchra_LA_results <- model_summ(pulchra_LA)
 pulchra_LA_results$Species <- "Salix pulchra"
+
+pulchra_LA_results <- pulchra_LA_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+pulchra_LA_results[2,1] <- pulchra_LA_results[2,1] + pulchra_LA_results[1,1]
+pulchra_LA_results[3,1] <- pulchra_LA_results[3,1] + pulchra_LA_results[1,1]
+pulchra_LA_results[4,1] <- pulchra_LA_results[4,1] + pulchra_LA_results[1,1]
+# change lower CI by adding 
+pulchra_LA_results[2,3] <- pulchra_LA_results[2,3] + pulchra_LA_results[1,3]
+pulchra_LA_results[3,3] <- pulchra_LA_results[3,3] + pulchra_LA_results[1,3]
+pulchra_LA_results[4,3] <- pulchra_LA_results[4,3] + pulchra_LA_results[1,3]
+# change upper CI
+pulchra_LA_results[2,4] <- pulchra_LA_results[2,4] + pulchra_LA_results[1,4]
+pulchra_LA_results[3,4] <- pulchra_LA_results[3,4] + pulchra_LA_results[1,4]
+pulchra_LA_results[4,4] <- pulchra_LA_results[4,4] + pulchra_LA_results[1,4]
+# interpretation 
+# N Garden = estimate = 1.21 , CI = -0.52 to 2.82
+# N Source = estimate = 3.14, CI = 0.50 to 4.53
+# S Source = estimate = 2.69, CI = 0.14 to 4.06
+# S Garden = estimate = 2.64, CI = -0.40 to 3.69
+
 # S. arctica ----
 arctica_LA <- brms::brm(log(LA_cm2)  ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
                           iter = 3000, warmup = 1000, 
@@ -354,22 +543,40 @@ summary(arctica_LA)
 plot(arctica_LA)
 pp_check(arctica_LA, type = "dens_overlay", ndraws = 100) 
 saveRDS(arctica_LA, file = "output/traits/models/la_arctica_compare.rds")
+arctica_LA <- readRDS("output/traits/models/la_arctica_compare.rds")
 arctica_LA_results <- model_summ(arctica_LA)
 arctica_LA_results$Species <- "Salix arctica"
+
+arctica_LA_results <- arctica_LA_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+# change estimates by adding estimate to other rows 
+arctica_LA_results[2,1] <- arctica_LA_results[2,1] + arctica_LA_results[1,1]
+arctica_LA_results[3,1] <- arctica_LA_results[3,1] + arctica_LA_results[1,1]
+arctica_LA_results[4,1] <- arctica_LA_results[4,1] + arctica_LA_results[1,1]
+# change lower CI by adding 
+arctica_LA_results[2,3] <- arctica_LA_results[2,3] + arctica_LA_results[1,3]
+arctica_LA_results[3,3] <- arctica_LA_results[3,3] + arctica_LA_results[1,3]
+arctica_LA_results[4,3] <- arctica_LA_results[4,3] + arctica_LA_results[1,3]
+# change upper CI
+arctica_LA_results[2,4] <- arctica_LA_results[2,4] + arctica_LA_results[1,4]
+arctica_LA_results[3,4] <- arctica_LA_results[3,4] + arctica_LA_results[1,4]
+arctica_LA_results[4,4] <- arctica_LA_results[4,4] + arctica_LA_results[1,4]
+# interpretation 
+# N Garden = estimate = 1.93 , CI = -0.11 to 3.98
+# N Source = estimate = 3.14, CI = 0.86 to 6.08
+# S Source = estimate = 2.69, CI = -0.76 to 4.42
+# S Garden = estimate = 2.64, CI = -0.32 to 4.75
 
 # merging all extracted outputs
 garden_LA_out <- rbind(rich_LA_results, pulchra_LA_results, arctica_LA_results)
 
 # back transforming from log
 garden_LA_out_back <- garden_LA_out %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
   mutate(CI_low_trans = exp(l_95_CI_log)) %>% 
   mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
-  mutate(Estimate_trans = exp(Estimate), 
-         Est.Error_trans = exp(Est.Error)) %>% 
-  select(-CI_range)
+  mutate(Estimate_trans = exp(Estimate)) %>% 
+  select(-Est.Error)
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_LA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
                                     "Year", "Sigma", 
@@ -380,16 +587,14 @@ rownames(garden_LA_out_back) <- c("Intercept", "Northern Source", "SouthernSourc
 
 # making sure Rhat keeps the .00 
 garden_LA_out_back$Rhat <- as.character(formatC(garden_LA_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
 # save df of results 
 write.csv(garden_LA_out_back, "output/traits/garden_LA_out_back.csv")
 # creating table
 kable_LA <- garden_LA_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: Leaf area  of northern garden, northern source, southern garden, southern source willows. 
-      Model structure per species: (log(SLA) ~ population + (1|year). 
+      Model structure per species: (log(LA) ~ population + (1|year). 
       Model output back-transformed in the table below.", 
       col.names = c( "Estimate",
-                    "Est. Error",
                     "Lower 95% CI (log)",
                     "Upper 95% CI (log)", 
                     "Rhat", 
@@ -401,8 +606,7 @@ kable_LA <- garden_LA_out_back %>%
                     "Lower 95% CI 
                     (back transformed)", "Upper 95% CI
                     (back transformed)", 
-                    "Estimate transformed", 
-                    "Error transformed"), digits=2, align = "c") %>% 
+                    "Estimate transformed"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in italics
@@ -425,8 +629,16 @@ summary(rich_LL)
 plot(rich_LL)
 pp_check(rich_LL, type = "dens_overlay", ndraws = 100) 
 saveRDS(rich_LL, file = "output/traits/models/ll_richardsonii_compare.rds")
+rich_LL <- readRDS("output/traits/models/ll_richardsonii_compare.rds")
 rich_LL_results <- model_summ(rich_LL)
 rich_LL_results$Species <- "Salix richardsonii"
+
+# interpretation 
+# N Garden = estimate = 22.01 , CI = 15.16 to 28.65 *
+# N Source = estimate = 41.93, CI = 31.36 to 52.34 **
+# S Source = estimate = 50.87, CI = 40.28 to 61.20 **
+# S Garden = estimate = 40.13, CI = 31.39 to 48.70 **
+
 # S. pulchra ----
 pulchra_LL <- brms::brm(mean_leaf_length ~ population + (1|year), data = pulchra_all_growth, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000, 
@@ -435,8 +647,15 @@ summary(pulchra_LL)
 plot(pulchra_LL)
 pp_check(pulchra_LL, type = "dens_overlay", ndraws = 100) 
 saveRDS(pulchra_LL, file = "output/traits/models/ll_pulchra_compare.rds")
+pulchra_LL <- readRDS("output/traits/models/ll_pulchra_compare.rds")
 pulchra_LL_results <- model_summ(pulchra_LL)
 pulchra_LL_results$Species <- "Salix pulchra"
+
+# interpretation 
+# N Garden = estimate = 20.01 , CI = 12.13 to 27.35 *
+# N Source = estimate = 35.04, CI = 23.05 to 46.55**
+# S Source = estimate = 50.31, CI = 38.37 to 61.78**
+# S Garden = estimate = 36.26, CI = 26.60 to 45.28**
 
 # S. arctica ----
 # no leaf length for S. arctic from source pop
@@ -451,8 +670,12 @@ summary(arctica_LL_CG)
 plot(arctica_LL_CG)
 pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
 saveRDS(arctica_LL_CG, file = "output/traits/models/ll_arctica_compare.rds")
+arctica_LL_CG <- readRDS("output/traits/models/ll_arctica_compare.rds")
 arctica_LL_results <- model_summ(arctica_LL_CG)
 arctica_LL_results$Species <- "Salix arctica"
+# interpretation 
+# N Garden = estimate = 23.16 , CI = 16.13 to 29.90 
+# S Garden = estimate = 26.19, CI = 14.93 to 37.17
 
 # merging all extracted outputs
 garden_LL_out <- rbind(rich_LL_results, pulchra_LL_results, arctica_LL_results)
@@ -467,7 +690,8 @@ rownames(garden_LL_out) <- c("Intercept", "Northern Source", "SouthernSource",  
 
 # making sure Rhat keeps the .00 
 garden_LL_out$Rhat <- as.character(formatC(garden_LL_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
+garden_LL_out <- garden_LL_out %>% 
+  select(-Est.Error)
 # save df of results 
 write.csv(garden_LL_out, "output/traits/garden_LL_out_back.csv")
 # creating table
@@ -476,7 +700,6 @@ kable_LL <- garden_LL_out %>%
       Model structure per species: leaf length ~ population + (1|year) + (1|sample_id). Note S. arctica only comparing garden populations. 
       Model output back-transformed in the table below.", 
       col.names = c( "Estimate",
-                     "Est. Error",
                      "Lower 95% CI",
                      "Upper 95% CI", 
                      "Rhat", 
@@ -538,16 +761,16 @@ arctica_cg_growth$population <- ordered(arctica_cg_growth$population,
 pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#7AD151FF")
 
 theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", size=20),
-                                 axis.text.x  = element_text(vjust=0.5, size=20, colour = "black", angle = 60), 
-                                 axis.title.y = element_text(face="bold", size=20),
-                                 axis.text.y  = element_text(vjust=0.5, size=20, colour = "black"),
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 60), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 20, face = "bold.italic", hjust = 0.5),
-                                 legend.title=element_text(size=16),
-                                 legend.text=element_text(size = 15))}
+                                 plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 legend.title=element_text(size=16, family = "Helvetica Light"),
+                                 legend.text=element_text(size = 15, family = "Helvetica Light"))}
 # SLA ---- 
 # richardsonii ----
 richard_sla <- (conditional_effects(rich_SLA)) # extracting conditional effects from bayesian model
@@ -561,11 +784,13 @@ richard_sla_data_trans <- richard_sla_data %>%
          Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
 
-(rich_sla_plot <-ggplot(richard_sla_data_trans) +
+colnames(rich_SLA.pred) = c('population','fit', 'lwr', 'upr')
+
+(rich_sla_plot <-ggplot(rich_SLA.pred) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = SLA, colour = population),
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0)) + # raw data
-    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
     ylab(expression(paste("\n Specific Leaf Area (",mm^{2}," ",mg^{-1},")"))) +
     xlab("" ) +
@@ -668,10 +893,11 @@ richard_ldmc_data_trans <- richard_ldmc_data %>%
                   size = 1, alpha = 1) +
     ylab(expression(paste("\n Leaf dry matter content (%)"))) +
     xlab("" ) +
-    coord_cartesian(ylim=c(0.15, 0.9)) +
+    coord_cartesian(ylim=c(15, 80)) +
     scale_color_manual(values=pal) +
     labs(title = "Salix richardsonii") +
     theme_shrub())
+
 # pulchra ----
 pul_ldmc <- (conditional_effects(pulchra_LDMC_log)) # extracting conditional effects from bayesian model
 pul_ldmc_data <- pul_ldmc[[1]] # making the extracted model outputs into a dataset (for plotting)
@@ -692,7 +918,7 @@ pul_ldmc_data_trans <- pul_ldmc_data %>%
                   size = 1, alpha = 1) +
     ylab("\n") +
     xlab("" )     +
-    coord_cartesian(ylim=c(0.15, 0.9)) +
+    coord_cartesian(ylim=c(15, 80)) +
   scale_color_manual(values=pal) +
     labs(title = "Salix pulchra") +
     theme_shrub())
@@ -715,12 +941,12 @@ arc_ldmc_data_trans <- arc_ldmc_data %>%
     ylab("\n") +
     xlab("" ) +
     scale_color_manual(values=pal) +
-    coord_cartesian(ylim=c(0.15, 0.9)) +
+    coord_cartesian(ylim=c(15, 80)) +
     labs(title = "Salix arctica") +
     theme_shrub())
 
 (ldmc_panel <- ggarrange(rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot, 
-                        common.legend = TRUE, legend = "none",
+                        common.legend = TRUE, legend = "bottom",
                         ncol = 3, nrow = 1))
 
 # raw data for reference 
