@@ -632,6 +632,7 @@ saveRDS(rich_LL, file = "output/traits/models/ll_richardsonii_compare.rds")
 rich_LL <- readRDS("output/traits/models/ll_richardsonii_compare.rds")
 rich_LL_results <- model_summ(rich_LL)
 rich_LL_results$Species <- "Salix richardsonii"
+rich_LL.pred <- ggpredict(rich_LL, terms = c('population'))
 
 # interpretation 
 # N Garden = estimate = 22.01 , CI = 15.16 to 28.65 *
@@ -650,6 +651,8 @@ saveRDS(pulchra_LL, file = "output/traits/models/ll_pulchra_compare.rds")
 pulchra_LL <- readRDS("output/traits/models/ll_pulchra_compare.rds")
 pulchra_LL_results <- model_summ(pulchra_LL)
 pulchra_LL_results$Species <- "Salix pulchra"
+
+pul_LL.pred <- ggpredict(pulchra_LL, terms = c('population'))
 
 # interpretation 
 # N Garden = estimate = 20.01 , CI = 12.13 to 27.35 *
@@ -673,6 +676,9 @@ saveRDS(arctica_LL_CG, file = "output/traits/models/ll_arctica_compare.rds")
 arctica_LL_CG <- readRDS("output/traits/models/ll_arctica_compare.rds")
 arctica_LL_results <- model_summ(arctica_LL_CG)
 arctica_LL_results$Species <- "Salix arctica"
+
+arc_LL.pred <- ggpredict(arctica_LL_CG, terms = c('population'))
+
 # interpretation 
 # N Garden = estimate = 23.16 , CI = 16.13 to 29.90 
 # S Garden = estimate = 26.19, CI = 14.93 to 37.17
