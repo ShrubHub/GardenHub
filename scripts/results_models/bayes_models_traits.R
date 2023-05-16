@@ -317,6 +317,23 @@ rich_LDMC_log <- readRDS("output/traits/models/ldmc_richardsonii_compare.rds")
 rich_LDMC_results <- model_summ(rich_LDMC_log)
 rich_LDMC_results$Species <- "Salix richardsonii"
 
+rich_LDMC_results <- rich_LDMC_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+rich_LDMC_results[2,1] <- rich_LDMC_results[2,1] + rich_LDMC_results[1,1]
+rich_LDMC_results[3,1] <- rich_LDMC_results[3,1] + rich_LDMC_results[1,1]
+rich_LDMC_results[4,1] <- rich_LDMC_results[4,1] + rich_LDMC_results[1,1]
+# change lower CI by adding 
+rich_LDMC_results[2,3] <- rich_LDMC_results[2,3] + rich_LDMC_results[1,3]
+rich_LDMC_results[3,3] <- rich_LDMC_results[3,3] + rich_LDMC_results[1,3]
+rich_LDMC_results[4,3] <- rich_LDMC_results[4,3] + rich_LDMC_results[1,3]
+# change upper CI
+rich_LDMC_results[2,4] <- rich_LDMC_results[2,4] + rich_LDMC_results[1,4]
+rich_LDMC_results[3,4] <- rich_LDMC_results[3,4] + rich_LDMC_results[1,4]
+rich_LDMC_results[4,4] <- rich_LDMC_results[4,4] + rich_LDMC_results[1,4]
+
 # interpretation (none sig diff)
 # N Garden = estimate = 3.42 , CI = 3.07 to 3.76
 # N Source = estimate = 3.48, CI = 2.89 to 4.04
@@ -335,6 +352,23 @@ saveRDS(pulchra_LDMC_log, file = "output/traits/models/ldmc_pulchra_compare.rds"
 pulchra_LDMC_log <- readRDS("output/traits/models/ldmc_pulchra_compare.rds")
 pulchra_LDMC_results <- model_summ(pulchra_LDMC_log)
 pulchra_LDMC_results$Species <- "Salix pulchra"
+
+pulchra_LDMC_results <- pulchra_LDMC_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+pulchra_LDMC_results[2,1] <- pulchra_LDMC_results[2,1] + pulchra_LDMC_results[1,1]
+pulchra_LDMC_results[3,1] <- pulchra_LDMC_results[3,1] + pulchra_LDMC_results[1,1]
+pulchra_LDMC_results[4,1] <- pulchra_LDMC_results[4,1] + pulchra_LDMC_results[1,1]
+# change lower CI by adding 
+pulchra_LDMC_results[2,3] <- pulchra_LDMC_results[2,3] + pulchra_LDMC_results[1,3]
+pulchra_LDMC_results[3,3] <- pulchra_LDMC_results[3,3] + pulchra_LDMC_results[1,3]
+pulchra_LDMC_results[4,3] <- pulchra_LDMC_results[4,3] + pulchra_LDMC_results[1,3]
+# change upper CI
+pulchra_LDMC_results[2,4] <- pulchra_LDMC_results[2,4] + pulchra_LDMC_results[1,4]
+pulchra_LDMC_results[3,4] <- pulchra_LDMC_results[3,4] + pulchra_LDMC_results[1,4]
+pulchra_LDMC_results[4,4] <- pulchra_LDMC_results[4,4] + pulchra_LDMC_results[1,4]
 
 # interpretation (none sig diff)
 # N Garden = estimate = 3.63 , CI = 3.18 to 4.07
@@ -355,6 +389,22 @@ arctica_LDMC_log <- readRDS("output/traits/models/ldmc_arctica_compare.rds")
 arctica_LDMC_results <- model_summ(arctica_LDMC_log)
 arctica_LDMC_results$Species <- "Salix arctica"
 
+arctica_LDMC_results <- arctica_LDMC_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+arctica_LDMC_results[2,1] <- arctica_LDMC_results[2,1] + arctica_LDMC_results[1,1]
+arctica_LDMC_results[3,1] <- arctica_LDMC_results[3,1] + arctica_LDMC_results[1,1]
+arctica_LDMC_results[4,1] <- arctica_LDMC_results[4,1] + arctica_LDMC_results[1,1]
+# change lower CI by adding 
+arctica_LDMC_results[2,3] <- arctica_LDMC_results[2,3] + arctica_LDMC_results[1,3]
+arctica_LDMC_results[3,3] <- arctica_LDMC_results[3,3] + arctica_LDMC_results[1,3]
+arctica_LDMC_results[4,3] <- arctica_LDMC_results[4,3] + arctica_LDMC_results[1,3]
+# change upper CI
+arctica_LDMC_results[2,4] <- arctica_LDMC_results[2,4] + arctica_LDMC_results[1,4]
+arctica_LDMC_results[3,4] <- arctica_LDMC_results[3,4] + arctica_LDMC_results[1,4]
+arctica_LDMC_results[4,4] <- arctica_LDMC_results[4,4] + arctica_LDMC_results[1,4]
 # interpretation (none sig diff)
 # N Garden = estimate = 3.46 , CI = 2.87 to 4.00
 # N Source = estimate = 3.54, CI = 2.79 to 4.23
@@ -366,12 +416,11 @@ garden_ldmc_out <- rbind(rich_LDMC_results, pulchra_LDMC_results, arctica_LDMC_r
 
 # back transforming from log
 garden_LDMC_out_back <- garden_ldmc_out %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_low_trans = exp(l_95_CI_log)) %>% 
   mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
-  mutate(Estimate_trans = exp(Estimate), 
-         Est.Error_trans = exp(Est.Error))
+  mutate(Estimate_trans = exp(Estimate)) %>% 
+  select(-Est.Error)
+
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_LDMC_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
                                    "Year", "Sigma", 
@@ -392,7 +441,6 @@ kable_LDMC <- garden_LDMC_out_back %>%
       Model structure per species: (log(LDMC) ~ population + (1|year). 
       Model output back-transformed in the table below.", 
       col.names = c("Estimate",
-                    "Est. Error",
                     "Lower 95% CI (log)",
                     "Upper 95% CI (log)", 
                     "Rhat", 
@@ -404,8 +452,7 @@ kable_LDMC <- garden_LDMC_out_back %>%
                     "Lower 95% CI 
                     (back transformed)", "Upper 95% CI
                     (back transformed)", 
-                    "Estimate transformed", 
-                    "Error transformed"), digits=2, align = "c") %>% 
+                    "Estimate transformed"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in cursive
