@@ -155,13 +155,18 @@ rich_SLA.pred <- ggpredict(rich_SLA, terms = c('population'))
 rich_SLA_results <- rich_SLA_results %>% 
   dplyr::rename("l_95_CI_log" = "l-95% CI", 
                 "u_95_CI_log" = "u-95% CI")
-
-rich_sla_intercept <- rich_SLA_results[1,]
-  
-rich_SLA_results_test <- rich_SLA_results %>% 
-  mutate(estimate_trans = (rich_sla_intercept$Estimate + Estimate),
-         CI_low_trans = (rich_sla_intercept$l_95_CI_log + l_95_CI_log), 
-         CI_upper_trans = (rich_sla_intercept$u_95_CI_log + u_95_CI_log))
+# change estimates by adding estimate to other rows 
+rich_SLA_results[2,1] <- rich_SLA_results[2,1] + rich_SLA_results[1,1]
+rich_SLA_results[3,1] <- rich_SLA_results[3,1] + rich_SLA_results[1,1]
+rich_SLA_results[4,1] <- rich_SLA_results[4,1] + rich_SLA_results[1,1]
+# change lower CI by adding 
+rich_SLA_results[2,3] <- rich_SLA_results[2,3] + rich_SLA_results[1,3]
+rich_SLA_results[3,3] <- rich_SLA_results[3,3] + rich_SLA_results[1,3]
+rich_SLA_results[4,3] <- rich_SLA_results[4,3] + rich_SLA_results[1,3]
+# change upper CI
+rich_SLA_results[2,4] <- rich_SLA_results[2,4] + rich_SLA_results[1,4]
+rich_SLA_results[3,4] <- rich_SLA_results[3,4] + rich_SLA_results[1,4]
+rich_SLA_results[4,4] <- rich_SLA_results[4,4] + rich_SLA_results[1,4]
 
 # interpretation (none are sig diff from each other)
 # N Garden = estimate 2.70 , CI = 2.54 to 2.85
@@ -184,6 +189,23 @@ pulchra_SLA_results$Species <- "Salix pulchra"
 
 pul_SLA.pred <- ggpredict(pulchra_SLA, terms = c('population'))
 
+pulchra_SLA_results <- pulchra_SLA_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+pulchra_SLA_results[2,1] <- pulchra_SLA_results[2,1] + pulchra_SLA_results[1,1]
+pulchra_SLA_results[3,1] <- pulchra_SLA_results[3,1] + pulchra_SLA_results[1,1]
+pulchra_SLA_results[4,1] <- pulchra_SLA_results[4,1] + pulchra_SLA_results[1,1]
+# change lower CI by adding 
+pulchra_SLA_results[2,3] <- pulchra_SLA_results[2,3] + pulchra_SLA_results[1,3]
+pulchra_SLA_results[3,3] <- pulchra_SLA_results[3,3] + pulchra_SLA_results[1,3]
+pulchra_SLA_results[4,3] <- pulchra_SLA_results[4,3] + pulchra_SLA_results[1,3]
+# change upper CI
+pulchra_SLA_results[2,4] <- pulchra_SLA_results[2,4] + pulchra_SLA_results[1,4]
+pulchra_SLA_results[3,4] <- pulchra_SLA_results[3,4] + pulchra_SLA_results[1,4]
+pulchra_SLA_results[4,4] <- pulchra_SLA_results[4,4] + pulchra_SLA_results[1,4]
+
 # interpretation 
 # N Garden = estimate = 2.74 , CI = 2.62 to 2.85
 # N Source = estimate = 2.33, CI = 2.07 to 2.58 **
@@ -203,6 +225,23 @@ arctica_SLA_results <- model_summ(arctica_SLA)
 arctica_SLA_results$Species <- "Salix arctica"
 arc_SLA.pred <- ggpredict(arctica_SLA, terms = c('population'))
 
+arctica_SLA_results <- arctica_SLA_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+arctica_SLA_results[2,1] <- arctica_SLA_results[2,1] + arctica_SLA_results[1,1]
+arctica_SLA_results[3,1] <- arctica_SLA_results[3,1] + arctica_SLA_results[1,1]
+arctica_SLA_results[4,1] <- arctica_SLA_results[4,1] + arctica_SLA_results[1,1]
+# change lower CI by adding 
+arctica_SLA_results[2,3] <- arctica_SLA_results[2,3] + arctica_SLA_results[1,3]
+arctica_SLA_results[3,3] <- arctica_SLA_results[3,3] + arctica_SLA_results[1,3]
+arctica_SLA_results[4,3] <- arctica_SLA_results[4,3] + arctica_SLA_results[1,3]
+# change upper CI
+arctica_SLA_results[2,4] <- arctica_SLA_results[2,4] + arctica_SLA_results[1,4]
+arctica_SLA_results[3,4] <- arctica_SLA_results[3,4] + arctica_SLA_results[1,4]
+arctica_SLA_results[4,4] <- arctica_SLA_results[4,4] + pulchra_SLA_results[1,4]
+
 # interpretation (none sig diff)
 # N Garden = estimate = 2.41 , CI = 2.18 to 2.64
 # N Source = estimate = 2.45, CI = 2.07 to 2.84 
@@ -214,12 +253,10 @@ garden_sla_out <- rbind(rich_SLA_results, pulchra_SLA_results, arctica_SLA_resul
 
 # back transforming from log
 garden_SLA_out_back <- garden_sla_out %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                 "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_low_trans = exp(l_95_CI_log)) %>% 
   mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
   mutate(Estimate_trans = exp(Estimate)) %>% 
-           select(-error)
+  select(-Est.Error)
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_SLA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
@@ -241,7 +278,6 @@ kable_SLA <- garden_SLA_out_back %>%
       Model structure per species: (log(SLA) ~ population + (1|year). 
       Model output back-transformed in the table below.", 
       col.names = c("Estimate",
-                    "Est. Error",
                     "Lower 95% CI (log)",
                     "Upper 95% CI (log)", 
                     "Rhat", 
@@ -253,8 +289,7 @@ kable_SLA <- garden_SLA_out_back %>%
                     "Lower 95% CI 
                     (back transformed)", "Upper 95% CI
                     (back transformed)", 
-                    "Estimate transformed", 
-                    "Error transformed"), digits=2, align = "c") %>% 
+                    "Estimate transformed"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in cursive
