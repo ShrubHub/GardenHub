@@ -690,7 +690,8 @@ rownames(garden_LL_out) <- c("Intercept", "Northern Source", "SouthernSource",  
 
 # making sure Rhat keeps the .00 
 garden_LL_out$Rhat <- as.character(formatC(garden_LL_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
+garden_LL_out <- garden_LL_out %>% 
+  select(-Est.Error)
 # save df of results 
 write.csv(garden_LL_out, "output/traits/garden_LL_out_back.csv")
 # creating table
@@ -699,7 +700,6 @@ kable_LL <- garden_LL_out %>%
       Model structure per species: leaf length ~ population + (1|year) + (1|sample_id). Note S. arctica only comparing garden populations. 
       Model output back-transformed in the table below.", 
       col.names = c( "Estimate",
-                     "Est. Error",
                      "Lower 95% CI",
                      "Upper 95% CI", 
                      "Rhat", 
