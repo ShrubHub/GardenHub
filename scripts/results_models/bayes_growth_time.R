@@ -611,6 +611,37 @@ colnames(ggpred_height_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
 # estimate for southern sample age in year 9: (1.50+0.91)+(0.09*9 +0.16*9) = exp(4.66) = 105.6361 in year 9 -->105.6361/9 = 11.73734 cm/year
 # estimate for n sample age in year 9: 1.50+0.09*9 = exp(2.31) = 10.07442 in year 9 --> 10.07442/9= 1.11938 cm/year
 
+# extracting model summary
+height_rich_summ <- model_summ(height_rich)
+height_rich_summ$Species <- "Salix richardsonii"
+height_rich_summ <- height_rich_summ %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+height_rich_summ[3,1] <- height_rich_summ[3,1] + height_rich_summ[1,1]
+height_rich_summ[4,1] <- height_rich_summ[4,1] + height_rich_summ[2,1]
+
+# change lower CI by adding 
+height_rich_summ[3,3] <- height_rich_summ[3,3] + height_rich_summ[1,3]
+height_rich_summ[4,3] <- height_rich_summ[4,3] + height_rich_summ[2,3]
+
+# change upper CI
+height_rich_summ[3,4] <- height_rich_summ[3,4] + height_rich_summ[1,4]
+height_rich_summ[4,4] <- height_rich_summ[4,4] + height_rich_summ[2,4]
+
+#height_rich_summ <- height_rich_summ[c(1:4),] # this removes the random effects
+
+rownames(height_rich_summ) <- c("Intercept", "Sample age", "Southern population"
+                                , "Sample age:Southern population", "Random intercept", 
+                                "sd(Sample age)", "cor(Intercept, Sample age)", "sigma")
+
+height_rich_summ$Rhat <- as.character(formatC(height_rich_summ$Rhat, digits = 2, format = 'f'))
+
+height_rich_summ <- height_rich_summ %>%
+  #mutate(Species = "Salix richardsonii")%>%
+  relocate("Species", .before = "Estimate")
+
 # Salix pulchra -----
 height_pul <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
                         data = all_CG_growth_pul,  family = gaussian(), chains = 3,
@@ -643,6 +674,33 @@ colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
     ggtitle(expression(italic("Salix pulchra"))) +
     theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
     theme(axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+
+height_pul_summ <- model_summ(height_pul)
+
+rownames(height_pul_summ) <- c("Intercept      ", "Sample age      ", "Southern population "
+                               , "Sample age:Southern population ", "Random intercept ", 
+                               "sd(Sample age) ", "cor(Intercept, Sample age) ", "sigma ")
+height_pul_summ$Rhat <- as.character(formatC(height_pul_summ$Rhat, digits = 2, format = 'f'))
+
+height_pul_summ <- height_pul_summ %>%
+  mutate(Species = "Salix pulchra")%>%
+  relocate("Species", .before = "Estimate")
+
+height_pul_summ <- height_pul_summ %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+height_pul_summ[3,1] <- height_pul_summ[3,1] + height_pul_summ[1,1]
+height_pul_summ[4,1] <- height_pul_summ[4,1] + height_pul_summ[2,1]
+
+# change lower CI by adding 
+height_pul_summ[3,3] <- height_pul_summ[3,3] + height_pul_summ[1,3]
+height_pul_summ[4,3] <- height_pul_summ[4,3] + height_pul_summ[2,3]
+
+# change upper CI
+height_pul_summ[3,4] <- height_pul_summ[3,4] + height_pul_summ[1,4]
+height_pul_summ[4,4] <- height_pul_summ[4,4] + height_pul_summ[2,4]
 
 # Salix arctica -------
 height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
@@ -680,6 +738,62 @@ ggpred_CG_height_panel <- ggarrange(ggpred_height_rich_plot,
 
 ggsave(ggpred_CG_height_panel, filename ="outputs/figures/ggpred_CG_height_panel.png", width = 14.67, height = 6.53, units = "in")
 
+height_arc_summ <- model_summ(height_arc)
+
+height_arc_summ$Species <- "Salix arctica"
+height_arc_summ <- height_arc_summ %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+height_arc_summ[3,1] <- height_arc_summ[3,1] + height_arc_summ[1,1]
+height_arc_summ[4,1] <- height_arc_summ[4,1] + height_arc_summ[2,1]
+
+# change lower CI by adding 
+height_arc_summ[3,3] <- height_arc_summ[3,3] + height_arc_summ[1,3]
+height_arc_summ[4,3] <- height_arc_summ[4,3] + height_arc_summ[2,3]
+
+# change upper CI
+height_arc_summ[3,4] <- height_arc_summ[3,4] + height_arc_summ[1,4]
+height_arc_summ[4,4] <- height_arc_summ[4,4] + height_arc_summ[2,4]
+
+rownames(height_arc_summ) <- c(" Intercept ", " Sample age ", " Southern population "
+                               , " Sample age:Southern population ", " Random intercept ", 
+                               " sd(Sample age) ", " cor(Intercept, Sample age) ", " sigma ")
+height_arc_summ$Rhat <- as.character(formatC(height_arc_summ$Rhat, digits = 2, format = 'f'))
+
+#height_arc_summ <- height_arc_summ[c(1:4),]
+
+# binding all summaries
+all_height_summ <- rbind(height_rich_summ,height_pul_summ,height_arc_summ)
+
+all_height_summ_back <- all_height_summ %>% 
+  dplyr::mutate("Estimate (back)" = exp(Estimate)) %>% 
+  dplyr::mutate("Lower 95% CI (back)" = exp(l_95_CI_log))%>%
+  dplyr::mutate("Upper 95% CI (back)" = exp(u_95_CI_log)) %>%
+  dplyr::rename("Est.Error (log)" = "Est.Error") %>%
+  dplyr::rename("Lower 95% CI (log)" = "l_95_CI_log") %>%
+  dplyr::rename("Upper 95% CI (log)" = "u_95_CI_log")
+
+
+all_height_summ_table <- all_height_summ_back %>% 
+  kbl(caption="Table. Heights over time of northern and southern shrubs in the common garden. ", 
+      col.names = c("Species", "Estimate (log)", "Error (log)", "Lower 95% CI (log)", "Upper 95% CI (log)",
+                    "Rhat", "Bulk effective sample size", "Tail effective sample size",
+                    "Effect", "Sample size", "Estimate (back)", "Lower 95% CI (back)", "Upper 95% CI (back)"), # give the column names you want making sure you have one name per column!
+      digits=2, align = "c") %>%  # specify number of significant digits, align numbers at the centre (can also align "l" left/ "r" right)
+  kable_classic(full_width=FALSE, html_font="Helvetica") # can change fonts
+
+# optional: making specific column text in italics
+column_spec(all_height_summ_table, 2, width = NULL, bold = FALSE, italic = TRUE) # 2 is my example column number 
+
+save_kable(kable_rich_pul_arc,file = "outputs/tables/kable_rich_pul_arc.pdf", # or .png, or .jpeg, save in your working directory
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex = FALSE,
+           density = 300)
 
 # DATA VISUALISATION -----
 # color palette for garden only
