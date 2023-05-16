@@ -260,6 +260,7 @@ summary(garden_rich_emerg_compare)
 plot(garden_rich_emerg_compare)
 pp_check(garden_rich_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
 saveRDS(garden_rich_emerg_compare, file = "output/models/garden_rich_emerg_compare.rds")
+garden_rich_emerg_compare<- readRDS(file = "output/models/garden_rich_emerg_compare.rds")
 
 # Salix pulchra -----
 all_phenocam_pulchra$First_bud_burst_DOY_center <- center_scale(all_phenocam_pulchra$First_bud_burst_DOY) 

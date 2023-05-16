@@ -638,7 +638,7 @@ colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
     ggtitle(expression(italic("Salix pulchra"))) +
     theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
-    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+    theme(axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
 
 # Salix arctica -------
 height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
