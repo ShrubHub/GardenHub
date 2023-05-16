@@ -479,6 +479,22 @@ rich_LA <- readRDS("output/traits/models/la_richardsonii_compare.rds")
 rich_LA_results <- model_summ(rich_LA)
 rich_LA_results$Species <- "Salix richardsonii"
 
+rich_LA_results <- rich_LA_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+# change estimates by adding estimate to other rows 
+rich_LA_results[2,1] <- rich_LA_results[2,1] + rich_LA_results[1,1]
+rich_LA_results[3,1] <- rich_LA_results[3,1] + rich_LA_results[1,1]
+rich_LA_results[4,1] <- rich_LA_results[4,1] + rich_LA_results[1,1]
+# change lower CI by adding 
+rich_LA_results[2,3] <- rich_LA_results[2,3] + rich_LA_results[1,3]
+rich_LA_results[3,3] <- rich_LA_results[3,3] + rich_LA_results[1,3]
+rich_LA_results[4,3] <- rich_LA_results[4,3] + rich_LA_results[1,3]
+# change upper CI
+rich_LA_results[2,4] <- rich_LA_results[2,4] + rich_LA_results[1,4]
+rich_LA_results[3,4] <- rich_LA_results[3,4] + rich_LA_results[1,4]
+rich_LA_results[4,4] <- rich_LA_results[4,4] + rich_LA_results[1,4]
+
 # interpretation 
 # N Garden = estimate = 1.64 , CI = 0.05 to 3.17
 # N Source = estimate = 3.14, CI = 1.25 to 4.96
@@ -496,6 +512,23 @@ saveRDS(pulchra_LA, file = "output/traits/models/la_pulchra_compare.rds")
 pulchra_LA <- readRDS("output/traits/models/la_pulchra_compare.rds")
 pulchra_LA_results <- model_summ(pulchra_LA)
 pulchra_LA_results$Species <- "Salix pulchra"
+
+pulchra_LA_results <- pulchra_LA_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+# change estimates by adding estimate to other rows 
+pulchra_LA_results[2,1] <- pulchra_LA_results[2,1] + pulchra_LA_results[1,1]
+pulchra_LA_results[3,1] <- pulchra_LA_results[3,1] + pulchra_LA_results[1,1]
+pulchra_LA_results[4,1] <- pulchra_LA_results[4,1] + pulchra_LA_results[1,1]
+# change lower CI by adding 
+pulchra_LA_results[2,3] <- pulchra_LA_results[2,3] + pulchra_LA_results[1,3]
+pulchra_LA_results[3,3] <- pulchra_LA_results[3,3] + pulchra_LA_results[1,3]
+pulchra_LA_results[4,3] <- pulchra_LA_results[4,3] + pulchra_LA_results[1,3]
+# change upper CI
+pulchra_LA_results[2,4] <- pulchra_LA_results[2,4] + pulchra_LA_results[1,4]
+pulchra_LA_results[3,4] <- pulchra_LA_results[3,4] + pulchra_LA_results[1,4]
+pulchra_LA_results[4,4] <- pulchra_LA_results[4,4] + pulchra_LA_results[1,4]
 # interpretation 
 # N Garden = estimate = 1.21 , CI = -0.52 to 2.82
 # N Source = estimate = 3.14, CI = 0.50 to 4.53
@@ -513,6 +546,22 @@ saveRDS(arctica_LA, file = "output/traits/models/la_arctica_compare.rds")
 arctica_LA <- readRDS("output/traits/models/la_arctica_compare.rds")
 arctica_LA_results <- model_summ(arctica_LA)
 arctica_LA_results$Species <- "Salix arctica"
+
+arctica_LA_results <- arctica_LA_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+# change estimates by adding estimate to other rows 
+arctica_LA_results[2,1] <- arctica_LA_results[2,1] + arctica_LA_results[1,1]
+arctica_LA_results[3,1] <- arctica_LA_results[3,1] + arctica_LA_results[1,1]
+arctica_LA_results[4,1] <- arctica_LA_results[4,1] + arctica_LA_results[1,1]
+# change lower CI by adding 
+arctica_LA_results[2,3] <- arctica_LA_results[2,3] + arctica_LA_results[1,3]
+arctica_LA_results[3,3] <- arctica_LA_results[3,3] + arctica_LA_results[1,3]
+arctica_LA_results[4,3] <- arctica_LA_results[4,3] + arctica_LA_results[1,3]
+# change upper CI
+arctica_LA_results[2,4] <- arctica_LA_results[2,4] + arctica_LA_results[1,4]
+arctica_LA_results[3,4] <- arctica_LA_results[3,4] + arctica_LA_results[1,4]
+arctica_LA_results[4,4] <- arctica_LA_results[4,4] + arctica_LA_results[1,4]
 # interpretation 
 # N Garden = estimate = 1.93 , CI = -0.11 to 3.98
 # N Source = estimate = 3.14, CI = 0.86 to 6.08
@@ -524,14 +573,10 @@ garden_LA_out <- rbind(rich_LA_results, pulchra_LA_results, arctica_LA_results)
 
 # back transforming from log
 garden_LA_out_back <- garden_LA_out %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
   mutate(CI_low_trans = exp(l_95_CI_log)) %>% 
   mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
-  mutate(Estimate_trans = exp(Estimate), 
-         Est.Error_trans = exp(Est.Error)) %>% 
-  select(-CI_range)
+  mutate(Estimate_trans = exp(Estimate)) %>% 
+  select(-Est.Error)
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_LA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
                                     "Year", "Sigma", 
@@ -542,7 +587,6 @@ rownames(garden_LA_out_back) <- c("Intercept", "Northern Source", "SouthernSourc
 
 # making sure Rhat keeps the .00 
 garden_LA_out_back$Rhat <- as.character(formatC(garden_LA_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
 # save df of results 
 write.csv(garden_LA_out_back, "output/traits/garden_LA_out_back.csv")
 # creating table
@@ -551,7 +595,6 @@ kable_LA <- garden_LA_out_back %>%
       Model structure per species: (log(LA) ~ population + (1|year). 
       Model output back-transformed in the table below.", 
       col.names = c( "Estimate",
-                    "Est. Error",
                     "Lower 95% CI (log)",
                     "Upper 95% CI (log)", 
                     "Rhat", 
@@ -563,8 +606,7 @@ kable_LA <- garden_LA_out_back %>%
                     "Lower 95% CI 
                     (back transformed)", "Upper 95% CI
                     (back transformed)", 
-                    "Estimate transformed", 
-                    "Error transformed"), digits=2, align = "c") %>% 
+                    "Estimate transformed"), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in italics
