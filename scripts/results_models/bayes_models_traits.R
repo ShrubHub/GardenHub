@@ -150,6 +150,19 @@ rich_SLA <- readRDS("output/traits/models/sla_richardsonii_compare.rds")
 rich_SLA_results <- model_summ(rich_SLA)
 rich_SLA_results$Species <- "Salix richardsonii"
 
+rich_SLA.pred <- ggpredict(rich_SLA, terms = c('population'))
+
+rich_SLA_results <- rich_SLA_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+
+rich_sla_intercept <- rich_SLA_results[1,]
+  
+rich_SLA_results_test <- rich_SLA_results %>% 
+  mutate(estimate_trans = (rich_sla_intercept$Estimate + Estimate),
+         CI_low_trans = (rich_sla_intercept$l_95_CI_log + l_95_CI_log), 
+         CI_upper_trans = (rich_sla_intercept$u_95_CI_log + u_95_CI_log))
+
 # interpretation (none are sig diff from each other)
 # N Garden = estimate 2.70 , CI = 2.54 to 2.85
 # N Source = estimate 2.70+(-0.24) = 2.46, CI = 2.13 to 2.81
@@ -169,6 +182,8 @@ pulchra_SLA <- readRDS("output/traits/models/sla_pulchra_compare.rds")
 pulchra_SLA_results <- model_summ(pulchra_SLA)
 pulchra_SLA_results$Species <- "Salix pulchra"
 
+pul_SLA.pred <- ggpredict(pulchra_SLA, terms = c('population'))
+
 # interpretation 
 # N Garden = estimate = 2.74 , CI = 2.62 to 2.85
 # N Source = estimate = 2.33, CI = 2.07 to 2.58 **
@@ -186,6 +201,7 @@ saveRDS(arctica_SLA, file = "output/traits/models/sla_arctica_compare.rds")
 arctica_SLA <- readRDS("output/traits/models/sla_arctica_compare.rds")
 arctica_SLA_results <- model_summ(arctica_SLA)
 arctica_SLA_results$Species <- "Salix arctica"
+arc_SLA.pred <- ggpredict(arctica_SLA, terms = c('population'))
 
 # interpretation (none sig diff)
 # N Garden = estimate = 2.41 , CI = 2.18 to 2.64
@@ -202,8 +218,8 @@ garden_SLA_out_back <- garden_sla_out %>%
                  "u_95_CI_log" = "u-95% CI") %>%
   mutate(CI_low_trans = exp(l_95_CI_log)) %>% 
   mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
-  mutate(Estimate_trans = exp(Estimate), 
-         Est.Error_trans = exp(Est.Error)) 
+  mutate(Estimate_trans = exp(Estimate)) %>% 
+           select(-error)
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(garden_SLA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
@@ -644,11 +660,13 @@ richard_sla_data_trans <- richard_sla_data %>%
          Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
 
-(rich_sla_plot <-ggplot(richard_sla_data_trans) +
+colnames(rich_SLA.pred) = c('population','fit', 'lwr', 'upr')
+
+(rich_sla_plot <-ggplot(rich_SLA.pred) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = SLA, colour = population),
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0)) + # raw data
-    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
     ylab(expression(paste("\n Specific Leaf Area (",mm^{2}," ",mg^{-1},")"))) +
     xlab("" ) +
