@@ -280,6 +280,12 @@ garden_rich_emerg_results[2,4] <- garden_rich_emerg_results[2,4] + garden_rich_e
 garden_rich_emerg_results[3,4] <- garden_rich_emerg_results[3,4] + garden_rich_emerg_results[1,4]
 garden_rich_emerg_results[4,4] <- garden_rich_emerg_results[4,4] + garden_rich_emerg_results[1,4]
 
+m_rich_emerg <- mean(all_phenocam_rich$First_bud_burst_DOY, na.rm = T)
+garden_rich_emerg_results_out <- garden_rich_emerg_results %>% 
+  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_rich_emerg)) %>% 
+  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_rich_emerg)) %>% 
+  dplyr::mutate(Estimate_trans = (Estimate + m_rich_emerg)) %>% 
+  dplyr::select(-Est.Error)
 
 # Salix pulchra -----
 all_phenocam_pulchra$First_bud_burst_DOY_center <- center_scale(all_phenocam_pulchra$First_bud_burst_DOY) 
@@ -314,6 +320,13 @@ garden_pul_emerg_results[2,4] <- garden_pul_emerg_results[2,4] + garden_pul_emer
 garden_pul_emerg_results[3,4] <- garden_pul_emerg_results[3,4] + garden_pul_emerg_results[1,4]
 garden_pul_emerg_results[4,4] <- garden_pul_emerg_results[4,4] + garden_pul_emerg_results[1,4]
 
+m_pul_emerg <- mean(all_phenocam_pulchra$First_bud_burst_DOY, na.rm = T)
+garden_pul_emerg_results_out <- garden_pul_emerg_results %>% 
+  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_pul_emerg)) %>% 
+  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_pul_emerg)) %>% 
+  dplyr::mutate(Estimate_trans = (Estimate + m_pul_emerg)) %>% 
+  dplyr::select(-Est.Error)
+
 # Salix arctica -----
 all_phenocam_arctica$First_bud_burst_DOY_center <- center_scale(all_phenocam_arctica$First_bud_burst_DOY) 
 
@@ -344,7 +357,29 @@ garden_arc_emerg_results[3,3] <- garden_arc_emerg_results[3,3] + garden_arc_emer
 garden_arc_emerg_results[2,4] <- garden_arc_emerg_results[2,4] + garden_arc_emerg_results[1,4]
 garden_arc_emerg_results[3,4] <- garden_arc_emerg_results[3,4] + garden_arc_emerg_results[1,4]
 
+m_arc_emerg <- mean(all_phenocam_arctica$First_bud_burst_DOY, na.rm = T)
+garden_arc_emerg_results_out <- garden_arc_emerg_results %>% 
+  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_arc_emerg)) %>% 
+  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_arc_emerg)) %>% 
+  dplyr::mutate(Estimate_trans = (Estimate + m_arc_emerg)) %>% 
+  dplyr::select(-Est.Error)
 
+# merging all extracted outputs
+emerg_pheno_out <- rbind(garden_rich_emerg_results_out, garden_pul_emerg_results_out, garden_arc_emerg_results_out)
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(emerg_pheno_out) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
+                                    "Year", "Sigma", 
+                                    " Intercept", " Northern Source", " SouthernSource", " Southern Garden", " Year", 
+                                    " Sigma", 
+                                    "Intercept ", "Northern Source ", "Southern Garden ", "Year ", 
+                                    "Sigma ")
+
+# making sure Rhat keeps the .00 
+emerg_pheno_out$Rhat <- as.character(formatC(emerg_pheno_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# save df of results 
+write.csv(emerg_pheno_out, "output/phenology/emerg_pheno_out_back.csv")
 
 # 1.2. LEAF EMERGENCE (CG ONLY MODELS) ------
 # Salix richardsonii -----
@@ -1104,7 +1139,6 @@ rich_grow_trans <- ric_grow_data %>%
   dplyr::mutate(Estimate_trans = (estimate__ + m_rich_grow), 
                 Est.Error_trans = (se__ + m_rich_grow)) %>% 
   dplyr::select(-CI_range) 
-
 
 (rich_grow_plot_scaled <-ggplot(rich_grow_trans) +
     geom_point(data = all_phenocam_rich, aes(x = population, y = growing_season_length, colour = population),
