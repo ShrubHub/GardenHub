@@ -369,11 +369,11 @@ garden_arc_emerg_results_out <- garden_arc_emerg_results %>%
 emerg_pheno_out <- rbind(garden_rich_emerg_results_out, garden_pul_emerg_results_out, garden_arc_emerg_results_out)
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(emerg_pheno_out) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
+rownames(emerg_pheno_out) <- c("Intercept", "Northern Garden", "Southern Garden",  "Southern Source", 
                                     "Year", "Sigma", 
-                                    " Intercept", " Northern Source", " SouthernSource", " Southern Garden", " Year", 
+                                    " Intercept", " Northern Garden", " Southern Garden", " Southern Source", " Year", 
                                     " Sigma", 
-                                    "Intercept ", "Northern Source ", "Southern Garden ", "Year ", 
+                                    "Intercept ", "Northern Garden ", "Southern Garden ", "Year ", 
                                     "Sigma ")
 
 # making sure Rhat keeps the .00 
@@ -615,12 +615,12 @@ garden_arc_yellow_results_out <- garden_arc_yellow_results %>%
 yellow_pheno_out <- rbind(garden_rich_yellow_results_out, garden_pul_yellow_results_out, garden_arc_yellow_results_out)
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(yellow_pheno_out) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
-                               "Year", "Sigma", 
-                               " Intercept", " Northern Source", " SouthernSource", " Southern Garden", " Year", 
-                               " Sigma", 
-                               "Intercept ", "Northern Source ", "Southern Garden ", "Year ", 
-                               "Sigma ")
+rownames(yellow_pheno_out) <- c("Intercept", "Northern Garden", "Southern Garden",  "Southern Source", 
+                                "Year", "Sigma", 
+                                " Intercept", " Northern Garden", " Southern Garden", " Southern Source", " Year", 
+                                " Sigma", 
+                                "Intercept ", "Northern Garden ", "Southern Garden ", "Year ", 
+                                "Sigma ")
 
 # making sure Rhat keeps the .00 
 yellow_pheno_out$Rhat <- as.character(formatC(yellow_pheno_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
@@ -865,12 +865,12 @@ growing_season_arc_scaled_results_out <- growing_season_arc_scaled_results %>%
 season_results <- rbind(growing_season_pul_scaled_results_out, growing_season_pul_scaled_results_out, growing_season_arc_scaled_results_out)
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(season_results) <- c("Intercept", "Northern Source", "Southern Garden",  "Southern Source", 
-                             "Year", "Sigma", 
-                             " Intercept", " Northern Source", " Southern Garden", " Southern Source", " Year", 
-                             " Sigma", 
-                             "Intercept ", "Northern Source ", "Southern Garden ", "Year ", 
-                             "Sigma ")
+rownames(season_results) <- c("Intercept", "Northern Garden", "Southern Garden",  "Southern Source", 
+                              "Year", "Sigma", 
+                              " Intercept", " Northern Garden", " Southern Garden", " Southern Source", " Year", 
+                              " Sigma", 
+                              "Intercept ", "Northern Garden ", "Southern Garden ", "Year ", 
+                              "Sigma ")
 
 # making sure Rhat keeps the .00 
 season_results$Rhat <- as.character(formatC(season_results$Rhat, digits = 2, format = 'f')) #new character variable with format specification
