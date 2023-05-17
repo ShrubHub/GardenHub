@@ -417,6 +417,7 @@ summary(garden_rich_yellow_compare)
 plot(garden_rich_yellow_compare)
 pp_check(garden_rich_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
 saveRDS(garden_rich_yellow_compare, file = "output/phenology/garden_rich_yellow_compare.rds")
+garden_rich_yellow_compare<- readRDS(file = "output/phenology/garden_rich_yellow_compare.rds")
 garden_rich_yellow_compare_extract <- model_summ_pheno(garden_rich_yellow_compare)
 
 # Salix pulchra ------
@@ -430,7 +431,8 @@ garden_pul_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ population
 summary(garden_pul_yellow_compare)
 plot(garden_pul_yellow_compare)
 pp_check(garden_pul_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
-saveRDS(garden_pul_yellow_compare, file = "output/models/garden_pul_yellow_compare.rds")
+saveRDS(garden_pul_yellow_compare, file = "output/phenology/garden_pul_yellow_compare.rds")
+garden_pul_yellow_compare<- readRDS(file = "output/phenology/garden_pul_yellow_compare.rds")
 
 garden_pul_yellow_compare_extract <- model_summ_pheno(garden_pul_yellow_compare)
 
@@ -445,7 +447,8 @@ garden_arc_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ population
 summary(garden_arc_yellow_compare)
 plot(garden_arc_yellow_compare)
 pp_check(garden_arc_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
-saveRDS(garden_arc_yellow_compare, file = "output/models/garden_arc_yellow_compare.rds")
+saveRDS(garden_arc_yellow_compare, file = "output/phenology/garden_arc_yellow_compare.rds")
+garden_arc_yellow_compare<- readRDS(file = "output/phenology/garden_arc_yellow_compare.rds")
 garden_arc_yellow_compare_extract <- model_summ_pheno(garden_arc_yellow_compare)
 
 # 2.2.  LEAF YELLOWING (only CG) -----
@@ -551,6 +554,8 @@ growing_season_rich_scale <- brms::brm(growing_season_length_scale ~ population 
                                  data = all_phenocam_rich, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000,
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
+saveRDS(growing_season_rich_scale, file = "output/phenology/garden_ric_growing_compare.rds")
+growing_season_rich_scale<- readRDS(file = "output/phenology/garden_ric_growing_compare.rds")
 summary(growing_season_rich_scale) 
 plot(growing_season_rich_scale)
 pp_check(growing_season_rich_scale, type = "dens_overlay", ndraws = 100) # looks decent
@@ -573,7 +578,8 @@ growing_season_pul_scaled <- brms::brm(growing_season_length_scale ~ population 
                                 data = all_phenocam_pulchra, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000,
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
-
+saveRDS(growing_season_pul_scaled, file = "output/phenology/garden_pul_growing_compare.rds")
+growing_season_pul_scaled<- readRDS(file = "output/phenology/garden_pul_growing_compare.rds")
 summary(growing_season_pul_scaled) # 
 plot(growing_season_pul_scaled)
 pp_check(growing_season_pul_scaled, type = "dens_overlay", ndraws = 100) # looks decent
@@ -597,6 +603,9 @@ growing_season_arc_scaled <- brms::brm(growing_season_length_scale ~ population 
                                        iter = 3000, warmup = 1000,
                                        control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(growing_season_arc_scaled) # 
+saveRDS(growing_season_arc_scaled, file = "output/phenology/garden_arc_growing_compare.rds")
+growing_season_arc_scaled<- readRDS(file = "output/phenology/garden_arc_growing_compare.rds")
+
 plot(growing_season_arc_scaled)
 pp_check(growing_season_arc_scaled, type = "dens_overlay", ndraws = 100) # looks decent
 # compile non-scaled results, should change to scaled though I think (Madi)
