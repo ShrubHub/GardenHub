@@ -736,6 +736,31 @@ summary(growing_season_rich_scale)
 plot(growing_season_rich_scale)
 pp_check(growing_season_rich_scale, type = "dens_overlay", ndraws = 100) # looks decent
 
+growing_season_rich_scale_results <- model_summ_pheno(growing_season_rich_scale)
+growing_season_rich_scale_results <- growing_season_rich_scale_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+growing_season_rich_scale_results$Species <- "Salix richardsonii"
+
+# change estimates by adding estimate to other rows 
+growing_season_rich_scale_results[2,1] <- growing_season_rich_scale_results[2,1] + growing_season_rich_scale_results[1,1]
+growing_season_rich_scale_results[3,1] <- growing_season_rich_scale_results[3,1] + growing_season_rich_scale_results[1,1]
+
+# change lower CI by adding 
+growing_season_rich_scale_results[2,3] <- growing_season_rich_scale_results[2,3] + growing_season_rich_scale_results[1,3]
+growing_season_rich_scale_results[3,3] <- growing_season_rich_scale_results[3,3] + growing_season_rich_scale_results[1,3]
+
+# change upper CI
+growing_season_rich_scale_results[2,4] <- growing_season_rich_scale_results[2,4] + growing_season_rich_scale_results[1,4]
+growing_season_rich_scale_results[3,4] <- growing_season_rich_scale_results[3,4] + growing_season_rich_scale_results[1,4]
+
+m_rich_grow <- mean(all_phenocam_rich$growing_season_length, na.rm = T)
+growing_season_rich_scale_results_out <- growing_season_rich_scale_results %>% 
+  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_rich_grow)) %>% 
+  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_rich_grow)) %>% 
+  dplyr::mutate(Estimate_trans = (Estimate + m_rich_grow)) %>% 
+  dplyr::select(-Est.Error)
+
 # Salix pulchra ------
 growing_season_pul <- brms::brm(growing_season.y ~ population + (1|Year), 
                                  data = all_growing_season_pul, family = gaussian(), chains = 3,
@@ -760,6 +785,32 @@ summary(growing_season_pul_scaled) #
 plot(growing_season_pul_scaled)
 pp_check(growing_season_pul_scaled, type = "dens_overlay", ndraws = 100) # looks decent
 
+growing_season_pul_scaled_results <- model_summ_pheno(growing_season_pul_scaled)
+growing_season_pul_scaled_results <- growing_season_pul_scaled_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+growing_season_pul_scaled_results$Species <- "Salix pulchra"
+
+# change estimates by adding estimate to other rows 
+growing_season_pul_scaled_results[2,1] <- growing_season_pul_scaled_results[2,1] + growing_season_pul_scaled_results[1,1]
+growing_season_pul_scaled_results[3,1] <- growing_season_pul_scaled_results[3,1] + growing_season_pul_scaled_results[1,1]
+growing_season_pul_scaled_results[4,1] <- growing_season_pul_scaled_results[4,1] + growing_season_pul_scaled_results[1,1]
+# change lower CI by adding 
+growing_season_pul_scaled_results[2,3] <- growing_season_pul_scaled_results[2,3] + growing_season_pul_scaled_results[1,3]
+growing_season_pul_scaled_results[3,3] <- growing_season_pul_scaled_results[3,3] + growing_season_pul_scaled_results[1,3]
+growing_season_pul_scaled_results[4,3] <- growing_season_pul_scaled_results[4,3] + growing_season_pul_scaled_results[1,3]
+# change upper CI
+growing_season_pul_scaled_results[2,4] <- growing_season_pul_scaled_results[2,4] + growing_season_pul_scaled_results[1,4]
+growing_season_pul_scaled_results[3,4] <- growing_season_pul_scaled_results[3,4] + growing_season_pul_scaled_results[1,4]
+growing_season_pul_scaled_results[4,4] <- growing_season_pul_scaled_results[4,4] + growing_season_pul_scaled_results[1,4]
+
+m_pul_grow <- mean(all_phenocam_pulchra$growing_season_length, na.rm = T)
+growing_season_pul_scaled_results_out <- growing_season_pul_scaled_results %>% 
+  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_pul_grow)) %>% 
+  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_pul_grow)) %>% 
+  dplyr::mutate(Estimate_trans = (Estimate + m_pul_grow)) %>% 
+  dplyr::select(-Est.Error)
+
 # Salix arctica ------
 growing_season_arc <- brms::brm(growing_season.y ~ population + (1|Year),
                                 data = all_growing_season_arc, family = gaussian(), chains = 3,
@@ -779,13 +830,38 @@ growing_season_arc_scaled <- brms::brm(growing_season_length_scale ~ population 
                                        iter = 3000, warmup = 1000,
                                        control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(growing_season_arc_scaled) # 
+plot(growing_season_arc_scaled)
+pp_check(growing_season_arc_scaled, type = "dens_overlay", ndraws = 100) # looks decent
 saveRDS(growing_season_arc_scaled, file = "output/phenology/garden_arc_growing_compare.rds")
 growing_season_arc_scaled<- readRDS(file = "output/phenology/garden_arc_growing_compare.rds")
 
-plot(growing_season_arc_scaled)
-pp_check(growing_season_arc_scaled, type = "dens_overlay", ndraws = 100) # looks decent
+growing_season_arc_scaled_results <- model_summ_pheno(growing_season_arc_scaled)
+growing_season_arc_scaled_results <- growing_season_arc_scaled_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+growing_season_arc_scaled_results$Species <- "Salix arctica"
+
+# change estimates by adding estimate to other rows 
+growing_season_arc_scaled_results[2,1] <- growing_season_arc_scaled_results[2,1] + growing_season_arc_scaled_results[1,1]
+growing_season_arc_scaled_results[3,1] <- growing_season_arc_scaled_results[3,1] + growing_season_arc_scaled_results[1,1]
+
+# change lower CI by adding 
+growing_season_arc_scaled_results[2,3] <- growing_season_arc_scaled_results[2,3] + growing_season_arc_scaled_results[1,3]
+growing_season_arc_scaled_results[3,3] <- growing_season_arc_scaled_results[3,3] + growing_season_arc_scaled_results[1,3]
+
+# change upper CI
+growing_season_arc_scaled_results[2,4] <- growing_season_arc_scaled_results[2,4] + growing_season_arc_scaled_results[1,4]
+growing_season_arc_scaled_results[3,4] <- growing_season_arc_scaled_results[3,4] + growing_season_arc_scaled_results[1,4]
+
+m_arc_grow <- mean(all_phenocam_arctica$growing_season_length, na.rm = T)
+growing_season_arc_scaled_results_out <- growing_season_arc_scaled_results %>% 
+  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_arc_grow)) %>% 
+  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_arc_grow)) %>% 
+  dplyr::mutate(Estimate_trans = (Estimate + m_arc_grow)) %>% 
+  dplyr::select(-Est.Error)
+
 # compile non-scaled results, should change to scaled though I think (Madi)
-season_results <- rbind(season_rich_results, season_pul_results, season_arc_results)
+season_results <- rbind(growing_season_pul_scaled_results_out, growing_season_pul_scaled_results_out, growing_season_arc_scaled_results_out)
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(season_results) <- c("Intercept", "Northern Source", "Southern Garden",  "Southern Source", 
@@ -806,7 +882,6 @@ kable_season_garden <- season_results %>%
   kbl(caption="Table.xxx BRMS model outputs: Growing season length northern vs southern willows in common garden and source populations. 
       Model structure per species: Growing season length ~ population. Data scaled to center on 0.", 
       col.names = c( "Estimate",
-                     "Est. Error",
                      "Lower 95% CI (scaled)",
                      "Upper 95% CI (scaled)", 
                      "Rhat", 
@@ -814,7 +889,11 @@ kable_season_garden <- season_results %>%
                      "Tail Effective Sample Size", 
                      "Effect",
                      "Sample Size",
-                     "Species"), digits=2, align = "c") %>% 
+                     "Species", 
+                     "Estimate (unscaled)",
+                     "Lower 95% CI (unscaled)",
+                     "Upper 95% CI (unscaled)"
+                     ), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 column_spec(kable_season_garden, 2, width = NULL, bold = FALSE, italic = TRUE)
 
