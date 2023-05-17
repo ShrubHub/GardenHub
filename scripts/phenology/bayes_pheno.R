@@ -369,11 +369,11 @@ garden_arc_emerg_results_out <- garden_arc_emerg_results %>%
 emerg_pheno_out <- rbind(garden_rich_emerg_results_out, garden_pul_emerg_results_out, garden_arc_emerg_results_out)
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(emerg_pheno_out) <- c("Intercept", "Northern Garden", "Southern Garden",  "Southern Source", 
+rownames(emerg_pheno_out) <- c("Intercept", "Northern Source", "Southern Garden",  "Southern Source", 
                                     "Year", "Sigma", 
-                                    " Intercept", " Northern Garden", " Southern Garden", " Southern Source", " Year", 
+                                    " Intercept", " Northern Source", " Southern Garden", " Southern Source", " Year", 
                                     " Sigma", 
-                                    "Intercept ", "Northern Garden ", "Southern Garden ", "Year ", 
+                                    "Intercept ", "Northern Source ", "Southern Garden ", "Year ", 
                                     "Sigma ")
 
 # making sure Rhat keeps the .00 
@@ -592,14 +592,12 @@ garden_arc_yellow_results <- garden_arc_yellow_results %>%
                 "u_95_CI_log" = "u-95% CI")
 garden_arc_yellow_results$Species <- "Salix arctica"
 
-# change estimates by adding estimate to other rows 
+# change estimates by adding intercept to other rows for estimate + CIs 
 garden_arc_yellow_results[2,1] <- garden_arc_yellow_results[2,1] + garden_arc_yellow_results[1,1]
 garden_arc_yellow_results[3,1] <- garden_arc_yellow_results[3,1] + garden_arc_yellow_results[1,1]
-
 # change lower CI by adding 
 garden_arc_yellow_results[2,3] <- garden_arc_yellow_results[2,3] + garden_arc_yellow_results[1,3]
 garden_arc_yellow_results[3,3] <- garden_arc_yellow_results[3,3] + garden_arc_yellow_results[1,3]
-
 # change upper CI
 garden_arc_yellow_results[2,4] <- garden_arc_yellow_results[2,4] + garden_arc_yellow_results[1,4]
 garden_arc_yellow_results[3,4] <- garden_arc_yellow_results[3,4] + garden_arc_yellow_results[1,4]
@@ -615,18 +613,18 @@ garden_arc_yellow_results_out <- garden_arc_yellow_results %>%
 yellow_pheno_out <- rbind(garden_rich_yellow_results_out, garden_pul_yellow_results_out, garden_arc_yellow_results_out)
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(yellow_pheno_out) <- c("Intercept", "Northern Garden", "Southern Garden",  "Southern Source", 
+rownames(yellow_pheno_out) <- c("Intercept", "Northern Source", "Southern Garden",  "Southern Source", 
                                 "Year", "Sigma", 
-                                " Intercept", " Northern Garden", " Southern Garden", " Southern Source", " Year", 
+                                " Intercept", " Northern Source", " Southern Garden", " Southern Source", " Year", 
                                 " Sigma", 
-                                "Intercept ", "Northern Garden ", "Southern Garden ", "Year ", 
+                                "Intercept ", "Northern Source ", "Southern Garden ", "Year ", 
                                 "Sigma ")
-
-# making sure Rhat keeps the .00 
-yellow_pheno_out$Rhat <- as.character(formatC(yellow_pheno_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
 # save df of results 
 write.csv(yellow_pheno_out, "output/phenology/yellow_pheno_out_back.csv")
+# making sure Rhat keeps the .00 
+yellow_pheno_out$Rhat <- as.character(formatC(yellow_pheno_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
 
 # 2.2.  LEAF YELLOWING (only CG) -----
 # Salix richardsonii -------
