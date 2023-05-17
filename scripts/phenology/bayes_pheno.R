@@ -261,6 +261,25 @@ plot(garden_rich_emerg_compare)
 pp_check(garden_rich_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
 saveRDS(garden_rich_emerg_compare, file = "output/phenology/garden_rich_emerg_compare.rds")
 garden_rich_emerg_compare<- readRDS(file = "output/phenology/garden_rich_emerg_compare.rds")
+garden_rich_emerg_results <- model_summ_pheno(garden_rich_emerg_compare)
+garden_rich_emerg_results <- garden_rich_emerg_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+garden_rich_emerg_results$Species <- "Salix richardsonii"
+
+# change estimates by adding estimate to other rows 
+garden_rich_emerg_results[2,1] <- garden_rich_emerg_results[2,1] + garden_rich_emerg_results[1,1]
+garden_rich_emerg_results[3,1] <- garden_rich_emerg_results[3,1] + garden_rich_emerg_results[1,1]
+garden_rich_emerg_results[4,1] <- garden_rich_emerg_results[4,1] + garden_rich_emerg_results[1,1]
+# change lower CI by adding 
+garden_rich_emerg_results[2,3] <- garden_rich_emerg_results[2,3] + garden_rich_emerg_results[1,3]
+garden_rich_emerg_results[3,3] <- garden_rich_emerg_results[3,3] + garden_rich_emerg_results[1,3]
+garden_rich_emerg_results[4,3] <- garden_rich_emerg_results[4,3] + garden_rich_emerg_results[1,3]
+# change upper CI
+garden_rich_emerg_results[2,4] <- garden_rich_emerg_results[2,4] + garden_rich_emerg_results[1,4]
+garden_rich_emerg_results[3,4] <- garden_rich_emerg_results[3,4] + garden_rich_emerg_results[1,4]
+garden_rich_emerg_results[4,4] <- garden_rich_emerg_results[4,4] + garden_rich_emerg_results[1,4]
+
 
 # Salix pulchra -----
 all_phenocam_pulchra$First_bud_burst_DOY_center <- center_scale(all_phenocam_pulchra$First_bud_burst_DOY) 
@@ -276,6 +295,24 @@ plot(garden_pul_emerg_compare)
 pp_check(garden_pul_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
 saveRDS(garden_pul_emerg_compare, file = "output/phenology/garden_pul_emerg_compare.rds")
 garden_pul_emerg_compare<- readRDS(file = "output/phenology/garden_pul_emerg_compare.rds")
+garden_pul_emerg_results <- model_summ_pheno(garden_pul_emerg_compare)
+garden_pul_emerg_results <- garden_pul_emerg_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+garden_pul_emerg_results$Species <- "Salix pulchra"
+
+# change estimates by adding estimate to other rows 
+garden_pul_emerg_results[2,1] <- garden_pul_emerg_results[2,1] + garden_pul_emerg_results[1,1]
+garden_pul_emerg_results[3,1] <- garden_pul_emerg_results[3,1] + garden_pul_emerg_results[1,1]
+garden_pul_emerg_results[4,1] <- garden_pul_emerg_results[4,1] + garden_pul_emerg_results[1,1]
+# change lower CI by adding 
+garden_pul_emerg_results[2,3] <- garden_pul_emerg_results[2,3] + garden_pul_emerg_results[1,3]
+garden_pul_emerg_results[3,3] <- garden_pul_emerg_results[3,3] + garden_pul_emerg_results[1,3]
+garden_pul_emerg_results[4,3] <- garden_pul_emerg_results[4,3] + garden_pul_emerg_results[1,3]
+# change upper CI
+garden_pul_emerg_results[2,4] <- garden_pul_emerg_results[2,4] + garden_pul_emerg_results[1,4]
+garden_pul_emerg_results[3,4] <- garden_pul_emerg_results[3,4] + garden_pul_emerg_results[1,4]
+garden_pul_emerg_results[4,4] <- garden_pul_emerg_results[4,4] + garden_pul_emerg_results[1,4]
 
 # Salix arctica -----
 all_phenocam_arctica$First_bud_burst_DOY_center <- center_scale(all_phenocam_arctica$First_bud_burst_DOY) 
@@ -291,6 +328,22 @@ plot(garden_arc_emerg_compare)
 pp_check(garden_arc_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
 saveRDS(garden_arc_emerg_compare, file = "output/phenology/garden_arc_emerg_compare.rds")
 garden_arc_emerg_compare<- readRDS(file = "output/phenology/garden_arc_emerg_compare.rds")
+garden_arc_emerg_results <- model_summ_pheno(garden_arc_emerg_compare)
+garden_arc_emerg_results <- garden_arc_emerg_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+garden_arc_emerg_results$Species <- "Salix arctica"
+
+# change estimates by adding estimate to other rows 
+garden_arc_emerg_results[2,1] <- garden_arc_emerg_results[2,1] + garden_arc_emerg_results[1,1]
+garden_arc_emerg_results[3,1] <- garden_arc_emerg_results[3,1] + garden_arc_emerg_results[1,1]
+# change lower CI by adding 
+garden_arc_emerg_results[2,3] <- garden_arc_emerg_results[2,3] + garden_arc_emerg_results[1,3]
+garden_arc_emerg_results[3,3] <- garden_arc_emerg_results[3,3] + garden_arc_emerg_results[1,3]
+# change upper CI
+garden_arc_emerg_results[2,4] <- garden_arc_emerg_results[2,4] + garden_arc_emerg_results[1,4]
+garden_arc_emerg_results[3,4] <- garden_arc_emerg_results[3,4] + garden_arc_emerg_results[1,4]
+
 
 
 # 1.2. LEAF EMERGENCE (CG ONLY MODELS) ------
