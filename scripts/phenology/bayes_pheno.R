@@ -913,7 +913,7 @@ pal_arc  <- c("#2A788EFF", "#440154FF", "#7AD151FF") # for when southern source 
 
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", size=20),
-                                 axis.text.x  = element_text(vjust=0.5, size=20, colour = "black", angle = 45), 
+                                 axis.text.x  = element_text(vjust=0.5, size=20, colour = "black"), 
                                  axis.title.y = element_text(face="bold", size=20),
                                  axis.text.y  = element_text(vjust=0.5, size=20, colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
@@ -921,6 +921,18 @@ theme_shrub <- function(){ theme(legend.position = "right",
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
                                  plot.title = element_text(color = "black", size = 20, face = "bold.italic", hjust = 0.5),
                                  plot.margin = unit(c(1,1,1,1), units = , "cm"))}
+
+theme_shrub <- function(){ theme(legend.position = "right",
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 270), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
+                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
+                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
+                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+                                 plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 legend.title=element_text(size=16, family = "Helvetica Light"),
+                                 legend.text=element_text(size = 15, family = "Helvetica Light"))}
 
 # reorder levels to be consistent
 all_growing_season_rich$population <- ordered(all_growing_season_rich$population, 
@@ -1409,13 +1421,28 @@ all_phenocam_rich_all <- rbind(all_phenocam_rich_1, all_phenocam_rich_2)
               linewidth = 1, alpha = 1)+
     ylab("\nDOY") +
     xlab("Population\n" ) +
-    coord_cartesian(ylim=c(120, 250))+
+    coord_cartesian(xlim=c(120, 250))+
     scale_color_manual(values=pal)+
     coord_flip() + 
     theme_shrub() +
     ggtitle(expression(italic("Salix richardsonii"))) +
     theme(text=element_text(family="Helvetica Light")))
 
+# changing x and y instead of using coor flip so we can set axis limits easily 
+(rich_emerg_yellow_plot_scaled <-ggplot(richard_emerg_yellow) +
+    geom_point(data = all_phenocam_rich_all, aes(x =DOY , y =population , colour = population),
+               alpha = 0.2)+
+    geom_point(aes(x = Estimate_trans, y = effect1__ , colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(xmin = CI_low_trans, xmax = CI_high_trans, y = effect1__  ,colour = population),
+                  linewidth = 0.4, alpha = 0.5, width=0.2)+
+    geom_line(aes(x = Estimate_trans , y = effect1__, group = population, colour = population), 
+              linewidth = 1, alpha = 1)+
+    ylab("Population\n") +
+    xlab("DOY" ) +
+    coord_cartesian(xlim=c(100, 250))+
+    scale_color_manual(values=pal)+
+    theme_shrub() +
+    ggtitle(expression(italic("Salix richardsonii"))))
 
 # S. pul----
 pul_emerg_trans_1 <-pulchra_emerg_trans %>%
@@ -1445,13 +1472,30 @@ all_phenocam_pul_all <- rbind(all_phenocam_pul_1, all_phenocam_pul_2)
     geom_line(aes(x = effect1__, y = Estimate_trans, group = population, colour = population), 
               linewidth = 1, alpha = 1)+
     ylab("\nDOY") +
-    xlab("Population\n" ) +
-    coord_cartesian(ylim=c(120, 250))+
+    xlab("" ) +
+    coord_cartesian(xlim=c(120, 250))+
     scale_color_manual(values=pal)+
     coord_flip() + 
     theme_shrub() +
     ggtitle(expression(italic("Salix pulchra"))) +
     theme(text=element_text(family="Helvetica Light")))
+
+# changing x and y instead of using coor flip so we can set axis limits easily 
+(pul_emerg_yellow_plot_scaled <-ggplot(pul_emerg_yellow) +
+    geom_point(data = all_phenocam_pul_all, aes(x =DOY , y =population , colour = population),
+               alpha = 0.2)+
+    geom_point(aes(x = Estimate_trans, y = effect1__ , colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(xmin = CI_low_trans, xmax = CI_high_trans, y = effect1__  ,colour = population),
+                  linewidth = 0.4, alpha = 0.5, width=0.2)+
+    geom_line(aes(x = Estimate_trans , y = effect1__, group = population, colour = population), 
+              linewidth = 1, alpha = 1)+
+    ylab("") +
+    xlab("DOY" ) +
+    coord_cartesian(xlim=c(100, 250))+
+    scale_color_manual(values=pal)+
+    theme_shrub() +
+    theme(axis.text.y=element_blank()) +
+    ggtitle(expression(italic("Salix pulchra"))))
 
 # S. arc----
 arc_emerg_trans_1 <-arc_emerg_trans %>%
@@ -1481,17 +1525,35 @@ all_phenocam_arc_all <- rbind(all_phenocam_arc_1, all_phenocam_arc_2)
     geom_line(aes(x = effect1__, y = Estimate_trans, group = population, colour = population), 
               linewidth = 1, alpha = 1)+
     ylab("\nDOY") +
-    xlab("Population\n" ) +
-    coord_cartesian(ylim=c(120, 250))+
+    xlab("" ) +
+    coord_cartesian(xlim=c(100, 250))+
     scale_color_manual(values=pal)+
     coord_flip() + 
     theme_shrub() +
-    ggtitle(expression(italic("Salix arctica"))) +
-    theme(text=element_text(family="Helvetica Light")))
+    ggtitle(expression(italic("Salix arctica"))))
+# changing x and y instead of using coor flip so we can set axis limits easily 
+(arc_emerg_yellow_plot_scaled <-ggplot(arc_emerg_yellow) +
+    geom_point(data = all_phenocam_arc_all, aes(x =DOY , y =population , colour = population),
+               alpha = 0.2)+
+    geom_point(aes(x = Estimate_trans, y = effect1__ , colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(xmin = CI_low_trans, xmax = CI_high_trans, y = effect1__  ,colour = population),
+                  linewidth = 0.4, alpha = 0.5, width=0.2)+
+    geom_line(aes(x = Estimate_trans , y = effect1__, group = population, colour = population), 
+              linewidth = 1, alpha = 1)+
+    ylab("") +
+    xlab("DOY" ) +
+    coord_cartesian(xlim=c(100, 250))+
+    scale_color_manual(values=pal)+
+    theme_shrub() +
+    theme(axis.text.y=element_blank()) +
+    ggtitle(expression(italic("Salix arctica"))))
+
 # arrange 
-(pheno_panel_new <- ggarrange(richard_emerg_yellow_plot_scaled, pul_emerg_yellow_plot_scaled, arc_emerg_yellow_plot_scaled, 
+(pheno_panel_new <- ggarrange(rich_emerg_yellow_plot_scaled, pul_emerg_yellow_plot_scaled, arc_emerg_yellow_plot_scaled, 
                               common.legend = TRUE, legend = "bottom",
+                              labels = c("A", "B", "C"),
                               ncol = 3, nrow = 1))
-ggsave(pheno_panel_new, filename ="outputs/figures/pheno_panel_new.png", width = 20, height = 6.53, units = "in")
+
+ggsave(pheno_panel_new, filename ="figures/phenology/pheno_panel_new.png", width = 20, height = 6.53, units = "in")
 
 
