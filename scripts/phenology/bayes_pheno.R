@@ -744,11 +744,9 @@ growing_season_rich_scale_results$Species <- "Salix richardsonii"
 # change estimates by adding estimate to other rows 
 growing_season_rich_scale_results[2,1] <- growing_season_rich_scale_results[2,1] + growing_season_rich_scale_results[1,1]
 growing_season_rich_scale_results[3,1] <- growing_season_rich_scale_results[3,1] + growing_season_rich_scale_results[1,1]
-
 # change lower CI by adding 
 growing_season_rich_scale_results[2,3] <- growing_season_rich_scale_results[2,3] + growing_season_rich_scale_results[1,3]
 growing_season_rich_scale_results[3,3] <- growing_season_rich_scale_results[3,3] + growing_season_rich_scale_results[1,3]
-
 # change upper CI
 growing_season_rich_scale_results[2,4] <- growing_season_rich_scale_results[2,4] + growing_season_rich_scale_results[1,4]
 growing_season_rich_scale_results[3,4] <- growing_season_rich_scale_results[3,4] + growing_season_rich_scale_results[1,4]
@@ -843,11 +841,9 @@ growing_season_arc_scaled_results$Species <- "Salix arctica"
 # change estimates by adding estimate to other rows 
 growing_season_arc_scaled_results[2,1] <- growing_season_arc_scaled_results[2,1] + growing_season_arc_scaled_results[1,1]
 growing_season_arc_scaled_results[3,1] <- growing_season_arc_scaled_results[3,1] + growing_season_arc_scaled_results[1,1]
-
 # change lower CI by adding 
 growing_season_arc_scaled_results[2,3] <- growing_season_arc_scaled_results[2,3] + growing_season_arc_scaled_results[1,3]
 growing_season_arc_scaled_results[3,3] <- growing_season_arc_scaled_results[3,3] + growing_season_arc_scaled_results[1,3]
-
 # change upper CI
 growing_season_arc_scaled_results[2,4] <- growing_season_arc_scaled_results[2,4] + growing_season_arc_scaled_results[1,4]
 growing_season_arc_scaled_results[3,4] <- growing_season_arc_scaled_results[3,4] + growing_season_arc_scaled_results[1,4]
@@ -863,23 +859,23 @@ growing_season_arc_scaled_results_out <- growing_season_arc_scaled_results %>%
 season_results <- rbind(growing_season_pul_scaled_results_out, growing_season_pul_scaled_results_out, growing_season_arc_scaled_results_out)
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(season_results) <- c("Intercept", "Northern Garden", "Southern Garden",  "Southern Source", 
+rownames(season_results) <- c("Intercept", "Northern Source", "Southern Garden",  "Southern Source", 
                               "Year", "Sigma", 
-                              " Intercept", " Northern Garden", " Southern Garden", " Southern Source", " Year", 
+                              " Intercept", " Northern Source", " Southern Garden", " Southern Source", " Year", 
                               " Sigma", 
-                              "Intercept ", "Northern Garden ", "Southern Garden ", "Year ", 
+                              "Intercept ", "Northern Source ", "Southern Garden ", "Year ", 
                               "Sigma ")
 
-# making sure Rhat keeps the .00 
-season_results$Rhat <- as.character(formatC(season_results$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
 # save df of results 
 write.csv(season_results, "output/phenology/season_outputs.csv")
 season_results <- read.csv("output/phenology/season_outputs.csv", row.names=1)
+# making sure Rhat keeps the .00 
+season_results$Rhat <- as.character(formatC(season_results$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
 kable_season_garden <- season_results %>% 
   kbl(caption="Table.xxx BRMS model outputs: Growing season length northern vs southern willows in common garden and source populations. 
-      Model structure per species: Growing season length ~ population. Data scaled to center on 0.", 
+      Model structure per species: Growing season length ~ population + (1|year). Data scaled to center on 0.", 
       col.names = c( "Estimate",
                      "Lower 95% CI (scaled)",
                      "Upper 95% CI (scaled)", 
@@ -889,9 +885,9 @@ kable_season_garden <- season_results %>%
                      "Effect",
                      "Sample Size",
                      "Species", 
-                     "Estimate (unscaled)",
                      "Lower 95% CI (unscaled)",
-                     "Upper 95% CI (unscaled)"
+                     "Upper 95% CI (unscaled)",
+                     "Estimate (unscaled)"
                      ), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 column_spec(kable_season_garden, 2, width = NULL, bold = FALSE, italic = TRUE)
