@@ -314,6 +314,8 @@ plot(rich_LDMC_log)
 pp_check(rich_LDMC_log, type = "dens_overlay", ndraws = 100) 
 saveRDS(rich_LDMC_log, file = "output/traits/models/ldmc_richardsonii_compare.rds")
 rich_LDMC_log <- readRDS("output/traits/models/ldmc_richardsonii_compare.rds")
+rich_LDMC.pred <- ggpredict(rich_LDMC_log, terms = c('population'))
+
 rich_LDMC_results <- model_summ(rich_LDMC_log)
 rich_LDMC_results$Species <- "Salix richardsonii"
 
@@ -350,6 +352,7 @@ plot(pulchra_LDMC_log)
 pp_check(pulchra_LDMC_log, type = "dens_overlay", ndraws = 100) 
 saveRDS(pulchra_LDMC_log, file = "output/traits/models/ldmc_pulchra_compare.rds")
 pulchra_LDMC_log <- readRDS("output/traits/models/ldmc_pulchra_compare.rds")
+pul_LDMC.pred <- ggpredict(pulchra_LDMC_log, terms = c('population'))
 pulchra_LDMC_results <- model_summ(pulchra_LDMC_log)
 pulchra_LDMC_results$Species <- "Salix pulchra"
 
@@ -385,6 +388,7 @@ tab_model(arctica_LDMC_log)
 plot(arctica_LDMC_log)
 pp_check(arctica_LDMC_log, type = "dens_overlay", ndraws = 100) 
 saveRDS(arctica_LDMC_log, file = "output/traits/models/ldmc_arctica_compare.rds")
+arc_LDMC.pred <- ggpredict(arctica_LDMC_log, terms = c('population'))
 arctica_LDMC_log <- readRDS("output/traits/models/ldmc_arctica_compare.rds")
 arctica_LDMC_results <- model_summ(arctica_LDMC_log)
 arctica_LDMC_results$Species <- "Salix arctica"
@@ -630,6 +634,8 @@ plot(rich_LL)
 pp_check(rich_LL, type = "dens_overlay", ndraws = 100) 
 saveRDS(rich_LL, file = "output/traits/models/ll_richardsonii_compare.rds")
 rich_LL <- readRDS("output/traits/models/ll_richardsonii_compare.rds")
+rich_LL.pred <- ggpredict(rich_LL, terms = c('population'))
+
 rich_LL_results <- model_summ(rich_LL)
 rich_LL_results$Species <- "Salix richardsonii"
 rich_LL.pred <- ggpredict(rich_LL, terms = c('population'))
@@ -649,6 +655,8 @@ plot(pulchra_LL)
 pp_check(pulchra_LL, type = "dens_overlay", ndraws = 100) 
 saveRDS(pulchra_LL, file = "output/traits/models/ll_pulchra_compare.rds")
 pulchra_LL <- readRDS("output/traits/models/ll_pulchra_compare.rds")
+pul_LL.pred <- ggpredict(pulchra_LL, terms = c('population'))
+
 pulchra_LL_results <- model_summ(pulchra_LL)
 pulchra_LL_results$Species <- "Salix pulchra"
 
@@ -674,6 +682,8 @@ plot(arctica_LL_CG)
 pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
 saveRDS(arctica_LL_CG, file = "output/traits/models/ll_arctica_compare.rds")
 arctica_LL_CG <- readRDS("output/traits/models/ll_arctica_compare.rds")
+arc_LL.pred <- ggpredict(arctica_LL_CG, terms = c('population'))
+
 arctica_LL_results <- model_summ(arctica_LL_CG)
 arctica_LL_results$Species <- "Salix arctica"
 
@@ -768,7 +778,7 @@ pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#7AD151FF")
 
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
-                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 60), 
+                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 270), 
                                  axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
                                  axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
@@ -798,7 +808,7 @@ colnames(rich_SLA.pred) = c('population','fit', 'lwr', 'upr')
     geom_point(aes(x = population, y = fit, colour = population), size = 6)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
-    ylab(expression(paste("\n Specific Leaf Area (",mm^{2}," ",mg^{-1},")"))) +
+    ylab(expression(paste("Specific Leaf Area (",mm^{2}," ",mg^{-1},")\n"))) +
     xlab("" ) +
     scale_color_manual(values=pal) +
     coord_cartesian(ylim=c(5, 25)) +
@@ -816,11 +826,13 @@ pul_sla_data_trans <- pul_sla_data %>%
          Est.Error_trans = exp(se__)) %>% 
   select(-CI_range)
 
-(pul_sla_plot <-ggplot(pul_sla_data_trans) +
+colnames(pul_SLA.pred) = c('population','fit', 'lwr', 'upr')
+
+(pul_sla_plot <-ggplot(pul_SLA.pred) +
     geom_point(data = pulchra_all_traits, aes(x = population, y = SLA, colour = population),
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
-    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
     ylab("\n") +
     xlab("" ) +
@@ -829,22 +841,13 @@ pul_sla_data_trans <- pul_sla_data %>%
     labs(title = "Salix pulchra") +
     theme_shrub())
 # arctica ----
-arc_sla <- (conditional_effects(arctica_SLA)) # extracting conditional effects from bayesian model
-arc_sla_data <- arc_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
-#[[1]] is to extract the first term in the model which in our case is population
-arc_sla_data_trans <- arc_sla_data %>% 
-  mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(lower__)) %>% 
-  mutate(CI_high_trans = exp(upper__)) %>% 
-  mutate(Estimate_trans = exp(estimate__), 
-         Est.Error_trans = exp(se__)) %>% 
-  select(-CI_range)
+colnames(arc_SLA.pred) = c('population','fit', 'lwr', 'upr')
 
-(arc_sla_plot <-ggplot(arc_sla_data_trans) +
+(arc_sla_plot <-ggplot(arc_SLA.pred) +
     geom_point(data = arctica_all_traits, aes(x = population, y = (SLA), colour = population),
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
-    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
     ylab("\n") +
     xlab("" ) +
@@ -855,6 +858,7 @@ arc_sla_data_trans <- arc_sla_data %>%
 
 (sla_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, 
                        common.legend = TRUE, legend = "none",
+                       labels = c("A", "B", "C"),
                            ncol = 3, nrow = 1))
 # raw data for reference 
 (sla_plot <- ggplot(all_CG_source_traits) +
@@ -880,24 +884,15 @@ arc_sla_data_trans <- arc_sla_data %>%
 
 # LMDC ---- 
 # richardsonii ----
-richard_ldmc <- (conditional_effects(rich_LDMC_log)) # extracting conditional effects from bayesian model
-richard_ldmc_data <- richard_ldmc[[1]] # making the extracted model outputs into a dataset (for plotting)
-#[[1]] is to extract the first term in the model which in our case is population
-richard_ldmc_data_trans <- richard_ldmc_data %>% 
-  mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(lower__)) %>% 
-  mutate(CI_high_trans = exp(upper__)) %>% 
-  mutate(Estimate_trans = exp(estimate__), 
-         Est.Error_trans = exp(se__)) %>% 
-  select(-CI_range)
+colnames(rich_LDMC.pred) = c('population','fit', 'lwr', 'upr')
 
-(rich_ldmc_plot <-ggplot(richard_ldmc_data_trans) +
+(rich_ldmc_plot <-ggplot(rich_LDMC.pred) +
     geom_point(data = richardsonii_all_traits, aes(x = population, y = LDMC_percent, colour = population),
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
-    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
-    ylab(expression(paste("\n Leaf dry matter content (%)"))) +
+    ylab(expression(paste("Leaf dry matter content (%)"))) +
     xlab("" ) +
     coord_cartesian(ylim=c(15, 80)) +
     scale_color_manual(values=pal) +
@@ -905,22 +900,13 @@ richard_ldmc_data_trans <- richard_ldmc_data %>%
     theme_shrub())
 
 # pulchra ----
-pul_ldmc <- (conditional_effects(pulchra_LDMC_log)) # extracting conditional effects from bayesian model
-pul_ldmc_data <- pul_ldmc[[1]] # making the extracted model outputs into a dataset (for plotting)
-#[[1]] is to extract the first term in the model which in our case is population
-pul_ldmc_data_trans <- pul_ldmc_data %>% 
-  mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_low_trans = exp(lower__)) %>% 
-  mutate(CI_high_trans = exp(upper__)) %>% 
-  mutate(Estimate_trans = exp(estimate__), 
-         Est.Error_trans = exp(se__)) %>% 
-  select(-CI_range)
+colnames(pul_LDMC.pred) = c('population','fit', 'lwr', 'upr')
 
-(pul_ldmc_plot <-ggplot(pul_ldmc_data_trans) +
+(pul_ldmc_plot <-ggplot(pul_LDMC.pred) +
     geom_point(data = pulchra_all_traits, aes(x = population, y = (LDMC_percent), colour = population),
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
-    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
     ylab("\n") +
     xlab("" )     +
@@ -929,20 +915,13 @@ pul_ldmc_data_trans <- pul_ldmc_data %>%
     labs(title = "Salix pulchra") +
     theme_shrub())
 # arctica ----
-arc_ldmc <- (conditional_effects(arctica_LDMC_log)) # extracting conditional effects from bayesian model
-arc_ldmc_data <- arc_ldmc[[1]] # making the extracted model outputs into a dataset (for plotting)
-#[[1]] is to extract the first term in the model which in our case is population
-arc_ldmc_data_trans <- arc_ldmc_data %>% 
-  mutate(CI_low_trans = exp(lower__)) %>% 
-  mutate(CI_high_trans = exp(upper__)) %>% 
-  mutate(Estimate_trans = exp(estimate__), 
-         Est.Error_trans = exp(se__)) 
+colnames(arc_LDMC.pred) = c('population','fit', 'lwr', 'upr')
 
-(arc_ldmc_plot <-ggplot(arc_ldmc_data_trans) +
+(arc_ldmc_plot <-ggplot(arc_LDMC.pred) +
     geom_point(data = arctica_all_traits, aes(x = population, y = (LDMC_percent), colour = population),
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
-    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
     ylab("\n") +
     xlab("" ) +
@@ -953,6 +932,7 @@ arc_ldmc_data_trans <- arc_ldmc_data %>%
 
 (ldmc_panel <- ggarrange(rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot, 
                         common.legend = TRUE, legend = "bottom",
+                        labels = c("D", "E", "F"),
                         ncol = 3, nrow = 1))
 
 # raw data for reference 
@@ -1094,15 +1074,13 @@ arc_la_data_trans <- arc_la_data %>%
 # LEAF LENGTH -----
 
 # richardsonii ----
-richard_ll <- (conditional_effects(rich_LL)) # extracting conditional effects from bayesian model
-richard_ll_data <- richard_ll[[1]] # making the extracted model outputs into a dataset (for plotting)
-#[[1]] is to extract the first term in the model which in our case is population
+colnames(rich_LL.pred) = c('population','fit', 'lwr', 'upr')
 
-(rich_ll_plot <-ggplot(richard_ll_data) +
+(rich_ll_plot <-ggplot(rich_LL.pred) +
     geom_point(data = richardsonii_all_growth, aes(x = population, y = mean_leaf_length, colour = population),
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
     ylab("\n Leaf Length (mm)\n") +
     xlab("") +
@@ -1111,15 +1089,13 @@ richard_ll_data <- richard_ll[[1]] # making the extracted model outputs into a d
     labs(title = "Salix richardsonii") +
     theme_shrub())
 # pulchra ----
-pul_ll <- (conditional_effects(pulchra_LL)) # extracting conditional effects from bayesian model
-pul_ll_data <- pul_ll[[1]] # making the extracted model outputs into a dataset (for plotting)
-#[[1]] is to extract the first term in the model which in our case is population
+colnames(pul_LL.pred) = c('population','fit', 'lwr', 'upr')
 
-(pul_ll_plot <-ggplot(pul_ll_data) +
+(pul_ll_plot <-ggplot(pul_LL.pred) +
     geom_point(data = pulchra_all_growth, aes(x = population, y = mean_leaf_length, colour = population),
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
     ylab("") +
     xlab("" ) +
@@ -1129,17 +1105,15 @@ pul_ll_data <- pul_ll[[1]] # making the extracted model outputs into a dataset (
     theme_shrub())
 
 # arctica ----
-arc_ll <- (conditional_effects(arctica_LL_CG)) # extracting conditional effects from bayesian model
-arc_ll_data <- arc_ll[[1]] # making the extracted model outputs into a dataset (for plotting)
-#[[1]] is to extract the first term in the model which in our case is population
+colnames(arc_LL.pred) = c('population','fit', 'lwr', 'upr')
 
 pal_garden <-c("#440154FF", "#7AD151FF")
 
-(arc_ll_plot <-ggplot(arc_ll_data) +
+(arc_ll_plot <-ggplot(arc_LL.pred) +
     geom_point(data = arctica_cg_growth, aes(x = population, y = mean_leaf_length, colour = population),
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
-    geom_point(aes(x = effect1__, y = estimate__,colour = population), size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = population),
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
     ylab("") +
     xlab("" ) +
@@ -1151,8 +1125,11 @@ pal_garden <-c("#440154FF", "#7AD151FF")
 
 (ll_panel <- ggarrange(rich_ll_plot, pul_ll_plot, arc_ll_plot, 
                        common.legend = TRUE, legend = "none",
+                       labels = c("A", "B", "C"),
                        ncol = 3, nrow = 1))
+ggsave("figures/leaf_length_panel.png", height = 10, width = 12, dpi = 300)
 
+# arrange plots ----
 
 (trait_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot,
   rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot,
@@ -1173,7 +1150,7 @@ ggsave("figures/size_trait_panel.png", height = 10, width = 12, dpi = 300)
 
 # SLA LDMC panel 
 (sla_ldmc_panel <- ggarrange(sla_panel, ldmc_panel, 
-                          common.legend = TRUE, legend = "bottom", 
+                          common.legend = TRUE, legend = "bottom",
                           ncol = 1, nrow = 2))
 # save 
 ggsave("figures/sla_ldmc_panel.png", height = 10, width = 12, dpi = 300)
