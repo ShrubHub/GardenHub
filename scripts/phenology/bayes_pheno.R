@@ -259,8 +259,8 @@ garden_rich_emerg_compare <- brms::brm(First_bud_burst_DOY_center ~ population +
 summary(garden_rich_emerg_compare)
 plot(garden_rich_emerg_compare)
 pp_check(garden_rich_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
-saveRDS(garden_rich_emerg_compare, file = "output/models/garden_rich_emerg_compare.rds")
-garden_rich_emerg_compare<- readRDS(file = "output/models/garden_rich_emerg_compare.rds")
+saveRDS(garden_rich_emerg_compare, file = "output/phenology/garden_rich_emerg_compare.rds")
+garden_rich_emerg_compare<- readRDS(file = "output/phenology/garden_rich_emerg_compare.rds")
 
 # Salix pulchra -----
 all_phenocam_pulchra$First_bud_burst_DOY_center <- center_scale(all_phenocam_pulchra$First_bud_burst_DOY) 
@@ -274,7 +274,8 @@ garden_pul_emerg_compare <- brms::brm(First_bud_burst_DOY_center ~ population + 
 summary(garden_pul_emerg_compare)
 plot(garden_pul_emerg_compare)
 pp_check(garden_pul_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
-saveRDS(garden_pul_emerg_compare, file = "output/models/garden_pul_emerg_compare.rds")
+saveRDS(garden_pul_emerg_compare, file = "output/phenology/garden_pul_emerg_compare.rds")
+garden_pul_emerg_compare<- readRDS(file = "output/phenology/garden_pul_emerg_compare.rds")
 
 # Salix arctica -----
 all_phenocam_arctica$First_bud_burst_DOY_center <- center_scale(all_phenocam_arctica$First_bud_burst_DOY) 
@@ -284,12 +285,12 @@ garden_arc_emerg_compare <- brms::brm(First_bud_burst_DOY_center ~ population + 
                                       iter = 3000, warmup = 1000, 
                                       control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-
 summary(garden_arc_emerg_compare)
 tab_model(garden_arc_emerg_compare)
 plot(garden_arc_emerg_compare)
 pp_check(garden_arc_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
-saveRDS(garden_arc_emerg_compare, file = "output/models/garden_arc_emerg_compare.rds")
+saveRDS(garden_arc_emerg_compare, file = "output/phenology/garden_arc_emerg_compare.rds")
+garden_arc_emerg_compare<- readRDS(file = "output/phenology/garden_arc_emerg_compare.rds")
 
 
 # 1.2. LEAF EMERGENCE (CG ONLY MODELS) ------
@@ -415,7 +416,7 @@ garden_rich_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ populatio
 summary(garden_rich_yellow_compare)
 plot(garden_rich_yellow_compare)
 pp_check(garden_rich_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
-saveRDS(garden_rich_yellow_compare, file = "output/models/garden_rich_yellow_compare.rds")
+saveRDS(garden_rich_yellow_compare, file = "output/phenology/garden_rich_yellow_compare.rds")
 garden_rich_yellow_compare_extract <- model_summ_pheno(garden_rich_yellow_compare)
 
 # Salix pulchra ------
