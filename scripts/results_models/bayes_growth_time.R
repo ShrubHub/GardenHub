@@ -577,7 +577,25 @@ kable_biovol_time <- garden_heights_timeb %>%
 column_spec(kable_biovol_time, 2, width = NULL, bold = FALSE, italic = TRUE)
 
 # ERICA's MSC height over time models -------
-
+# funciton to extract model summary
+model_summ <- function(x) {
+  sum = summary(x)
+  fixed = sum$fixed
+  sigma = sum$spec_pars
+  random = sum$random$Sample_age # change name of random effect here
+  random = sum$random$SampleID_standard # change name of random effect here
+  obs = sum$nobs
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  # fixed$effect <- "population"  # add ID column for type of effect (fixed, random, residual)
+  random$effect <- "random"
+  # random$effect <- "SampleID_standard"
+  sigma$effect <- "residual"
+  fixed$nobs <- obs  # add column with number of observations
+  random$nobs <- obs
+  sigma$nobs <- obs
+  row.names(random)[row.names(random) == "sd(Intercept)"] <- "random" # could change rowname here of random effect if you'd like
+  modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge together
+}
 # Salix richardsonii -------
 height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
                          data = all_CG_growth_ric,  family = gaussian(), chains = 3,
@@ -590,7 +608,6 @@ height_rich <- readRDS("output/models/height_rich.rds")
 library(ggeffects)
 ggpred_height_ric <- ggpredict(height_rich, terms = c("Sample_age", "population"))
 colnames(ggpred_height_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
-
 
 (ggpred_height_rich_plot <-ggplot(ggpred_height_ric) +
     geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
