@@ -665,7 +665,6 @@ save_kable(kable_ldmc, file = "output/traits/kable_ldmc.pdf",
            keep_tex =TRUE,
            density = 300)
 
-
 # LA ----
 # S. richardsonii ----
 rich_LA <- brms::brm(log(LA_cm2) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
@@ -676,25 +675,55 @@ plot(rich_LA)
 pp_check(rich_LA, type = "dens_overlay", ndraws = 100)
 saveRDS(rich_LA, file = "output/traits/models/la_richardsonii_compare.rds")
 rich_LA <- readRDS("output/traits/models/la_richardsonii_compare.rds")
+
+# extract output with function
 rich_LA_results <- model_summ(rich_LA)
-rich_LA_results$Species <- "Salix richardsonii"
 
 rich_LA_results <- rich_LA_results %>% 
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI")
-# change estimates by adding estimate to other rows 
-rich_LA_results[2,1] <- rich_LA_results[2,1] + rich_LA_results[1,1]
-rich_LA_results[3,1] <- rich_LA_results[3,1] + rich_LA_results[1,1]
-rich_LA_results[4,1] <- rich_LA_results[4,1] + rich_LA_results[1,1]
-# change lower CI by adding 
-rich_LA_results[2,3] <- rich_LA_results[2,3] + rich_LA_results[1,3]
-rich_LA_results[3,3] <- rich_LA_results[3,3] + rich_LA_results[1,3]
-rich_LA_results[4,3] <- rich_LA_results[4,3] + rich_LA_results[1,3]
-# change upper CI
-rich_LA_results[2,4] <- rich_LA_results[2,4] + rich_LA_results[1,4]
-rich_LA_results[3,4] <- rich_LA_results[3,4] + rich_LA_results[1,4]
-rich_LA_results[4,4] <- rich_LA_results[4,4] + rich_LA_results[1,4]
+  dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
+                "u_95_CI_log_og" = "u-95% CI", 
+                "Estimate (log og)"= "Estimate")
 
+rich_LA_results_2 <- rich_LA_results %>% 
+  dplyr::rename("l_95_CI_log_sum" = "l_95_CI_log_og", 
+                "u_95_CI_log_sum" = "u_95_CI_log_og",
+                "Estimate (log sum)"= "Estimate (log og)")
+
+# change estimates by adding estimate to other rows 
+rich_LA_results_2[2,1] <- rich_LA_results_2[2,1] + rich_LA_results_2[1,1]
+rich_LA_results_2[3,1] <- rich_LA_results_2[3,1] + rich_LA_results_2[1,1]
+rich_LA_results_2[4,1] <- rich_LA_results_2[4,1] + rich_LA_results_2[1,1]
+# change lower CI by adding 
+rich_LA_results_2[2,3] <- rich_LA_results_2[2,3] + rich_LA_results_2[1,3]
+rich_LA_results_2[3,3] <- rich_LA_results_2[3,3] + rich_LA_results_2[1,3]
+rich_LA_results_2[4,3] <- rich_LA_results_2[4,3] + rich_LA_results_2[1,3]
+# change upper CI
+rich_LA_results_2[2,4] <- rich_LA_results_2[2,4] + rich_LA_results_2[1,4]
+rich_LA_results_2[3,4] <- rich_LA_results_2[3,4] + rich_LA_results_2[1,4]
+rich_LA_results_2[4,4] <- rich_LA_results_2[4,4] + rich_LA_results_2[1,4]
+
+# extraction for model output table
+rownames(rich_LA_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Sample age  ", "Sigma  ")
+rownames(rich_LA_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Sample age ", "Sigma ")
+
+rich_la_extract_df_1 <- rich_LA_results %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  relocate("Species", .before = "Estimate (log og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+rich_la_extract_df <- rich_LA_results_2 %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  relocate("Species", .before = "Estimate (log sum)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+rich_la_extract_all <- full_join(rich_la_extract_df_1, rich_la_extract_df, 
+                                  by = c("effect" = "effect", "nobs"="nobs",
+                                         "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                         "Species"="Species", "Rhat"="Rhat"))
+
+rownames(rich_la_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Sample age", "Sigma")
 # interpretation 
 # N Garden = estimate = 1.64 , CI = 0.05 to 3.17
 # N Source = estimate = 3.14, CI = 1.25 to 4.96
@@ -710,25 +739,56 @@ plot(pulchra_LA)
 pp_check(pulchra_LA, type = "dens_overlay", ndraws = 100) 
 saveRDS(pulchra_LA, file = "output/traits/models/la_pulchra_compare.rds")
 pulchra_LA <- readRDS("output/traits/models/la_pulchra_compare.rds")
+
+# extract output with function
 pulchra_LA_results <- model_summ(pulchra_LA)
-pulchra_LA_results$Species <- "Salix pulchra"
 
 pulchra_LA_results <- pulchra_LA_results %>% 
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI")
+  dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
+                "u_95_CI_log_og" = "u-95% CI", 
+                "Estimate (log og)"= "Estimate")
+
+pulchra_LA_results_2 <- pulchra_LA_results %>% 
+  dplyr::rename("l_95_CI_log_sum" = "l_95_CI_log_og", 
+                "u_95_CI_log_sum" = "u_95_CI_log_og",
+                "Estimate (log sum)"= "Estimate (log og)")
 
 # change estimates by adding estimate to other rows 
-pulchra_LA_results[2,1] <- pulchra_LA_results[2,1] + pulchra_LA_results[1,1]
-pulchra_LA_results[3,1] <- pulchra_LA_results[3,1] + pulchra_LA_results[1,1]
-pulchra_LA_results[4,1] <- pulchra_LA_results[4,1] + pulchra_LA_results[1,1]
+pulchra_LA_results_2[2,1] <- pulchra_LA_results_2[2,1] + pulchra_LA_results_2[1,1]
+pulchra_LA_results_2[3,1] <- pulchra_LA_results_2[3,1] + pulchra_LA_results_2[1,1]
+pulchra_LA_results_2[4,1] <- pulchra_LA_results_2[4,1] + pulchra_LA_results_2[1,1]
 # change lower CI by adding 
-pulchra_LA_results[2,3] <- pulchra_LA_results[2,3] + pulchra_LA_results[1,3]
-pulchra_LA_results[3,3] <- pulchra_LA_results[3,3] + pulchra_LA_results[1,3]
-pulchra_LA_results[4,3] <- pulchra_LA_results[4,3] + pulchra_LA_results[1,3]
+pulchra_LA_results_2[2,3] <- pulchra_LA_results_2[2,3] + pulchra_LA_results_2[1,3]
+pulchra_LA_results_2[3,3] <- pulchra_LA_results_2[3,3] + pulchra_LA_results_2[1,3]
+pulchra_LA_results_2[4,3] <- pulchra_LA_results_2[4,3] + pulchra_LA_results_2[1,3]
 # change upper CI
-pulchra_LA_results[2,4] <- pulchra_LA_results[2,4] + pulchra_LA_results[1,4]
-pulchra_LA_results[3,4] <- pulchra_LA_results[3,4] + pulchra_LA_results[1,4]
-pulchra_LA_results[4,4] <- pulchra_LA_results[4,4] + pulchra_LA_results[1,4]
+pulchra_LA_results_2[2,4] <- pulchra_LA_results_2[2,4] + pulchra_LA_results_2[1,4]
+pulchra_LA_results_2[3,4] <- pulchra_LA_results_2[3,4] + pulchra_LA_results_2[1,4]
+pulchra_LA_results_2[4,4] <- pulchra_LA_results_2[4,4] + pulchra_LA_results_2[1,4]
+
+# extraction for model output table
+rownames(pulchra_LA_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Sample age  ", "Sigma  ")
+rownames(pulchra_LA_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Sample age ", "Sigma ")
+
+pul_la_extract_df_1 <- pulchra_LA_results %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  relocate("Species", .before = "Estimate (log og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+pul_la_extract_df <- pulchra_LA_results_2 %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  relocate("Species", .before = "Estimate (log sum)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+pul_la_extract_all <- full_join(pul_la_extract_df_1, pul_la_extract_df, 
+                                 by = c("effect" = "effect", "nobs"="nobs",
+                                        "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                        "Species"="Species", "Rhat"="Rhat"))
+
+rownames(pul_la_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Sample age", "Sigma")
+
 # interpretation 
 # N Garden = estimate = 1.21 , CI = -0.52 to 2.82
 # N Source = estimate = 3.14, CI = 0.50 to 4.53
@@ -744,24 +804,56 @@ plot(arctica_LA)
 pp_check(arctica_LA, type = "dens_overlay", ndraws = 100) 
 saveRDS(arctica_LA, file = "output/traits/models/la_arctica_compare.rds")
 arctica_LA <- readRDS("output/traits/models/la_arctica_compare.rds")
+
+# extract output with function
 arctica_LA_results <- model_summ(arctica_LA)
-arctica_LA_results$Species <- "Salix arctica"
 
 arctica_LA_results <- arctica_LA_results %>% 
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI")
+  dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
+                "u_95_CI_log_og" = "u-95% CI", 
+                "Estimate (log og)"= "Estimate")
+
+arctica_LA_results_2 <- arctica_LA_results %>% 
+  dplyr::rename("l_95_CI_log_sum" = "l_95_CI_log_og", 
+                "u_95_CI_log_sum" = "u_95_CI_log_og",
+                "Estimate (log sum)"= "Estimate (log og)")
+
 # change estimates by adding estimate to other rows 
-arctica_LA_results[2,1] <- arctica_LA_results[2,1] + arctica_LA_results[1,1]
-arctica_LA_results[3,1] <- arctica_LA_results[3,1] + arctica_LA_results[1,1]
-arctica_LA_results[4,1] <- arctica_LA_results[4,1] + arctica_LA_results[1,1]
+arctica_LA_results_2[2,1] <- arctica_LA_results_2[2,1] + arctica_LA_results_2[1,1]
+arctica_LA_results_2[3,1] <- arctica_LA_results_2[3,1] + arctica_LA_results_2[1,1]
+arctica_LA_results_2[4,1] <- arctica_LA_results_2[4,1] + arctica_LA_results_2[1,1]
 # change lower CI by adding 
-arctica_LA_results[2,3] <- arctica_LA_results[2,3] + arctica_LA_results[1,3]
-arctica_LA_results[3,3] <- arctica_LA_results[3,3] + arctica_LA_results[1,3]
-arctica_LA_results[4,3] <- arctica_LA_results[4,3] + arctica_LA_results[1,3]
+arctica_LA_results_2[2,3] <- arctica_LA_results_2[2,3] + arctica_LA_results_2[1,3]
+arctica_LA_results_2[3,3] <- arctica_LA_results_2[3,3] + arctica_LA_results_2[1,3]
+arctica_LA_results_2[4,3] <- arctica_LA_results_2[4,3] + arctica_LA_results_2[1,3]
 # change upper CI
-arctica_LA_results[2,4] <- arctica_LA_results[2,4] + arctica_LA_results[1,4]
-arctica_LA_results[3,4] <- arctica_LA_results[3,4] + arctica_LA_results[1,4]
-arctica_LA_results[4,4] <- arctica_LA_results[4,4] + arctica_LA_results[1,4]
+arctica_LA_results_2[2,4] <- arctica_LA_results_2[2,4] + arctica_LA_results_2[1,4]
+arctica_LA_results_2[3,4] <- arctica_LA_results_2[3,4] + arctica_LA_results_2[1,4]
+arctica_LA_results_2[4,4] <- arctica_LA_results_2[4,4] + arctica_LA_results_2[1,4]
+
+# extraction for model output table
+rownames(arctica_LA_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Sample age  ", "Sigma  ")
+rownames(arctica_LA_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Sample age ", "Sigma ")
+
+arc_la_extract_df_1 <- arctica_LA_results %>% 
+  mutate(Species = rep("Salix arctica")) %>%
+  relocate("Species", .before = "Estimate (log og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+arc_la_extract_df <- arctica_LA_results_2 %>% 
+  mutate(Species = rep("Salix arctica")) %>%
+  relocate("Species", .before = "Estimate (log sum)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+arc_la_extract_all <- full_join(arc_la_extract_df_1, arc_la_extract_df, 
+                                by = c("effect" = "effect", "nobs"="nobs",
+                                       "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                       "Species"="Species", "Rhat"="Rhat"))
+
+rownames(arc_la_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Sample age", "Sigma")
+
 # interpretation 
 # N Garden = estimate = 1.93 , CI = -0.11 to 3.98
 # N Source = estimate = 3.14, CI = 0.86 to 6.08
@@ -769,50 +861,60 @@ arctica_LA_results[4,4] <- arctica_LA_results[4,4] + arctica_LA_results[1,4]
 # S Garden = estimate = 2.64, CI = -0.32 to 4.75
 
 # merging all extracted outputs
-garden_LA_out <- rbind(rich_LA_results, pulchra_LA_results, arctica_LA_results)
+
+# merging all extracted outputs
+garden_LA_out <- rbind(rich_la_extract_all, pul_la_extract_all, 
+                         arc_la_extract_all) 
+
+garden_LA_out <- garden_LA_out %>%
+  dplyr::rename("Estimate_log_sum" = "Estimate (log sum)")
 
 # back transforming from log
-garden_LA_out_back <- garden_LA_out %>%
-  mutate(CI_low_trans = exp(l_95_CI_log)) %>% 
-  mutate(CI_high_trans = exp(u_95_CI_log)) %>% 
-  mutate(Estimate_trans = exp(Estimate)) %>% 
-  select(-Est.Error)
-# adding spaces before/after each name so they let me repeat them in the table
-rownames(garden_LA_out_back) <- c("Intercept", "Northern Source", "SouthernSource",  "Southern Garden", 
-                                    "Year", "Sigma", 
-                                    " Intercept", " Northern Source", " SouthernSource", " Southern Garden", " Year", 
-                                    " Sigma", 
-                                    "Intercept ", "Northern Source ", "SouthernSource ", "Southern Garden ", "Year ", 
-                                    "Sigma ")
+garden_la_out_back <- garden_LA_out %>%
+  mutate(CI_low_trans = exp(l_95_CI_log_sum)) %>% 
+  mutate(CI_high_trans = exp(u_95_CI_log_sum)) %>% 
+  mutate(Estimate_trans = exp(Estimate_log_sum))%>%
+  relocate(CI_low_trans, .before = Rhat) %>%
+  relocate(CI_high_trans, .before = Rhat) %>%
+  relocate(Estimate_trans, .before = CI_low_trans)%>%
+  relocate(Estimate_log_sum, .before = Estimate_trans) %>%
+  relocate(l_95_CI_log_sum, .before = Estimate_trans) %>%
+  relocate(u_95_CI_log_sum, .before = Estimate_trans)
 
-# making sure Rhat keeps the .00 
-garden_LA_out_back$Rhat <- as.character(formatC(garden_LA_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 # save df of results 
-write.csv(garden_LA_out_back, "output/traits/garden_LA_out_back.csv")
+write.csv(garden_la_out_back, "output/traits/garden_LA_out_back.csv")
+garden_la_out_back <- read.csv("output/traits/garden_LA_out_back.csv", row.names = 1)
+
+# making sure Rhat keeps the .00 
+garden_la_out_back$Rhat <- as.character(formatC(garden_la_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
 # creating table
-kable_LA <- garden_LA_out_back %>% 
-  kbl(caption="Table.xxx BRMS model outputs: Leaf area  of northern garden, northern source, southern garden, southern source willows. 
-      Model structure per species: (log(LA) ~ population + (1|year). 
-      Model output back-transformed in the table below.", 
-      col.names = c( "Estimate",
-                    "Lower 95% CI (log)",
-                    "Upper 95% CI (log)", 
-                    "Rhat", 
-                    "Bulk Effective Sample Size",
-                    "Tail Effective Sample Size", 
-                    "Effect",
-                    "Sample Size",
-                    "Species",  
-                    "Lower 95% CI 
-                    (back transformed)", "Upper 95% CI
-                    (back transformed)", 
-                    "Estimate transformed"), digits=2, align = "c") %>% 
+kable_la <- garden_la_out_back %>% 
+  kbl(caption="Table.xxx BRMS model outputs: leaf area by northern garden, northern source, sourthern garden and southern source populations. 
+      Log transformed output in the table below.", 
+      col.names = c( "Species",
+                     "Estimate (log)",
+                     "Lower 95% CI (log)",
+                     "Upper 95% CI (log)",
+                     "Estimate (log sum)",  
+                     "Lower 95% CI 
+                    (log sum)", 
+                     "Upper 95% CI (log sum)",  
+                     "Estimate (transformed)","Lower 95% CI 
+                    (transformed)", 
+                     "Upper 95% CI (transformed)",
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Sample Size",
+                     "Effect"), digits=2, align = "l") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in italics
-column_spec(kable_LA, 2, width = NULL, bold = FALSE, italic = TRUE)
+row_spec(kable_la, 1:12, align = "c") 
+column_spec(kable_la, 2, width = NULL, bold = FALSE, italic = TRUE)
 
-save_kable(kable_LA, file = "output/traits/LA_results.pdf",
+save_kable(kable_la, file = "output/traits/kable_la.pdf",
            bs_theme = "simplex",
            self_contained = TRUE,
            extra_dependencies = NULL,
