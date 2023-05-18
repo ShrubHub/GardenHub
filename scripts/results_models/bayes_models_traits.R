@@ -1,6 +1,6 @@
 # BAYESIAN traits results models -----
 # Script by Madi
-# Last update: 03/04/2023
+# Last update: 19/05/2023
 
 # libraries ----
 library(plyr) # load before dplyr aka tidyverse 
@@ -33,7 +33,6 @@ all_CG_source_growth$SampleID_standard <- as.factor(all_CG_source_growth$SampleI
 all_CG_source_growth$population <- as.factor(all_CG_source_growth$population)
 all_CG_source_growth$Sample_Date <- as.POSIXct(all_CG_source_growth$Sample_Date, format = '%Y/%m/%d')
 all_CG_source_growth$year <- as.factor(all_CG_source_growth$Year)
-all_CG_source_growth$Sample_age <- as.factor(all_CG_source_growth$Sample_age)
 
 all_CG_source_traits$Species <- as.factor(all_CG_source_traits$Species)
 all_CG_source_traits$plant_tag_id <- as.factor(all_CG_source_traits$plant_tag_id)
@@ -401,7 +400,6 @@ save_kable(kable_sla,file = "output/traits/kable_sla.pdf",
            latex_header_includes = NULL,
            keep_tex =TRUE,
            density = 300)
-
 
 # LDMC ----
 # S. richardsonii ----
