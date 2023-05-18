@@ -289,7 +289,7 @@ saveRDS(garden_rich_height, file = "output/models/garden_rich_height.rds")
 # extract output with function
 rich_extract <- model_summ_growth(garden_rich_height)
 
-ic_extract <- rich_extract %>% 
+ric_extract <- rich_extract %>% 
   dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
                 "u_95_CI_log_og" = "u-95% CI", 
                 "Estimate (log og)"= "Estimate")
