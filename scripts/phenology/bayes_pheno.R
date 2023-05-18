@@ -902,10 +902,6 @@ save_kable(kable_season_garden, file = "output/phenology/season__length_results.
 
 
 # PLOTS ====
-pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#7AD151FF") # for reall levels 
-pal_garden <- c("#440154FF", "#7AD151FF") # for only garden 
-pal_arc  <- c("#2A788EFF", "#440154FF", "#7AD151FF") # for when southern source is missing  
-
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", size=20),
                                  axis.text.x  = element_text(vjust=0.5, size=20, colour = "black"), 
@@ -961,6 +957,9 @@ all_phenocam_arctica$population <- ordered(all_phenocam_arctica$population,
                                                    "N. Garden", 
                                                    "S. Source",  
                                                    "S. Garden"))
+pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#7AD151FF") # for reall levels 
+pal_garden <- c("#440154FF", "#7AD151FF") # for only garden 
+pal_arc  <- c("#2A788EFF", "#440154FF", "#7AD151FF") # for when southern source is missing  
 
 # LEAF EMERGENCE CG vs SOURCES ----
 # S. richardsonii ------
@@ -1538,7 +1537,7 @@ all_phenocam_arc_all <- rbind(all_phenocam_arc_1, all_phenocam_arc_2)
     ylab("") +
     xlab("DOY" ) +
     coord_cartesian(xlim=c(100, 250))+
-    scale_color_manual(values=pal)+
+    scale_color_manual(values=pal_arc)+
     theme_shrub() +
     theme(axis.text.y=element_blank()) +
     ggtitle(expression(italic("Salix arctica"))))

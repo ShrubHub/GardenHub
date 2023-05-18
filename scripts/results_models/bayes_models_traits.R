@@ -12,6 +12,7 @@ library(ggpubr)
 library(gridExtra)
 library(knitr) # For kable tables
 library(kableExtra) # For kable tables
+library(ggeffects)
 
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
