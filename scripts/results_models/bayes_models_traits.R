@@ -370,7 +370,7 @@ garden_sla_out_back$Rhat <- as.character(formatC(garden_sla_out_back$Rhat, digit
 
 # creating table
 kable_sla <- garden_sla_out_back %>% 
-  kbl(caption="Table.xxx BRMS model outputs: specific leaf area northern garden, northern source, sourthern garden and southern source populations. 
+  kbl(caption="Table.xxx BRMS model outputs: specific leaf area by northern garden, northern source, sourthern garden and southern source populations. 
       Log transformed output in the table below.", 
       col.names = c( "Species",
                      "Estimate (log)",
@@ -389,6 +389,19 @@ kable_sla <- garden_sla_out_back %>%
                      "Sample Size",
                      "Effect"), digits=2, align = "l") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in italics
+row_spec(kable_sla, 1:12, align = "c") 
+column_spec(kable_sla, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+save_kable(kable_sla,file = "output/traits/kable_sla.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
+
 
 # LDMC ----
 # S. richardsonii ----
@@ -639,6 +652,18 @@ kable_ldmc <- garden_ldmc_out_back %>%
                      "Sample Size",
                      "Effect"), digits=2, align = "l") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in italics
+row_spec(kable_ldmc, 1:12, align = "c") 
+column_spec(kable_ldmc, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+save_kable(kable_ldmc, file = "output/traits/kable_ldmc.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 
 # LA ----
