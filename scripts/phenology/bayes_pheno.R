@@ -262,31 +262,59 @@ pp_check(garden_rich_emerg_compare, type = "dens_overlay", nsamples = 100) # loo
 saveRDS(garden_rich_emerg_compare, file = "output/phenology/garden_rich_emerg_compare.rds")
 garden_rich_emerg_compare<- readRDS(file = "output/phenology/garden_rich_emerg_compare.rds")
 
-garden_rich_emerg_results <- model_summ_pheno(garden_rich_emerg_compare)
-garden_rich_emerg_results <- garden_rich_emerg_results %>% 
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI")
-garden_rich_emerg_results$Species <- "Salix richardsonii"
+# extract output with function
+rich_emerg_results <- model_summ_pheno(garden_rich_emerg_compare)
+
+rich_emerg_results <- rich_emerg_results %>% 
+  dplyr::rename("l_95_CI_scale_og" = "l-95% CI", 
+                "u_95_CI_scale_og" = "u-95% CI", 
+                "Estimate (scale og)"= "Estimate")
+
+rich_emerg_results_2 <- rich_emerg_results %>% 
+  dplyr::rename("l_95_CI_scale_sum" = "l_95_CI_scale_og", 
+                "u_95_CI_scale_sum" = "u_95_CI_scale_og",
+                "Estimate_scale_sum"= "Estimate (scale og)")
 
 # change estimates by adding estimate to other rows 
-garden_rich_emerg_results[2,1] <- garden_rich_emerg_results[2,1] + garden_rich_emerg_results[1,1]
-garden_rich_emerg_results[3,1] <- garden_rich_emerg_results[3,1] + garden_rich_emerg_results[1,1]
-garden_rich_emerg_results[4,1] <- garden_rich_emerg_results[4,1] + garden_rich_emerg_results[1,1]
+rich_emerg_results_2[2,1] <- rich_emerg_results_2[2,1] + rich_emerg_results_2[1,1]
+rich_emerg_results_2[3,1] <- rich_emerg_results_2[3,1] + rich_emerg_results_2[1,1]
+rich_emerg_results_2[4,1] <- rich_emerg_results_2[4,1] + rich_emerg_results_2[1,1]
 # change lower CI by adding 
-garden_rich_emerg_results[2,3] <- garden_rich_emerg_results[2,3] + garden_rich_emerg_results[1,3]
-garden_rich_emerg_results[3,3] <- garden_rich_emerg_results[3,3] + garden_rich_emerg_results[1,3]
-garden_rich_emerg_results[4,3] <- garden_rich_emerg_results[4,3] + garden_rich_emerg_results[1,3]
+rich_emerg_results_2[2,3] <- rich_emerg_results_2[2,3] + rich_emerg_results_2[1,3]
+rich_emerg_results_2[3,3] <- rich_emerg_results_2[3,3] + rich_emerg_results_2[1,3]
+rich_emerg_results_2[4,3] <- rich_emerg_results_2[4,3] + rich_emerg_results_2[1,3]
 # change upper CI
-garden_rich_emerg_results[2,4] <- garden_rich_emerg_results[2,4] + garden_rich_emerg_results[1,4]
-garden_rich_emerg_results[3,4] <- garden_rich_emerg_results[3,4] + garden_rich_emerg_results[1,4]
-garden_rich_emerg_results[4,4] <- garden_rich_emerg_results[4,4] + garden_rich_emerg_results[1,4]
+rich_emerg_results_2[2,4] <- rich_emerg_results_2[2,4] + rich_emerg_results_2[1,4]
+rich_emerg_results_2[3,4] <- rich_emerg_results_2[3,4] + rich_emerg_results_2[1,4]
+rich_emerg_results_2[4,4] <- rich_emerg_results_2[4,4] + rich_emerg_results_2[1,4]
+
+# extraction for model output table
+rownames(rich_emerg_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
+rownames(rich_emerg_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+
+ric_emerg_extract_df_1 <- rich_emerg_results %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  relocate("Species", .before = "Estimate (scale og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
 
 m_rich_emerg <- mean(all_phenocam_rich$First_bud_burst_DOY, na.rm = T)
-garden_rich_emerg_results_out <- garden_rich_emerg_results %>% 
-  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_rich_emerg)) %>% 
-  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_rich_emerg)) %>% 
-  dplyr::mutate(Estimate_trans = (Estimate + m_rich_emerg)) %>% 
+
+ric_emerg_extract_df <- rich_emerg_results_2 %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  dplyr::mutate(l_95_CI_scale_sum = ((l_95_CI_scale_sum) + m_rich_emerg)) %>% 
+  dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_rich_emerg)) %>% 
+  dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_rich_emerg)) %>% 
+  relocate("Species", .before = "Estimate_scale_sum") %>%
+  relocate("nobs", .before = "effect")%>%
   dplyr::select(-Est.Error)
+
+ric_emerg_extract_all <- full_join(ric_emerg_extract_df_1, ric_emerg_extract_df, 
+                                 by = c("effect" = "effect", "nobs"="nobs",
+                                        "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                        "Species"="Species", "Rhat"="Rhat"))
+
+rownames(ric_emerg_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
 
 # Salix pulchra -----
 all_phenocam_pulchra$First_bud_burst_DOY_center <- center_scale(all_phenocam_pulchra$First_bud_burst_DOY) 
@@ -296,37 +324,58 @@ garden_pul_emerg_compare <- brms::brm(First_bud_burst_DOY_center ~ population + 
                                        iter = 3000, warmup = 1000, 
                                        control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-
 summary(garden_pul_emerg_compare)
 plot(garden_pul_emerg_compare)
 pp_check(garden_pul_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
 saveRDS(garden_pul_emerg_compare, file = "output/phenology/garden_pul_emerg_compare.rds")
 garden_pul_emerg_compare<- readRDS(file = "output/phenology/garden_pul_emerg_compare.rds")
-garden_pul_emerg_results <- model_summ_pheno(garden_pul_emerg_compare)
-garden_pul_emerg_results <- garden_pul_emerg_results %>% 
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI")
-garden_pul_emerg_results$Species <- "Salix pulchra"
+
+# extract output with function
+pul_emerg_results <- model_summ_pheno(garden_pul_emerg_compare)
+
+pul_emerg_results <- pul_emerg_results %>% 
+  dplyr::rename("l_95_CI_scale_og" = "l-95% CI", 
+                "u_95_CI_scale_og" = "u-95% CI", 
+                "Estimate (scale og)"= "Estimate")
+
+pul_emerg_results_2 <- pul_emerg_results %>% 
+  dplyr::rename("l_95_CI_scale_sum" = "l_95_CI_scale_og", 
+                "u_95_CI_scale_sum" = "u_95_CI_scale_og",
+                "Estimate_scale_sum"= "Estimate (scale og)")
 
 # change estimates by adding estimate to other rows 
-garden_pul_emerg_results[2,1] <- garden_pul_emerg_results[2,1] + garden_pul_emerg_results[1,1]
-garden_pul_emerg_results[3,1] <- garden_pul_emerg_results[3,1] + garden_pul_emerg_results[1,1]
-garden_pul_emerg_results[4,1] <- garden_pul_emerg_results[4,1] + garden_pul_emerg_results[1,1]
+pul_emerg_results_2[2,1] <- pul_emerg_results_2[2,1] + pul_emerg_results_2[1,1]
+pul_emerg_results_2[3,1] <- pul_emerg_results_2[3,1] + pul_emerg_results_2[1,1]
+pul_emerg_results_2[4,1] <- pul_emerg_results_2[4,1] + pul_emerg_results_2[1,1]
 # change lower CI by adding 
-garden_pul_emerg_results[2,3] <- garden_pul_emerg_results[2,3] + garden_pul_emerg_results[1,3]
-garden_pul_emerg_results[3,3] <- garden_pul_emerg_results[3,3] + garden_pul_emerg_results[1,3]
-garden_pul_emerg_results[4,3] <- garden_pul_emerg_results[4,3] + garden_pul_emerg_results[1,3]
+pul_emerg_results_2[2,3] <- pul_emerg_results_2[2,3] + pul_emerg_results_2[1,3]
+pul_emerg_results_2[3,3] <- pul_emerg_results_2[3,3] + pul_emerg_results_2[1,3]
+pul_emerg_results_2[4,3] <- pul_emerg_results_2[4,3] + pul_emerg_results_2[1,3]
 # change upper CI
-garden_pul_emerg_results[2,4] <- garden_pul_emerg_results[2,4] + garden_pul_emerg_results[1,4]
-garden_pul_emerg_results[3,4] <- garden_pul_emerg_results[3,4] + garden_pul_emerg_results[1,4]
-garden_pul_emerg_results[4,4] <- garden_pul_emerg_results[4,4] + garden_pul_emerg_results[1,4]
+pul_emerg_results_2[2,4] <- pul_emerg_results_2[2,4] + pul_emerg_results_2[1,4]
+pul_emerg_results_2[3,4] <- pul_emerg_results_2[3,4] + pul_emerg_results_2[1,4]
+pul_emerg_results_2[4,4] <- pul_emerg_results_2[4,4] + pul_emerg_results_2[1,4]
+
+# extraction for model output table
+rownames(pul_emerg_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
 
 m_pul_emerg <- mean(all_phenocam_pulchra$First_bud_burst_DOY, na.rm = T)
-garden_pul_emerg_results_out <- garden_pul_emerg_results %>% 
-  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_pul_emerg)) %>% 
-  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_pul_emerg)) %>% 
-  dplyr::mutate(Estimate_trans = (Estimate + m_pul_emerg)) %>% 
+
+pul_emerg_extract_df <- pul_emerg_results_2 %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  dplyr::mutate(l_95_CI_scale_sum = ((l_95_CI_scale_sum) + m_pul_emerg)) %>% 
+  dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_pul_emerg)) %>% 
+  dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_pul_emerg)) %>% 
+  relocate("Species", .before = "Estimate_scale_sum") %>%
+  relocate("nobs", .before = "effect")%>%
   dplyr::select(-Est.Error)
+
+pul_emerg_extract_all <- full_join(pul_emerg_extract_df_1, pul_emerg_extract_df, 
+                                   by = c("effect" = "effect", "nobs"="nobs",
+                                          "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                          "Species"="Species", "Rhat"="Rhat"))
+
+rownames(pul_emerg_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
 
 # Salix arctica -----
 all_phenocam_arctica$First_bud_burst_DOY_center <- center_scale(all_phenocam_arctica$First_bud_burst_DOY) 
@@ -342,31 +391,53 @@ plot(garden_arc_emerg_compare)
 pp_check(garden_arc_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
 saveRDS(garden_arc_emerg_compare, file = "output/phenology/garden_arc_emerg_compare.rds")
 garden_arc_emerg_compare<- readRDS(file = "output/phenology/garden_arc_emerg_compare.rds")
-garden_arc_emerg_results <- model_summ_pheno(garden_arc_emerg_compare)
-garden_arc_emerg_results <- garden_arc_emerg_results %>% 
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI")
-garden_arc_emerg_results$Species <- "Salix arctica"
+
+# extract output with function
+arc_emerg_results <- model_summ_pheno(garden_arc_emerg_compare)
+
+arc_emerg_results <- arc_emerg_results %>% 
+  dplyr::rename("l_95_CI_scale_og" = "l-95% CI", 
+                "u_95_CI_scale_og" = "u-95% CI", 
+                "Estimate (scale og)"= "Estimate")
+
+arc_emerg_results_2 <- arc_emerg_results %>% 
+  dplyr::rename("l_95_CI_scale_sum" = "l_95_CI_scale_og", 
+                "u_95_CI_scale_sum" = "u_95_CI_scale_og",
+                "Estimate_scale_sum"= "Estimate (scale og)")
 
 # change estimates by adding estimate to other rows 
-garden_arc_emerg_results[2,1] <- garden_arc_emerg_results[2,1] + garden_arc_emerg_results[1,1]
-garden_arc_emerg_results[3,1] <- garden_arc_emerg_results[3,1] + garden_arc_emerg_results[1,1]
+arc_emerg_results_2[2,1] <- arc_emerg_results_2[2,1] + arc_emerg_results_2[1,1]
+arc_emerg_results_2[3,1] <- arc_emerg_results_2[3,1] + arc_emerg_results_2[1,1]
 # change lower CI by adding 
-garden_arc_emerg_results[2,3] <- garden_arc_emerg_results[2,3] + garden_arc_emerg_results[1,3]
-garden_arc_emerg_results[3,3] <- garden_arc_emerg_results[3,3] + garden_arc_emerg_results[1,3]
+arc_emerg_results_2[2,3] <- arc_emerg_results_2[2,3] + arc_emerg_results_2[1,3]
+arc_emerg_results_2[3,3] <- arc_emerg_results_2[3,3] + arc_emerg_results_2[1,3]
 # change upper CI
-garden_arc_emerg_results[2,4] <- garden_arc_emerg_results[2,4] + garden_arc_emerg_results[1,4]
-garden_arc_emerg_results[3,4] <- garden_arc_emerg_results[3,4] + garden_arc_emerg_results[1,4]
+arc_emerg_results_2[2,4] <- arc_emerg_results_2[2,4] + arc_emerg_results_2[1,4]
+arc_emerg_results_2[3,4] <- arc_emerg_results_2[3,4] + arc_emerg_results_2[1,4]
+
+# extraction for model output table
+rownames(arc_emerg_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Year ", "Sigma ")
 
 m_arc_emerg <- mean(all_phenocam_arctica$First_bud_burst_DOY, na.rm = T)
-garden_arc_emerg_results_out <- garden_arc_emerg_results %>% 
-  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_arc_emerg)) %>% 
-  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_arc_emerg)) %>% 
-  dplyr::mutate(Estimate_trans = (Estimate + m_arc_emerg)) %>% 
-  dplyr::select(-Est.Error)
+
+arc_emerg_extract_df <- arc_emerg_results_2 %>% 
+  mutate(Species = rep("Salix arctica")) %>%
+  dplyr::mutate(l_95_CI_scale_sum = ((l_95_CI_scale_sum) + m_arc_emerg)) %>% 
+  dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_arc_emerg)) %>% 
+  dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_arc_emerg)) %>% 
+  relocate("Species", .before = "Estimate_scale_sum") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-c(Est.Error))
+
+arc_emerg_extract_all <- full_join(arc_emerg_extract_df_1, arc_emerg_extract_df, 
+                                   by = c("effect" = "effect", "nobs"="nobs",
+                                          "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                          "Species"="Species", "Rhat"="Rhat"))
+
+rownames(arc_emerg_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Year", "Sigma")
 
 # merging all extracted outputs
-emerg_pheno_out <- rbind(garden_rich_emerg_results_out, garden_pul_emerg_results_out, garden_arc_emerg_results_out)
+emerg_pheno_out <- rbind(ric_emerg_extract_all, pul_emerg_extract_all, arc_emerg_extract_all)
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(emerg_pheno_out) <- c("Intercept", "Northern Source", "Southern Garden",  "Southern Source", 
@@ -376,11 +447,42 @@ rownames(emerg_pheno_out) <- c("Intercept", "Northern Source", "Southern Garden"
                                     "Intercept ", "Northern Source ", "Southern Garden ", "Year ", 
                                     "Sigma ")
 
-# making sure Rhat keeps the .00 
-emerg_pheno_out$Rhat <- as.character(formatC(emerg_pheno_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
 # save df of results 
 write.csv(emerg_pheno_out, "output/phenology/emerg_pheno_out_back.csv")
+
+# making sure Rhat keeps the .00 
+emerg_pheno_out$Rhat <- as.character(formatC(emerg_pheno_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_emerg_pheno <- emerg_pheno_out %>% 
+  kbl(caption="Table.xxx BRMS model outputs: Leaf emergence day of year for northern garden, northern source, sourthern garden and southern source populations. 
+      Scaled to center on zero and transformed output in the table below.", 
+      col.names = c( "Species",
+                     "Estimate (scaled)",
+                     "Lower 95% CI (scaled)",
+                     "Upper 95% CI (scaled)",
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Sample Size",
+                     "Effect", 
+                     "Estimate (backscaled sum)",  
+                     "Lower 95% CI (backscaled sum)", 
+                     "Upper 95% CI (backscaled sum)"
+                     ), digits=2, align = "l") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in italics
+row_spec(kable_emerg_pheno, 1:12, align = "c") 
+column_spec(kable_emerg_pheno, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+save_kable(kable_emerg_pheno, file = "output/phenology/kable_emerg.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # 1.2. LEAF EMERGENCE (CG ONLY MODELS) ------
 # Salix richardsonii -----
