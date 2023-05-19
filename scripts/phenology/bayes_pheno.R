@@ -609,31 +609,60 @@ plot(garden_rich_yellow_compare)
 pp_check(garden_rich_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
 saveRDS(garden_rich_yellow_compare, file = "output/phenology/garden_rich_yellow_compare.rds")
 garden_rich_yellow_compare<- readRDS(file = "output/phenology/garden_rich_yellow_compare.rds")
-garden_rich_yellow_results <- model_summ_pheno(garden_rich_yellow_compare)
-garden_rich_yellow_results <- garden_rich_yellow_results %>% 
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI")
-garden_rich_yellow_results$Species <- "Salix richardsonii"
+
+# extract output with function
+rich_yellow_results <- model_summ_pheno(garden_rich_yellow_compare)
+
+rich_yellow_results <- rich_yellow_results %>% 
+  dplyr::rename("l_95_CI_scale_og" = "l-95% CI", 
+                "u_95_CI_scale_og" = "u-95% CI", 
+                "Estimate (scale og)"= "Estimate")
+
+rich_yellow_results_2 <- rich_yellow_results %>% 
+  dplyr::rename("l_95_CI_scale_sum" = "l_95_CI_scale_og", 
+                "u_95_CI_scale_sum" = "u_95_CI_scale_og",
+                "Estimate_scale_sum"= "Estimate (scale og)")
 
 # change estimates by adding estimate to other rows 
-garden_rich_yellow_results[2,1] <- garden_rich_yellow_results[2,1] + garden_rich_yellow_results[1,1]
-garden_rich_yellow_results[3,1] <- garden_rich_yellow_results[3,1] + garden_rich_yellow_results[1,1]
-garden_rich_yellow_results[4,1] <- garden_rich_yellow_results[4,1] + garden_rich_yellow_results[1,1]
+rich_yellow_results_2[2,1] <- rich_yellow_results_2[2,1] + rich_yellow_results_2[1,1]
+rich_yellow_results_2[3,1] <- rich_yellow_results_2[3,1] + rich_yellow_results_2[1,1]
+rich_yellow_results_2[4,1] <- rich_yellow_results_2[4,1] + rich_yellow_results_2[1,1]
 # change lower CI by adding 
-garden_rich_yellow_results[2,3] <- garden_rich_yellow_results[2,3] + garden_rich_yellow_results[1,3]
-garden_rich_yellow_results[3,3] <- garden_rich_yellow_results[3,3] + garden_rich_yellow_results[1,3]
-garden_rich_yellow_results[4,3] <- garden_rich_yellow_results[4,3] + garden_rich_yellow_results[1,3]
+rich_yellow_results_2[2,3] <- rich_yellow_results_2[2,3] + rich_yellow_results_2[1,3]
+rich_yellow_results_2[3,3] <- rich_yellow_results_2[3,3] + rich_yellow_results_2[1,3]
+rich_yellow_results_2[4,3] <- rich_yellow_results_2[4,3] + rich_yellow_results_2[1,3]
 # change upper CI
-garden_rich_yellow_results[2,4] <- garden_rich_yellow_results[2,4] + garden_rich_yellow_results[1,4]
-garden_rich_yellow_results[3,4] <- garden_rich_yellow_results[3,4] + garden_rich_yellow_results[1,4]
-garden_rich_yellow_results[4,4] <- garden_rich_yellow_results[4,4] + garden_rich_yellow_results[1,4]
+rich_yellow_results_2[2,4] <- rich_yellow_results_2[2,4] + rich_yellow_results_2[1,4]
+rich_yellow_results_2[3,4] <- rich_yellow_results_2[3,4] + rich_yellow_results_2[1,4]
+rich_yellow_results_2[4,4] <- rich_yellow_results_2[4,4] + rich_yellow_results_2[1,4]
+
+# extraction for model output table
+rownames(rich_yellow_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
+rownames(rich_yellow_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+
+ric_yellow_extract_df_1 <- rich_yellow_results %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  relocate("Species", .before = "Estimate (scale og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
 
 m_rich_yellow <- mean(all_phenocam_rich$First_leaf_yellow_DOY, na.rm = T)
-garden_rich_yellow_results_out <- garden_rich_yellow_results %>% 
-  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_rich_yellow)) %>% 
-  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_rich_yellow)) %>% 
-  dplyr::mutate(Estimate_trans = (Estimate + m_rich_yellow)) %>% 
+
+ric_yellow_extract_df <- rich_yellow_results_2 %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  dplyr::mutate(l_95_CI_scale_sum = ((l_95_CI_scale_sum) + m_rich_yellow)) %>% 
+  dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_rich_yellow)) %>% 
+  dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_rich_yellow)) %>% 
+  relocate("Species", .before = "Estimate_scale_sum") %>%
+  relocate("nobs", .before = "effect")%>%
   dplyr::select(-Est.Error)
+
+ric_yellow_extract_all <- full_join(ric_yellow_extract_df_1, ric_yellow_extract_df, 
+                                   by = c("effect" = "effect", "nobs"="nobs",
+                                          "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                          "Species"="Species", "Rhat"="Rhat"))
+
+rownames(ric_yellow_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
 
 # Salix pulchra ------
 all_phenocam_pulchra$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_pulchra$First_leaf_yellow_DOY) 
@@ -649,31 +678,59 @@ pp_check(garden_pul_yellow_compare, type = "dens_overlay", ndraws = 100) # looks
 saveRDS(garden_pul_yellow_compare, file = "output/phenology/garden_pul_yellow_compare.rds")
 garden_pul_yellow_compare<- readRDS(file = "output/phenology/garden_pul_yellow_compare.rds")
 
-garden_pul_yellow_results <- model_summ_pheno(garden_pul_yellow_compare)
-garden_pul_yellow_results <- garden_pul_yellow_results %>% 
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI")
-garden_pul_yellow_results$Species <- "Salix pulchra"
+# extract output with function
+pul_yellow_results <- model_summ_pheno(garden_pul_yellow_compare)
+
+pul_yellow_results <- pul_yellow_results %>% 
+  dplyr::rename("l_95_CI_scale_og" = "l-95% CI", 
+                "u_95_CI_scale_og" = "u-95% CI", 
+                "Estimate (scale og)"= "Estimate")
+
+pul_yellow_results_2 <- pul_yellow_results %>% 
+  dplyr::rename("l_95_CI_scale_sum" = "l_95_CI_scale_og", 
+                "u_95_CI_scale_sum" = "u_95_CI_scale_og",
+                "Estimate_scale_sum"= "Estimate (scale og)")
 
 # change estimates by adding estimate to other rows 
-garden_pul_yellow_results[2,1] <- garden_pul_yellow_results[2,1] + garden_pul_yellow_results[1,1]
-garden_pul_yellow_results[3,1] <- garden_pul_yellow_results[3,1] + garden_pul_yellow_results[1,1]
-garden_pul_yellow_results[4,1] <- garden_pul_yellow_results[4,1] + garden_pul_yellow_results[1,1]
+pul_yellow_results_2[2,1] <- pul_yellow_results_2[2,1] + pul_yellow_results_2[1,1]
+pul_yellow_results_2[3,1] <- pul_yellow_results_2[3,1] + pul_yellow_results_2[1,1]
+pul_yellow_results_2[4,1] <- pul_yellow_results_2[4,1] + pul_yellow_results_2[1,1]
 # change lower CI by adding 
-garden_pul_yellow_results[2,3] <- garden_pul_yellow_results[2,3] + garden_pul_yellow_results[1,3]
-garden_pul_yellow_results[3,3] <- garden_pul_yellow_results[3,3] + garden_pul_yellow_results[1,3]
-garden_pul_yellow_results[4,3] <- garden_pul_yellow_results[4,3] + garden_pul_yellow_results[1,3]
+pul_yellow_results_2[2,3] <- pul_yellow_results_2[2,3] + pul_yellow_results_2[1,3]
+pul_yellow_results_2[3,3] <- pul_yellow_results_2[3,3] + pul_yellow_results_2[1,3]
+pul_yellow_results_2[4,3] <- pul_yellow_results_2[4,3] + pul_yellow_results_2[1,3]
 # change upper CI
-garden_pul_yellow_results[2,4] <- garden_pul_yellow_results[2,4] + garden_pul_yellow_results[1,4]
-garden_pul_yellow_results[3,4] <- garden_pul_yellow_results[3,4] + garden_pul_yellow_results[1,4]
-garden_pul_yellow_results[4,4] <- garden_pul_yellow_results[4,4] + garden_pul_yellow_results[1,4]
+pul_yellow_results_2[2,4] <- pul_yellow_results_2[2,4] + pul_yellow_results_2[1,4]
+pul_yellow_results_2[3,4] <- pul_yellow_results_2[3,4] + pul_yellow_results_2[1,4]
+pul_yellow_results_2[4,4] <- pul_yellow_results_2[4,4] + pul_yellow_results_2[1,4]
+
+# extraction for model output table
+rownames(pul_yellow_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
+rownames(pul_yellow_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+
+pul_yellow_extract_df_1 <- pul_yellow_results %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  relocate("Species", .before = "Estimate (scale og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
 
 m_pul_yellow <- mean(all_phenocam_pulchra$First_leaf_yellow_DOY, na.rm = T)
-garden_pul_yellow_results_out <- garden_pul_yellow_results %>% 
-  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_pul_yellow)) %>% 
-  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_pul_yellow)) %>% 
-  dplyr::mutate(Estimate_trans = (Estimate + m_pul_yellow)) %>% 
+
+pul_yellow_extract_df <- pul_yellow_results_2 %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  dplyr::mutate(l_95_CI_scale_sum = ((l_95_CI_scale_sum) + m_pul_yellow)) %>% 
+  dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_pul_yellow)) %>% 
+  dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_pul_yellow)) %>% 
+  relocate("Species", .before = "Estimate_scale_sum") %>%
+  relocate("nobs", .before = "effect")%>%
   dplyr::select(-Est.Error)
+
+pul_yellow_extract_all <- full_join(pul_yellow_extract_df_1, pul_yellow_extract_df, 
+                                    by = c("effect" = "effect", "nobs"="nobs",
+                                           "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                           "Species"="Species", "Rhat"="Rhat"))
+
+rownames(pul_yellow_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
 
 # Salix arctica ------
 all_phenocam_arctica$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_arctica$First_leaf_yellow_DOY) 
@@ -688,31 +745,60 @@ plot(garden_arc_yellow_compare)
 pp_check(garden_arc_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
 saveRDS(garden_arc_yellow_compare, file = "output/phenology/garden_arc_yellow_compare.rds")
 garden_arc_yellow_compare<- readRDS(file = "output/phenology/garden_arc_yellow_compare.rds")
-garden_arc_yellow_results <- model_summ_pheno(garden_arc_yellow_compare)
-garden_arc_yellow_results <- garden_arc_yellow_results %>% 
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI")
-garden_arc_yellow_results$Species <- "Salix arctica"
+
+# extract output with function
+arc_yellow_results <- model_summ_pheno(garden_arc_yellow_compare)
+
+arc_yellow_results <- arc_yellow_results %>% 
+  dplyr::rename("l_95_CI_scale_og" = "l-95% CI", 
+                "u_95_CI_scale_og" = "u-95% CI", 
+                "Estimate (scale og)"= "Estimate")
+
+arc_yellow_results_2 <- arc_yellow_results %>% 
+  dplyr::rename("l_95_CI_scale_sum" = "l_95_CI_scale_og", 
+                "u_95_CI_scale_sum" = "u_95_CI_scale_og",
+                "Estimate_scale_sum"= "Estimate (scale og)")
 
 # change estimates by adding intercept to other rows for estimate + CIs 
-garden_arc_yellow_results[2,1] <- garden_arc_yellow_results[2,1] + garden_arc_yellow_results[1,1]
-garden_arc_yellow_results[3,1] <- garden_arc_yellow_results[3,1] + garden_arc_yellow_results[1,1]
+arc_yellow_results_2[2,1] <- arc_yellow_results_2[2,1] + arc_yellow_results_2[1,1]
+arc_yellow_results_2[3,1] <- arc_yellow_results_2[3,1] + arc_yellow_results_2[1,1]
 # change lower CI by adding 
-garden_arc_yellow_results[2,3] <- garden_arc_yellow_results[2,3] + garden_arc_yellow_results[1,3]
-garden_arc_yellow_results[3,3] <- garden_arc_yellow_results[3,3] + garden_arc_yellow_results[1,3]
+arc_yellow_results_2[2,3] <- arc_yellow_results_2[2,3] + arc_yellow_results_2[1,3]
+arc_yellow_results_2[3,3] <- arc_yellow_results_2[3,3] + arc_yellow_results_2[1,3]
 # change upper CI
-garden_arc_yellow_results[2,4] <- garden_arc_yellow_results[2,4] + garden_arc_yellow_results[1,4]
-garden_arc_yellow_results[3,4] <- garden_arc_yellow_results[3,4] + garden_arc_yellow_results[1,4]
+arc_yellow_results_2[2,4] <- arc_yellow_results_2[2,4] + arc_yellow_results_2[1,4]
+arc_yellow_results_2[3,4] <- arc_yellow_results_2[3,4] + arc_yellow_results_2[1,4]
 
-m_arc_yellow <- mean(all_phenocam_arctica$First_leaf_yellow_DOY, na.rm = T)
-garden_arc_yellow_results_out <- garden_arc_yellow_results %>% 
-  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_arc_yellow)) %>% 
-  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_arc_yellow)) %>% 
-  dplyr::mutate(Estimate_trans = (Estimate + m_arc_yellow)) %>% 
+# extraction for model output table
+rownames(arc_yellow_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ",  "Year  ", "Sigma  ")
+rownames(arc_yellow_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ",  "Year ", "Sigma ")
+
+arc_yellow_extract_df_1 <- arc_yellow_results %>% 
+  mutate(Species = rep("Salix arctica")) %>%
+  relocate("Species", .before = "Estimate (scale og)") %>%
+  relocate("nobs", .before = "effect")%>%
   dplyr::select(-Est.Error)
 
+m_arc_yellow <- mean(all_phenocam_arctica$First_leaf_yellow_DOY, na.rm = T)
+
+arc_yellow_extract_df <- arc_yellow_results_2 %>% 
+  mutate(Species = rep("Salix arctica")) %>%
+  dplyr::mutate(l_95_CI_scale_sum = ((l_95_CI_scale_sum) + m_arc_yellow)) %>% 
+  dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_arc_yellow)) %>% 
+  dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_arc_yellow)) %>% 
+  relocate("Species", .before = "Estimate_scale_sum") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+arc_yellow_extract_all <- full_join(arc_yellow_extract_df_1, arc_yellow_extract_df, 
+                                    by = c("effect" = "effect", "nobs"="nobs",
+                                           "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                           "Species"="Species", "Rhat"="Rhat"))
+
+rownames(arc_yellow_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Year", "Sigma")
+
 # merging all extracted outputs
-yellow_pheno_out <- rbind(garden_rich_yellow_results_out, garden_pul_yellow_results_out, garden_arc_yellow_results_out)
+yellow_pheno_out <- rbind(ric_yellow_extract_all, pul_yellow_extract_all, arc_yellow_extract_all)
 
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(yellow_pheno_out) <- c("Intercept", "Northern Source", "Southern Garden",  "Southern Source", 
@@ -727,6 +813,36 @@ write.csv(yellow_pheno_out, "output/phenology/yellow_pheno_out_back.csv")
 # making sure Rhat keeps the .00 
 yellow_pheno_out$Rhat <- as.character(formatC(yellow_pheno_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
+# creating table
+kable_yellow_pheno <- yellow_pheno_out %>% 
+  kbl(caption="Table.xxx BRMS model outputs: Leaf yellowing day of year for northern garden, northern source, sourthern garden and southern source populations. 
+      Scaled to center on zero and transformed output in the table below.", 
+      col.names = c( "Species",
+                     "Estimate (scaled)",
+                     "Lower 95% CI (scaled)",
+                     "Upper 95% CI (scaled)",
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Sample Size",
+                     "Effect", 
+                     "Estimate (backscaled sum)",  
+                     "Lower 95% CI (backscaled sum)", 
+                     "Upper 95% CI (backscaled sum)"
+      ), digits=2, align = "l") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in italics
+row_spec(kable_yellow_pheno, 1:12, align = "c") 
+column_spec(kable_yellow_pheno, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+save_kable(kable_yellow_pheno, file = "output/phenology/kable_yellow.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # 2.2.  LEAF YELLOWING (only CG) -----
 # Salix richardsonii -------
