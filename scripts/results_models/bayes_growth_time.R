@@ -636,16 +636,16 @@ height_rich_summ <- height_rich_summ %>%
                 "u_95_CI_log" = "u-95% CI")
 
 # change estimates by adding estimate to other rows 
-height_rich_summ[3,1] <- height_rich_summ[3,1] + height_rich_summ[1,1]
-height_rich_summ[4,1] <- height_rich_summ[4,1] + height_rich_summ[2,1]
+#height_rich_summ[3,1] <- height_rich_summ[3,1] + height_rich_summ[1,1]
+#height_rich_summ[4,1] <- height_rich_summ[4,1] + height_rich_summ[2,1]
 
 # change lower CI by adding 
-height_rich_summ[3,3] <- height_rich_summ[3,3] + height_rich_summ[1,3]
-height_rich_summ[4,3] <- height_rich_summ[4,3] + height_rich_summ[2,3]
+#height_rich_summ[3,3] <- height_rich_summ[3,3] + height_rich_summ[1,3]
+#height_rich_summ[4,3] <- height_rich_summ[4,3] + height_rich_summ[2,3]
 
 # change upper CI
-height_rich_summ[3,4] <- height_rich_summ[3,4] + height_rich_summ[1,4]
-height_rich_summ[4,4] <- height_rich_summ[4,4] + height_rich_summ[2,4]
+#height_rich_summ[3,4] <- height_rich_summ[3,4] + height_rich_summ[1,4]
+#height_rich_summ[4,4] <- height_rich_summ[4,4] + height_rich_summ[2,4]
 
 #height_rich_summ <- height_rich_summ[c(1:4),] # this removes the random effects
 
@@ -708,16 +708,16 @@ height_pul_summ <- height_pul_summ %>%
                 "u_95_CI_log" = "u-95% CI")
 
 # change estimates by adding estimate to other rows 
-height_pul_summ[3,1] <- height_pul_summ[3,1] + height_pul_summ[1,1]
-height_pul_summ[4,1] <- height_pul_summ[4,1] + height_pul_summ[2,1]
+#height_pul_summ[3,1] <- height_pul_summ[3,1] + height_pul_summ[1,1]
+#height_pul_summ[4,1] <- height_pul_summ[4,1] + height_pul_summ[2,1]
 
 # change lower CI by adding 
-height_pul_summ[3,3] <- height_pul_summ[3,3] + height_pul_summ[1,3]
-height_pul_summ[4,3] <- height_pul_summ[4,3] + height_pul_summ[2,3]
+#height_pul_summ[3,3] <- height_pul_summ[3,3] + height_pul_summ[1,3]
+#height_pul_summ[4,3] <- height_pul_summ[4,3] + height_pul_summ[2,3]
 
 # change upper CI
-height_pul_summ[3,4] <- height_pul_summ[3,4] + height_pul_summ[1,4]
-height_pul_summ[4,4] <- height_pul_summ[4,4] + height_pul_summ[2,4]
+#height_pul_summ[3,4] <- height_pul_summ[3,4] + height_pul_summ[1,4]
+#height_pul_summ[4,4] <- height_pul_summ[4,4] + height_pul_summ[2,4]
 
 # Salix arctica -------
 height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
@@ -763,16 +763,16 @@ height_arc_summ <- height_arc_summ %>%
                 "u_95_CI_log" = "u-95% CI")
 
 # change estimates by adding estimate to other rows 
-height_arc_summ[3,1] <- height_arc_summ[3,1] + height_arc_summ[1,1]
-height_arc_summ[4,1] <- height_arc_summ[4,1] + height_arc_summ[2,1]
+#height_arc_summ[3,1] <- height_arc_summ[3,1] + height_arc_summ[1,1]
+#height_arc_summ[4,1] <- height_arc_summ[4,1] + height_arc_summ[2,1]
 
-# change lower CI by adding 
-height_arc_summ[3,3] <- height_arc_summ[3,3] + height_arc_summ[1,3]
-height_arc_summ[4,3] <- height_arc_summ[4,3] + height_arc_summ[2,3]
+## change lower CI by adding 
+#height_arc_summ[3,3] <- height_arc_summ[3,3] + height_arc_summ[1,3]
+#height_arc_summ[4,3] <- height_arc_summ[4,3] + height_arc_summ[2,3]
 
 # change upper CI
-height_arc_summ[3,4] <- height_arc_summ[3,4] + height_arc_summ[1,4]
-height_arc_summ[4,4] <- height_arc_summ[4,4] + height_arc_summ[2,4]
+#height_arc_summ[3,4] <- height_arc_summ[3,4] + height_arc_summ[1,4]3
+#height_arc_summ[4,4] <- height_arc_summ[4,4] + height_arc_summ[2,4]
 
 rownames(height_arc_summ) <- c(" Intercept ", " Sample age ", " Southern population "
                                , " Sample age:Southern population ", " Random intercept ", 
@@ -793,11 +793,19 @@ all_height_summ_back <- all_height_summ %>%
   dplyr::rename("Upper 95% CI (log)" = "u_95_CI_log")
 
 
-all_height_summ_table <- all_height_summ_back %>% 
+#all_height_summ_table <- all_height_summ_back %>% 
+#  kbl(caption="Table. Heights over time of northern and southern shrubs in the common garden. ", 
+  #    col.names = c("Species", "Estimate (log)", "Error (log)", "Lower 95% CI (log)", "Upper 95% CI (log)",
+    #                "Rhat", "Bulk effective sample size", "Tail effective sample size",
+       #             "Effect", "Sample size", "Estimate (back)", "Lower 95% CI (back)", "Upper 95% CI (back)"), # give the column names you want making sure you have one name per column!
+      #digits=2, align = "c") %>%  # specify number of significant digits, align numbers at the centre (can also align "l" left/ "r" right)
+ # kable_classic(full_width=FALSE, html_font="Helvetica") # can change fonts
+
+all_height_summ_table <- all_height_summ %>% 
   kbl(caption="Table. Heights over time of northern and southern shrubs in the common garden. ", 
       col.names = c("Species", "Estimate (log)", "Error (log)", "Lower 95% CI (log)", "Upper 95% CI (log)",
                     "Rhat", "Bulk effective sample size", "Tail effective sample size",
-                    "Effect", "Sample size", "Estimate (back)", "Lower 95% CI (back)", "Upper 95% CI (back)"), # give the column names you want making sure you have one name per column!
+                    "Effect", "Sample size"), # give the column names you want making sure you have one name per column!
       digits=2, align = "c") %>%  # specify number of significant digits, align numbers at the centre (can also align "l" left/ "r" right)
   kable_classic(full_width=FALSE, html_font="Helvetica") # can change fonts
 
