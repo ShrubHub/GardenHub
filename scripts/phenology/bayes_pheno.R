@@ -947,34 +947,62 @@ growing_season_rich_scale <- brms::brm(growing_season_length_scale ~ population 
                                  data = all_phenocam_rich, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000,
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
-saveRDS(growing_season_rich_scale, file = "output/phenology/garden_ric_growing_compare.rds")
-growing_season_rich_scale<- readRDS(file = "output/phenology/garden_ric_growing_compare.rds")
 summary(growing_season_rich_scale) 
 plot(growing_season_rich_scale)
 pp_check(growing_season_rich_scale, type = "dens_overlay", ndraws = 100) # looks decent
+saveRDS(growing_season_rich_scale, file = "output/phenology/garden_ric_growing_compare.rds")
+growing_season_rich_scale<- readRDS(file = "output/phenology/garden_ric_growing_compare.rds")
 
-growing_season_rich_scale_results <- model_summ_pheno(growing_season_rich_scale)
-growing_season_rich_scale_results <- growing_season_rich_scale_results %>% 
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI")
-growing_season_rich_scale_results$Species <- "Salix richardsonii"
+# extract output with function
+rich_season_results <- model_summ_pheno(growing_season_rich_scale)
+
+rich_season_results <- rich_season_results %>% 
+  dplyr::rename("l_95_CI_scale_og" = "l-95% CI", 
+                "u_95_CI_scale_og" = "u-95% CI", 
+                "Estimate (scale og)"= "Estimate")
+
+rich_season_results_2 <- rich_season_results %>% 
+  dplyr::rename("l_95_CI_scale_sum" = "l_95_CI_scale_og", 
+                "u_95_CI_scale_sum" = "u_95_CI_scale_og",
+                "Estimate_scale_sum"= "Estimate (scale og)")
 
 # change estimates by adding estimate to other rows 
-growing_season_rich_scale_results[2,1] <- growing_season_rich_scale_results[2,1] + growing_season_rich_scale_results[1,1]
-growing_season_rich_scale_results[3,1] <- growing_season_rich_scale_results[3,1] + growing_season_rich_scale_results[1,1]
+rich_season_results_2[2,1] <- rich_season_results_2[2,1] + rich_season_results_2[1,1]
+rich_season_results_2[3,1] <- rich_season_results_2[3,1] + rich_season_results_2[1,1]
 # change lower CI by adding 
-growing_season_rich_scale_results[2,3] <- growing_season_rich_scale_results[2,3] + growing_season_rich_scale_results[1,3]
-growing_season_rich_scale_results[3,3] <- growing_season_rich_scale_results[3,3] + growing_season_rich_scale_results[1,3]
+rich_season_results_2[2,3] <- rich_season_results_2[2,3] + rich_season_results_2[1,3]
+rich_season_results_2[3,3] <- rich_season_results_2[3,3] + rich_season_results_2[1,3]
 # change upper CI
-growing_season_rich_scale_results[2,4] <- growing_season_rich_scale_results[2,4] + growing_season_rich_scale_results[1,4]
-growing_season_rich_scale_results[3,4] <- growing_season_rich_scale_results[3,4] + growing_season_rich_scale_results[1,4]
+rich_season_results_2[2,4] <- rich_season_results_2[2,4] + rich_season_results_2[1,4]
+rich_season_results_2[3,4] <- rich_season_results_2[3,4] + rich_season_results_2[1,4]
+
+# extraction for model output table
+rownames(rich_season_results) <- c("Intercept  ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
+rownames(rich_season_results_2) <- c("Intercept ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+
+ric_season_extract_df_1 <- rich_season_results %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  relocate("Species", .before = "Estimate (scale og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
 
 m_rich_grow <- mean(all_phenocam_rich$growing_season_length, na.rm = T)
-growing_season_rich_scale_results_out <- growing_season_rich_scale_results %>% 
-  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_rich_grow)) %>% 
-  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_rich_grow)) %>% 
-  dplyr::mutate(Estimate_trans = (Estimate + m_rich_grow)) %>% 
+
+ric_season_extract_df <- rich_season_results_2 %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  dplyr::mutate(l_95_CI_scale_sum = ((l_95_CI_scale_sum) + m_rich_grow)) %>% 
+  dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_rich_grow)) %>% 
+  dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_rich_grow)) %>% 
+  relocate("Species", .before = "Estimate_scale_sum") %>%
+  relocate("nobs", .before = "effect")%>%
   dplyr::select(-Est.Error)
+
+ric_season_extract_all <- full_join(ric_season_extract_df_1, ric_season_extract_df, 
+                                   by = c("effect" = "effect", "nobs"="nobs",
+                                          "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                          "Species"="Species", "Rhat"="Rhat"))
+
+rownames(ric_season_extract_all) <- c("Intercept", "Southern Garden", "Southern Source", "Year", "Sigma")
 
 # Salix pulchra ------
 growing_season_pul <- brms::brm(growing_season.y ~ population + (1|Year), 
@@ -995,36 +1023,64 @@ growing_season_pul_scaled <- brms::brm(growing_season_length_scale ~ population 
                                 iter = 3000, warmup = 1000,
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 saveRDS(growing_season_pul_scaled, file = "output/phenology/garden_pul_growing_compare.rds")
-growing_season_pul_scaled<- readRDS(file = "output/phenology/garden_pul_growing_compare.rds")
 summary(growing_season_pul_scaled) # 
 plot(growing_season_pul_scaled)
 pp_check(growing_season_pul_scaled, type = "dens_overlay", ndraws = 100) # looks decent
+growing_season_pul_scaled<- readRDS(file = "output/phenology/garden_pul_growing_compare.rds")
 
-growing_season_pul_scaled_results <- model_summ_pheno(growing_season_pul_scaled)
-growing_season_pul_scaled_results <- growing_season_pul_scaled_results %>% 
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI")
-growing_season_pul_scaled_results$Species <- "Salix pulchra"
+# extract output with function
+pul_season_results <- model_summ_pheno(growing_season_pul_scaled)
+
+pul_season_results <- pul_season_results %>% 
+  dplyr::rename("l_95_CI_scale_og" = "l-95% CI", 
+                "u_95_CI_scale_og" = "u-95% CI", 
+                "Estimate (scale og)"= "Estimate")
+
+pul_season_results_2 <- pul_season_results %>% 
+  dplyr::rename("l_95_CI_scale_sum" = "l_95_CI_scale_og", 
+                "u_95_CI_scale_sum" = "u_95_CI_scale_og",
+                "Estimate_scale_sum"= "Estimate (scale og)")
 
 # change estimates by adding estimate to other rows 
-growing_season_pul_scaled_results[2,1] <- growing_season_pul_scaled_results[2,1] + growing_season_pul_scaled_results[1,1]
-growing_season_pul_scaled_results[3,1] <- growing_season_pul_scaled_results[3,1] + growing_season_pul_scaled_results[1,1]
-growing_season_pul_scaled_results[4,1] <- growing_season_pul_scaled_results[4,1] + growing_season_pul_scaled_results[1,1]
+pul_season_results_2[2,1] <- pul_season_results_2[2,1] + pul_season_results_2[1,1]
+pul_season_results_2[3,1] <- pul_season_results_2[3,1] + pul_season_results_2[1,1]
+pul_season_results_2[4,1] <- pul_season_results_2[4,1] + pul_season_results_2[1,1]
 # change lower CI by adding 
-growing_season_pul_scaled_results[2,3] <- growing_season_pul_scaled_results[2,3] + growing_season_pul_scaled_results[1,3]
-growing_season_pul_scaled_results[3,3] <- growing_season_pul_scaled_results[3,3] + growing_season_pul_scaled_results[1,3]
-growing_season_pul_scaled_results[4,3] <- growing_season_pul_scaled_results[4,3] + growing_season_pul_scaled_results[1,3]
+pul_season_results_2[2,3] <- pul_season_results_2[2,3] + pul_season_results_2[1,3]
+pul_season_results_2[3,3] <- pul_season_results_2[3,3] + pul_season_results_2[1,3]
+pul_season_results_2[4,3] <- pul_season_results_2[4,3] + pul_season_results_2[1,3]
 # change upper CI
-growing_season_pul_scaled_results[2,4] <- growing_season_pul_scaled_results[2,4] + growing_season_pul_scaled_results[1,4]
-growing_season_pul_scaled_results[3,4] <- growing_season_pul_scaled_results[3,4] + growing_season_pul_scaled_results[1,4]
-growing_season_pul_scaled_results[4,4] <- growing_season_pul_scaled_results[4,4] + growing_season_pul_scaled_results[1,4]
+pul_season_results_2[2,4] <- pul_season_results_2[2,4] + pul_season_results_2[1,4]
+pul_season_results_2[3,4] <- pul_season_results_2[3,4] + pul_season_results_2[1,4]
+pul_season_results_2[4,4] <- pul_season_results_2[4,4] + pul_season_results_2[1,4]
+
+# extraction for model output table
+rownames(pul_season_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
+rownames(pul_season_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+
+pul_season_extract_df_1 <- pul_season_results %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  relocate("Species", .before = "Estimate (scale og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
 
 m_pul_grow <- mean(all_phenocam_pulchra$growing_season_length, na.rm = T)
-growing_season_pul_scaled_results_out <- growing_season_pul_scaled_results %>% 
-  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_pul_grow)) %>% 
-  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_pul_grow)) %>% 
-  dplyr::mutate(Estimate_trans = (Estimate + m_pul_grow)) %>% 
+
+pul_season_extract_df <- pul_season_results_2 %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  dplyr::mutate(l_95_CI_scale_sum = ((l_95_CI_scale_sum) + m_pul_grow)) %>% 
+  dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_pul_grow)) %>% 
+  dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_pul_grow)) %>% 
+  relocate("Species", .before = "Estimate_scale_sum") %>%
+  relocate("nobs", .before = "effect")%>%
   dplyr::select(-Est.Error)
+
+pul_season_extract_all <- full_join(pul_season_extract_df_1, pul_season_extract_df, 
+                                    by = c("effect" = "effect", "nobs"="nobs",
+                                           "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                           "Species"="Species", "Rhat"="Rhat"))
+
+rownames(pul_season_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
 
 # Salix arctica ------
 growing_season_arc <- brms::brm(growing_season.y ~ population + (1|Year),
@@ -1050,40 +1106,67 @@ pp_check(growing_season_arc_scaled, type = "dens_overlay", ndraws = 100) # looks
 saveRDS(growing_season_arc_scaled, file = "output/phenology/garden_arc_growing_compare.rds")
 growing_season_arc_scaled<- readRDS(file = "output/phenology/garden_arc_growing_compare.rds")
 
-growing_season_arc_scaled_results <- model_summ_pheno(growing_season_arc_scaled)
-growing_season_arc_scaled_results <- growing_season_arc_scaled_results %>% 
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI")
-growing_season_arc_scaled_results$Species <- "Salix arctica"
+# extract output with function
+arc_season_results <- model_summ_pheno(growing_season_arc_scaled)
+
+arc_season_results <- arc_season_results %>% 
+  dplyr::rename("l_95_CI_scale_og" = "l-95% CI", 
+                "u_95_CI_scale_og" = "u-95% CI", 
+                "Estimate (scale og)"= "Estimate")
+
+arc_season_results_2 <- arc_season_results %>% 
+  dplyr::rename("l_95_CI_scale_sum" = "l_95_CI_scale_og", 
+                "u_95_CI_scale_sum" = "u_95_CI_scale_og",
+                "Estimate_scale_sum"= "Estimate (scale og)")
 
 # change estimates by adding estimate to other rows 
-growing_season_arc_scaled_results[2,1] <- growing_season_arc_scaled_results[2,1] + growing_season_arc_scaled_results[1,1]
-growing_season_arc_scaled_results[3,1] <- growing_season_arc_scaled_results[3,1] + growing_season_arc_scaled_results[1,1]
+arc_season_results_2[2,1] <- arc_season_results_2[2,1] + arc_season_results_2[1,1]
+arc_season_results_2[3,1] <- arc_season_results_2[3,1] + arc_season_results_2[1,1]
 # change lower CI by adding 
-growing_season_arc_scaled_results[2,3] <- growing_season_arc_scaled_results[2,3] + growing_season_arc_scaled_results[1,3]
-growing_season_arc_scaled_results[3,3] <- growing_season_arc_scaled_results[3,3] + growing_season_arc_scaled_results[1,3]
+growing_season_arc_scaled_results[2,3] <- arc_season_results_2[2,3] + arc_season_results_2[1,3]
+growing_season_arc_scaled_results[3,3] <- arc_season_results_2[3,3] + arc_season_results_2[1,3]
 # change upper CI
-growing_season_arc_scaled_results[2,4] <- growing_season_arc_scaled_results[2,4] + growing_season_arc_scaled_results[1,4]
-growing_season_arc_scaled_results[3,4] <- growing_season_arc_scaled_results[3,4] + growing_season_arc_scaled_results[1,4]
+arc_season_results_2[2,4] <- arc_season_results_2[2,4] + arc_season_results_2[1,4]
+arc_season_results_2[3,4] <- arc_season_results_2[3,4] + arc_season_results_2[1,4]
 
-m_arc_grow <- mean(all_phenocam_arctica$growing_season_length, na.rm = T)
-growing_season_arc_scaled_results_out <- growing_season_arc_scaled_results %>% 
-  dplyr::mutate(CI_low_trans = ((l_95_CI_log) + m_arc_grow)) %>% 
-  dplyr::mutate(CI_high_trans = ((u_95_CI_log) + m_arc_grow)) %>% 
-  dplyr::mutate(Estimate_trans = (Estimate + m_arc_grow)) %>% 
+# extraction for model output table
+rownames(arc_season_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Year  ", "Sigma  ")
+rownames(arc_season_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ",  "Year ", "Sigma ")
+
+arc_season_extract_df_1 <- arc_season_results %>% 
+  mutate(Species = rep("Salix arctica")) %>%
+  relocate("Species", .before = "Estimate (scale og)") %>%
+  relocate("nobs", .before = "effect")%>%
   dplyr::select(-Est.Error)
 
-# compile non-scaled results, should change to scaled though I think (Madi)
-season_results <- rbind(growing_season_pul_scaled_results_out, growing_season_pul_scaled_results_out, growing_season_arc_scaled_results_out)
+m_arc_grow <- mean(all_phenocam_arctica$growing_season_length, na.rm = T)
+
+arc_season_extract_df <- arc_season_results_2 %>% 
+  mutate(Species = rep("Salix arctica")) %>%
+  dplyr::mutate(l_95_CI_scale_sum = ((l_95_CI_scale_sum) + m_arc_grow)) %>% 
+  dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_arc_grow)) %>% 
+  dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_arc_grow)) %>% 
+  relocate("Species", .before = "Estimate_scale_sum") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+arc_season_extract_all <- full_join(arc_season_extract_df_1, arc_season_extract_df, 
+                                    by = c("effect" = "effect", "nobs"="nobs",
+                                           "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                           "Species"="Species", "Rhat"="Rhat"))
+
+rownames(arc_season_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Year", "Sigma")
+
+# compile results 
+season_results <- rbind(ric_season_extract_all, pul_season_extract_all, arc_season_extract_all)
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(season_results) <- c("Intercept", "Northern Source", "Southern Garden",  "Southern Source", 
+rownames(season_results) <- c("Intercept", "Southern Garden",  "Southern Source", 
                               "Year", "Sigma", 
                               " Intercept", " Northern Source", " Southern Garden", " Southern Source", " Year", 
                               " Sigma", 
                               "Intercept ", "Northern Source ", "Southern Garden ", "Year ", 
                               "Sigma ")
-
 
 # save df of results 
 write.csv(season_results, "output/phenology/season_outputs.csv")
@@ -1094,7 +1177,8 @@ season_results$Rhat <- as.character(formatC(season_results$Rhat, digits = 2, for
 kable_season_garden <- season_results %>% 
   kbl(caption="Table.xxx BRMS model outputs: Growing season length northern vs southern willows in common garden and source populations. 
       Model structure per species: Growing season length ~ population + (1|year). Data scaled to center on 0.", 
-      col.names = c( "Estimate",
+      col.names = c( "Species",
+        "Estimate (scaled)",
                      "Lower 95% CI (scaled)",
                      "Upper 95% CI (scaled)", 
                      "Rhat", 
@@ -1102,10 +1186,9 @@ kable_season_garden <- season_results %>%
                      "Tail Effective Sample Size", 
                      "Effect",
                      "Sample Size",
-                     "Species", 
-                     "Lower 95% CI (unscaled)",
-                     "Upper 95% CI (unscaled)",
-                     "Estimate (unscaled)"
+                      "Estimate (unscaled)", 
+                     "Lower 95% CI (unscaled sum)",
+                     "Upper 95% CI (unscaled sum)"
                      ), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 column_spec(kable_season_garden, 2, width = NULL, bold = FALSE, italic = TRUE)
@@ -1117,7 +1200,6 @@ save_kable(kable_season_garden, file = "output/phenology/season__length_results.
            latex_header_includes = NULL,
            keep_tex =TRUE,
            density = 300)
-
 
 # PLOTS ====
 theme_shrub <- function(){ theme(legend.position = "right",
