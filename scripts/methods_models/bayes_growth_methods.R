@@ -80,16 +80,18 @@ source_rich_height <- brms::brm(log(Canopy_Height_cm) ~ Site + (1|SampleYear),
                                 iter = 3000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(source_rich_height) # lower heights for QHi
+summary(source_rich_height) # sig. lower heights for QHi
 plot(source_rich_height)
 pp_check(source_rich_height, type = "dens_overlay", nsamples = 100)  # good) 
+saveRDS(source_rich_height, file = "output/models/source_rich_height.rds")
+source_rich_height <- readRDS(file = "output/models/source_rich_height.rds")
 
 # extract output with function
-source_rich_height <- model_summ_methods(source_rich_height)
+source_rich_height_dat <- model_summ_methods(source_rich_height)
 
 # extraction for model output table
-rownames(source_rich_height) <- c("Intercept", "Northern source", "Sample year", "Sigma")
-source_rich_height_df <- source_rich_height %>% 
+rownames(source_rich_height_dat) <- c("Intercept", "Northern source", "Sample year", "Sigma")
+source_rich_height_df <- source_rich_height_dat %>% 
   mutate(Species = rep("Salix richardsonii")) %>% 
   relocate("Species", .before = "Estimate")%>%
   relocate("nobs", .before = "effect")
@@ -100,16 +102,18 @@ source_pul_height <- brms::brm(log(Canopy_Height_cm) ~ Site + (1|SampleYear),
                                 iter = 3000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(source_pul_height) # lower heights for QHi
+summary(source_pul_height) # sig lower heights for QHi
 plot(source_pul_height)
 pp_check(source_pul_height, type = "dens_overlay", nsamples = 100)  # good) 
+saveRDS(source_pul_height, file = "output/models/source_pul_height.rds")
+source_pul_height <- readRDS(file = "output/models/source_pul_height.rds")
 
 # extract output with function
-source_pul_height <- model_summ_methods(source_pul_height)
+source_pul_height_dat<- model_summ_methods(source_pul_height)
 
 # extraction for model output table
-rownames(source_pul_height) <- c("Intercept", "Northern source", "Sample year", "Sigma")
-source_pul_height_df <- source_pul_height %>% 
+rownames(source_pul_height_dat) <- c("Intercept", "Northern source", "Sample year", "Sigma")
+source_pul_height_df <- source_pul_height_dat %>% 
   mutate(Species = rep("Salix pulchra")) %>% 
   relocate("Species", .before = "Estimate")%>%
   relocate("nobs", .before = "effect")
@@ -123,13 +127,14 @@ source_arc_height <- brms::brm(log(Canopy_Height_cm) ~ Site + (1|SampleYear),
 summary(source_arc_height) # no significant difference
 plot(source_arc_height)
 pp_check(source_arc_height, type = "dens_overlay", nsamples = 100)  # good) 
-
+saveRDS(source_arc_height, file = "output/models/source_arc_height.rds")
+source_arc_height <- readRDS(file = "output/models/source_arc_height.rds")
 # extract output with function
-source_arc_height <- model_summ_methods(source_arc_height)
+source_arc_height_dat <- model_summ_methods(source_arc_height)
 
 # extraction for model output table
-rownames(source_arc_height) <- c("Intercept", "Northern source", "Sample year", "Sigma")
-source_arc_height_df <- source_arc_height %>% 
+rownames(source_arc_height_dat) <- c("Intercept", "Northern source", "Sample year", "Sigma")
+source_arc_height_df <- source_arc_height_dat %>% 
   mutate(Species = rep("Salix arctica")) %>% 
   relocate("Species", .before = "Estimate")%>%
   relocate("nobs", .before = "effect")
@@ -140,30 +145,25 @@ source_heights_out <- rbind(source_rich_height_df, source_pul_height_df,
 
 
 # back transforming from log
-source_heights_out_back <- source_heights_out %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(Estimate), 
-         Est.Error_trans = 10^(Est.Error)) %>% 
-  select(-CI_range)
+#source_heights_out_back <- source_heights_out %>%
+ # dplyr::rename("l_95_CI_log" = "l-95% CI", 
+   #             "u_95_CI_log" = "u-95% CI") %>%
+ 
 
 # save df of results 
 write.csv(source_heights_out_back, "output/source_heights_out_back.csv")
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(source_heights_out_back) <- c("Intercept", "Northern source", "Sample year", 
+rownames(source_heights_out) <- c("Intercept", "Northern source", "Sample year", 
                                        "Sigma", " Intercept", " Northern source", " Sample year", 
                                        " Sigma", "Intercept ", "Northern source ", "Sample year ", 
                                        "Sigma ")
 
 # making sure Rhat keeps the .00 
-source_heights_out_back$Rhat <- as.character(formatC(source_heights_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+source_heights_out$Rhat <- as.character(formatC(source_heights_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
 # creating table
-kable_heights_source <- source_heights_out_back %>% 
+kable_heights_source <- source_heights_out %>% 
   kbl(caption="Table.xxx BRMS model outputs: canopy heights of northern vs southern shrubs in source populations. 
       Model structure per species: log(Canopy_Height_cm) ~ Site + (1|SampleYear). 
       Including model output back-transformed in the table below.", 
@@ -175,12 +175,7 @@ kable_heights_source <- source_heights_out_back %>%
                      "Bulk Effective Sample Size",
                      "Tail Effective Sample Size", 
                      "Sample Size",
-                     "Effect",
-                     "Lower 95% CI 
-                    (back transformed)", "Upper 95% CI
-                    (back transformed)", 
-                     "Estimate transformed", 
-                     "Error transformed"), digits=2, align = "l") %>% 
+                     "Effect"), digits=2, align = "l") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in cursive
@@ -634,67 +629,128 @@ all_source_outputs <- rbind(source_heights_out_back, source_width_out_back,
 
 
 # DATA VISUALISATION --------
+theme_shrub_source <- function(){ theme(legend.position = "right",
+                                 axis.title.x = element_text(family = "Helvetica Light", size=20),
+                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 0), 
+                                 axis.title.y = element_text(family = "Helvetica Light", size=20),
+                                 axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
+                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
+                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
+                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+                                 plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 legend.title=element_text(size=16, family = "Helvetica Light"),
+                                 legend.text=element_text(size = 15, family = "Helvetica Light"))}
+pal_source  <- c("#FDE725FF", "#2A788EFF") # for when southern source is missing  
 
 # CANOPY HEIGHT -------
 # S.rich ----
 rich_source_height <- (conditional_effects(source_rich_height)) # extracting conditional effects from bayesian model
 rich_source_height_data <- rich_source_height[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
+rich_source_height_data$Site  <- plyr::revalue(rich_source_height_data$Site , 
+                                                 c("Kluane"="S. Source",
+                                                   "Qikiqtaruk"="N. Source"))
+
+rich_source_height_data$effect1__  <- plyr::revalue(rich_source_height_data$effect1__ , 
+                                               c("Kluane"="S. Source",
+                                                 "Qikiqtaruk"="N. Source"))
+
+unique_source_mother_rich$Site  <- plyr::revalue(unique_source_mother_rich$Site , 
+                                                 c("Kluane"="S. Source",
+                                                   "Qikiqtaruk"="N. Source"))
+
 
 (rich_source_height_plot <-ggplot(rich_source_height_data) +
-    geom_violin(data = unique_source_mother_rich, aes(x = Site, y = log(Canopy_Height_cm), fill = Site, colour = Site),
-                alpha = 0.1)+ # raw data
-    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = log(Canopy_Height_cm), colour = Site),
-                alpha = 0.8)+
-    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
-                  alpha = 1,  width=0.5) +
-    ylab("Canopy height (log, cm)\n") +
-    xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_shrub() +
-    labs(title = "Salix richardsonii"))
+   # geom_violin(data = unique_source_mother_rich, aes(x = Site, y = log(Canopy_Height_cm), fill = Site, colour = Site),
+    #            alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = Canopy_Height_cm, colour = Site),
+                alpha = 0.2)+
+    geom_point(aes(x = effect1__, y = exp(estimate__),colour = Site),  width=0.5, size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = exp(lower__), ymax = exp(upper__),colour = Site),
+                  linewidth = 1, alpha = 1) +
+    ylab("Canopy height (cm)\n") +
+    xlab("\n Source population" ) +
+    scale_color_manual(values=pal_source) +
+    theme_shrub_source() +
+    ggtitle(expression(italic("Salix richardsonii"))) +
+    theme(text=element_text(family="Helvetica Light")) )
+
 
 # S. pul----
 pul_source_height <- (conditional_effects(source_pul_height)) # extracting conditional effects from bayesian model
 pul_source_height_data <- pul_source_height[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
+pul_source_height_data$Site  <- plyr::revalue(pul_source_height_data$Site , 
+                                               c("Kluane"="S. Source",
+                                                 "Qikiqtaruk"="N. Source"))
+
+pul_source_height_data$effect1__  <- plyr::revalue(pul_source_height_data$effect1__ , 
+                                                    c("Kluane"="S. Source",
+                                                      "Qikiqtaruk"="N. Source"))
+
+unique_source_mother_pulchra$Site  <- plyr::revalue(unique_source_mother_pulchra$Site , 
+                                                 c("Kluane"="S. Source",
+                                                   "Qikiqtaruk"="N. Source"))
+
+
 
 (pul_source_height_plot <-ggplot(pul_source_height_data) +
-    geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = log(Canopy_Height_cm), fill = Site, colour = Site),
-                alpha = 0.1)+ # raw data
-    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = log(Canopy_Height_cm), colour = Site),
-                alpha = 0.8)+
-    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
-                  alpha = 1,  width=0.5) +
-    ylab("Canopy height (log, cm)\n") +
-    xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_shrub() +
-    labs(title = "Salix pulchra"))
+    #geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = log(Canopy_Height_cm), fill = Site, colour = Site),
+      #          alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = Canopy_Height_cm, colour = Site),
+                alpha = 0.2)+
+    geom_point(aes(x = effect1__, y = exp(estimate__),colour = Site), width=0.5, size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = exp(lower__), ymax = exp(upper__),colour = Site),
+                  linewidth = 1, alpha = 1) +
+    ylim(0, 200)+
+    ylab("Canopy height (cm)\n") +
+    xlab("\n Source population" ) +
+    scale_colour_manual(values =pal_source) +
+    theme_shrub_source() +
+    ggtitle(expression(italic("Salix pulchra"))) +
+    theme(text=element_text(family="Helvetica Light")) )
 
 # S.arctica -----
 arc_source_height <- (conditional_effects(source_arc_height)) # extracting conditional effects from bayesian model
 arc_source_height_data <- arc_source_height[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
+arc_source_height_data$Site  <- plyr::revalue(arc_source_height_data$Site , 
+                                              c("Kluane"="S. Source",
+                                                "Qikiqtaruk"="N. Source"))
+
+arc_source_height_data$effect1__  <- plyr::revalue(arc_source_height_data$effect1__ , 
+                                                   c("Kluane"="S. Source",
+                                                     "Qikiqtaruk"="N. Source"))
+
+unique_source_mother_arctica$Site  <- plyr::revalue(unique_source_mother_arctica$Site , 
+                                                    c("Kluane"="S. Source",
+                                                      "Qikiqtaruk"="N. Source"))
+
+
+
 
 (arc_source_height_plot <-ggplot(arc_source_height_data) +
-    geom_violin(data = unique_source_mother_arctica, aes(x = Site, y = log(Canopy_Height_cm), fill = Site, colour = Site),
-                alpha = 0.1)+ # raw data
-    geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = log(Canopy_Height_cm), colour = Site),
-                alpha = 0.8)+
-    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
-                  alpha = 1,  width=0.5) +
-    ylab("Canopy height (log, cm)\n") +
-    xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_shrub() +
-    labs(title = "Salix arctica"))
+   # geom_violin(data = unique_source_mother_arctica, aes(x = Site, y = log(Canopy_Height_cm), fill = Site, colour = Site),
+         #       alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = Canopy_Height_cm, colour = Site),
+                alpha = 0.2)+
+    geom_point(aes(x = effect1__, y = exp(estimate__),colour = Site), width=0.5, size = 4)+
+    geom_errorbar(aes(x = effect1__, ymin = exp(lower__), ymax = exp(upper__),colour = Site),
+                  linewidth = 1, alpha = 1) +
+    ylab("Canopy height (cm)\n") +
+    xlab("\n Source population" ) +
+    scale_colour_manual(values = pal_source) +
+    theme_shrub_source()  +
+    ggtitle(expression(italic("Salix arctica"))) +
+    theme(text=element_text(family="Helvetica Light")) )
+
+# arrange 
+(source_growth_heights_plots <- ggarrange(rich_source_height_plot, pul_source_height_plot, arc_source_height_plot, 
+                                common.legend = TRUE, legend = "bottom",
+                                ncol = 3, nrow = 1))
+
+
+ggsave(source_growth_heights_plots, filename ="output/figures/source_growth_heights_plots.png", width = 14.67, height = 6.53, units = "in")
 
 # STEM ELONG -----
 # S.rich ----
