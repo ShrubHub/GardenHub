@@ -88,13 +88,47 @@ source_rich_height <- readRDS(file = "output/models/source_rich_height.rds")
 
 # extract output with function
 source_rich_height_dat <- model_summ_methods(source_rich_height)
+source_rich_height_dat <- source_rich_height_dat %>% 
+  dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
+                "u_95_CI_log_og" = "u-95% CI", 
+                "Estimate (log og)"= "Estimate")
+
+source_rich_height_dat_2 <- source_rich_height_dat %>% 
+  dplyr::rename("l_95_CI_log_sum" = "l_95_CI_log_og", 
+                "u_95_CI_log_sum" = "u_95_CI_log_og",
+                "Estimate (log sum)"= "Estimate (log og)")
+
+# change estimates by adding estimate to other rows 
+source_rich_height_dat_2[2,1] <- source_rich_height_dat_2[2,1] + source_rich_height_dat_2[1,1]
+# change lower CI by adding 
+source_rich_height_dat_2[2,3] <- source_rich_height_dat_2[2,3] + source_rich_height_dat_2[1,3]
+# change upper CI
+source_rich_height_dat_2[2,4] <- source_rich_height_dat_2[2,4] + source_rich_height_dat_2[1,4]
 
 # extraction for model output table
 rownames(source_rich_height_dat) <- c("Intercept", "Northern source", "Sample year", "Sigma")
-source_rich_height_df <- source_rich_height_dat %>% 
-  mutate(Species = rep("Salix richardsonii")) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
+rownames(source_rich_height_dat_2) <- c("Intercept", "Northern source", "Sample year", "Sigma")
+
+source_rich_height_df_1 <- source_rich_height_dat %>% 
+  mutate(Species = rep("Salix richardsonii"))  %>%
+  relocate("Species", .before = "Estimate (log og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+source_rich_height_df <- source_rich_height_dat_2 %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  relocate("Species", .before = "Estimate (log sum)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+rich_source_extract_all <- full_join(source_rich_height_df_1, source_rich_height_df, 
+                             by = c("effect" = "effect", "nobs"="nobs",
+                                    "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                    "Species"="Species", "Rhat"="Rhat"))
+
+rownames(rich_source_extract_all) <- c("Intercept ", "Northern Source ", "Sample year", "Sigma  ")
+
+
 
 # Salix pulchra ------
 source_pul_height <- brms::brm(log(Canopy_Height_cm) ~ Site + (1|SampleYear),
@@ -110,13 +144,47 @@ source_pul_height <- readRDS(file = "output/models/source_pul_height.rds")
 
 # extract output with function
 source_pul_height_dat<- model_summ_methods(source_pul_height)
+source_pul_height_dat <- source_pul_height_dat %>% 
+  dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
+                "u_95_CI_log_og" = "u-95% CI", 
+                "Estimate (log og)"= "Estimate")
+
+source_pul_height_dat_2 <- source_pul_height_dat %>% 
+  dplyr::rename("l_95_CI_log_sum" = "l_95_CI_log_og", 
+                "u_95_CI_log_sum" = "u_95_CI_log_og",
+                "Estimate (log sum)"= "Estimate (log og)")
+
+# change estimates by adding estimate to other rows 
+source_pul_height_dat_2[2,1] <- source_pul_height_dat_2[2,1] + source_pul_height_dat_2[1,1]
+# change lower CI by adding 
+source_pul_height_dat_2[2,3] <- source_pul_height_dat_2[2,3] + source_pul_height_dat_2[1,3]
+# change upper CI
+source_pul_height_dat_2[2,4] <- source_pul_height_dat_2[2,4] + source_pul_height_dat_2[1,4]
 
 # extraction for model output table
 rownames(source_pul_height_dat) <- c("Intercept", "Northern source", "Sample year", "Sigma")
-source_pul_height_df <- source_pul_height_dat %>% 
-  mutate(Species = rep("Salix pulchra")) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
+rownames(source_pul_height_dat_2) <- c("Intercept", "Northern source", "Sample year", "Sigma")
+
+source_pul_height_df_1 <- source_pul_height_dat %>% 
+  mutate(Species = rep("Salix pulchra"))  %>%
+  relocate("Species", .before = "Estimate (log og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+source_pul_height_df <- source_pul_height_dat_2 %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  relocate("Species", .before = "Estimate (log sum)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+pul_source_extract_all <- full_join(source_pul_height_df_1, source_pul_height_df, 
+                                     by = c("effect" = "effect", "nobs"="nobs",
+                                            "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                            "Species"="Species", "Rhat"="Rhat"))
+
+rownames(pul_source_extract_all) <- c("Intercept ", "Northern Source ", "Sample year", "Sigma  ")
+
+
 
 # Salix arctica -----
 source_arc_height <- brms::brm(log(Canopy_Height_cm) ~ Site + (1|SampleYear),
@@ -131,46 +199,92 @@ saveRDS(source_arc_height, file = "output/models/source_arc_height.rds")
 source_arc_height <- readRDS(file = "output/models/source_arc_height.rds")
 # extract output with function
 source_arc_height_dat <- model_summ_methods(source_arc_height)
+source_arc_height_dat <- source_arc_height_dat %>% 
+  dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
+                "u_95_CI_log_og" = "u-95% CI", 
+                "Estimate (log og)"= "Estimate")
+
+source_arc_height_dat_2 <- source_arc_height_dat %>% 
+  dplyr::rename("l_95_CI_log_sum" = "l_95_CI_log_og", 
+                "u_95_CI_log_sum" = "u_95_CI_log_og",
+                "Estimate (log sum)"= "Estimate (log og)")
+
+# change estimates by adding estimate to other rows 
+source_arc_height_dat_2[2,1] <- source_arc_height_dat_2[2,1] + source_arc_height_dat_2[1,1]
+# change lower CI by adding 
+source_arc_height_dat_2[2,3] <- source_arc_height_dat_2[2,3] + source_arc_height_dat_2[1,3]
+# change upper CI
+source_arc_height_dat_2[2,4] <- source_arc_height_dat_2[2,4] + source_arc_height_dat_2[1,4]
+
 
 # extraction for model output table
 rownames(source_arc_height_dat) <- c("Intercept", "Northern source", "Sample year", "Sigma")
-source_arc_height_df <- source_arc_height_dat %>% 
-  mutate(Species = rep("Salix arctica")) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
+rownames(source_arc_height_dat_2) <- c("Intercept", "Northern source", "Sample year", "Sigma")
+
+source_arc_height_df_1 <- source_arc_height_dat %>% 
+  mutate(Species = rep("Salix arctica"))  %>%
+  relocate("Species", .before = "Estimate (log og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+source_arc_height_df <- source_arc_height_dat_2 %>% 
+  mutate(Species = rep("Salix arctica")) %>%
+  relocate("Species", .before = "Estimate (log sum)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+arc_source_extract_all <- full_join(source_arc_height_df_1, source_arc_height_df, 
+                                    by = c("effect" = "effect", "nobs"="nobs",
+                                           "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                           "Species"="Species", "Rhat"="Rhat"))
+
+rownames(arc_source_extract_all) <- c("Intercept ", "Northern Source ", "Sample year", "Sigma  ")
+
 
 # merging all extracted outputs
-source_heights_out <- rbind(source_rich_height_df, source_pul_height_df, 
-                            source_arc_height_df) 
-
+source_heights_out <- rbind(rich_source_extract_all, pul_source_extract_all, 
+                            arc_source_extract_all) 
+source_heights_out <- source_heights_out %>%
+  dplyr::rename("Estimate_log_sum" = "Estimate (log sum)")
 
 # back transforming from log
-#source_heights_out_back <- source_heights_out %>%
- # dplyr::rename("l_95_CI_log" = "l-95% CI", 
-   #             "u_95_CI_log" = "u-95% CI") %>%
- 
+source_heights_out_back <- source_heights_out %>%
+  mutate(CI_low_trans = exp(l_95_CI_log_sum)) %>% 
+  mutate(CI_high_trans = exp(u_95_CI_log_sum)) %>% 
+  mutate(Estimate_trans = exp(Estimate_log_sum))%>%
+  relocate(CI_low_trans, .before = Rhat) %>%
+  relocate(CI_high_trans, .before = Rhat) %>%
+  relocate(Estimate_trans, .before = CI_low_trans)%>%
+  relocate(Estimate_log_sum, .before = Estimate_trans) %>%
+  relocate(l_95_CI_log_sum, .before = Estimate_trans) %>%
+  relocate(u_95_CI_log_sum, .before = Estimate_trans)
 
 # save df of results 
 write.csv(source_heights_out_back, "output/source_heights_out_back.csv")
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(source_heights_out) <- c("Intercept", "Northern source", "Sample year", 
+rownames(source_heights_out_back) <- c("Intercept", "Northern source", "Sample year", 
                                        "Sigma", " Intercept", " Northern source", " Sample year", 
                                        " Sigma", "Intercept ", "Northern source ", "Sample year ", 
                                        "Sigma ")
 
 # making sure Rhat keeps the .00 
-source_heights_out$Rhat <- as.character(formatC(source_heights_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+source_heights_out_back$Rhat <- as.character(formatC(source_heights_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
 # creating table
-kable_heights_source <- source_heights_out %>% 
+kable_heights_source <- source_heights_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: canopy heights of northern vs southern shrubs in source populations. 
       Model structure per species: log(Canopy_Height_cm) ~ Site + (1|SampleYear). 
       Including model output back-transformed in the table below.", 
-      col.names = c( "Species","Estimate",
-                     "Est. Error",
+      col.names = c( "Species","Estimate (log)",
                      "Lower 95% CI (log)",
-                     "Upper 95% CI (log)", 
+                     "Upper 95% CI (log)",
+                     "Estimate (log sum)",  "Lower 95% CI 
+                    (log sum)", "Upper 95% CI
+                    (log sum)",  
+                     "Estimate (transformed)","Lower 95% CI 
+                    (transformed)", "Upper 95% CI
+                    (transformed)",
                      "Rhat", 
                      "Bulk Effective Sample Size",
                      "Tail Effective Sample Size", 
