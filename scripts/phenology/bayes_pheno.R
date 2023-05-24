@@ -810,6 +810,7 @@ rownames(yellow_pheno_out) <- c("Intercept", "Northern Source", "Southern Garden
 
 # save df of results 
 write.csv(yellow_pheno_out, "output/phenology/yellow_pheno_out_back.csv")
+yellow_pheno_out <- read.csv("output/phenology/yellow_pheno_out_back.csv", row.names = 1)
 # making sure Rhat keeps the .00 
 yellow_pheno_out$Rhat <- as.character(formatC(yellow_pheno_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
