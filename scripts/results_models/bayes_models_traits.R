@@ -177,8 +177,8 @@ rich_SLA_results_2[3,4] <- rich_SLA_results_2[3,4] + rich_SLA_results_2[1,4]
 rich_SLA_results_2[4,4] <- rich_SLA_results_2[4,4] + rich_SLA_results_2[1,4]
 
 # extraction for model output table
-rownames(rich_SLA_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
-rownames(rich_SLA_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+rownames(rich_SLA_results) <- c("Intercept  ", "Northern Source ", "Southern Source  ", "Southern Garden ", "Year  ", "Sigma  ")
+rownames(rich_SLA_results_2) <- c("Intercept ", "Northern Source ", "Southern Source ", "Southern Garden ", "Year ", "Sigma ")
 
 ric_sla_extract_df_1 <- rich_SLA_results %>% 
   mutate(Species = rep("Salix richardsonii")) %>%
@@ -197,7 +197,7 @@ ric_sla_extract_all <- full_join(ric_sla_extract_df_1, ric_sla_extract_df,
                                     "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                     "Species"="Species", "Rhat"="Rhat"))
 
-rownames(ric_sla_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
+rownames(ric_sla_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation (none are sig diff from each other)
 # N Garden = estimate 2.70 , CI = 2.54 to 2.85
@@ -245,8 +245,8 @@ pulchra_SLA_results_2[3,4] <- pulchra_SLA_results_2[3,4] + pulchra_SLA_results_2
 pulchra_SLA_results_2[4,4] <- pulchra_SLA_results_2[4,4] + pulchra_SLA_results_2[1,4]
 
 # extraction for model output table
-rownames(pulchra_SLA_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
-rownames(pulchra_SLA_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+rownames(pulchra_SLA_results) <- c("Intercept  ", "Northern Source ", "Southern Source  ", "Southern Garden ", "Year  ", "Sigma  ")
+rownames(pulchra_SLA_results_2) <- c("Intercept ", "Northern Source ", "Southern Source ", "Southern Garden ", "Year ", "Sigma ")
 
 pul_sla_extract_df_1 <- pulchra_SLA_results %>% 
   mutate(Species = rep("Salix pulchra")) %>%
@@ -265,7 +265,7 @@ pul_sla_extract_all <- full_join(pul_sla_extract_df_1, pul_sla_extract_df,
                                         "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                         "Species"="Species", "Rhat"="Rhat"))
 
-rownames(pul_sla_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
+rownames(pul_sla_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation 
 # N Garden = estimate = 2.74 , CI = 2.62 to 2.85
@@ -311,8 +311,8 @@ arctica_SLA_results_2[3,4] <- arctica_SLA_results_2[3,4] + arctica_SLA_results_2
 arctica_SLA_results_2[4,4] <- arctica_SLA_results_2[4,4] + arctica_SLA_results_2[1,4]
 
 # extraction for model output table
-rownames(arctica_SLA_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
-rownames(arctica_SLA_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+rownames(arctica_SLA_results) <- c("Intercept  ", "Northern Source ", "Southern Source  ", "Southern Garden ", "Year  ", "Sigma  ")
+rownames(arctica_SLA_results_2) <- c("Intercept ", "Northern Source ", "Southern Source ", "Southern Garden ", "Year ", "Sigma ")
 
 arc_sla_extract_df_1 <- arctica_SLA_results %>% 
   mutate(Species = rep("Salix arctica")) %>%
@@ -331,7 +331,7 @@ arc_sla_extract_all <- full_join(arc_sla_extract_df_1, arc_sla_extract_df,
                                         "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                         "Species"="Species", "Rhat"="Rhat"))
 
-rownames(arc_sla_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
+rownames(arc_sla_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation (none sig diff)
 # N Garden = estimate = 2.41 , CI = 2.18 to 2.64
