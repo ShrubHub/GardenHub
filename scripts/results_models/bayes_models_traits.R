@@ -958,8 +958,8 @@ rich_LL_results_2[3,4] <- rich_LL_results_2[3,4] + rich_LL_results_2[1,4]
 rich_LL_results_2[4,4] <- rich_LL_results_2[4,4] + rich_LL_results_2[1,4]
 
 # extraction for model output table
-rownames(rich_LL_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
-rownames(rich_LL_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+rownames(rich_LL_results) <- c("Intercept  ", "Northern Source ", "Southern Source  ", "Southern Garden ", "Year  ", "Sigma  ")
+rownames(rich_LL_results_2) <- c("Intercept ", "Northern Source ", "Southern Source ", "Southern Garden ", "Year ", "Sigma ")
 
 rich_ll_extract_df_1 <- rich_LL_results %>% 
   mutate(Species = rep("Salix richardsonii")) %>%
@@ -978,7 +978,7 @@ rich_ll_extract_all <- full_join(rich_ll_extract_df_1, rich_ll_extract_df,
                                         "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                         "Species"="Species", "Rhat"="Rhat"))
 
-rownames(rich_ll_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
+rownames(rich_ll_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation 
 # N Garden = estimate = 22.01 , CI = 15.16 to 28.65 *
@@ -1024,8 +1024,8 @@ pul_LL_results_2[3,4] <- pul_LL_results_2[3,4] + pul_LL_results_2[1,4]
 pul_LL_results_2[4,4] <- pul_LL_results_2[4,4] + pul_LL_results_2[1,4]
 
 # extraction for model output table
-rownames(pul_LL_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
-rownames(pul_LL_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+rownames(pul_LL_results) <- c("Intercept  ", "Northern Source ", "Southern Source  ", "Southern Garden ", "Year  ", "Sigma  ")
+rownames(pul_LL_results_2) <- c("Intercept ", "Northern Source ", "Southern Source ", "Southern Garden ", "Year ", "Sigma ")
 
 pul_ll_extract_df_1 <- pul_LL_results %>% 
   mutate(Species = rep("Salix pulchra")) %>%
@@ -1044,7 +1044,7 @@ pul_ll_extract_all <- full_join(pul_ll_extract_df_1, pul_ll_extract_df,
                                         "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                         "Species"="Species", "Rhat"="Rhat"))
 
-rownames(pul_ll_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
+rownames(pul_ll_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 # interpretation 
 # N Garden = estimate = 20.01 , CI = 12.13 to 27.35 *
 # N Source = estimate = 35.04, CI = 23.05 to 46.55**
@@ -1137,7 +1137,7 @@ garden_ll_out_back$Rhat <- as.character(formatC(garden_ll_out_back$Rhat, digits 
 
 # creating table
 kable_ll <- garden_ll_out_back %>% 
-  kbl(caption="Table.xxx BRMS model outputs: leaf dry matter content by northern garden, northern source, sourthern garden and southern source populations. 
+  kbl(caption="Table.xxx BRMS model outputs: leaf length in northern garden, northern source, sourthern garden and southern source populations. 
       Log transformed output in the table below.", 
       col.names = c( "Species",
                      "Estimate",
