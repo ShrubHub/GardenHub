@@ -1127,9 +1127,7 @@ garden_LL_out <- garden_LL_out %>%
 garden_ll_out_back <- garden_LL_out %>% 
   relocate(lower_CI, .before = Rhat) %>%
   relocate(upper_CI, .before = Rhat) %>%
-  relocate(Estimate, .before = lower_CI)%>%
-  relocate(lower_CI_trans, .before = Estimate_sum) %>%
-  relocate(upper_CI_trans, .before = Estimate_sum)
+  relocate(Estimate, .before = lower_CI)
 # save df of results 
 write.csv(garden_ll_out_back, "output/traits/garden_LL_out_back.csv")
 garden_ll_out_back <- read.csv("output/traits/garden_LL_out_back.csv", row.names = 1)
