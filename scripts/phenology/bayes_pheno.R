@@ -449,7 +449,7 @@ rownames(emerg_pheno_out) <- c("Intercept", "Northern Source", "Southern Garden"
 
 # save df of results 
 write.csv(emerg_pheno_out, "output/phenology/emerg_pheno_out_back.csv")
-
+emerg_pheno_out <- read.csv("output/phenology/emerg_pheno_out_back.csv", row.names = 1)
 # making sure Rhat keeps the .00 
 emerg_pheno_out$Rhat <- as.character(formatC(emerg_pheno_out$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
