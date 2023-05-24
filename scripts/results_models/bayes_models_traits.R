@@ -441,8 +441,8 @@ rich_LDMC_results_2[3,4] <- rich_LDMC_results_2[3,4] + rich_LDMC_results_2[1,4]
 rich_LDMC_results_2[4,4] <- rich_LDMC_results_2[4,4] + rich_LDMC_results_2[1,4]
 
 # extraction for model output table
-rownames(rich_LDMC_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
-rownames(rich_LDMC_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+rownames(rich_LDMC_results) <- c("Intercept  ", "Northern Source ", "Southern Source  ", "Southern Garden ", "Year  ", "Sigma  ")
+rownames(rich_LDMC_results_2) <- c("Intercept ", "Northern Source ", "Southern Source ", "Southern Garden ", "Year ", "Sigma ")
 
 ric_ldmc_extract_df_1 <- rich_LDMC_results %>% 
   mutate(Species = rep("Salix richardsonii")) %>%
@@ -461,7 +461,7 @@ rich_ldmc_extract_all <- full_join(ric_ldmc_extract_df_1, ric_ldmc_extract_df,
                                         "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                         "Species"="Species", "Rhat"="Rhat"))
 
-rownames(rich_ldmc_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
+rownames(rich_ldmc_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation (none sig diff)
 # N Garden = estimate = 3.42 , CI = 3.07 to 3.76
@@ -508,8 +508,8 @@ pulchra_LDMC_results_2[3,4] <- pulchra_LDMC_results_2[3,4] + pulchra_LDMC_result
 pulchra_LDMC_results_2[4,4] <- pulchra_LDMC_results_2[4,4] + pulchra_LDMC_results_2[1,4]
 
 # extraction for model output table
-rownames(pulchra_LDMC_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
-rownames(pulchra_LDMC_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+rownames(pulchra_LDMC_results) <- c("Intercept  ", "Northern Source ", "Southern Source  ", "Southern Garden ", "Year  ", "Sigma  ")
+rownames(pulchra_LDMC_results_2) <- c("Intercept ", "Northern Source ", "Southern Source ", "Southern Garden ", "Year ", "Sigma ")
 
 pul_ldmc_extract_df_1 <- pulchra_LDMC_results %>% 
   mutate(Species = rep("Salix pulchra")) %>%
@@ -528,7 +528,7 @@ pul_ldmc_extract_all <- full_join(pul_ldmc_extract_df_1, pul_ldmc_extract_df,
                                           "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                           "Species"="Species", "Rhat"="Rhat"))
 
-rownames(pul_ldmc_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
+rownames(pul_ldmc_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation (none sig diff)
 # N Garden = estimate = 3.63 , CI = 3.18 to 4.07
@@ -575,8 +575,8 @@ arctica_LDMC_results_2[3,4] <- arctica_LDMC_results_2[3,4] + arctica_LDMC_result
 arctica_LDMC_results_2[4,4] <- arctica_LDMC_results_2[4,4] + arctica_LDMC_results_2[1,4]
 
 # extraction for model output table
-rownames(arctica_LDMC_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
-rownames(arctica_LDMC_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+rownames(arctica_LDMC_results) <- c("Intercept  ", "Northern Source ", "Southern Source  ", "Southern Garden ", "Year  ", "Sigma  ")
+rownames(arctica_LDMC_results_2) <- c("Intercept ", "Northern Source ", "Southern Source ", "Southern Garden ", "Year ", "Sigma ")
 
 arc_ldmc_extract_df_1 <- arctica_LDMC_results %>% 
   mutate(Species = rep("Salix arctica")) %>%
@@ -595,7 +595,7 @@ arc_ldmc_extract_all <- full_join(pul_ldmc_extract_df_1, pul_ldmc_extract_df,
                                          "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                          "Species"="Species", "Rhat"="Rhat"))
 
-rownames(arc_ldmc_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year ", "Sigma")
+rownames(arc_ldmc_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year ", "Sigma")
 
 # interpretation (none sig diff)
 # N Garden = estimate = 3.46 , CI = 2.87 to 4.00
