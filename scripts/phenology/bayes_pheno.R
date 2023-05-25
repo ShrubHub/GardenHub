@@ -11,6 +11,7 @@ library(ggplot2)
 library(knitr) # For kable tables
 library(kableExtra) # For kable tables
 library(ggpubr)
+library(ggeffects)
 
 # Load data ----
 all_phenocam_data_salix <- read_csv("data/phenology/all_phenocam_update.csv")
