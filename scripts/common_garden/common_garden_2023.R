@@ -4,6 +4,7 @@
 
 # libraries ----
 library(tidyr)
+library(tidyverse)
 library(ggplot2)
 
 # data 
@@ -39,10 +40,10 @@ data_2023_wrangle$Stem_diameter <- as.numeric(data_2023_wrangle$Stem_diameter)
 
 # make mean leaf length, mean stem elongation, and biovolume columns 
 data_2023_wrangle <- data_2023_wrangle %>% 
-  mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
+  dplyr::mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
          mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
          mean_width = ((Width_cm + Width_2_cm)/2)) %>% 
-  mutate(biovolume = (Canopy_Height_cm* Width_cm* Width_2_cm))
+  dplyr::mutate(biovolume = (Canopy_Height_cm* Width_cm* Width_2_cm))
 
 # make standard sample ID column to avoid issue of dashes, spaces, etc. 
 data_2023_wrangle$SampleID_standard <- toupper(data_2023_wrangle$Sample_ID) # make all uppercase characters 
@@ -62,7 +63,7 @@ data_2023_wrangle$Day <- as.numeric(data_2023_wrangle$Day)
 
 # try to merge with complete dataset from 2022 
 # wish me luck 
-all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
+all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv")
 # to get year planted and species, extract from 2022 dataset 
 spp_year <- all_CG_source_growth %>% 
   dplyr::select(c(Species, Year_planted, SampleID_standard, population, Cutting_diameter, Cutting_length, Mother_LS)) %>% 
@@ -89,7 +90,12 @@ all_data_merge <- full_join(all_CG_source_growth, data_2023_wrangle_to_merge,
                                   "Cutting_diameter", "Cutting_length", "Mother_LS")) 
 
 all_data_wrangle <- all_data_merge %>% 
-  dplyr::select(-c(Sample_age, ...1)) %>% 
+  dplyr::select(-Sample_age) %>% 
   mutate(Sample_age = Year - Year_planted)
-  
+
+# save as csv 
+write.csv(all_data_wrangle, 'data/common_garden_data_2023/all_data_2023.csv')
+
+# quick figs ----
+
 
