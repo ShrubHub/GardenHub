@@ -1133,7 +1133,7 @@ grid.arrange(ric_rate_plot, pul_rate_plot, arc_rate_plot,
              nrow=1)
 
 
-# UPDATED with 2023 data ----
+# 2023 UPDATED data ----
 # by 05 Aug 2023
 
 # Loading data ---- 
@@ -1210,3 +1210,31 @@ colnames(ggpred_height_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
           axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
           axis.text.y = element_text(size = 15, colour = "black")))
 
+# Salix pulchra -----
+height_pul <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
+                        data = all_CG_growth_pul,  family = gaussian(), chains = 3,
+                        iter = 5000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+saveRDS(height_pul, file = "output/models/height_pul_2023.rds")
+height_pul <- readRDS("output/models/height_pul_2023.rds")
+
+summary(height_pul)
+
+ggpred_height_pul <- ggpredict(height_pul, terms = c("Sample_age", "population"))
+colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+
+(ggpred_height_pul_plot <-ggplot(ggpred_height_pul) +
+    geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Canopy height (cm)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    ggtitle(expression(italic("Salix pulchra"))) +
+    theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
+    theme(axis.text.x  = element_text(angle = 0)))
