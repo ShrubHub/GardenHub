@@ -8,6 +8,7 @@ library(knitr) # For kable tables
 library(kableExtra) # For kable tables
 library(gridExtra)
 library(ggpubr)
+library(ggeffects)
 
 # Loading data ---- 
 all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
@@ -1130,3 +1131,82 @@ grid.arrange(ric_rate_plot, pul_rate_plot, arc_rate_plot,
 
 grid.arrange(ric_rate_plot, pul_rate_plot, arc_rate_plot, 
              nrow=1)
+
+
+# UPDATED with 2023 data ----
+# by 05 Aug 2023
+
+# Loading data ---- 
+all_2023_growth <- read_csv("data/common_garden_data_2023/all_data_2023.csv")
+
+# WRANGLE ------
+# Filtering data for height over time model 
+all_CG_growth <- all_2023_growth %>%
+  filter(population %in% c("Northern", "Southern"))
+
+# making a growth rate column
+all_CG_height_growth_rates <- all_CG_growth %>%
+  group_by(SampleID_standard) %>% 
+  arrange(Sample_age) %>%
+  mutate(height_growth_diff = Canopy_Height_cm-lag(Canopy_Height_cm)) %>%
+  mutate(height_growth_diffpercent = (height_growth_diff/Canopy_Height_cm)*100) %>%
+  mutate(biovol_growth_diff = biovolume-lag(biovolume)) %>%
+  mutate(biovol_growth_diffpercent = (biovol_growth_diff/biovolume)*100)
+
+# Species specific 
+all_CG_growth_ric <- all_CG_height_growth_rates %>%
+  filter(Species == "Salix richardsonii")
+
+all_CG_growth_pul<-  all_CG_height_growth_rates %>%
+  filter(Species == "Salix pulchra")
+
+all_CG_growth_arc <-all_CG_height_growth_rates %>%
+  filter(Species == "Salix arctica")
+
+# # Salix richardsonii -------
+height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
+                         data = all_CG_growth_ric,  family = gaussian(), chains = 3,
+                         iter = 5000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+saveRDS(height_rich, file = "output/models/height_rich_2023.rds")
+height_rich <- readRDS("output/models/height_rich_2023.rds")
+
+ggpred_height_ric <- ggpredict(height_rich, terms = c("Sample_age", "population"))
+colnames(ggpred_height_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_height_rich_plot <-ggplot(ggpred_height_ric) +
+    geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Canopy height (cm)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    ggtitle(expression(italic("Salix richardsonii"))) +
+    theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
+    theme( axis.text.x  = element_text(angle = 0))) 
+
+# just raw data
+(richardsonii_height_2023 <- ggplot(all_CG_growth_ric) +
+    geom_smooth(aes(x = Sample_age, y = Canopy_Height_cm, colour = population, fill = population, group = population, method = "glm")) +
+    geom_point(aes(x = Sample_age, y= Canopy_Height_cm, colour = population, group = population), size = 1.5, alpha = 0.5) +
+    #facet_grid(cols = vars(Species)) +
+    ylab("Canopy Height (cm)") +
+    xlab("\nAge (years)") +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_bw() +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
