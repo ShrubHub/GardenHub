@@ -251,6 +251,7 @@ library(ggsci)
 library(ggrepel)
 library(ggforce)
 library(vegan)
+library(tcltk)
 
 # I think we need to put the dataframe into wide format? 
 # i.e. column names must be: "KP","QHI", "CG" and their temperatures
@@ -269,6 +270,7 @@ three_site_chelsa <-  july_enviro_chelsa %>%
   filter(site %in% c("QHI", "Kluane_plateau", "Common_garden")) %>% 
   filter(PrecipMeanJuly < 20000) # remove one values that's obscenly high 
 
+pal_clim  <- c("#5ccc64","#FDE725FF", "#2A788EFF" )
 
 (climate_space <- ggplot(three_site_chelsa, 
                          aes(x = mean_temp_C, y = mean_precip_mm, color = site, shape =site)) +
@@ -278,8 +280,10 @@ three_site_chelsa <-  july_enviro_chelsa %>%
                  alpha = 0.25) +
     ylab("Mean July precipitation (mm)\n") +
     xlab("\nMean July temperature (°C)") +
-    scale_colour_viridis_d(begin = 0.2, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.2, end = 0.85) +
+    #scale_colour_viridis_d(begin = 0.2, end = 0.85) +
+    #scale_fill_viridis_d(begin = 0.2, end = 0.85) +
+    scale_color_manual(values=pal_clim) +
+    scale_fill_manual(values=pal_clim) +
     theme_bw()+
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(),
@@ -292,5 +296,6 @@ three_site_chelsa <-  july_enviro_chelsa %>%
           axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
           axis.text.y = element_text(size = 15, colour = "black")))
 
+ggsave(climate_space, filename ="output/figures/climate_space.png", width = 12.67, height = 8.53, units = "in")
 
 
