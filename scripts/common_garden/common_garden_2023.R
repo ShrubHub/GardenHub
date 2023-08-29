@@ -93,6 +93,30 @@ all_data_wrangle <- all_data_merge %>%
   dplyr::select(-Sample_age) %>% 
   mutate(Sample_age = Year - Year_planted)
 
+# import leaf lengths for S. arctica collected up Kluane Plateau 
+
+S_arc_leaf_lengths <- read.csv("data/source_pops/S_arctica_leaf_lengths_Jul2023.csv")
+S_arc_leaf_lengths <- S_arc_leaf_lengths %>% 
+  mutate("Site" = "Kluane") %>% 
+  mutate("population" = "source_south") %>% 
+  mutate("Species" = "Salix arctica") %>% 
+  mutate(mean_leaf_length = ((Leaf_length_1_mm + Leaf_length_2_mm + Leaf_length_3_mm)/3)) %>% 
+  select(-c(Date, GPS_name)) %>% 
+  dplyr::rename("Length_1_mm" = "Leaf_length_1_mm", 
+                "Length_2_mm" = "Leaf_length_2_mm", 
+                "Length_3_mm" = "Leaf_length_3_mm", 
+                "Year" = "year", 
+                "Month" = "month", 
+                "Day" = "day", 
+                "SampleID_standard" = "Sample")
+
+data_merge <- full_join(S_arc_leaf_lengths, all_data_wrangle, 
+                            by = c("Site", "Species",
+                                   "Length_1_mm", "Length_2_mm", "Length_3_mm",
+                                  "population", "mean_leaf_length", 
+                                   "SampleID_standard", 
+                                   "Year", "Month", "Day")) 
+
 # save as csv 
 write.csv(all_data_wrangle, 'data/common_garden_data_2023/all_data_2023.csv')
 
