@@ -1084,14 +1084,20 @@ arc_LL_results_2 <- arc_LL_results %>%
 
 # change estimates by adding estimate to other rows 
 arc_LL_results_2[2,1] <- arc_LL_results_2[2,1] + arc_LL_results_2[1,1]
+arc_LL_results_2[3,1] <- arc_LL_results_2[3,1] + arc_LL_results_2[1,1]
+arc_LL_results_2[4,1] <- arc_LL_results_2[4,1] + arc_LL_results_2[1,1]
 # change lower CI by adding 
 arc_LL_results_2[2,3] <- arc_LL_results_2[2,3] + arc_LL_results_2[1,3]
+arc_LL_results_2[3,3] <- arc_LL_results_2[3,3] + arc_LL_results_2[1,3]
+arc_LL_results_2[4,3] <- arc_LL_results_2[4,3] + arc_LL_results_2[1,3]
 # change upper CI
 arc_LL_results_2[2,4] <- arc_LL_results_2[2,4] + arc_LL_results_2[1,4]
+arc_LL_results_2[3,4] <- arc_LL_results_2[3,4] + arc_LL_results_2[1,4]
+arc_LL_results_2[4,4] <- arc_LL_results_2[4,4] + arc_LL_results_2[1,4]
 
 # extraction for model output table
-rownames(arc_LL_results) <- c("Intercept  ", "Southern Garden  ",  "Year  ", "Sigma  ")
-rownames(arc_LL_results_2) <- c("Intercept ", "Southern Garden ", "Year ", "Sigma ")
+rownames(arc_LL_results) <- c("Intercept  ", "Northern Source ", "Southern Source  ", "Southern Garden ", "Year  ", "Sigma  ")
+rownames(arc_LL_results_2) <- c("Intercept ", "Northern Source ", "Southern Source ", "Southern Garden ", "Year ", "Sigma ")
 
 arc_ll_extract_df_1 <- arc_LL_results %>% 
   mutate(Species = rep("Salix arctica")) %>%
@@ -1110,10 +1116,12 @@ arc_ll_extract_all <- full_join(arc_ll_extract_df_1, arc_ll_extract_df,
                                        "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                        "Species"="Species", "Rhat"="Rhat"))
 
-rownames(arc_ll_extract_all) <- c("Intercept", "Southern Garden", "Year", "Sigma")
+rownames(arc_ll_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 # interpretation 
-# N Garden = estimate = 23.16 , CI = 16.13 to 29.90 
-# S Garden = estimate = 26.19, CI = 14.93 to 37.17
+# N Garden = estimate = 26.34 , CI = 18.72, 34.31 
+# N Source = estimate = 27.49, CI = 19.27, 36.03
+# S Source = estimate = 31.33, CI =  22.61, 39.58
+# S Garden = estimate = 26.19, CI = 20.41, 36.39
 
 # merging all extracted outputs
 garden_LL_out <- rbind(rich_ll_extract_all, pul_ll_extract_all, arc_ll_extract_all)
@@ -1540,7 +1548,7 @@ colnames(arc_LL.pred) = c('population','fit', 'lwr', 'upr')
 pal_garden <-c("#440154FF", "#7AD151FF")
 
 (arc_ll_plot <-ggplot(arc_LL.pred) +
-    geom_point(data = arctica_cg_growth, aes(x = population, y = mean_leaf_length, colour = population),
+    geom_point(data = arctica_all_growth, aes(x = population, y = mean_leaf_length, colour = population),
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = population, y = fit, colour = population), size = 6)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
