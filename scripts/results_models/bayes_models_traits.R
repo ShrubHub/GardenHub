@@ -1,6 +1,6 @@
 # BAYESIAN traits results models -----
 # Script by Madi
-# Last update: 19/05/2023
+# Last update: 30/08/2023
 
 # libraries ----
 library(plyr) # load before dplyr aka tidyverse 
@@ -16,7 +16,8 @@ library(ggeffects)
 
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
-all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv") # leaf length
+#all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv") # leaf length
+all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv") # 2023 data
 
 # omit one anamonolously higher LMDC value from QHI 2015 
 all_CG_source_traits <- all_CG_source_traits %>% 
@@ -981,15 +982,15 @@ rich_ll_extract_all <- full_join(rich_ll_extract_df_1, rich_ll_extract_df,
 rownames(rich_ll_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation 
-# N Garden = estimate = 22.01 , CI = 15.16 to 28.65 *
-# N Source = estimate = 41.93, CI = 31.36 to 52.34 **
-# S Source = estimate = 50.87, CI = 40.28 to 61.20 **
-# S Garden = estimate = 40.13, CI = 31.39 to 48.70 **
+# N Garden = estimate = 22.73 , CI = 17.12 to 28.64 *
+# N Source = estimate = 35.97, CI = 29.94 to 42.30 **
+# S Source = estimate = 46.40, CI = 40.62 to 52.74 **
+# S Garden = estimate = 40.63, CI = 35.12 to 46.44 **
 
 # S. pulchra ----
 pulchra_LL <- brms::brm(mean_leaf_length ~ population + (1|year), data = pulchra_all_growth, family = gaussian(), chains = 3,
                         iter = 3000, warmup = 1000, 
-                        control = list(max_treedepth = 15, adapt_delta = 0.99)) # There were 1 divergent transitions after warmup
+                        control = list(max_treedepth = 15, adapt_delta = 0.99)) 
 summary(pulchra_LL)
 plot(pulchra_LL)
 pp_check(pulchra_LL, type = "dens_overlay", ndraws = 100) 
@@ -1046,20 +1047,21 @@ pul_ll_extract_all <- full_join(pul_ll_extract_df_1, pul_ll_extract_df,
 
 rownames(pul_ll_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 # interpretation 
-# N Garden = estimate = 20.01 , CI = 12.13 to 27.35 *
-# N Source = estimate = 35.04, CI = 23.05 to 46.55**
-# S Source = estimate = 50.31, CI = 38.37 to 61.78**
-# S Garden = estimate = 36.26, CI = 26.60 to 45.28**
+# N Garden = estimate = 20.43 , CI = 13.92 to 26.78 *
+# N Source = estimate = 29.63, CI = 22.68 to 36.48**
+# S Source = estimate = 44.02, CI = 36.97 to 50.87**
+# S Garden = estimate = 36.48, CI = 29.91 to 42.97**
 
 # S. arctica ----
 # no leaf length for S. arctic from source pop
 # make common garden only model 
-arctica_cg_growth <- arctica_all_growth %>% 
-  filter(population %in% c("N. Garden", "S. Garden"))
+#arctica_cg_growth <- arctica_all_growth %>% 
+#  filter(population %in% c("N. Garden", "S. Garden"))
 
-arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population + (1|year) + (1|SampleID_standard), data = arctica_cg_growth, family = gaussian(), chains = 3,
-                           iter = 5000, warmup = 1000, 
+arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population + (1|year) + (1|SampleID_standard), data = arctica_all_growth, family = gaussian(), chains = 3,
+                           iter = 3000, warmup = 1000, 
                            control = list(max_treedepth = 15, adapt_delta = 0.99))
+
 summary(arctica_LL_CG)
 plot(arctica_LL_CG)
 pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
