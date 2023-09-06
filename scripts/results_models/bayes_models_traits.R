@@ -1,6 +1,6 @@
 # BAYESIAN traits results models -----
 # Script by Madi
-# Last update: 30/08/2023
+# Last update: 06/09/2023
 
 # libraries ----
 library(plyr) # load before dplyr aka tidyverse 
@@ -15,7 +15,7 @@ library(kableExtra) # For kable tables
 library(ggeffects)
 
 # DATA ----
-all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
+all_CG_source_traits <- read.csv("data/all_CG_source_traits_2023.csv") # most traits
 #all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv") # leaf length
 all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv") # 2023 data
 

@@ -194,9 +194,8 @@ cg_2023 <- all_data_2023 %>%
           axis.text.y = element_text(size = 15, colour = "black")))
 
 (plot_canopy_2023 <- ggplot(cg_2023) +
-    geom_smooth(aes(x = Sample_age, y = Canopy_Height_cm, colour = population, fill = population, method = "glm")) +
+    geom_line(aes(x = Sample_age, y = Canopy_Height_cm, colour = population, fill = population) +
     geom_point(aes(x = Sample_age, y= Canopy_Height_cm, colour = SampleID_standard), size = 1.5, alpha = 0.5) +
-    #facet_grid(cols = vars(Species)) +
     facet_wrap(~Species, scales = "free_y") +
     ylab("Canopy Height (cm)") +
     xlab("\nAge (years)") +
@@ -207,8 +206,7 @@ cg_2023 <- all_data_2023 %>%
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
           strip.text = element_text(size = 15, color = "black", face = "italic"),
-          legend.title = element_text(size=15), #change legend title font size
-          legend.text = element_text(size=12),
+          legend.position = "none",
           axis.line = element_line(colour = "black"),
           axis.title = element_text(size = 18),
           axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
