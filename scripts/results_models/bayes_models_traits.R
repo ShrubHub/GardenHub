@@ -465,10 +465,10 @@ rich_ldmc_extract_all <- full_join(ric_ldmc_extract_df_1, ric_ldmc_extract_df,
 rownames(rich_ldmc_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation (none sig diff)
-# N Garden = estimate = 3.42 , CI = 3.07 to 3.76
-# N Source = estimate = 3.48, CI = 2.89 to 4.04
-# S Source = estimate = 3.36, CI = 2.90 to 3.81
-# S Garden = estimate = 3.48, CI = 3.04 to 3.90 
+# N. Garden  |     28.99 | [23.89, 36.58]
+# N. Source  |     33.16 | [24.01, 40.97]
+# S. Source  |     27.94 | [22.83, 35.55]
+# S. Garden  |     32.07 | [26.58, 40.48] 
 
 # S. pulchra ----
 pulchra_LDMC_log <- brms::brm(log(LDMC_percent) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
@@ -532,14 +532,14 @@ pul_ldmc_extract_all <- full_join(pul_ldmc_extract_df_1, pul_ldmc_extract_df,
 rownames(pul_ldmc_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation (none sig diff)
-# N Garden = estimate = 3.63 , CI = 3.18 to 4.07
-# N Source = estimate = 3.78, CI = 3.07 to 4.48
-# S Source = estimate = 3.50, CI = 2.90 to 4.09
-# S Garden = estimate = 3.61, CI = 3.05 to 4.16 
+# N. Garden  |     35.84 | [27.35, 46.86]
+# N. Source  |     44.61 | [31.12, 58.22]
+# S. Source  |     32.20 | [24.41, 42.84]
+# S. Garden  |     36.86 | [28.26, 48.09]
 
 # S. arctica ---- 
 arctica_LDMC_log <- brms::brm(log(LDMC_percent) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
-                              iter = 3000, warmup = 1000, 
+                              iter = 5000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99)) #There were 5 divergent transitions after warmup.
 summary(arctica_LDMC_log)
 tab_model(arctica_LDMC_log)
@@ -599,10 +599,10 @@ arc_ldmc_extract_all <- full_join(pul_ldmc_extract_df_1, pul_ldmc_extract_df,
 rownames(arc_ldmc_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year ", "Sigma")
 
 # interpretation (none sig diff)
-# N Garden = estimate = 3.46 , CI = 2.87 to 4.00
-# N Source = estimate = 3.54, CI = 2.79 to 4.23
-# S Source = estimate = 3.35, CI = 2.64 to 4.01
-# S Garden = estimate = 3.55, CI = 2.86 to 4.18 
+# N. Garden  |     31.41 | [23.73, 42.69]
+# N. Source  |     34.13 | [24.15, 44.57]
+# S. Source  |     27.42 | [20.29, 37.62]
+# S. Garden  |     32.31 | [24.22, 43.89]
 
 # merging all extracted outputs
 garden_ldmc_out <- rbind(rich_ldmc_extract_all, pul_ldmc_extract_all, 
