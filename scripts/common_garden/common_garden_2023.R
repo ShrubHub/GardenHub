@@ -145,8 +145,11 @@ trait_2023 <- trait_2023 %>%
 
 all_source_traits_2023 <- full_join(trait_2023, all_CG_source_traits, by = c("Site" = "Site", 
                                                                              "plant_tag_id" = "plant_tag_id", 
+                                                                             "site_id" = "site_id",
                                                                              "sample_id" = "sample_id", 
+                                                                             "month" = "month",
                                                                              "date_sampled" = "date_sampled",
+                                                                             "population" = "population",
                                                                          "Species" = "Species", 
                                                                          "leaf_mass_per_area_g_m2" = "leaf_mass_per_area_g_m2",
                                                                          "actual_leaf_dry_matter_content_perc" = "actual_leaf_dry_matter_content_perc",
