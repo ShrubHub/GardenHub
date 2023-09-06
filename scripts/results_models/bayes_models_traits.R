@@ -201,17 +201,17 @@ ric_sla_extract_all <- full_join(ric_sla_extract_df_1, ric_sla_extract_df,
 rownames(ric_sla_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation (none are sig diff from each other)
-# N Garden = estimate 2.70 , CI = 2.54 to 2.85
-# N Source = estimate 2.70+(-0.24) = 2.46, CI = 2.13 to 2.81
-# S Source = estimate = 2.75, CI = 2.46 to 3.04
-# S Garden = estimate = 2.57, CI = 2.29 to 2.85
+# N. Garden  |     15.28 | [13.42, 17.01]
+# N. Source  |     11.63 | [10.37, 13.62]
+# S. Source  |     15.62 | [13.90, 17.53]
+# S. Garden  |     12.74 | [11.20, 14.08]
 
 # S. pulchra ----
 pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
                          iter = 3000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(pulchra_SLA) # There were 1 divergent transitions after warmup
+summary(pulchra_SLA) 
 plot(pulchra_SLA)
 pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 saveRDS(pulchra_SLA, file = "output/traits/models/sla_pulchra_compare.rds")
@@ -269,10 +269,10 @@ pul_sla_extract_all <- full_join(pul_sla_extract_df_1, pul_sla_extract_df,
 rownames(pul_sla_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation 
-# N Garden = estimate = 2.74 , CI = 2.62 to 2.85
-# N Source = estimate = 2.33, CI = 2.07 to 2.58 **
-# S Source = estimate = 2.75, CI = 2.50 to 2.99 
-# S Garden = estimate = 2.56, CI = 2.32 to 2.78 *
+# N. Garden  |     15.69 | [14.08, 17.19] 
+# N. Source  |     10.19 | [ 9.28, 11.32] **
+# S. Source  |     15.60 | [14.18, 17.44]
+# S. Garden  |     12.39 | [11.21, 13.46] *
 
 # S. arctica ----
 arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
@@ -335,10 +335,10 @@ arc_sla_extract_all <- full_join(arc_sla_extract_df_1, arc_sla_extract_df,
 rownames(arc_sla_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation (none sig diff)
-# N Garden = estimate = 2.41 , CI = 2.18 to 2.64
-# N Source = estimate = 2.45, CI = 2.07 to 2.84 
-# S Source = estimate = 2.59, CI = 2.22 to 2.96 
-# S Garden = estimate = 2.34, CI = 1.97 to 2.70 
+# N. Garden  |     11.69 | [ 8.81, 14.52]
+# N. Source  |     12.06 | [ 9.42, 15.58]
+# S. Source  |     13.77 | [10.60, 17.69]
+# S. Garden  |     11.08 | [ 8.36, 14.00]
 
 # merging all extracted outputs
 
@@ -370,7 +370,7 @@ garden_sla_out_back$Rhat <- as.character(formatC(garden_sla_out_back$Rhat, digit
 
 # creating table
 kable_sla <- garden_sla_out_back %>% 
-  kbl(caption="Table.xxx BRMS model outputs: specific leaf area by northern garden, northern source, sourthern garden and southern source populations. 
+  kbl(caption="Table.xxx BRMS model outputs: specific leaf area of northern garden, northern source, sourthern garden and southern source populations. 
       Log transformed output in the table below.", 
       col.names = c( "Species",
                      "Estimate (log)",
