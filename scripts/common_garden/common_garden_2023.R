@@ -120,13 +120,17 @@ data_merge <- full_join(S_arc_leaf_lengths, all_data_wrangle,
                                    "Year", "Month", "Day")) 
 
 # load source pop trait data from 2023
-all_data_2023 <- read.csv("data/common_garden_data_2023/all_data_2023.csv")
+all_CG_source_traits <- read.csv("data/all_CG_source_traits.csv") # most traits
 
 trait_2023 <- read.csv("data/source_pops/willow_2021_2022_2023_sla.csv")
 
 trait_2023$year <-  format(as.Date(trait_2023$date_sampled, format="%Y-%m-%d"),"%Y")
 trait_2023$month <-  format(as.Date(trait_2023$date_sampled, format="%Y-%m-%d"),"%m")
 trait_2023$DOY <-  yday(as.POSIXct(trait_2023$date_sampled, format = "%Y-%m-%d"))
+# reclass for merge 
+trait_2023$DOY <- as.character(trait_2023$DOY)
+trait_2023$year <- as.integer(trait_2023$year)
+trait_2023$month <- as.integer(trait_2023$month)
 
 trait_2023 <- trait_2023 %>% 
   dplyr::filter(year == "2023") %>% # previous data is already merged 
@@ -135,11 +139,30 @@ trait_2023 <- trait_2023 %>%
   mutate(total_leaf_dry_mass_mg = total_leaf_dry_mass_g*1000) %>% # convert leaf mass per area to mg instead of g 
   mutate(LA = LA*100) %>%  #convert leaf area to mm2 instead of cm2
   mutate(LDMC_g_g = LDMC/1000) %>% # covert LDMC from mg g-1 to g g-1
-  dplyr::select(-c(X, LDMC, rehydrated_leaf_sample_remarks, total_leaf_dry_mass_g, sample_remarks, dried_leaf_sample_remarks))  
-  
+  dplyr::select(-c(X, LDMC, rehydrated_leaf_sample_remarks, sample_remarks, dried_leaf_sample_remarks)) %>% 
+  mutate(population = case_when(Site %in% c("Qikiqtaruk") ~ "Northern",
+                                 Site == "Kluane" ~ "Southern")) 
+
+all_source_traits_2023 <- full_join(trait_2023, all_CG_source_traits, by = c("Site" = "Site", 
+                                                                             "plant_tag_id" = "plant_tag_id", 
+                                                                             "sample_id" = "sample_id", 
+                                                                             "date_sampled" = "date_sampled",
+                                                                         "Species" = "Species", 
+                                                                         "leaf_mass_per_area_g_m2" = "leaf_mass_per_area_g_m2",
+                                                                         "actual_leaf_dry_matter_content_perc" = "actual_leaf_dry_matter_content_perc",
+                                                                         "equivalent_water_thickness_cm" = "equivalent_water_thickness_cm",
+                                                                         "total_rehydrated_leaf_mass_g" = "total_rehydrated_leaf_mass_g",
+                                                                         "DOY" = "DOY",
+                                                                         "year" = "year",
+                                                                         "LA" = "LA", 
+                                                                         "SLA" = "SLA", 
+                                                                         "LDMC_g_g" = "LDMC_g_g", 
+                                                                         "total_leaf_dry_mass_mg" = "total_leaf_dry_mass_mg", 
+                                                                         "total_leaf_dry_mass_g" = "total_leaf_dry_mass_g",
+                                                                         "leaf_fresh_mass_g" = "leaf_fresh_mass_g"))
 
 # save as csv 
-write.csv(all_data_wrangle, 'data/common_garden_data_2023/all_data_2023.csv')
+write.csv(all_source_traits_2023, "data/all_CG_source_traits_2023.csv")
 
 # quick figs ----
 # load data 
