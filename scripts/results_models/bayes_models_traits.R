@@ -13,6 +13,7 @@ library(gridExtra)
 library(knitr) # For kable tables
 library(kableExtra) # For kable tables
 library(ggeffects)
+library(cowplot)
 
 # DATA ----
 all_CG_source_traits <- read.csv("data/all_CG_source_traits_2023.csv") # most traits
@@ -1249,12 +1250,15 @@ colnames(rich_SLA.pred) = c('population','fit', 'lwr', 'upr')
     geom_point(aes(x = population, y = fit, colour = population), size = 6)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
-    ylab(expression(paste("Specific Leaf Area (",mm^{2}," ",mg^{-1},")\n"))) +
+    ylab(expression(atop("Specific Leaf Area", paste("(",mm^{2}," ",mg^{-1},")"))))+
     xlab("" ) +
     scale_color_manual(values=pal) +
     coord_cartesian(ylim=c(5, 25)) +
-    labs(title = "Salix richardsonii") +
-    theme_shrub())
+    labs(title = "Salix richardsonii", size = 20, family = "Helvetica Light") +
+    theme_shrub()+
+    theme(axis.title.y = element_text(margin = margin (r = 10))))
+
+
 # pulchra ----
 pul_sla <- (conditional_effects(pulchra_SLA)) # extracting conditional effects from bayesian model
 pul_sla_data <- pul_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
@@ -1300,7 +1304,10 @@ colnames(arc_SLA.pred) = c('population','fit', 'lwr', 'upr')
 (sla_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, 
                        common.legend = TRUE, legend = "none",
                        labels = c("A", "B", "C"),
+                       label.x = c(0.2, 0.2, 0.2),
+                       font.label = list(size = 18, color = "black", face = "bold", family = NULL),
                            ncol = 3, nrow = 1))
+
 # raw data for reference 
 (sla_plot <- ggplot(all_CG_source_traits) +
     geom_boxplot(aes(x= population, y = SLA, colour = population, fill = population, group = population), size = 0.5, alpha = 0.5) +
@@ -1333,12 +1340,16 @@ colnames(rich_LDMC.pred) = c('population','fit', 'lwr', 'upr')
     geom_point(aes(x = population, y = fit, colour = population), size = 6)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1) +
-    ylab(expression(paste("Leaf dry matter content (%)"))) +
+#    ylab(expression(paste("Leaf dry matter content (%)"))) +
+    ylab(expression(atop("Leaf dry matter content", paste("(%)"))))+
+    
     xlab("" ) +
     coord_cartesian(ylim=c(15, 80)) +
     scale_color_manual(values=pal) +
     labs(title = "Salix richardsonii") +
-    theme_shrub())
+    theme_shrub()+ 
+    theme(axis.title.y = element_text(margin = margin (r = 10))))
+
 
 # pulchra ----
 colnames(pul_LDMC.pred) = c('population','fit', 'lwr', 'upr')
@@ -1374,6 +1385,8 @@ colnames(arc_LDMC.pred) = c('population','fit', 'lwr', 'upr')
 (ldmc_panel <- ggarrange(rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot, 
                         common.legend = TRUE, legend = "bottom",
                         labels = c("D", "E", "F"),
+                        label.x = c(0.2, 0.2, 0.2),
+                        font.label = list(size = 18, color = "black", face = "bold", family = NULL),
                         ncol = 3, nrow = 1))
 
 # raw data for reference 
@@ -1593,5 +1606,6 @@ ggsave("figures/size_trait_panel.png", height = 10, width = 12, dpi = 300)
 (sla_ldmc_panel <- ggarrange(sla_panel, ldmc_panel, 
                           common.legend = TRUE, legend = "bottom",
                           ncol = 1, nrow = 2))
+
 # save 
 ggsave("figures/sla_ldmc_panel.png", height = 10, width = 12, dpi = 300)
