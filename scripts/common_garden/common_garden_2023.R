@@ -176,64 +176,60 @@ write.csv(all_source_traits_2023, "data/all_CG_source_traits_2023.csv")
 
 all_data_2023 <-  read.csv('data/common_garden_data_2023/all_data_2023.csv') # all data (one point per year)
 all_cg_data <- all_data_2023 %>% # filter only common garden data
-  dplyr::filter(Site == "Common_garden")
+  dplyr::filter(Site == "Common_garden") %>% 
+  select(-c(X, X.1))
+# save for good measure 
+write.csv(all_cg_data, 'data/common_garden_data_2023/all_cg_data_2023.csv')
 
 # check how many unique sample IDs 
-length(unique(all_cg_data_2022$SampleID_standard)) # 827
-
-# out of curiosity how many of these are NAs?
-sum(is.na(all_cg_data_2022$Canopy_Height_cm)) # 1761 wow, quite a few 
-
-# drop unnecessary columns 
-max_cg_extractions <-  all_cg_data_2022 %>% 
-  dplyr::select(-c(SampleID))
+length(unique(all_cg_data$SampleID_standard)) # 836
 
 # extract max value for height per sample bc samples have been trimmed over the years 
-max_cg_heights <- all_cg_data_2022 %>% 
+max_cg_heights <- all_cg_data %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(Canopy_Height_cm)) %>% 
   dplyr::rename("max_canopy_height_cm" = "Canopy_Height_cm")
 
 max(max_cg_heights$max_canopy_height_cm) # 127
-mean(max_cg_heights$max_canopy_height_cm)#  21.22924
-sd(max_cg_heights$max_canopy_height_cm) #24.91144
-mean(all_cg_data_2022$Canopy_Height_cm, na.rm = TRUE)#   19.18346
+mean(max_cg_heights$max_canopy_height_cm)#  21.52
+sd(max_cg_heights$max_canopy_height_cm) # 24.62
+mean(all_cg_data$Canopy_Height_cm, na.rm = TRUE)# 19.68
 
 # do same for widths (use average width value)
-max_cg_widths <- all_cg_data_2022 %>% 
+max_cg_widths <- all_cg_data %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(mean_width)) %>% 
   dplyr::rename("max_mean_width_cm" = "mean_width")
 
-max(max_cg_widths$max_mean_width_cm) # 240
-mean(max_cg_widths$max_mean_width_cm) # 30.87956
-sd(max_cg_widths$max_mean_width_cm) # 35.62966
-mean(all_cg_data_2022$mean_width, na.rm = TRUE) # 27.60868
+max(max_cg_widths$max_mean_width_cm) # 256.25
+mean(max_cg_widths$max_mean_width_cm) # 32.79
+sd(max_cg_widths$max_mean_width_cm) # 36.10
+mean(all_cg_data$mean_width, na.rm = TRUE) # 30.14
 
 # do same for biovolume 
-max_cg_biovol <- all_cg_data_2022 %>% 
+max_cg_biovol <- all_cg_data %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(biovolume)) %>% 
   dplyr::rename("max_biovol" = "biovolume")
 
 # stem elongation max
-max_cg_elong <- all_cg_data_2022 %>% 
+max_cg_elong <- all_cg_data %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(mean_stem_elong)) %>% 
   dplyr::rename("max_stem_elong" = "mean_stem_elong")
 
 # stem diameter max
-max_cg_diam <- all_cg_data_2022 %>% 
+max_cg_diam <- all_cg_data %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(Stem_diameter)) %>% 
   dplyr::rename("max_stem_diam" = "Stem_diameter")
 
 # save 
-write.csv(max_cg_heights, "data/common_garden_data_2022/max_heights_cg.csv")
-write.csv(max_cg_biovol, "data/common_garden_data_2022/max_biovol_cg.csv")
-write.csv(max_cg_widths, "data/common_garden_data_2022/max_widths_cg.csv")
-write.csv(max_cg_elong, "data/common_garden_data_2022/max_elong_cg.csv")
-write.csv(max_cg_diam, "data/common_garden_data_2022/max_diam_cg.csv")
+write.csv(max_cg_heights, "data/common_garden_data_2023/max_heights_cg.csv")
+write.csv(max_cg_biovol, "data/common_garden_data_2023/max_biovol_cg.csv")
+write.csv(max_cg_widths, "data/common_garden_data_2023/max_widths_cg.csv")
+write.csv(max_cg_elong, "data/common_garden_data_2023/max_elong_cg.csv")
+write.csv(max_cg_diam, "data/common_garden_data_2023/max_diam_cg.csv")
 
 
 

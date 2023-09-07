@@ -1,0 +1,325 @@
+"","Bed","Year_planted","Species","Site","Sample_Date","Month","Day","Year","max_canopy_height_cm","Width_cm","Width_2_cm","Stem_diameter","Length_1_mm","Length_2_mm","Length_3_mm","Stem_Elongation_1_mm","Stem_Elongation_2_mm","Stem_Elongation_3_mm","SampleID_standard","biovolume","mean_stem_elong","mean_leaf_length","mean_width","population","Latitude","Longitude","Elevation","Date_propagated","Date_planted","Mother_LS","Cutting_length","Cutting_diameter","Sample_ID","July_2023_notes","Sample_age"
+"1","JB",2015,"Salix arctica","Common_garden",NA,7,23,2023,6.3,34.6,36.4,15,37,42,47,42,19,31,"H15SA10",7934.472,30.66666667,42,35.5,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H15Sa10","20% yellow, 60% yellowing",8
+"2","JB",2015,"Salix arctica","Common_garden",NA,8,11,2021,3.5,3.1,3.2,10,20,17,13,6,7,8,"H15SA11",34.72,7,16.66666667,3.15,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"3","JB",2015,"Salix arctica","Common_garden",NA,8,23,2019,5,NA,NA,NA,39.37,31.84,27.5,6.58,7.92,11.26,"H15SA12",NA,8.586666667,32.90333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"4","JB",2015,"Salix arctica","Common_garden",NA,8,18,2018,4.1,NA,NA,NA,22.02,19.37,18.8,4.67,4.29,3.29,"H15SA14",NA,4.083333333,20.06333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"5","JB",2015,"Salix arctica","Common_garden",NA,7,23,2023,3.4,12.2,9.9,5,24,27,29,4,6,8,"H15SA15",410.652,6,26.66666667,11.05,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H15sa15","100% yellowing",8
+"6","JB",2015,"Salix arctica","Common_garden",NA,8,11,2021,5.2,7.1,5.6,6,16,14,8,11,4,11,"H15SA18",206.752,8.666666667,12.66666667,6.35,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"7","JB",2015,"Salix arctica","Common_garden",NA,7,23,2023,6.7,25.2,20.2,12,35,43,42,18,20,28,"H15SA19",3410.568,22,40,22.7,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H15sa19","15% yellow, 30% yellowing and redding",8
+"8","JB",2015,"Salix arctica","Common_garden",NA,8,18,2018,5.8,NA,NA,NA,17.3,19.6,24.61,4.59,5.23,3.03,"H15SA20",NA,4.283333333,20.50333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"9","JB",2015,"Salix arctica","Common_garden",NA,7,23,2023,4.9,23.3,11.2,7,64,41,53,6,24,31,"H15SA3",1278.704,20.33333333,52.66666667,17.25,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H15Sa3","100% yellow and purple patches",8
+"10","JB",2015,"Salix arctica","Common_garden",NA,8,14,2017,0.3,NA,NA,NA,NA,NA,NA,NA,NA,NA,"H15SA4",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"11","JB",2015,"Salix arctica","Common_garden",NA,8,14,2017,0.7,NA,NA,NA,NA,NA,NA,4,NA,NA,"H15SA5",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"12","JB",2015,"Salix arctica","Common_garden",NA,8,23,2019,5.6,NA,NA,NA,27.56,23.68,27.31,20.97,22.2,21.62,"H15SA7",NA,21.59666667,26.18333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"13","JB",2015,"Salix arctica","Common_garden",NA,8,11,2021,2.2,14.1,7.2,10,33,NA,NA,11,24,22,"H15SA9",223.344,19,NA,10.65,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"14","IMS",2015,"Salix pulchra","Common_garden",NA,8,18,2018,6.2,NA,NA,NA,19.02,13.11,16.06,4.39,7.79,4.95,"H15SP1",NA,5.71,16.06333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"15","CF",2015,"Salix pulchra","Common_garden",NA,8,19,2020,7.1,NA,NA,NA,21,22,24,19,15,11,"H15SP10",NA,15,22.33333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"16","CF",2015,"Salix pulchra","Common_garden",NA,8,13,2017,2.6,NA,NA,NA,NA,NA,NA,13,7,NA,"H15SP11",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"17","CF",2015,"Salix pulchra","Common_garden",NA,8,18,2018,1.5,NA,NA,NA,7.47,6.71,4.84,1.97,1.31,1.32,"H15SP12",NA,1.533333333,6.34,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"18","CF",2015,"Salix pulchra","Common_garden",NA,8,11,2016,13.8,NA,NA,NA,37,42,44,53,47,10,"H15SP13",NA,36.66666667,41,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"19","CF",2015,"Salix pulchra","Common_garden",NA,8,11,2016,16.3,NA,NA,NA,48,19,18,19,15,NA,"H15SP14",NA,NA,28.33333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"20","CF",2015,"Salix pulchra","Common_garden",NA,8,11,2016,21.3,NA,NA,NA,31,41,40,46,30,NA,"H15SP15",NA,NA,37.33333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"21","CF",2015,"Salix pulchra","Common_garden",NA,8,11,2016,17.8,NA,NA,NA,33,32,32,16,14,6,"H15SP16",NA,12,32.33333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"22","CF",2015,"Salix pulchra","Common_garden",NA,8,11,2016,19,NA,NA,NA,27,24,16,18,15,8,"H15SP17",NA,13.66666667,22.33333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"23","CF",2015,"Salix pulchra","Common_garden",NA,8,18,2018,17.1,NA,NA,NA,23.04,24.84,25.72,8.13,5.09,3.54,"H15SP18",NA,5.586666667,24.53333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"24","CF",2015,"Salix pulchra","Common_garden",NA,8,23,2019,11.1,NA,NA,NA,18.97,15.95,14.93,22.67,21.15,5.42,"H15SP19",NA,16.41333333,16.61666667,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"25","IMS",2015,"Salix pulchra","Common_garden",NA,8,11,2016,31,NA,NA,NA,17,21,14,23,22,18,"H15SP2",NA,21,17.33333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"26","CF",2015,"Salix pulchra","Common_garden",NA,8,11,2021,8.7,9,5.5,10,21,NA,NA,7,6,11,"H15SP20",430.65,8,NA,7.25,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"27","MG",2015,"Salix pulchra","Common_garden",NA,8,11,2016,9.5,NA,NA,NA,NA,NA,NA,19,16,NA,"H15SP23",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"28","MG",2015,"Salix pulchra","Common_garden",NA,8,18,2018,11.3,NA,NA,NA,21.14,23.09,20.79,22.79,24.78,15.4,"H15SP24",NA,20.99,21.67333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"29","AB",2015,"Salix pulchra","Common_garden","2022-08-17",8,17,2022,9,14,10,15,19,18,23,14,13,19,"H15SP25",1260,15.33333333,20,12,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,7
+"30","AB",2015,"Salix pulchra","Common_garden",NA,8,14,2017,4.3,NA,NA,NA,NA,NA,NA,25,NA,NA,"H15SP26",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"31","AB",2015,"Salix pulchra","Common_garden",NA,8,11,2016,19,NA,NA,NA,21,17,15,18,13,NA,"H15SP27",NA,NA,17.66666667,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"32","AB",2015,"Salix pulchra","Common_garden",NA,8,18,2018,9.6,NA,NA,NA,20.39,22.97,22.34,3.53,3.17,1.4,"H15SP29",NA,2.7,21.9,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"33","IMS",2015,"Salix pulchra","Common_garden",NA,8,13,2017,2.1,NA,NA,NA,NA,NA,NA,9,NA,NA,"H15SP3",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"34","IMS",2015,"Salix pulchra","Common_garden",NA,7,23,2023,9.4,15.7,15.4,12,22,27,30,22,12,15,"H15SP5",2272.732,16.33333333,26.33333333,15.55,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H15Sp5","40% yellow, 20% yellowing, rest green",8
+"35","IMS",2015,"Salix pulchra","Common_garden",NA,8,9,2021,6.8,6,3.2,10,17,18,NA,6,10,8,"H15SP6",130.56,8,NA,4.6,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"36","IMS",2015,"Salix pulchra","Common_garden",NA,8,11,2016,17,NA,NA,NA,30,28,21,11,9,12,"H15SP8",NA,10.66666667,26.33333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"37","CF",2015,"Salix pulchra","Common_garden",NA,8,11,2016,31.3,NA,NA,NA,33,36,42,27,9,NA,"H15SP9",NA,NA,37,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"38","SW",2015,"Salix richardsonii","Common_garden",NA,8,13,2017,1,NA,NA,NA,NA,NA,NA,31,15,NA,"H15SR12",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"39","SW",2015,"Salix richardsonii","Common_garden",NA,8,18,2018,4.3,NA,NA,NA,NA,NA,NA,6.55,NA,NA,"H15SR13",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"40","SW",2015,"Salix richardsonii","Common_garden",NA,8,11,2021,7.5,12,9.4,9,18,21,19,17,21,10,"H15SR19",846,16,19.33333333,10.7,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"41","SW",2015,"Salix richardsonii","Common_garden",NA,8,18,2018,9.2,NA,NA,NA,12.55,11.85,12.9,9.42,5.84,7.09,"H15SR20",NA,7.45,12.43333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"42","AC",2015,"Salix richardsonii","Common_garden","2022-07-23",7,23,2022,6.4,9,6.5,5,26,20,21,11,16,20,"H15SR29",374.4,15.66666667,22.33333333,7.75,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,7
+"43","LB",2015,"Salix richardsonii","Common_garden",NA,8,11,2016,1.7,NA,NA,NA,11,16,NA,14,NA,NA,"H15SR3",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"44","LB",2015,"Salix richardsonii","Common_garden",NA,7,23,2023,20.6,22.8,13.5,12,37,34,30,24,18,35,"H15SR5",6340.68,25.66666667,33.66666667,18.15,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H15Sr5","60% yellowing",8
+"45","JA",2017,"Salix arctica","Common_garden",NA,7,23,2023,7.6,27.9,18.6,11,45,48,41,12,8,7,"H17SA10",3943.944,9,44.66666667,23.25,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17Sa10","85% brown and yellow patches",6
+"46","SAB",2017,"Salix arctica","Common_garden",NA,7,23,2023,5.4,11,7.5,9,36,33,32,9,4,3,"H17SA12",445.5,5.333333333,33.66666667,9.25,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17Sa12","30% browning and crunchy",6
+"47","SAB",2017,"Salix arctica","Common_garden",NA,8,23,2019,3.2,NA,NA,NA,24.59,NA,NA,15.3,8.92,NA,"H17SA14",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"48","SAB",2017,"Salix arctica","Common_garden","2022-08-17",8,17,2022,7,18.5,14,9,38,31,34,13,27,25,"H17SA15",1813,21.66666667,34.33333333,16.25,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"49","JB",2017,"Salix arctica","Common_garden",NA,7,23,2023,5.1,21.2,14.8,7,37,52,39,26,15,19,"H17SA17",1600.176,20,42.66666667,18,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17sa17","90% red and yellowish purple patches",6
+"50","JB",2017,"Salix arctica","Common_garden","2022-08-17",8,17,2022,10,47,25,16,49,32,36,40,28,26,"H17SA18",11750,31.33333333,39,36,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"51","JB",2017,"Salix arctica","Common_garden",NA,7,23,2023,5.6,17.8,15.1,14,68,60,68,9,24,18,"H17SA20",1505.168,17,65.33333333,16.45,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17sa20","75% dead, 2 branches removed, 20% yellowing",6
+"52","JA",2017,"Salix arctica","Common_garden",NA,8,18,2018,1.8,NA,NA,NA,22.18,11.43,NA,6.07,3.42,NA,"H17SA3",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"53","JA",2017,"Salix arctica","Common_garden",NA,7,23,2023,7.7,24.9,22.3,11,48,47,48,32,19,55,"H17SA6",4275.579,35.33333333,47.66666667,23.6,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17Sa6","20% brown patches, doing well",6
+"54","JA",2017,"Salix arctica","Common_garden",NA,8,11,2021,4.4,16.5,12.5,9,24,23,24,6,5,10,"H17SA8",907.5,7,23.66666667,14.5,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"55","JA",2017,"Salix arctica","Common_garden",NA,7,23,2023,10,34.5,29.4,15,32,34,28,8,22,18,"H17SA9",10143,16,31.33333333,31.95,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17Sa9","85% brown patches",6
+"56","AB",2017,"Salix pulchra","Common_garden",NA,8,18,2018,11.8,NA,NA,NA,24.57,25.04,21.98,5.56,4.35,2.06,"H17SP10",NA,3.99,23.86333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"57","AB",2017,"Salix pulchra","Common_garden",NA,7,23,2023,9.2,21.3,18.2,7,18,20,19,5,7,15,"H17SP12",3566.472,9,19,19.75,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17sp12","10% yellow, 90% yellowing",6
+"58","AB",2017,"Salix pulchra","Common_garden",NA,8,18,2018,24.6,NA,NA,NA,20.81,17.54,16.59,4.46,3.86,2.88,"H17SP13",NA,3.733333333,18.31333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"59","AB",2017,"Salix pulchra","Common_garden",NA,8,18,2018,23.3,NA,NA,NA,12.6,15.19,11.03,1.91,2,0.86,"H17SP14",NA,1.59,12.94,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"60","AB",2017,"Salix pulchra","Common_garden",NA,7,23,2023,10.2,8.3,9.1,6,30,27,25,18,31,16,"H17SP15",770.406,21.66666667,27.33333333,8.7,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17sp15","40% yellowing",6
+"61","AB",2017,"Salix pulchra","Common_garden",NA,7,23,2023,5.2,10.7,8.3,8,20,18,22,10,4,5,"H17SP18",461.812,6.333333333,20,9.5,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17sp18","60% yellow, 40% yellowing",6
+"62","AB",2017,"Salix pulchra","Common_garden",NA,8,18,2018,5.5,NA,NA,NA,28.18,21.23,15.28,1.95,7.02,0.39,"H17SP20",NA,3.12,21.56333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"63","IMS",2017,"Salix pulchra","Common_garden",NA,8,19,2020,42,NA,NA,NA,NA,NA,NA,6,10,4,"H17SP3",NA,6.666666667,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"64","IMS",2017,"Salix pulchra","Common_garden",NA,8,18,2018,9.3,NA,NA,NA,33.08,34.26,29.9,2.8,2.61,2.21,"H17SP6",NA,2.54,32.41333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"65","IMS",2017,"Salix pulchra","Common_garden",NA,8,9,2021,3.6,4.3,1.2,7,16,17,17,16,13,6,"H17SP7",18.576,11.66666667,16.66666667,2.75,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"66","CF",2017,"Salix pulchra","Common_garden",NA,7,23,2023,17.6,18.4,17.9,11,26,23,27,9,8,8,"H17SP9",5796.736,8.333333333,25.33333333,18.15,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17SP9","20% yellow, 70% yellowing, 10% green",6
+"67","LB",2017,"Salix richardsonii","Common_garden",NA,8,23,2019,19.2,NA,NA,NA,NA,NA,NA,14.35,10.96,17.33,"H17SR1",NA,14.21333333,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"68","GD",2017,"Salix richardsonii","Common_garden",NA,8,9,2021,12,20,19,11,30,29,28,42,40,23,"H17SR10",4560,35,29,19.5,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"69","GD",2017,"Salix richardsonii","Common_garden",NA,7,23,2023,6.7,12.9,10.5,7,24,22,26,7,11,5,"H17SR12",907.515,7.666666667,24,11.7,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17SR12","80% brown and purple patches",6
+"70","GD",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,14.4,NA,NA,NA,25.56,20.91,17.42,9.32,4.61,3.84,"H17SR13",NA,5.923333333,21.29666667,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"71","GD",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,20.9,NA,NA,NA,26.25,29.52,27.32,25.1,NA,NA,"H17SR15",NA,NA,27.69666667,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"72","IR",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,22.2,NA,NA,NA,20.33,23.85,27.24,13.72,12.61,NA,"H17SR18",NA,NA,23.80666667,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"73","IR",2017,"Salix richardsonii","Common_garden",NA,8,11,2021,6.8,10.4,5,12,17,18,19,18,10,14,"H17SR19",353.6,14,18,7.7,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"74","AC",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,2.2,NA,NA,NA,11.67,10.84,NA,5.14,NA,NA,"H17SR20",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"75","AC",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,28,NA,NA,NA,NA,NA,NA,NA,NA,NA,"H17SR21_CLONE",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"76","AC",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,16.6,NA,NA,NA,27.05,25.76,23.32,12.48,15.4,8.06,"H17SR24",NA,11.98,25.37666667,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"77","AC",2017,"Salix richardsonii","Common_garden",NA,8,19,2020,24.93,NA,NA,NA,NA,NA,NA,9.02,7.32,7.36,"H17SR25",NA,7.9,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"78","AC",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,6.9,NA,NA,NA,NA,NA,NA,3.8,NA,NA,"H17SR28",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"79","LB",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,1.4,NA,NA,NA,NA,NA,NA,7.44,NA,NA,"H17SR3",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"80","EW",2017,"Salix richardsonii","Common_garden",NA,7,23,2023,16.3,37.6,28.1,20,31,34,37,16,5,25,"H17SR30",17221.928,15.33333333,34,32.85,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17sr30","100% brown tips on leaves, 40% yellowing",6
+"81","EW",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,2.1,NA,NA,NA,NA,NA,NA,11.31,NA,NA,"H17SR31",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"82","EW",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,1.9,NA,NA,NA,NA,NA,NA,7.9,NA,NA,"H17SR32",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"83","EW",2017,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,19,23,24,16,27,26,28,36,35,25,"H17SR35",10488,32,27,23.5,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"84","EW",2017,"Salix richardsonii","Common_garden",NA,8,19,2020,14.6,NA,NA,NA,32,28,38,68,56,64,"H17SR36",NA,62.66666667,32.66666667,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"85","EW",2017,"Salix richardsonii","Common_garden",NA,7,23,2023,9.2,13,10.3,8,24,23,27,12,7,13,"H17SR37",1231.88,10.66666667,24.66666667,11.65,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17sr37","100% brown tips on leaves, 60% yellowing and browning",6
+"86","LB",2017,"Salix richardsonii","Common_garden",NA,8,19,2020,12,NA,NA,NA,NA,NA,NA,44,23,18,"H17SR4",NA,28.33333333,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"87","LB",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,19.2,NA,NA,NA,25.34,26.82,20.96,15.11,11.04,9.97,"H17SR5",NA,12.04,24.37333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"88","GD",2017,"Salix richardsonii","Common_garden",NA,7,23,2023,12.3,18.2,14.2,9,26,27,30,22,16,13,"H17SR7",3178.812,17,27.66666667,16.2,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H17SR7","100% browning at edges, 40% yellowing",6
+"89","GD",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,19.8,NA,NA,NA,18.12,22.11,23.68,9.42,10.32,5.31,"H17SR9",NA,8.35,21.30333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"90","SAB",2018,"Salix arctica","Common_garden","2022-08-17",8,17,2022,4,9.5,7.5,9,25,35,27,12,11,7,"H18SA1",285,10,29,8.5,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"91","JB",2018,"Salix arctica","Common_garden",NA,8,23,2019,0.4,NA,NA,NA,9.56,7.2,NA,56.05,NA,NA,"H18SA13",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"92","EW",NA,"Salix arctica","Common_garden",NA,7,23,2023,3.3,15.5,9.2,4,27,32,29,4,4,3,"H18SA29",470.58,3.666666667,29.33333333,12.35,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H18sa29","100% purple patches on leaves",NA
+"93","SAB",2018,"Salix arctica","Common_garden",NA,7,23,2023,5.6,16.8,16.4,15,37,30,33,8,19,6,"H18SA8",1542.912,11,33.33333333,16.6,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H18sa8","100% brown patches, 30% yellowing",5
+"94","IMS",2018,"Salix pulchra","Common_garden","2022-08-17",8,17,2022,4.5,5,3.2,5,22,11,14,7,8,3,"H18SP1",72,6,15.66666667,4.1,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"95","SL",2018,"Salix pulchra","Common_garden","2022-07-23",7,23,2022,8.5,8,12,8.5,25,18,22,12,15,11,"H18SP11",816,12.66666667,21.66666667,10,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"96","SL",2018,"Salix pulchra","Common_garden",NA,8,19,2020,9.2,NA,NA,NA,25,24,23,32,24,18,"H18SP15",NA,24.66666667,24,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"97","JG",2018,"Salix pulchra","Common_garden",NA,8,11,2021,11,6.2,4,4,15,16,11,9,5,3,"H18SP16",272.8,5.666666667,14,5.1,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"98","JG",2018,"Salix pulchra","Common_garden",NA,7,23,2023,4.2,4.6,3.5,4,23,22,25,7,NA,NA,"H18SP18",67.62,NA,23.33333333,4.05,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H18sp18","100% yellowing, six leaves",5
+"99","JG",2018,"Salix pulchra","Common_garden",NA,8,23,2019,2.4,NA,NA,NA,NA,NA,NA,6.42,NA,NA,"H18SP19",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"100","IMS",2018,"Salix pulchra","Common_garden",NA,8,23,2019,8.3,NA,NA,NA,NA,NA,NA,6.8,NA,NA,"H18SP2",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"101","MG",2018,"Salix pulchra","Common_garden",NA,7,23,2023,7.1,9.2,7.8,5,28,24,26,20,17,7,"H18SP24",509.496,14.66666667,26,8.5,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H18sp24","Starting to yellow 50%",5
+"102","AB",2018,"Salix pulchra","Common_garden",NA,8,23,2019,8.89,NA,NA,NA,NA,NA,NA,14.87,19.7,12.92,"H18SP29",NA,15.83,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"103","AB",2018,"Salix pulchra","Common_garden",NA,8,23,2019,7.6,NA,NA,NA,NA,NA,NA,9.79,21.5,25.19,"H18SP30",NA,18.82666667,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"104","IMS",2018,"Salix pulchra","Common_garden",NA,8,19,2020,19.4,NA,NA,NA,NA,NA,NA,23,22,30,"H18SP4",NA,25,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"105","IMS",2018,"Salix pulchra","Common_garden",NA,8,9,2021,13.6,10.6,2.4,5,NA,NA,NA,9,8,17,"H18SP5",345.984,11.33333333,NA,6.5,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"106","CF",2018,"Salix pulchra","Common_garden",NA,8,19,2020,12.1,NA,NA,NA,NA,NA,NA,12,11,14,"H18SP7",NA,12.33333333,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"107","CF",2018,"Salix pulchra","Common_garden",NA,8,11,2021,1.5,3,0.9,2,15,19,NA,5,NA,NA,"H18SP8",4.05,NA,NA,1.95,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"108","CF",2018,"Salix pulchra","Common_garden",NA,8,11,2021,7.5,5,8.5,4,NA,12,9,2.5,4,10,"H18SP9",318.75,5.5,NA,6.75,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"109","GD",2018,"Salix richardsonii","Common_garden",NA,7,23,2023,6.2,12.4,12.8,9,21,20,30,10,7,8,"H18SR10",984.064,8.333333333,23.66666667,12.6,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H18sr10","40% yellowing, leaves round",5
+"110","SW",2018,"Salix richardsonii","Common_garden",NA,8,23,2019,0.7,NA,NA,NA,10.89,9.14,10.45,8.74,NA,NA,"H18SR12",NA,NA,10.16,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"111","LB",2018,"Salix richardsonii","Common_garden",NA,8,23,2019,19.6,NA,NA,NA,17.33,13.72,15.82,10.49,NA,NA,"H18SR2",NA,NA,15.62333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"112","AC",2018,"Salix richardsonii","Common_garden",NA,8,23,2019,10.2,NA,NA,NA,NA,NA,NA,37.8,19.03,13.38,"H18SR24",NA,23.40333333,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"113","EW",2018,"Salix richardsonii","Common_garden",NA,7,23,2023,16.9,23.9,13.7,12,39,28,26,17,10,9,"H18SR27",5533.567,12,31,18.8,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H18sr27","100% yellowing and redding",5
+"114","EW",2018,"Salix richardsonii","Common_garden",NA,8,19,2020,5.4,NA,NA,NA,NA,NA,NA,43,42,40,"H18SR29",NA,41.66666667,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"115","EW",2018,"Salix richardsonii","Common_garden",NA,7,23,2023,17.6,24.2,19,13,25,26,25,8,14,7,"H18SR30",8092.48,9.666666667,25.33333333,21.6,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H18sr30","10% yellow, 100% turning yellow and brown",5
+"116","GD",2018,"Salix richardsonii","Common_garden",NA,7,23,2023,4.3,5.9,3.4,8,19,22,19,8,4,3,"H18SR6",86.258,5,20,4.65,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H18sr6","40% brown tips on leaves, quite small",5
+"117","GD",2018,"Salix richardsonii","Common_garden",NA,7,23,2023,6.4,19.9,17.8,7,24,26,31,3,7,12,"H18SR8",2267.008,7.333333333,27,18.85,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"H18sr8","100% brown tips on leaves, 50% yellowing",5
+"118","AB",2015,"Salix pulchra","Common_garden",NA,8,23,2019,4.7,NA,NA,NA,NA,NA,NA,10.4,19.09,17.39,"HE15SP26",NA,15.62666667,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"119","SAB",2016,"Salix arctica","Common_garden",NA,8,14,2017,4,NA,NA,NA,NA,NA,NA,NA,NA,NA,"HE16SA10",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"120","SAB",2016,"Salix arctica","Common_garden",NA,7,23,2023,6.4,25.7,21.8,6,37,25,25,6,10,12,"HE16SA14",3585.664,9.333333333,29,23.75,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"HE16SA14","60% brown patches",7
+"121","JA",2016,"Salix arctica","Common_garden",NA,7,23,2023,7.6,24.1,20.7,8,58,49,41,5,12,22,"HE16SA3",3791.412,13,49.33333333,22.4,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"HE16Sa3","35% have brown patches",7
+"122","SAB",2016,"Salix arctica","Common_garden",NA,8,18,2018,4.5,NA,NA,NA,15.04,11.81,7.41,4.09,2.68,3.3,"HE16SA6",NA,3.356666667,11.42,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"123","SAB",2016,"Salix arctica","Common_garden",NA,7,23,2023,6,30.9,22.3,12,35,37,51,4,16,13,"HE16SA7",4134.42,11,41,26.6,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"HE16SA7","40% brown tips on leaves, rest green",7
+"124","SAB",2016,"Salix arctica","Common_garden",NA,8,14,2017,2.9,NA,NA,NA,10,17,NA,13,NA,NA,"HE16SA8",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"125","SL",2016,"Salix pulchra","Common_garden",NA,8,13,2017,6.5,NA,NA,NA,NA,NA,NA,11,NA,NA,"HE16SP11",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"126","SL",2016,"Salix pulchra","Common_garden",NA,8,9,2021,6.2,10.8,6.5,4,21,22,21,8,3,20,"HE16SP15",435.24,10.33333333,21.33333333,8.65,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"127","JG",2016,"Salix pulchra","Common_garden",NA,8,13,2017,1.9,NA,NA,NA,18,20,17,17,NA,NA,"HE16SP16",NA,NA,18.33333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"128","JG",2016,"Salix pulchra","Common_garden",NA,7,23,2023,6.3,15.4,9.2,9,46,50,42,88,86,NA,"HE16SP17",892.584,NA,46,12.3,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"HE16SP17","48% dead, removed one branch, pail yellow green, very tips are brown, 15 leaves",7
+"129","JG",2016,"Salix pulchra","Common_garden",NA,8,13,2017,9,NA,NA,NA,12,7,NA,12,6,NA,"HE16SP19",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"130","JG",2016,"Salix pulchra","Common_garden",NA,8,13,2017,24,NA,NA,NA,NA,NA,NA,4,4,2,"HE16SP25",NA,3.333333333,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"131","AB",2016,"Salix pulchra","Common_garden",NA,8,23,2019,28.8,NA,NA,NA,NA,NA,NA,1,NA,NA,"HE16SP4",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"132","GD",2016,"Salix richardsonii","Common_garden",NA,8,13,2017,4.6,NA,NA,NA,NA,NA,NA,8,NA,NA,"HE16SR23",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"133","LB",NA,"Salix richardsonii","Common_garden",NA,7,23,2023,7.5,8.5,10.6,13,47,55,34,65,NA,NA,"HEFSR4",675.75,NA,45.33333333,9.55,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"HEF_SR_4","68% dead, removed 3 branches, big round leaves, 40% yellowing",NA
+"134","MG",2014,"Salix pulchra","Common_garden",NA,7,23,2023,15.9,30.2,27.3,15,39,27,32,20,10,12,"HERSP11",13108.914,14,32.66666667,28.75,"source_north",NA,NA,NA,NA,NA,1.2,54.3,NA,"HER_SP_11","Yellow and crunchy leaves 80%",9
+"135","MG",2014,"Salix pulchra","Common_garden",NA,7,23,2023,21,34.2,35.2,15,36,31,29,29,11,30,"HERSP12",25280.64,23.33333333,32,34.7,"source_north",NA,NA,NA,NA,NA,1,57.8,NA,"HER_SP_12","Yellow leaves 40%",9
+"136","MG",2014,"Salix pulchra","Common_garden",NA,7,23,2023,3.3,5.5,5.8,11,18,21,16,3,2,8,"HERSP14",105.27,4.333333333,18.33333333,5.65,"source_north",NA,NA,NA,NA,NA,1.2,72.5,NA,"HER_Sp_14","100% leaves yellowing and browning",9
+"137","IMS",2014,"Salix pulchra","Common_garden",NA,7,23,2023,10.6,30,21.9,19,29,32,27,12,20,15,"HERSP24",6964.2,15.66666667,29.33333333,25.95,"source_north",NA,NA,NA,NA,NA,0.8,54.5,NA,"HER_Sp_24","30% yellowing, 10% rust",9
+"138","AB",2014,"Salix pulchra","Common_garden",NA,7,23,2023,12.9,21.1,19.5,19,18,28,26,15,12,20,"HERSP29",5307.705,15.66666667,24,20.3,"source_north",NA,NA,NA,NA,NA,1.3,45.9,NA,"HERSP29","20% yellow, rest yellowing",9
+"139","IMS",2014,"Salix pulchra","Common_garden",NA,7,23,2023,16.8,46.4,28.6,20,29,31,34,12,49,21,"HERSP3",22294.272,27.33333333,31.33333333,37.5,"source_north",NA,NA,NA,NA,NA,1.3,68.3,NA,"HER_Sp_3","50% yellow, 20% yellowing",9
+"140","IMS",2014,"Salix pulchra","Common_garden",NA,7,23,2023,7.7,9.7,8,7,17,22,18,20,15,12,"HERSP4",597.52,15.66666667,19,8.85,"source_north",NA,NA,NA,NA,NA,1.4,55.9,NA,"HER_Sp_4","90% yellowing",9
+"141","MG",2013,"Salix pulchra","Common_garden",NA,8,11,2016,26.6,NA,NA,NA,45,39,48,39,30,36,"HESP11",NA,35,44,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"142","MG",2013,"Salix pulchra","Common_garden",NA,8,18,2018,30.5,NA,NA,NA,22.66,20.8,17.14,6.43,3.42,6.48,"HESP12",NA,5.443333333,20.2,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"143","MG",2013,"Salix pulchra","Common_garden",NA,8,11,2016,5.9,NA,NA,NA,31,36,30,34,21,15,"HESP14",NA,23.33333333,32.33333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"144","MG",2013,"Salix pulchra","Common_garden",NA,8,18,2018,13.2,NA,NA,NA,14.24,12.55,12.13,3.44,3,2.3,"HESP17",NA,2.913333333,12.97333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"145","MG",2013,"Salix pulchra","Common_garden",NA,8,11,2016,8.3,NA,NA,NA,35,33,31,36,29,34,"HESP18",NA,33,33,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"146","IMS",2013,"Salix pulchra","Common_garden",NA,8,11,2016,12.3,NA,NA,NA,26,20,23,32,29,26,"HESP2",NA,29,23,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"147","MG",2013,"Salix pulchra","Common_garden",NA,8,11,2016,12,NA,NA,NA,39,42,34,41,36,36,"HESP20",NA,37.66666667,38.33333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"148","AB",2013,"Salix pulchra","Common_garden",NA,8,14,2017,7.7,NA,NA,NA,16,10,9,14,14,10,"HESP23",NA,12.66666667,11.66666667,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"149","IMS",2013,"Salix pulchra","Common_garden",NA,8,18,2018,25.4,NA,NA,NA,24.37,23.15,22.59,4.94,3.66,3.29,"HESP24",NA,3.963333333,23.37,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"150","AB",2013,"Salix pulchra","Common_garden",NA,8,14,2017,2.2,NA,NA,NA,NA,NA,NA,27,NA,NA,"HESP26",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"151","AB",2013,"Salix pulchra","Common_garden","2022-08-17",8,17,2022,12,19,16,18,20,26,21,18,17,19,"HESP29",3648,18,22.33333333,17.5,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,9
+"152","IMS",2013,"Salix pulchra","Common_garden",NA,8,11,2016,37.2,NA,NA,NA,39,31,37,42,40,38,"HESP3",NA,40,35.66666667,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"153","IMS",2013,"Salix pulchra","Common_garden",NA,8,13,2017,87,NA,NA,NA,61,75,62,175,145,210,"HESP4",NA,176.6666667,66,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"154","CF",2013,"Salix pulchra","Common_garden",NA,8,23,2019,18.2,NA,NA,NA,24.6,30.77,26.02,26.65,19.96,16.83,"HESP6",NA,21.14666667,27.13,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"155","SW",2013,"Salix richardsonii","Common_garden",NA,7,23,2023,14.4,11,5.3,8,24,22,17,12,8,10,"HESR13",839.52,10,21,8.15,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"HeSR13","5% yellowing",10
+"156","IR",2013,"Salix richardsonii","Common_garden",NA,8,11,2016,2.2,NA,NA,NA,NA,NA,NA,NA,NA,NA,"HESR17",NA,NA,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"157","LB",2013,"Salix richardsonii","Common_garden",NA,7,23,2023,12.3,25.8,14.1,16,25,23,22,12,23,15,"HESR2",4474.494,16.66666667,23.33333333,19.95,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"HeSR2","75% yellowing",10
+"158","AC",2013,"Salix richardsonii","Common_garden",NA,8,14,2017,23.5,NA,NA,NA,9,12,15,36,21,31,"HESR21",NA,29.33333333,12,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"159","AC",2013,"Salix richardsonii","Common_garden",NA,7,23,2023,9,10.4,9.4,8,21,22,19,7,5,4,"HESR23",879.84,5.333333333,20.66666667,9.9,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"HESR23","20% leaves are yellowing and going red",10
+"160","AC",2013,"Salix richardsonii","Common_garden",NA,8,14,2017,14.5,NA,NA,NA,21,20,22,27,48,25,"HESR26",NA,33.33333333,21,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"161","AC",2013,"Salix richardsonii","Common_garden",NA,8,18,2018,8.8,NA,NA,NA,8.62,7.31,5.64,13.21,4.81,5.68,"HESR27",NA,7.9,7.19,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"162","LB",2013,"Salix richardsonii","Common_garden",NA,7,23,2023,15.6,26.7,21,12,25,27,28,11,14,20,"HESR3",8746.92,15,26.66666667,23.85,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,"HeSR3","20% yellowing",10
+"163","LB",2013,"Salix richardsonii","Common_garden",NA,8,23,2019,8.4,NA,NA,NA,NA,NA,NA,19.34,19.59,8.99,"HESR4",NA,15.97333333,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"164","LB",2013,"Salix richardsonii","Common_garden",NA,8,13,2017,3.3,NA,NA,NA,13,7,6,6,12,4,"HESR4B",NA,7.333333333,8.666666667,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"165","LB",2013,"Salix richardsonii","Common_garden",NA,8,18,2018,3.1,NA,NA,NA,16.16,NA,NA,9.44,2.36,8.4,"HESR4B_CLONE",NA,6.733333333,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"166","SW",2013,"Salix richardsonii","Common_garden",NA,8,23,2019,17.2,NA,NA,NA,NA,NA,NA,7.91,11.42,16.1,"HESR6",NA,11.81,NA,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"167","SW",2013,"Salix richardsonii","Common_garden",NA,8,11,2016,19.5,NA,NA,NA,32,34,35,36,31,49,"HESR7",NA,38.66666667,33.66666667,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"168","SW",2013,"Salix richardsonii","Common_garden",NA,8,11,2016,26,NA,NA,NA,29,27,29,54,39,34,"HESR8",NA,42.33333333,28.33333333,NA,"Northern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"169","JB",2015,"Salix arctica","Common_garden",NA,7,23,2023,5.2,13.9,12,5,32,25,34,2,11,14,"K15PSA10",867.36,9,30.33333333,12.95,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"K15PSa10","100% yellowing and browning",8
+"170","JB",2015,"Salix arctica","Common_garden",NA,7,23,2023,8.1,39.2,21.2,34,62,66,58,28,31,15,"K15PSA11",6731.424,24.66666667,62,30.2,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"K15PSa11","30% yellowing",8
+"171","JB",2015,"Salix arctica","Common_garden",NA,8,11,2021,7.1,24.8,20.1,12,32,37,34,8,4,14,"K15PSA12",3539.208,8.666666667,34.33333333,22.45,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"172","JB",2015,"Salix arctica","Common_garden",NA,8,18,2018,3,NA,NA,NA,27.18,25.83,27.29,4.2,5.4,6.67,"K15PSA13",NA,5.423333333,26.76666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"173","JB",2015,"Salix arctica","Common_garden","2022-08-17",8,17,2022,15.2,17,21,12,40,33,37,20,16,20,"K15PSA15",5426.4,18.66666667,36.66666667,19,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,7
+"174","JB",2015,"Salix arctica","Common_garden",NA,8,23,2019,7,NA,NA,NA,41.94,35,37.01,11.73,7.08,5.36,"K15PSA2",NA,8.056666667,37.98333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"175","JB",2015,"Salix arctica","Common_garden",NA,7,23,2023,10.1,30.9,30.3,13,51,52,52,20,16,9,"K15PSA6",9456.327,15,51.66666667,30.6,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"K15PSa6","70% purple-y brown red around the edges",8
+"176","JB",2015,"Salix arctica","Common_garden",NA,7,23,2023,10.3,57.8,49.7,28,73,67,65,22,14,20,"K15PSA7",29588.398,18.66666667,68.33333333,53.75,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"K15PSa7","90% yellowing and redding, 15x20 cm dead patch",8
+"177","JB",2015,"Salix arctica","Common_garden",NA,8,18,2018,7.8,NA,NA,NA,37.57,20.67,34.46,73.83,39.47,18.01,"K15PSA8",NA,43.77,30.9,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"178","JB",2015,"Salix arctica","Common_garden",NA,7,23,2023,9.4,37.2,36.9,23,54,57,68,48,45,36,"K15PSA9",12903.192,43,59.66666667,37.05,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"K15PSa9","40% brown patches",8
+"179","SW",2015,"Salix richardsonii","Common_garden",NA,7,23,2023,38.9,28.4,26.9,18,50,43,40,214,61,75,"K15SSR8",29718.044,116.6666667,44.33333333,27.65,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"K15SSr8","Looking green and happy",8
+"180","JB",2017,"Salix arctica","Common_garden",NA,8,18,2018,2.2,NA,NA,NA,10.02,15.72,10.2,4.98,1.64,1.68,"K17SA10",NA,2.766666667,11.98,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"181","JA",2017,"Salix arctica","Common_garden",NA,7,23,2023,3.5,9.8,7.7,4,31,30,32,3,2,2,"K17SA5",264.11,2.333333333,31,8.75,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"K17Sa5","100% green",6
+"182","LB",2017,"Salix richardsonii","Common_garden",NA,8,19,2020,20.1,NA,NA,NA,64,61,48,109,51,38,"K17SR6",NA,66,57.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"183","LB",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,5.7,NA,NA,NA,15.64,18.99,17.91,2.85,NA,NA,"K17SR9",NA,NA,17.51333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"184","IMS",2013,"Salix pulchra","Common_garden",NA,8,23,2019,45.4,NA,NA,NA,49.5,44.55,39.65,29.55,20.36,36.01,"KLSPC1",NA,28.64,44.56666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"185","MG",2013,"Salix pulchra","Common_garden",NA,8,11,2016,33,NA,NA,NA,46,48,47,43,41,28,"KLSPC10",NA,37.33333333,47,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"186","AB",2013,"Salix pulchra","Common_garden",NA,8,18,2018,49.1,NA,NA,NA,47.67,46.6,41.15,6.69,4.84,3.71,"KLSPC13",NA,5.08,45.14,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"187","IMS",2013,"Salix pulchra","Common_garden",NA,8,13,2017,31,NA,NA,NA,47,56,51,90,75,60,"KLSPC2",NA,75,51.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"188","IMS",2013,"Salix pulchra","Common_garden",NA,8,13,2017,31,NA,NA,NA,47,54,55,110,112,80,"KLSPC3",NA,100.6666667,52,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"189","MG",2013,"Salix pulchra","Common_garden",NA,8,11,2016,16.1,NA,NA,NA,74,65,75,314,317,275,"KLSPC8",NA,302,71.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"190","MG",2013,"Salix pulchra","Common_garden",NA,8,18,2018,44.1,NA,NA,NA,18.19,21.84,24.22,53.66,83.52,54.71,"KLSPC9",NA,63.96333333,21.41666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"191","IMS",2013,"Salix pulchra","Common_garden",NA,8,18,2018,74.9,NA,NA,NA,31.63,37.79,40.93,6.26,7.49,6.6,"KLSPE1",NA,6.783333333,36.78333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"192","CF",2013,"Salix pulchra","Common_garden",NA,8,23,2019,37.8,NA,NA,NA,33.02,37.53,36.55,156,61,40,"KLSPE10",NA,85.66666667,35.7,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"193","MG",2013,"Salix pulchra","Common_garden",NA,8,23,2019,40.3,NA,NA,NA,38.16,40.9,41.41,17.53,18.91,24.95,"KLSPE11",NA,20.46333333,40.15666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"194","MG",2013,"Salix pulchra","Common_garden",NA,8,14,2017,50,NA,NA,NA,55,39,34,170,190,210,"KLSPE12",NA,190,42.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"195","MG",2013,"Salix pulchra","Common_garden","2022-08-17",8,17,2022,54,85,72,16,72,64,73,230,300,450,"KLSPE14",330480,326.6666667,69.66666667,78.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,9
+"196","MG",2013,"Salix pulchra","Common_garden",NA,8,14,2017,20,NA,NA,NA,34,33,37,145,200,90,"KLSPE15",NA,145,34.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"197","IMS",2013,"Salix pulchra","Common_garden",NA,8,13,2017,61,NA,NA,NA,51,50,48,222,357,286,"KLSPE2",NA,288.3333333,49.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"198","IMS",2013,"Salix pulchra","Common_garden",NA,7,23,2023,12.9,10,9.4,12,27,32,33,18,15,12,"KLSPE3",1212.6,15,30.66666667,9.7,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"KLSPE3","5% yellowing, brown tips",10
+"199","IMS",2013,"Salix pulchra","Common_garden",NA,8,13,2017,83.5,NA,NA,NA,70,62,65,280,235,170,"KLSPE4",NA,228.3333333,65.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"200","IMS",2013,"Salix pulchra","Common_garden",NA,8,13,2017,31,NA,NA,NA,50,55,37,55,60,85,"KLSPE5",NA,66.66666667,47.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"201","CF",2013,"Salix pulchra","Common_garden",NA,8,18,2018,101,NA,NA,NA,64.45,68.7,68.1,319,170,225,"KLSPE6",NA,238,67.08333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"202","CF",2013,"Salix pulchra","Common_garden",NA,8,13,2017,87,NA,NA,NA,60,65,59,595,430,495,"KLSPE7",NA,506.6666667,61.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"203","CF",2013,"Salix pulchra","Common_garden",NA,8,23,2019,73.2,NA,NA,NA,38.62,39.66,38.31,65.24,61.39,45.14,"KLSPE8",NA,57.25666667,38.86333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"204","CF",2013,"Salix pulchra","Common_garden",NA,8,13,2017,49,NA,NA,NA,80,70,65,270,350,270,"KLSPE9",NA,296.6666667,71.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"205","IR",2013,"Salix richardsonii","Common_garden",NA,8,11,2021,110.6,145.3,124.8,81,58,48,52,40,61,109,"KLSRC10",2005558.464,70,52.66666667,135.05,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,8
+"206","AC",2013,"Salix richardsonii","Common_garden",NA,8,18,2018,41.6,NA,NA,NA,40.45,35.87,36.11,31.54,106.01,83.64,"KLSRC11",NA,73.73,37.47666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"207","AC",2013,"Salix richardsonii","Common_garden",NA,8,11,2021,85,115,114,88,47,52,48,120,39,112,"KLSRC13",1114350,90.33333333,49,114.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,8
+"208","LB",2013,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,127,140,110,60,52,40,45,90,80,80,"KLSRC2",1955800,83.33333333,45.66666667,125,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,9
+"209","IR",2013,"Salix richardsonii","Common_garden",NA,8,19,2020,115,NA,NA,NA,42,41,48,137,122,84,"KLSRC6",NA,114.3333333,43.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,7
+"210","IR",2013,"Salix richardsonii","Common_garden",NA,8,14,2017,82,NA,NA,NA,31,32,30,175,240,220,"KLSRC7",NA,211.6666667,31,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"211","SW",2013,"Salix richardsonii","Common_garden",NA,8,11,2021,122,147,117,39,34,46,41,53,106,35,"KLSRE10",2098278,64.66666667,40.33333333,132,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,8
+"212","IR",2013,"Salix richardsonii","Common_garden",NA,7,23,2023,100.5,154.8,138.7,90,65,59,74,52,65,112,"KLSRE11",2157811.38,76.33333333,66,146.75,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"KLSRE11","15% dead, removed, thriving, new growth near bottom, 2% dead branches",10
+"213","IR",2013,"Salix richardsonii","Common_garden",NA,7,23,2023,105.3,140.7,107.3,66,44,38,40,92,84,79,"KLSRE13",1589725.683,85,40.66666667,124,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"KLSRE13","20% yellowing, 15% browning",10
+"214","IR",2013,"Salix richardsonii","Common_garden",NA,8,23,2019,60.5,NA,NA,NA,47.49,57.18,61.54,146,125,121,"KLSRE14",NA,130.6666667,55.40333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"215","IR",2013,"Salix richardsonii","Common_garden",NA,8,23,2019,112.2,NA,NA,NA,49.66,51.06,45.09,106,125,112,"KLSRE15",NA,114.3333333,48.60333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"216","LB",2013,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,113,245,235,120,48,45,34,60,60,100,"KLSRE4",6505975,73.33333333,42.33333333,240,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,9
+"217","SW",2013,"Salix richardsonii","Common_garden",NA,8,11,2021,85,98,87,35,43,49,53,54,33,69,"KLSRE6",724710,52,48.33333333,92.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,8
+"218","SW",2013,"Salix richardsonii","Common_garden",NA,8,11,2021,68,87,68,58,52,42,43,136,73,68,"KLSRE7",402288,92.33333333,45.66666667,77.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,8
+"219","SW",2013,"Salix richardsonii","Common_garden",NA,8,19,2020,83.8,NA,NA,NA,52,46,64,102,88,106,"KLSRE9",NA,98.66666667,54,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,7
+"220","JA",2016,"Salix arctica","Common_garden",NA,8,18,2018,1.9,NA,NA,NA,11.87,16.86,15.81,1.64,2.22,2.01,"KP16SA5",NA,1.956666667,14.84666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"221","SAB",2016,"Salix arctica","Common_garden",NA,7,23,2023,7.2,12.2,10.1,16,42,39,45,6,3,11,"KP16SA6",887.184,6.666666667,42,11.15,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"KP16Sa6","100% purple patches on leaves",7
+"222","SL",2016,"Salix pulchra","Common_garden",NA,8,23,2019,2.7,NA,NA,NA,NA,NA,NA,NA,NA,NA,"KP16SP11",NA,NA,NA,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"223","SL",2016,"Salix pulchra","Common_garden",NA,8,19,2020,21.8,NA,NA,NA,28,31,33,81,52,88,"KP16SP22",NA,73.66666667,30.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"224","SL",2016,"Salix pulchra","Common_garden",NA,8,23,2019,19.99,NA,NA,NA,NA,NA,NA,NA,NA,NA,"KP16SP23",NA,NA,NA,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"225","SL",2016,"Salix pulchra","Common_garden",NA,8,19,2020,26.1,NA,NA,NA,42,31,33,46,56,45,"KP16SP24",NA,49,35.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"226","AB",2016,"Salix pulchra","Common_garden",NA,8,11,2021,42.2,58.4,38,34,36,37,28,22,9,5,"KP16SP33",93650.24,12,33.66666667,48.2,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"227","AB",2016,"Salix pulchra","Common_garden",NA,8,14,2017,17,NA,NA,NA,46,60,61,150,27,26,"KP16SP34",NA,67.66666667,55.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"228","JG",2016,"Salix pulchra","Common_garden",NA,7,23,2023,7.9,11.4,6.5,5,44,39,35,6,73,4,"KP16SP39",585.39,27.66666667,39.33333333,8.95,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"KP16Sp39","50% yellow, 50% early yellowing",7
+"229","IMS",2016,"Salix pulchra","Common_garden",NA,8,19,2020,11.3,NA,NA,NA,28,30,30,18,17,14,"KP16SP41",NA,16.33333333,29.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"230","CF",2016,"Salix pulchra","Common_garden",NA,8,13,2017,24.5,NA,NA,NA,26,26,32,32,13,10,"KP16SP43",NA,18.33333333,28,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"231","CF",2016,"Salix pulchra","Common_garden",NA,8,13,2017,25.5,NA,NA,NA,5,5,5,26,6,14,"KP16SP45",NA,15.33333333,5,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"232","CF",2016,"Salix pulchra","Common_garden",NA,8,13,2017,27.5,NA,NA,NA,27,30,28,12,11,11,"KP16SP46",NA,11.33333333,28.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"233","CF",2016,"Salix pulchra","Common_garden",NA,8,13,2017,32,NA,NA,NA,32,34,31,65,29,17,"KP16SP51",NA,37,32.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"234","CF",2016,"Salix pulchra","Common_garden",NA,8,13,2017,24.5,NA,NA,NA,27,35,21,29,33,21,"KP16SP52",NA,27.66666667,27.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"235","CF",2016,"Salix pulchra","Common_garden",NA,8,19,2020,26.9,NA,NA,NA,26,24,24,15,14,15,"KP16SP55",NA,14.66666667,24.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"236","JG",2016,"Salix pulchra","Common_garden",NA,7,23,2023,41.1,60.5,57.2,19,55,53,56,131,84,31,"KP16SP56",142230.66,82,54.66666667,58.85,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"KP16SP56","80% tips of leaves are brown, 40% brown patches, cobwebs ",7
+"237","JG",2016,"Salix pulchra","Common_garden",NA,8,13,2017,18.5,NA,NA,NA,50,46,45,49,NA,NA,"KP16SP57",NA,NA,47,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"238","JG",2016,"Salix pulchra","Common_garden",NA,7,23,2023,22.3,72.9,40.9,19,36,41,42,28,16,25,"KP16SP59",66489.903,23,39.66666667,56.9,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"Kp16sp59","10% brown patches, rest green",7
+"239","JG",2016,"Salix pulchra","Common_garden",NA,7,23,2023,34.3,46,27.5,25,39,32,27,295,34,27,"KP16SP60",43389.5,118.6666667,32.66666667,36.75,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"Kp16sp60","30% yellowing, rest green",7
+"240","LB",2016,"Salix richardsonii","Common_garden",NA,8,18,2018,7,NA,NA,NA,26.96,26.32,27.78,7.46,15.37,17.16,"KP16SR1",NA,13.33,27.02,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"241","EW",2016,"Salix richardsonii","Common_garden",NA,8,14,2017,1.6,NA,NA,NA,5,4,10,15,NA,NA,"KP16SR19",NA,NA,6.333333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"242","IR",2016,"Salix richardsonii","Common_garden",NA,8,11,2021,31.2,11.7,12.1,17,25,26,27,17,21,32,"KP16SR26",4416.984,23.33333333,26,11.9,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"243","IR",2016,"Salix richardsonii","Common_garden",NA,8,11,2021,35.6,28.8,17.5,24,43,42,46,52,44,34,"KP16SR27",17942.4,43.33333333,43.66666667,23.15,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"244","GD",2016,"Salix richardsonii","Common_garden",NA,7,23,2023,47.4,43.9,39.4,35,50,52,48,78,42,102,"KP16SR36",81985.884,74,50,41.65,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"KP16Sr36","100% green",7
+"245","GD",2016,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,83,67,68,35,34,37,41,175,560,180,"KP16SR37",378148,305,37.33333333,67.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"246","LB",2016,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,29,31,34,12,33,30,37,110,90,120,"KP16SR41",30566,106.6666667,33.33333333,32.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"247","GD",2016,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,38,36,30,14,40,32,46,95,170,130,"KP16SR51",41040,131.6666667,39.33333333,33,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"248","GD",2016,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,45,56,51.5,25,42,40,31,100,105,65,"KP16SR52",129780,90,37.66666667,53.75,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"249","GD",2016,"Salix richardsonii","Common_garden",NA,7,23,2023,21.6,45.2,37.6,22,39,40,42,54,41,57,"KP16SR53",36709.632,50.66666667,40.33333333,41.4,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"KP16SR53","30% have brown patches",7
+"250","EW",2016,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,76,77,56,35,49,48,45,240,250,150,"KP16SR57",327712,213.3333333,47.33333333,66.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"251","EW",2016,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,46,66,51,31,43,41,41,200,170,180,"KP16SR58",154836,183.3333333,41.66666667,58.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"252","EW",2016,"Salix richardsonii","Common_garden",NA,7,23,2023,56,47.9,38.6,25,49,48,50,139,42,47,"KP16SR60",103540.64,76,49,43.25,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"Kp16sr60","40% brown patches, rest green",7
+"253","JB",2017,"Salix arctica","Common_garden",NA,8,23,2019,3.4,NA,NA,NA,19.32,20.37,21.71,3.3,2,3,"KP17SA10",NA,2.766666667,20.46666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"254","JA",2017,"Salix arctica","Common_garden",NA,8,11,2021,4.8,13.5,9.5,7,29,37,32,7,5,4,"KP17SA2",615.6,5.333333333,32.66666667,11.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"255","JA",2017,"Salix arctica","Common_garden",NA,7,23,2023,4.4,11.9,10,6,25,20,32,5,6,3,"KP17SA4",523.6,4.666666667,25.66666667,10.95,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"KP17Sa4","25% purple patches",6
+"256","SAB",2017,"Salix arctica","Common_garden","2022-08-17",8,17,2022,5.5,19,19.5,10,42,33,33,9,17,24,"KP17SA6",2037.75,16.66666667,36,19.25,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"257","JB",2017,"Salix arctica","Common_garden",NA,8,18,2018,2.4,NA,NA,NA,24.25,19.45,18.87,3.86,5.56,4.29,"KP17SA8",NA,4.57,20.85666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"258","JB",2017,"Salix arctica","Common_garden",NA,7,23,2023,6.8,25.4,13.5,9,52,49,46,4,7,5,"KP17SA9",2331.72,5.333333333,49,19.45,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"Kp17sa9","100% purple and brown patches, two clumps 3 cm apart",6
+"259","IMS",2017,"Salix pulchra","Common_garden",NA,7,23,2023,25.8,24.2,13.4,9,36,35,38,71,8,17,"KP17SP1",8366.424,32,36.33333333,18.8,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"KP17SP1","Green with a couple of brown tips",6
+"260","AB",2017,"Salix pulchra","Common_garden",NA,8,19,2020,32.2,NA,NA,NA,39.74,46.61,39.25,45,143,152,"KP17SP12",NA,113.3333333,41.86666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"261","AB",2017,"Salix pulchra","Common_garden",NA,8,18,2018,14,NA,NA,NA,33.62,33.73,32.15,43.12,40.32,46.89,"KP17SP14",NA,43.44333333,33.16666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"262","IMS",2017,"Salix pulchra","Common_garden",NA,8,9,2021,21.5,20.5,14.5,12,25,25,32,10,8,7,"KP17SP2",6390.875,8.333333333,27.33333333,17.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"263","SL",2017,"Salix pulchra","Common_garden",NA,7,23,2023,36.2,88.2,43.5,20,52,62,67,104,451,198,"KP17SP5",138888.54,251,60.33333333,65.85,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"KP17SP5","24% dead, one branch removed by lady NATURE",6
+"264","AB",2017,"Salix pulchra","Common_garden",NA,8,11,2021,14.8,22.8,11.8,9,29,28,21,11,20,14,"KP17SP9",3981.792,15,26,17.3,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"265","LB",2017,"Salix richardsonii","Common_garden",NA,7,23,2023,29.8,38.2,32.5,35,39,42,47,96,136,61,"KP17SR1",36996.7,97.66666667,42.66666667,35.35,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"KP17Sr1","All green, 5% curled leaves",6
+"266","LB",2017,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,34.5,25,34,16,20,17,17,40,25,49,"KP17SR2",29325,38,18,29.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"267","LB",2017,"Salix richardsonii","Common_garden",NA,8,9,2021,38,40,29,11,43,42,41,70,30,45,"KP17SR3",44080,48.33333333,42,34.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"268","LB",2017,"Salix richardsonii","Common_garden",NA,8,9,2021,27,39,19,16,32,35,33,27,36,32,"KP17SR4",20007,31.66666667,33.33333333,29,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"269","JA",2018,"Salix arctica","Common_garden",NA,8,23,2019,0.6,NA,NA,NA,6.44,9.51,8.37,NA,NA,NA,"KP18SA1",NA,NA,8.106666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"270","EW",2018,"Salix arctica","Common_garden","2022-08-17",8,17,2022,4.5,17,9,7,38,25,46,13,5,4,"KP18SA10",688.5,7.333333333,36.33333333,13,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"271","JA",2018,"Salix arctica","Common_garden","2022-08-17",8,17,2022,3.5,13,8.5,8,30,20,22,11,12,10,"KP18SA2",386.75,11,24,10.75,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"272","JA",2018,"Salix arctica","Common_garden",NA,8,23,2019,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,"KP18SA3",NA,NA,NA,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"273","JA",2018,"Salix arctica","Common_garden",NA,8,11,2021,3.8,11.5,6.8,6,48,38,31,6,3,4,"KP18SA4",297.16,4.333333333,39,9.15,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"274","EW",2018,"Salix arctica","Common_garden",NA,7,23,2023,10.3,28.1,14.4,8,24,30,28,13,10,5,"KP18SA8",4167.792,9.333333333,27.33333333,21.25,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"Kp18sa8","Two parts 10 cm apart, 100% brown patches on leaves",5
+"275","EW",2018,"Salix arctica","Common_garden","2022-08-17",8,17,2022,3.5,8.5,5,5,25,38,20,4,2,3,"KP18SA9",148.75,3,27.66666667,6.75,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"276","JG",2018,"Salix pulchra","Common_garden","2022-08-17",8,17,2022,27,49,42,17,48,41,21,102,83,50,"KP18SP1",55566,78.33333333,36.66666667,45.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"277","JG",2018,"Salix pulchra","Common_garden",NA,7,23,2023,71,78.2,65.7,23,44,42,57,44,293,275,"KP18SP2",364779.54,204,47.66666667,71.95,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"Kp18sp2","100% green",5
+"278","JG",2018,"Salix pulchra","Common_garden",NA,8,23,2019,32.8,NA,NA,NA,69.74,50.01,56.93,181,NA,NA,"KP18SP3",NA,NA,58.89333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"279","JG",2018,"Salix pulchra","Common_garden","2022-08-17",8,17,2022,26,45,31,12,50,41,38,130,150,200,"KP18SP4",36270,160,43,38,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"280","CF",2013,"Salix richardsonii","Common_garden",NA,8,11,2021,54,89,49,36,42,44,48,54,42,66,"KPSR5",235494,54,44.66666667,69,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,8
+"281","JA",2016,"Salix arctica","Common_garden",NA,7,23,2023,10.5,40.3,33.4,27,67,56,61,15,22,11,"PC16CESA2",14133.21,16,61.33333333,36.85,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"PC16CESa2","40% purple-y patches",7
+"282","AB",2016,"Salix pulchra","Common_garden",NA,7,23,2023,35.4,74.6,66.4,26,44,50,42,39,58,90,"PC16CESP7",175351.776,62.33333333,45.33333333,70.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"PC16CESp7","20% brown patches on leaves",7
+"283","SL",2016,"Salix pulchra","Common_garden",NA,8,13,2017,13.5,NA,NA,NA,44,38,42,1,28,30,"PC16CWSP1",NA,19.66666667,41.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"284","SL",2016,"Salix pulchra","Common_garden",NA,8,13,2017,10.6,NA,NA,NA,32,32,18,17,6,6,"PC16CWSP6",NA,9.666666667,27.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"285","SL",2016,"Salix pulchra","Common_garden","2022-08-17",8,17,2022,60,38,34,15,54,51,45,390,245,150,"PC16CWSP7",77520,261.6666667,50,36,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"286","SL",2016,"Salix pulchra","Common_garden",NA,7,23,2023,14.7,47.3,36.7,13,35,36,40,16,24,19,"PC16CWSP9",25517.877,19.66666667,37,42,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"PC16CWSp9","40% brown tips on leaves, 20% orange rust",7
+"287","SL",2016,"Salix pulchra","Common_garden",NA,8,13,2017,6.4,NA,NA,NA,13,12,9,16,35,NA,"PC16PVSP8",NA,NA,11.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"288","JA",2017,"Salix arctica","Common_garden",NA,7,23,2023,10.2,36.3,31.2,11,59,67,57,35,33,24,"PC17SA1",11552.112,30.66666667,61,33.75,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"PC17Sa1","40% brown and purple patches",6
+"289","JB",2017,"Salix arctica","Common_garden",NA,8,18,2018,0.8,NA,NA,NA,13.05,NA,NA,2.02,NA,NA,"PC17SA5",NA,NA,NA,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"290","JA",2017,"Salix arctica","Common_garden",NA,7,23,2023,6.7,12.9,10.2,6,28,34,32,16,9,7,"PC17SA6",881.586,10.66666667,31.33333333,11.55,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"PC17Sa6","100% yellow and brown patches",6
+"291","JA",2017,"Salix arctica","Common_garden",NA,7,23,2023,8.1,26.9,26.3,8,37,44,45,12,15,6,"PC17SA7",5730.507,11,42,26.6,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"PC17Sa7","100% largish purple spots",6
+"292","JA",2017,"Salix arctica","Common_garden",NA,8,18,2018,1.7,NA,NA,NA,5.91,3.92,3.06,1.49,0.88,0.7,"PC17SA8",NA,1.023333333,4.296666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"293","JA",2017,"Salix arctica","Common_garden",NA,7,23,2023,5.1,11,9.7,5,31,27,30,4,7,13,"PC17SA9",544.17,8,29.33333333,10.35,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"PC17Sa9","60% purple patches",6
+"294","SL",2017,"Salix pulchra","Common_garden",NA,8,18,2018,27.5,NA,NA,NA,34.66,30.89,29.85,5.71,3.83,3.48,"PC17SP1",NA,4.34,31.8,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"295","JG",2017,"Salix pulchra","Common_garden",NA,7,23,2023,8.8,24.9,14.1,8,34,41,42,22,7,16,"PC17SP10",3089.592,15,39,19.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"PC17SP10","100% brown at very tips on leaves, 20% yellowing",6
+"296","SL",2017,"Salix pulchra","Common_garden",NA,8,19,2020,12.4,NA,NA,NA,26,30,30,60,82,61,"PC17SP3",NA,67.66666667,28.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"297","SL",2017,"Salix pulchra","Common_garden",NA,8,19,2020,34.7,NA,NA,NA,50,46,52,111,232,169,"PC17SP4",NA,170.6666667,49.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"298","CF",2017,"Salix pulchra","Common_garden",NA,8,23,2019,16.5,NA,NA,NA,30.11,23.49,22.43,7.92,12.56,23.6,"PC17SP5",NA,14.69333333,25.34333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"299","CF",2017,"Salix pulchra","Common_garden",NA,8,18,2018,17.3,NA,NA,NA,51.7,43.34,42.78,28.71,33.68,34.89,"PC17SP6",NA,32.42666667,45.94,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"300","JG",2017,"Salix pulchra","Common_garden",NA,8,19,2020,26.4,NA,NA,NA,32,28,30,33,24,23,"PC17SP7",NA,26.66666667,30,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"301","JG",2017,"Salix pulchra","Common_garden",NA,7,23,2023,20.9,70.6,48.7,14,56,52,35,114,129,117,"PC17SP8",71858.798,120,47.66666667,59.65,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"PC17SP8","100% green",6
+"302","JG",2017,"Salix pulchra","Common_garden",NA,8,11,2021,16,17.5,16.5,12,28,27,31,11,14,19,"PC17SP9",4620,14.66666667,28.66666667,17,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"303","LB",2017,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,40,30.5,40,12,28,50,33,330,110,180,"PC17SR1",48800,206.6666667,37,35.25,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"304","SW",2017,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,36,39,17,18,40,37,36,85,52,27,"PC17SR10",23868,54.66666667,37.66666667,28,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"305","IR",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,3.2,NA,NA,NA,19.17,NA,NA,19.88,NA,NA,"PC17SR11",NA,NA,NA,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"306","IR",2017,"Salix richardsonii","Common_garden",NA,8,11,2021,10.2,9.9,5.5,9,29,31,28,25,23,NA,"PC17SR12",555.39,NA,29.33333333,7.7,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,4
+"307","IR",2017,"Salix richardsonii","Common_garden",NA,7,23,2023,16.1,24.9,15.2,13,31,26,29,38,25,23,"PC17SR13",6093.528,28.66666667,28.66666667,20.05,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"PC17Sr13","30% starting to yellow browning",6
+"308","AC",2017,"Salix richardsonii","Common_garden",NA,8,23,2019,13.7,NA,NA,NA,34.21,38.03,34.89,53.47,25.47,29.15,"PC17SR15",NA,36.03,35.71,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"309","LB",2017,"Salix richardsonii","Common_garden",NA,7,23,2023,37.1,21.5,24.2,14,39,40,37,45,37,24,"PC17SR2",19303.13,35.33333333,38.66666667,22.85,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"PC17Sr2","All green",6
+"310","GD",2017,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,74,63,45,15,46,44,41,410,250,145,"PC17SR4",209790,268.3333333,43.66666667,54,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"311","GD",2017,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,121,62,72,40,52,38,50,395,465,310,"PC17SR5",540144,390,46.66666667,67,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"312","GD",2017,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,41,63,49,16,42,40,40,290,260,195,"PC17SR6",126567,248.3333333,40.66666667,56,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"313","SW",2017,"Salix richardsonii","Common_garden",NA,7,23,2023,25.9,11.2,7.6,15,23,26,19,4,6,3,"PC17SR9",2204.608,4.333333333,22.66666667,9.4,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"PC17SR9","Yellow leaves but looks dead, in a bad way",6
+"314","JA",2016,"Salix arctica","Common_garden","2022-08-17",8,17,2022,3.5,4,5,5,19,13,18,4,NA,NA,"PP16MSA1",70,NA,16.66666667,4.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6
+"315","JA",2016,"Salix arctica","Common_garden",NA,8,13,2017,4.2,NA,NA,NA,23,15,18,8,6,NA,"PP16MSA5",NA,NA,18.66666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"316","MG",2016,"Salix pulchra","Common_garden",NA,8,14,2017,23,NA,NA,NA,35,30,23,26,16,26,"PP16TSP7",NA,22.66666667,29.33333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"317","AB",2017,"Salix pulchra","Common_garden",NA,8,23,2019,11,NA,NA,NA,NA,NA,NA,1,NA,NA,"PP17SP11",NA,NA,NA,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2
+"318","AB",2017,"Salix pulchra","Common_garden",NA,8,18,2018,19,NA,NA,NA,30.1,25.93,25.17,37.87,24.13,20.35,"PP17SP12",NA,27.45,27.06666667,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"319","AB",2017,"Salix pulchra","Common_garden",NA,8,19,2020,16.5,NA,NA,NA,31.8,30.38,36.11,24.11,24.25,17.55,"PP17SP13",NA,21.97,32.76333333,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3
+"320","AB",2017,"Salix pulchra","Common_garden","2022-08-17",8,17,2022,29,57,58,23,74,64,31,320,250,370,"PP17SP15",95874,313.3333333,56.33333333,57.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"321","EW",2017,"Salix richardsonii","Common_garden","2022-08-17",8,17,2022,44,46,47,29,43,37,42,150,130,100,"PP17SR16",95128,126.6666667,40.66666667,46.5,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,5
+"322","EW",2017,"Salix richardsonii","Common_garden",NA,8,18,2018,1.2,NA,NA,NA,NA,NA,NA,5.26,NA,NA,"PP17SR18",NA,NA,NA,NA,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1
+"323","EW",2017,"Salix richardsonii","Common_garden",NA,7,23,2023,42.3,44.9,39.5,22,44,46,45,27,71,42,"PP17SR19",75021.165,46.66666667,45,42.2,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"Pp17Sr19","85% turning brown and red, 15% brown",6
+"324","EW",2017,"Salix richardsonii","Common_garden",NA,7,23,2023,45.7,62,68.4,27,48,45,45,46,50,30,"PP17SR20",193804.56,42,46,65.2,"Southern",NA,NA,NA,NA,NA,NA,NA,NA,"Pp17SR20","One dead branch removed, 14% biomass, 40% brown patches, cobwebs",6
