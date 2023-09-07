@@ -674,6 +674,7 @@ plot(rich_LA)
 pp_check(rich_LA, type = "dens_overlay", ndraws = 100)
 saveRDS(rich_LA, file = "output/traits/models/la_richardsonii_compare.rds")
 rich_LA <- readRDS("output/traits/models/la_richardsonii_compare.rds")
+rich_LA.pred <- ggpredict(rich_LA, terms = c('population'))
 
 # extract output with function
 rich_LA_results <- model_summ(rich_LA)
@@ -724,10 +725,10 @@ rich_la_extract_all <- full_join(rich_la_extract_df_1, rich_la_extract_df,
 
 rownames(rich_la_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 # interpretation 
-# N Garden = estimate = 1.64 , CI = 0.05 to 3.17
-# N Source = estimate = 3.14, CI = 1.25 to 4.96
-# S Source = estimate = 2.69, CI = 0.84 to 4.46
-# S Garden = estimate = 2.64, CI = 0.86 to 4.37
+# N. Garden  |      7.88 | [1.82,  29.61]
+# N. Source  |     30.97 | [7.15, 120.33]
+# S. Source  |     19.61 | [4.58,  75.84]
+# S. Garden  |     17.08 | [3.97,  64.22]
 
 # S. pulchra ----
 pulchra_LA <- brms::brm(log(LA_cm2) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
@@ -738,6 +739,7 @@ plot(pulchra_LA)
 pp_check(pulchra_LA, type = "dens_overlay", ndraws = 100) 
 saveRDS(pulchra_LA, file = "output/traits/models/la_pulchra_compare.rds")
 pulchra_LA <- readRDS("output/traits/models/la_pulchra_compare.rds")
+pulchra_LA.pred <- ggpredict(pulchra_LA, terms = c('population'))
 
 # extract output with function
 pulchra_LA_results <- model_summ(pulchra_LA)
@@ -789,10 +791,10 @@ pul_la_extract_all <- full_join(pul_la_extract_df_1, pul_la_extract_df,
 rownames(pul_la_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation 
-# N Garden = estimate = 1.21 , CI = -0.52 to 2.82
-# N Source = estimate = 3.14, CI = 0.50 to 4.53
-# S Source = estimate = 2.69, CI = 0.14 to 4.06
-# S Garden = estimate = 2.64, CI = -0.40 to 3.69
+# N. Garden  |      5.21 | [0.95, 24.86]
+# N. Source  |     19.66 | [3.71, 96.46]
+# S. Source  |     12.95 | [2.45, 63.43]
+# S. Garden  |      9.20 | [1.65, 43.64]
 
 # S. arctica ----
 arctica_LA <- brms::brm(log(LA_cm2)  ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
@@ -803,6 +805,7 @@ plot(arctica_LA)
 pp_check(arctica_LA, type = "dens_overlay", ndraws = 100) 
 saveRDS(arctica_LA, file = "output/traits/models/la_arctica_compare.rds")
 arctica_LA <- readRDS("output/traits/models/la_arctica_compare.rds")
+arctica_LA.pred <- ggpredict(arctica_LA, terms = c('population'))
 
 # extract output with function
 arctica_LA_results <- model_summ(arctica_LA)
@@ -854,10 +857,10 @@ arc_la_extract_all <- full_join(arc_la_extract_df_1, arc_la_extract_df,
 rownames(arc_la_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation 
-# N Garden = estimate = 1.93 , CI = -0.11 to 3.98
-# N Source = estimate = 3.14, CI = 0.86 to 6.08
-# S Source = estimate = 2.69, CI = -0.76 to 4.42
-# S Garden = estimate = 2.64, CI = -0.32 to 4.75
+# N. Garden  |     10.90 | [1.54,  63.22]
+# N. Source  |     47.89 | [7.40, 283.30]
+# S. Source  |      9.50 | [1.48,  56.24]
+# S. Garden  |     13.47 | [1.86,  78.19]
 
 # merging all extracted outputs
 
