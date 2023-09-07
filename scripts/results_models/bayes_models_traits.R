@@ -986,10 +986,10 @@ rich_ll_extract_all <- full_join(rich_ll_extract_df_1, rich_ll_extract_df,
 rownames(rich_ll_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation 
-# N Garden = estimate = 22.73 , CI = 17.12 to 28.64 *
-# N Source = estimate = 35.97, CI = 29.94 to 42.30 **
-# S Source = estimate = 46.40, CI = 40.62 to 52.74 **
-# S Garden = estimate = 40.63, CI = 35.12 to 46.44 **
+# N. Garden  |     22.86 | [16.60, 28.71] *
+# N. Source  |     42.54 | [35.36, 49.41] **
+# S. Source  |     51.45 | [44.59, 58.10] **
+# S. Garden  |     40.68 | [34.35, 46.41] **
 
 # S. pulchra ----
 pulchra_LL <- brms::brm(mean_leaf_length ~ population + (1|year), data = pulchra_all_growth, family = gaussian(), chains = 3,
@@ -1050,11 +1050,12 @@ pul_ll_extract_all <- full_join(pul_ll_extract_df_1, pul_ll_extract_df,
                                         "Species"="Species", "Rhat"="Rhat"))
 
 rownames(pul_ll_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
+
 # interpretation 
-# N Garden = estimate = 20.43 , CI = 13.92 to 26.78 *
-# N Source = estimate = 29.63, CI = 22.68 to 36.48**
-# S Source = estimate = 44.02, CI = 36.97 to 50.87**
-# S Garden = estimate = 36.48, CI = 29.91 to 42.97**
+# N. Garden  |     20.66 | [14.65, 27.20]
+# N. Source  |     35.57 | [28.43, 42.81]
+# S. Source  |     50.80 | [43.92, 58.00]
+# S. Garden  |     36.53 | [30.53, 43.07]
 
 # S. arctica ----
 # no leaf length for S. arctic from source pop
@@ -1065,7 +1066,6 @@ rownames(pul_ll_extract_all) <- c("Intercept", "Northern Source", "Southern Sour
 arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population + (1|year) + (1|SampleID_standard), data = arctica_all_growth, family = gaussian(), chains = 3,
                            iter = 3000, warmup = 1000, 
                            control = list(max_treedepth = 15, adapt_delta = 0.99))
-
 summary(arctica_LL_CG)
 plot(arctica_LL_CG)
 pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
@@ -1122,10 +1122,10 @@ arc_ll_extract_all <- full_join(arc_ll_extract_df_1, arc_ll_extract_df,
 
 rownames(arc_ll_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 # interpretation 
-# N Garden = estimate = 26.34 , CI = 18.72, 34.31 
-# N Source = estimate = 27.49, CI = 19.27, 36.03
-# S Source = estimate = 31.33, CI =  22.61, 39.58
-# S Garden = estimate = 26.19, CI = 20.41, 36.39
+# N. Garden  |     25.64 | [17.75, 33.88]
+# N. Source  |     30.77 | [21.08, 40.40]
+# sS. Source  |     40.49 | [30.81, 50.90]
+# S. Garden  |     28.68 | [20.78, 36.85]
 
 # merging all extracted outputs
 garden_LL_out <- rbind(rich_ll_extract_all, pul_ll_extract_all, arc_ll_extract_all)

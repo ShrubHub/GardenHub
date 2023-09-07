@@ -278,15 +278,15 @@ saveRDS(garden_rich_height, file = "output/models/garden_rich_height.rds")
 rich_height.pred <- ggpredict(garden_rich_height, terms = c('population'))
 
 
-# estimate for northern: 2.4302969 = exp(2.4302969) = 11.36226 # updated with 2023 data
-# estimate for southern: 2.4302969 + 1.1512444 = 3.581541 -> exp(3.581541) = 35.92886
+# estimate for northern: 2.4197356 = exp(2.4197356) = 11.24289 # updated with 2023 data
+# estimate for southern: 2.4197356 + 1.1531522 = 3.572888 -> exp(3.572888) = 35.61931
 # %diff
-(35.92886 - 11.36226)/11.36226
-# 2.162123
+(35.61931 - 11.24289)/11.24289
+# 2.168163
 
 # times larger
-35.92886/11.36226
-# 3.162123
+35.61931/11.24289
+# 3.168163
 
 # extract output with function
 rich_extract <- model_summ_growth(garden_rich_height)
@@ -334,8 +334,6 @@ ric_extract_all <- full_join(ric_extract_df_1, ric_extract_df,
 
 rownames(ric_extract_all) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
 
-
-              
 # S. Pulchra -----
 garden_pul_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sample_age),
                                 data =max_heights_cg_pul, family = gaussian(), chains = 3, 
@@ -344,23 +342,22 @@ garden_pul_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sampl
 
 summary(garden_pul_height) # significantly higher canopy heights for southern pop.
 plot(garden_pul_height) # fine
-pp_check(garden_pul_height, type = "dens_overlay", nsamples = 100)  # good) 
+pp_check(garden_pul_height, type = "dens_overlay", ndraws = 100)  # good) 
 saveRDS(garden_pul_height, file = "output/models/garden_pul_height.rds")
 pul_height.pred <- ggpredict(garden_pul_height, terms = c('population'))
 
-# estimate for northern: 2.2889943 = exp(2.2889943) = 9.865011
-# estimate for southern: 2.2889943+0.9149186=3.203913 -> exp(3.203913) = 24.62871
+# estimate for northern: 2.3038383 = exp(2.3038383) = 10.01254
+# estimate for southern: 2.3038383 + 0.9394663 = 3.243305 -> exp(3.243305) = 25.61825
 # %diff
-(24.62871-9.865011)/9.865011
-# 1.496572
+(25.61825-10.01254)/10.01254
+# 1.558616
 
 # times larger
-24.62871/9.865011
-# 2.496572
+25.61825/10.01254
+# 2.558616
 
 # extract output with function
 pul_extract <- model_summ_growth(garden_pul_height)
-
 
 pul_extract <- pul_extract %>% 
   dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
@@ -404,8 +401,7 @@ pul_extract_all <- full_join(pul_extract_df_1, pul_extract_df,
 
 rownames(pul_extract_all) <- c("Intercept ", "Southern Garden ", "Sample age ", "Sigma  ")
 
-
-# S. Arctica -----
+# S. arctica -----
 garden_arc_height <- brms::brm(log(max_canopy_height_cm) ~ population + (1|Sample_age),
                                 data = max_heights_cg_arc, family = gaussian(), chains = 3, 
                                 iter = 5000, warmup = 1000, 
@@ -498,7 +494,9 @@ garden_heights_out_back$Rhat <- as.character(formatC(garden_heights_out_back$Rha
 kable_heights <- garden_heights_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: max. heights of northern vs southern shrubs in the common garden. 
       Log transformed output in the table below.", 
-      col.names = c( "Species","Estimate (log)",
+      col.names = c( "Population",
+        "Species",
+        "Estimate (log)",
                      "Lower 95% CI (log)",
                      "Upper 95% CI (log)",
                      "Estimate (log sum)",  "Lower 95% CI 
@@ -518,7 +516,6 @@ kable_heights <- garden_heights_out_back %>%
 row_spec(kable_heights, 1:12, align = "c") 
 column_spec(kable_heights, 2, width = NULL, bold = FALSE, italic = TRUE)
 
-
 save_kable(kable_heights,file = "outputs/tables/kable_heights.pdf",
            bs_theme = "simplex",
            self_contained = TRUE,
@@ -527,10 +524,9 @@ save_kable(kable_heights,file = "outputs/tables/kable_heights.pdf",
            keep_tex =TRUE,
            density = 300)
 
-
 # 2. STEM ELONGATION ------
 
-# S. Richardsonii -----
+# S. richardsonii -----
 # model
 garden_rich_elong <- brms::brm(log(max_stem_elong) ~ population + (1|Sample_age),
                                data = max_elong_cg_rich, family = gaussian(), chains = 3,
@@ -539,7 +535,8 @@ garden_rich_elong <- brms::brm(log(max_stem_elong) ~ population + (1|Sample_age)
 
 summary(garden_rich_elong) # southern pop significantly longer stem elong
 plot(garden_rich_elong) # fine
-pp_check(garden_rich_elong, type = "dens_overlay", nsamples = 100) # goood
+pp_check(garden_rich_elong, type = "dens_overlay", nsamples = 100) # good
+saveRDS(garden_rich_elong, file = "output/models/garden_rich_elong.rds")
 
 # extract output with function
 rich_extract_elong <- model_summ_growth(garden_rich_elong)
@@ -562,7 +559,8 @@ summary(garden_pul_elong)# southern pop significantly longer stem elong
 plot(garden_pul_elong) # fine
 pp_check(garden_pul_elong, type = "dens_overlay", nsamples = 100)  # fine
 
-# extract output with function
+saveRDS(garden_pul_elong, file = "output/models/garden_pul_elong.rds")
+# output with function
 pul_extract_elong <- model_summ_growth(garden_pul_elong)
 
 # extraction for model output table
@@ -578,10 +576,10 @@ garden_arc_elong <- brms::brm(log(max_stem_elong) ~ population + (1|Sample_age),
                                data = max_elong_cg_arc, family = gaussian(), chains = 3,
                                iter = 3000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
-
 summary(garden_arc_elong) # southern shrubs SIGNIFICANTLY SHORTER elong! 
 plot(garden_arc_elong) # fine
 pp_check(garden_arc_elong,  type = "dens_overlay", nsamples = 100) # fine
+saveRDS(gardgarden_arc_elongen_pul_elong, file = "output/models/garden_arc_elong.rds")
 
 # extract output with function
 arc_extract_elong <- model_summ_growth(garden_arc_elong)
@@ -652,11 +650,10 @@ garden_rich_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
                                data = max_biovol_cg_rich, family = gaussian(), chains = 3,
                                iter = 5000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-
 summary(garden_rich_biovol) # significantly larger biovolume for southern shrubs in garden
 plot(garden_rich_biovol) # fine
-pp_check(garden_rich_biovol,  type = "dens_overlay", nsamples = 100) # fine
+pp_check(garden_rich_biovol,  type = "dens_overlay", nsamples = 100) # fine
+saveRDS(garden_rich_biovol, file = "output/models/garden_rich_biovol.rds")
 
 # extract output with function
 rich_biovol_extract <- model_summ_growth(garden_rich_biovol)
@@ -669,16 +666,15 @@ rich_biovol_extract_df <- rich_biovol_extract %>%
   relocate("Species", .before = "Estimate")%>% 
   relocate("nobs", .before = "effect")
 
-# S. Pulchra -----
+# S. pulchra -----
 garden_pul_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
                                 data = max_biovol_cg_pul, family = gaussian(), chains = 3,
                                 iter = 5000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-
 summary(garden_pul_biovol) # significantly larger biovolume for southern shrubs in garden
 plot(garden_pul_biovol) # fine
 pp_check(garden_pul_biovol,  type = "dens_overlay", nsamples = 100) # fine
+saveRDS(garden_pul_biovol, file = "output/models/garden_pul_biovol.rds")
 
 # extract output with function
 pul_extract_biovol <- model_summ_growth(garden_pul_biovol)
@@ -701,6 +697,7 @@ garden_arc_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
 summary(garden_arc_biovol) # NOT significant diff. 
 plot(garden_arc_biovol) # fine
 pp_check(garden_arc_biovol,  type = "dens_overlay", nsamples = 100) # fine
+saveRDS(garden_arc_biovol, file = "output/models/garden_arc_biovol.rds")
 
 # extract output with function
 arc_extract_biovol <- model_summ_growth(garden_arc_biovol)
@@ -764,18 +761,16 @@ kable_biovol <- garden_biovol_out_back %>%
 # making species column in cursive
 column_spec(kable_biovol, 2, width = NULL, bold = FALSE, italic = TRUE)
 
-
 # 4. WIDTH ------
 # S. Richardsonii -----
 garden_rich_width <- brms::brm(log(max_mean_width_cm) ~ population + (1|Sample_age),
                                 data = max_widths_cg_rich, family = gaussian(), chains = 3,
                                 iter = 5000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-
 summary(garden_rich_width) # significantly larger widths for southern shrubs in garden
 plot(garden_rich_width) # fine
 pp_check(garden_rich_width,  type = "dens_overlay", nsamples = 100) # fine
+saveRDS(garden_rich_width, file = "output/models/garden_rich_width.rds")
 
 # extract output with function
 rich_extract_width <- model_summ_growth(garden_rich_width)
@@ -784,20 +779,18 @@ rich_extract_width <- model_summ_growth(garden_rich_width)
 rownames(rich_extract_width) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
 rich_extract_width_df <- rich_extract_width %>% 
   mutate(Species = rep("Salix richardsonii")) %>% 
-         # "Sample Size" = rep(81)) %>% 
   relocate("Species", .before = "Estimate")%>% 
   relocate("nobs", .before = "effect")
 
-# S. Pulchra -----
+# S. pulchra -----
 garden_pul_width <- brms::brm(log(max_mean_width_cm) ~ population + (1|Sample_age),
                                data = max_widths_cg_pul, family = gaussian(), chains = 3,
                                iter = 5000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-
 summary(garden_pul_width) # significantly larger widths for southern shrubs in garden
 plot(garden_pul_width) # fine
 pp_check(garden_pul_width,  type = "dens_overlay", nsamples = 100) # fine
+saveRDS(garden_pul_width, file = "output/models/garden_pul_width.rds")
 
 # extract output with function
 pul_extract_width <- model_summ_growth(garden_pul_width)
@@ -806,20 +799,18 @@ pul_extract_width <- model_summ_growth(garden_pul_width)
 rownames(pul_extract_width) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
 pul_extract_width_df <- pul_extract_width %>% 
   mutate(Species = rep("Salix pulchra")) %>%
-        # "Sample Size" = rep(114)) %>%
   relocate("Species", .before = "Estimate")%>% 
   relocate("nobs", .before = "effect")
 
-# S. Arctica -----
+# S. arctica -----
 garden_arc_width <- brms::brm(log(max_mean_width_cm) ~ population + (1|Sample_age),
                                data = max_widths_cg_arc, family = gaussian(), chains = 3,
                                iter = 5000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-
 summary(garden_arc_width) # NOT significantly larger widths for southern shrubs in garden (makes sense)
 plot(garden_arc_width) # fine
-pp_check(garden_arc_width,  type = "dens_overlay", nsamples = 100) # fine
+pp_check(garden_arc_width,  type = "dens_overlay", nsamples = 100) # fine
+saveRDS(garden_arc_width, file = "output/models/garden_arc_width.rds")
 
 # extract output with function
 arc_extract_width <- model_summ_growth(garden_arc_width)
