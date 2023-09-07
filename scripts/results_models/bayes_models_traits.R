@@ -1304,7 +1304,7 @@ colnames(arc_SLA.pred) = c('population','fit', 'lwr', 'upr')
 (sla_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, 
                        common.legend = TRUE, legend = "none",
                        labels = c("A", "B", "C"),
-                       label.x = c(0.2, 0.2, 0.2),
+                       label.x = c(0.1, 0.1, 0.1),
                        font.label = list(size = 18, color = "black", face = "bold", family = NULL),
                            ncol = 3, nrow = 1))
 
@@ -1385,7 +1385,8 @@ colnames(arc_LDMC.pred) = c('population','fit', 'lwr', 'upr')
 (ldmc_panel <- ggarrange(rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot, 
                         common.legend = TRUE, legend = "bottom",
                         labels = c("D", "E", "F"),
-                        label.x = c(0.2, 0.2, 0.2),
+                        label.x = c(0.1, 0.1, 0.1),
+                        label.y = c(1.05, 1.05, 1.05),
                         font.label = list(size = 18, color = "black", face = "bold", family = NULL),
                         ncol = 3, nrow = 1))
 
