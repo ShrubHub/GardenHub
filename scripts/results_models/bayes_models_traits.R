@@ -1386,7 +1386,6 @@ colnames(arc_LDMC.pred) = c('population','fit', 'lwr', 'upr')
                         common.legend = TRUE, legend = "bottom",
                         labels = c("D", "E", "F"),
                         label.x = c(0.1, 0.1, 0.1),
-                        label.y = c(1.05, 1.05, 1.05),
                         font.label = list(size = 18, color = "black", face = "bold", family = NULL),
                         ncol = 3, nrow = 1))
 
