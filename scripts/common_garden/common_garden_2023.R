@@ -45,13 +45,20 @@ data_2023_wrangle <- data_2023_wrangle %>%
   dplyr::mutate(mean_stem_elong = ((Stem_Elongation_1_mm + Stem_Elongation_2_mm + Stem_Elongation_3_mm)/3), 
          mean_leaf_length = ((Length_1_mm + Length_2_mm + Length_3_mm)/3),
          mean_width = ((Width_cm + Width_2_cm)/2)) %>% 
-  dplyr::mutate(biovolume = (Canopy_Height_cm* Width_cm* Width_2_cm))
+  dplyr::mutate(biovolume = (Canopy_Height_cm* Width_cm* Width_2_cm))  
+   
 
 # make standard sample ID column to avoid issue of dashes, spaces, etc. 
 data_2023_wrangle$SampleID_standard <- toupper(data_2023_wrangle$Sample_ID) # make all uppercase characters 
 data_2023_wrangle$SampleID_standard<-gsub("-","",as.character(data_2023_wrangle$SampleID_standard)) # remove "-"
 data_2023_wrangle$SampleID_standard<-gsub("_","",as.character(data_2023_wrangle$SampleID_standard)) # remove "-"
 data_2023_wrangle$SampleID_standard<-gsub(" ","",as.character(data_2023_wrangle$SampleID_standard)) # remove spaces " " 
+
+# make population column 
+
+data_2023_wrangle <-  data_2023_wrangle %>% 
+  mutate(population = case_when(startsWith(as.character(SampleID_standard), "H") ~ "Northern",
+                              TRUE ~ "Southern"))
 
 # date column is reading wrong, manually make day month year columns bc measurements were collected 23 July 2023
 # also add site column
@@ -68,7 +75,7 @@ data_2023_wrangle$Day <- as.numeric(data_2023_wrangle$Day)
 all_CG_source_growth <- read.csv("data/all_CG_source_growth.csv")
 # to get year planted and species, extract from 2022 dataset 
 spp_year <- all_CG_source_growth %>% 
-  dplyr::select(c(Species, Year_planted, SampleID_standard, population, Cutting_diameter, Cutting_length, Mother_LS)) %>% 
+  dplyr::select(c(Species, Year_planted, SampleID_standard, Cutting_diameter, Cutting_length, Mother_LS)) %>% 
   distinct()
 
 # merge spp_year with 2023 data 
@@ -119,7 +126,7 @@ data_merge <- full_join(S_arc_leaf_lengths, all_data_wrangle,
                                   "population", "mean_leaf_length", 
                                    "SampleID_standard", 
                                    "Year", "Month", "Day")) 
-# write.csv(data_merge, "data/common_garden_data_2023/all_data_2023.csv") # 2023 data
+write.csv(data_merge, "data/common_garden_data_2023/all_data_2023.csv") # 2023 data
 
 # traits ----
 # load source pop trait data from 2023
@@ -230,8 +237,6 @@ write.csv(max_cg_biovol, "data/common_garden_data_2023/max_biovol_cg.csv")
 write.csv(max_cg_widths, "data/common_garden_data_2023/max_widths_cg.csv")
 write.csv(max_cg_elong, "data/common_garden_data_2023/max_elong_cg.csv")
 write.csv(max_cg_diam, "data/common_garden_data_2023/max_diam_cg.csv")
-
-
 
 # quick figs ----
 # load data 

@@ -1,6 +1,6 @@
 # BAYESIAN growth results models -----
 # Script by Erica
-# Last update: 02/03/2023 by Madi 
+# Last update: 07/09/2023 by Madi 
 # Code adapted from coding club tutorial by Louise Litrico:
 # https://ourcodingclub.github.io/tutorials/brms/ 
 
@@ -21,13 +21,13 @@ library(gridExtra)
 library(ggpubr)
 
 # Loading data ---- 
-all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
+all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv") # 2023 data
 # Only using max growth variables values
-max_widths_cg <- read_csv("data/common_garden_data_2022/max_widths_cg.csv")
-max_heights_cg <- read_csv("data/common_garden_data_2022/max_heights_cg.csv")
-max_biovol_cg <- read_csv("data/common_garden_data_2022/max_biovol_cg.csv")
-max_elong_cg <- read_csv("data/common_garden_data_2022/max_elong_cg.csv")
-max_diam_cg <- read_csv("data/common_garden_data_2022/max_diam_cg.csv")
+max_widths_cg <- read_csv("data/common_garden_data_2023/max_widths_cg.csv")
+max_heights_cg <- read_csv("data/common_garden_data_2023/max_heights_cg.csv")
+max_biovol_cg <- read_csv("data/common_garden_data_2023/max_biovol_cg.csv")
+max_elong_cg <- read_csv("data/common_garden_data_2023/max_elong_cg.csv")
+max_diam_cg <- read_csv("data/common_garden_data_2023/max_diam_cg.csv")
 
 # Functions -------
 # 1. scale function =====
@@ -128,11 +128,11 @@ max_heights_cg_arc <- max_heights_cg %>%
   filter (Species == "Salix arctica") 
 
 # look at mean max heights per species 
-mean(max_heights_cg_rich$max_canopy_height_cm) # 31.25362
+mean(max_heights_cg_rich$max_canopy_height_cm) # 31.75 
 range(max_heights_cg_rich$max_canopy_height_cm) # 0.7 - 127.0
-mean(max_heights_cg_pul$max_canopy_height_cm) # 21.90695 
+mean(max_heights_cg_pul$max_canopy_height_cm) # 21.87
 range(max_heights_cg_pul$max_canopy_height_cm) # 1.5 101.0
-mean(max_heights_cg_arc$max_canopy_height_cm) # 4.589855
+mean(max_heights_cg_arc$max_canopy_height_cm) # 5.29
 range(max_heights_cg_arc$max_canopy_height_cm) # 0.3 15.2
 
 
@@ -275,16 +275,18 @@ summary(garden_rich_height) # significantly higher canopy heights for southern p
 plot(garden_rich_height) # fine
 pp_check(garden_rich_height,  type = "dens_overlay", nsamples = 100)  # good
 saveRDS(garden_rich_height, file = "output/models/garden_rich_height.rds")
+rich_height.pred <- ggpredict(garden_rich_height, terms = c('population'))
 
-# estimate for northern: 2.3801895 = exp(2.3801895) = 10.80695
-# estimate for southern: 2.3801895+1.1569109=3.5371 -> exp(3.5371) = 34.36711
+
+# estimate for northern: 2.4302969 = exp(2.4302969) = 11.36226 # updated with 2023 data
+# estimate for southern: 2.4302969 + 1.1512444 = 3.581541 -> exp(3.581541) = 35.92886
 # %diff
-(34.36711-10.80695)/10.80695
-# 2.180093
+(35.92886 - 11.36226)/11.36226
+# 2.162123
 
 # times larger
-34.36711/10.80695
-# 3.180093
+35.92886/11.36226
+# 3.162123
 
 # extract output with function
 rich_extract <- model_summ_growth(garden_rich_height)
@@ -344,6 +346,7 @@ summary(garden_pul_height) # significantly higher canopy heights for southern po
 plot(garden_pul_height) # fine
 pp_check(garden_pul_height, type = "dens_overlay", nsamples = 100)  # good) 
 saveRDS(garden_pul_height, file = "output/models/garden_pul_height.rds")
+pul_height.pred <- ggpredict(garden_pul_height, terms = c('population'))
 
 # estimate for northern: 2.2889943 = exp(2.2889943) = 9.865011
 # estimate for southern: 2.2889943+0.9149186=3.203913 -> exp(3.203913) = 24.62871
