@@ -11,7 +11,8 @@ library(ggpubr)
 library(ggeffects)
 
 # Loading data ---- 
-all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv")
+all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv") # 2022 data 
+all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv") # 2023 data
 
 # 1. scale function =====
 # centering with 'scale()'
@@ -603,10 +604,10 @@ height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_a
                          iter = 5000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-saveRDS(height_rich, file = "output/models/height_rich.rds")
-height_rich <- readRDS("output/models/height_rich.rds")
+saveRDS(height_rich, file = "output/models/height_rich_2023.rds")
+height_rich <- readRDS("output/models/height_rich_2023.rds")
+summary(height_rich)
 
-library(ggeffects)
 ggpred_height_ric <- ggpredict(height_rich, terms = c("Sample_age", "population"))
 colnames(ggpred_height_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
 
@@ -666,8 +667,8 @@ height_pul <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_ag
                         iter = 5000, warmup = 1000, 
                         control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-saveRDS(height_pul, file = "output/models/height_pul.rds")
-height_pul <- readRDS("output/models/height_pul.rds")
+saveRDS(height_pul, file = "output/models/height_pul_2023.rds")
+height_pul <- readRDS("output/models/height_pul_2023.rds")
 
 summary(height_pul)
 # estimate for northern sample age: 1.99-0.02=1.97 --> exp(1.97)= 7.170676 cm in year 1
@@ -677,7 +678,6 @@ summary(height_pul)
 
 ggpred_height_pul <- ggpredict(height_pul, terms = c("Sample_age", "population"))
 colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
-
 
 (ggpred_height_pul_plot <-ggplot(ggpred_height_pul) +
     geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
@@ -725,8 +725,8 @@ height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_ag
                         data = all_CG_growth_arc,  family = gaussian(), chains = 3,
                         iter = 5000, warmup = 1000, 
                         control = list(max_treedepth = 15, adapt_delta = 0.99))
-saveRDS(height_arc, file = "output/models/height_arc.rds")
-height_arc <- readRDS("output/models/height_arc.rds")
+saveRDS(height_arc, file = "output/models/height_arc_2023.rds")
+height_arc <- readRDS("output/models/height_arc_2023.rds")
 
 summary(height_arc) # significant growth over time
 # estimate for northern sample age 9: 0.86+0.08*9= exp(1.58) = 4.854956 -->0.5394396
@@ -749,12 +749,12 @@ colnames(ggpred_height_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
     theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
     theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
 
-ggpred_CG_height_panel <- ggarrange(ggpred_height_rich_plot,
+(ggpred_CG_height_panel <- ggarrange(ggpred_height_rich_plot,
                                     ggpred_height_pul_plot, 
                                     ggpred_height_arc_plot, nrow = 1,
-                                    common.legend = TRUE, legend="none")
+                                    common.legend = TRUE, legend="none"))
 
-ggsave(ggpred_CG_height_panel, filename ="outputs/figures/ggpred_CG_height_panel.png", width = 14.67, height = 6.53, units = "in")
+ggsave(ggpred_CG_height_panel, filename ="outputs/figures/ggpred_CG_height_panel_2023.png", width = 14.67, height = 6.53, units = "in")
 
 height_arc_summ <- model_summ(height_arc)
 
