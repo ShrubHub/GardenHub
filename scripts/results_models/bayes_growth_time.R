@@ -623,7 +623,8 @@ colnames(ggpred_height_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
     ggtitle(expression(italic("Salix richardsonii"))) +
     theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
-    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+    theme( axis.text.x  = element_text(angle = 0)) +
+    labs(title = "Salix richardsonii", size = 20, family = "Helvetica Light")) # if i log everything it's exactly the same plot as with conditional effects! 
 
 # estimate for northern sample age: 1.50+0.09*1 = exp(1.59) = 4.903749 cm, in year 1
 # estimate for southern sample age: (1.50+0.91)+(0.09*1+0.16*1) = exp(2.66) = 14.29629 in year 1
@@ -685,13 +686,13 @@ colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
-    ylab("Canopy height (cm)\n") +
-    xlab("\n Sample age " ) +
+    ylab("Canopy height (cm)\n", family = "Helvetica Light") +
+    xlab("\n Sample age " , family = "Helvetica Light") +
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    ggtitle(expression(italic("Salix pulchra"))) +
     theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
-    theme(axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+    theme(axis.text.x  = element_text(angle = 0)) +
+    labs(title = "Salix pulchra", size = 20, family = "Helvetica Light")) # if i log everything it's exactly the same plot as with conditional effects! 
 
 height_pul_summ <- model_summ(height_pul)
 
@@ -745,16 +746,17 @@ colnames(ggpred_height_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
     xlab("\n Sample age " ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    ggtitle(expression(italic("Salix arctica"))) +
-    theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
-    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+    theme_shrub() + 
+    theme( axis.text.x  = element_text(angle = 0)) + 
+    labs(title = "Salix arctica", size = 20, family = "Helvetica Light")) # if i log everything it's exactly the same plot as with conditional effects! 
 
 (ggpred_CG_height_panel <- ggarrange(ggpred_height_rich_plot,
                                     ggpred_height_pul_plot, 
                                     ggpred_height_arc_plot, nrow = 1,
-                                    common.legend = TRUE, legend="none"))
+                                    common.legend = TRUE, legend="bottom"))
 
-ggsave(ggpred_CG_height_panel, filename ="outputs/figures/ggpred_CG_height_panel_2023.png", width = 14.67, height = 6.53, units = "in")
+ggsave(ggpred_CG_height_panel, filename ="outputs/figures/ggpred_CG_height_panel_2023.png",
+       width = 14.67, height = 6.53, units = "in")
 
 height_arc_summ <- model_summ(height_arc)
 
@@ -825,6 +827,17 @@ save_kable(kable_rich_pul_arc,file = "outputs/tables/kable_rich_pul_arc.pdf", # 
 # color palette for garden only
 pal_garden <- c("#440154FF", "#7AD151FF")
 
+theme_shrub <- function(){ theme(legend.position = "right",
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 270), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
+                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
+                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
+                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+                                 plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 legend.title=element_text(size=16, family = "Helvetica Light"),
+                                 legend.text=element_text(size = 15, family = "Helvetica Light"))}
 
 theme_shrub <- function(){ theme(legend.position = "right",
                                  axis.title.x = element_text(face="bold", size=12),

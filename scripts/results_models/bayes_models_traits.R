@@ -1583,7 +1583,7 @@ pal_garden <-c("#440154FF", "#7AD151FF")
                        ncol = 3, nrow = 1))
 ggsave("figures/leaf_length_panel.png", height = 10, width = 12, dpi = 300)
 
-# arrange plots ----
+# Arrange plots ----
 
 (trait_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot,
   rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot,
