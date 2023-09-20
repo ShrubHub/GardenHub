@@ -12,6 +12,77 @@ library(readr)
 library(tidyverse)
 library(stringr)
 
+
+#### functio to extract TOMST data 
+
+read_tms4 <- function(file) {
+  
+  # Extract serial number from filename
+  serial <- file 
+  print(file)
+  
+  # Read the data file
+  data <- read_delim(file, delim = ";",
+                     col_names = F, 
+                     locale=locale(decimal_mark = ",")) 
+  
+  
+  # Check file has contents. Empty files due to bad data download only have "File is empty" as text. 
+  if (ncol(data) > 1) {
+    # Create vector of column names
+    vars <- c("Index", "Datetime_UTC", "TimeZone", "T1: Soil sensor", "T2: Surface sensor", "T3: Top sensor", "SoilMoistureCount", "shake",
+              "errFlag", "empty")
+    
+    # Format data for output
+    names(data) <- vars
+    
+    data_with_ID <- data  %>% 
+      mutate(SerialID = serial) %>% 
+      select(SerialID, everything()) %>% 
+      mutate(Datetime_UTC = lubridate::parse_date_time(Datetime_UTC,orders = c("%Y.%m.%d %H:%M")))
+    
+  } else {
+    print("empty file")
+    data_with_ID <- NULL
+  }
+  
+  
+  return(data_with_ID)
+}
+
+tomst_qhi <- "data/tomst/QHI_TOMST_Aug2023/data_files_only"
+files_qhi <- list.files(path = tomst_qhi, pattern = "^data_*", full.names = T)
+qhi_data <- map_dfr(files_qhi, read_tms4)
+
+tomst_kp <- "data/tomst/KLU_TOMST_backup_2023/KP_data_files_aug2023"
+files_kp <- list.files(path = tomst_kp, pattern = "^data_*", full.names = T)
+kp_data <- map_dfr(files_kp, read_tms4)
+
+tomst_cg <- "data/tomst/KLU_TOMST_backup_2023/Common_garden/data_files"
+files_cg <- list.files(path = tomst_cg, pattern = "^data_*", full.names = T)
+cg_data <- map_dfr(files_kp, read_tms4)
+
+# change date (GMT to NWT time) - 7 hours time difference
+qhi_data$Datetime_UTC <- qhi_data$Datetime_UTC - hours(7)
+
+tomst_qhi_data <-  qhi_data %>% 
+  filter(Datetime_UTC > lubridate::ymd_hm("2022-07-27 15:00")) %>% 
+  pivot_longer(cols = 5:8,
+               names_to = "Variable",
+               values_to = "Value")
+
+# save as .csv
+write.csv(tomst_qhi_data, "data/tomst/2023/tomst_qhi_2023_data.csv")
+
+# change date (GMT to NWT time) - 7 hours time difference
+kp_data$Datetime_UTC <- kp_data$Datetime_UTC - hours(7)
+
+tomst_kp_data <-  kp_data %>% 
+  filter(Datetime_UTC > lubridate::ymd_hm("2022-07-27 15:00")) %>% 
+  pivot_longer(cols = 5:8,
+               names_to = "Variable",
+               values_to = "Value")
+
 # TOMST ----
 # from 2022 27 July - 16 August 2022 
 
