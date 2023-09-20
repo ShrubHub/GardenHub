@@ -71,17 +71,25 @@ tomst_qhi_data <-  qhi_data %>%
                names_to = "Variable",
                values_to = "Value")
 
-# save as .csv
-saveRDS(tomst_qhi_data, "data/tomst/2023/tomst_qhi_2023_data.rds")
-
 # change date (GMT to NWT time) - 7 hours time difference
-kp_data$Datetime_UTC <- kp_data$Datetime_UTC - hours(7)
+tomst_qhi_data$Datetime_UTC <- tomst_qhi_data$Datetime_UTC - hours(7)
 
-tomst_kp_data <-  kp_data %>% 
-  filter(Datetime_UTC > lubridate::ymd_hm("2022-07-27 15:00")) %>% 
-  pivot_longer(cols = 5:8,
-               names_to = "Variable",
-               values_to = "Value")
+# make doy, month and year columns 
+qhi_tomst_data <- tomst_qhi_data %>% 
+  mutate(Date = lubridate::date(Datetime_UTC))
+qhi_tomst_data$doy <- yday(qhi_tomst_data$Date) # make DOY column
+qhi_tomst_data$year <- format(as.Date(qhi_tomst_data$Date, format="%Y-%m-%d"),"%Y") # make year column
+
+# save as .csv
+saveRDS(qhi_tomst_data, "data/tomst/2023/tomst_qhi_2023_data.rds")
+
+august_qhi_surface_temp <- tomst_qhi_data %>%
+  subset(Date >= "2023-07-27" & Date <= "2022-07-31") %>% 
+  filter(Variable %in% "T2: Surface sensor") %>% 
+  
+
+mean(july_surface_temp$mean_temp) #  5.01368
+sd(july_surface_temp$mean_temp) # 2.42599
 
 # TOMST ----
 # from 2022 27 July - 16 August 2022 
