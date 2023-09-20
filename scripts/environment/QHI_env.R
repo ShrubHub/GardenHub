@@ -72,7 +72,7 @@ tomst_qhi_data <-  qhi_data %>%
                values_to = "Value")
 
 # save as .csv
-write.csv(tomst_qhi_data, "data/tomst/2023/tomst_qhi_2023_data.csv")
+saveRDS(tomst_qhi_data, "data/tomst/2023/tomst_qhi_2023_data.rds")
 
 # change date (GMT to NWT time) - 7 hours time difference
 kp_data$Datetime_UTC <- kp_data$Datetime_UTC - hours(7)
