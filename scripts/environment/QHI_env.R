@@ -79,17 +79,18 @@ qhi_tomst_data <- tomst_qhi_data %>%
   mutate(Date = lubridate::date(Datetime_UTC))
 qhi_tomst_data$doy <- yday(qhi_tomst_data$Date) # make DOY column
 qhi_tomst_data$year <- format(as.Date(qhi_tomst_data$Date, format="%Y-%m-%d"),"%Y") # make year column
+qhi_tomst_data$month <- format(as.Date(qhi_tomst_data$Date, format="%Y-%m-%d"),"%m") # make month column
 
 # save as .csv
 saveRDS(qhi_tomst_data, "data/tomst/2023/tomst_qhi_2023_data.rds")
 
-august_qhi_surface_temp <- tomst_qhi_data %>%
-  subset(Date >= "2023-07-27" & Date <= "2022-07-31") %>% 
-  filter(Variable %in% "T2: Surface sensor") %>% 
-  
-
-mean(july_surface_temp$mean_temp) #  5.01368
-sd(july_surface_temp$mean_temp) # 2.42599
+august_qhi_surface_temp_aug <- qhi_tomst_data %>%
+  filter(Variable == "T2: Surface sensor") %>% 
+  subset(doy > "212" & doy <= "226") %>% 
+  filter(month == "08") %>% 
+  group_by(year) %>% 
+  summarise(mean_temp = mean(Value, na.rm = TRUE), 
+            sd_temp = sd(Value, na.rm = T))
 
 # TOMST ----
 # from 2022 27 July - 16 August 2022 
