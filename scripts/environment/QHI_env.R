@@ -84,13 +84,168 @@ qhi_tomst_data$month <- format(as.Date(qhi_tomst_data$Date, format="%Y-%m-%d"),"
 # save as .csv
 saveRDS(qhi_tomst_data, "data/tomst/2023/tomst_qhi_2023_data.rds")
 
+qhi_top_sensor_july2023 <- qhi_tomst_data %>% 
+  filter(year == "2023") %>% 
+  filter(doy > 181 & doy < 213) %>% 
+  filter(Variable == "T3: Top sensor") %>%  
+  group_by(Date) %>% 
+  filter(Value < 30) #%>% 
+  #summarise(mean_temp = mean(Value, na.rm = TRUE), 
+   #         sd_temp = sd(Value, na.rm = T))
+
+mean(qhi_top_sensor_july2023$Value)
+sd(qhi_top_sensor_july2023$Value)
+
 august_qhi_surface_temp_aug <- qhi_tomst_data %>%
   filter(Variable == "T2: Surface sensor") %>% 
   subset(doy > "212" & doy <= "226") %>% 
   filter(month == "08") %>% 
   group_by(year) %>% 
+  filter(Value < 30) %>% 
   summarise(mean_temp = mean(Value, na.rm = TRUE), 
             sd_temp = sd(Value, na.rm = T))
+
+august_qhi_abvgrnd_temp_aug <- qhi_tomst_data %>%
+  filter(Variable == "T3: Top sensor") %>% 
+  subset(doy > "212" & doy <= "226") %>% 
+  filter(month == "08") %>% 
+  group_by(year) %>% 
+  filter(Value < 30) %>% 
+  summarise(mean_temp = mean(Value, na.rm = TRUE), 
+            sd_temp = sd(Value, na.rm = T))
+
+august_qhi_soil_temp_aug <- qhi_tomst_data %>%
+  filter(Variable == "T1: Soil sensor") %>% 
+  subset(doy > "212" & doy <= "226") %>% 
+  filter(month == "08") %>% 
+  group_by(year) %>% 
+  filter(Value < 30) %>% 
+  summarise(mean_temp = mean(Value, na.rm = TRUE), 
+            sd_temp = sd(Value, na.rm = T))
+
+qhi_temp_2023_surface <- qhi_tomst_data %>% 
+  dplyr::group_by(Date) %>% 
+  filter(year == "2023") %>% 
+  filter(doy > 120) %>% 
+  filter(Value < 30) %>% 
+  filter(Variable == "T2: Surface sensor") %>% 
+  summarise(mean_daily_surface = mean(Value))
+
+qhi_temp_2023_soil <- qhi_tomst_data %>% 
+  dplyr::group_by(Date) %>% 
+  filter(year == "2023") %>% 
+  filter(doy > 120) %>% 
+  filter(Value < 30) %>% 
+  filter(Variable == "T1: Soil sensor") %>% 
+  summarise(mean_daily_soil = mean(Value))
+
+qhi_temp_2023_top <- qhi_tomst_data %>% 
+  dplyr::group_by(Date) %>% 
+  filter(year == "2023") %>% 
+  filter(doy > 120) %>% 
+  filter(Value < 30) %>% 
+  filter(Variable == "T3: Top sensor") %>% 
+  summarise(mean_daily_top_sensor = mean(Value))
+
+# merge those three 
+qhi_temp_2023_merge <- full_join(qhi_temp_2023_top, qhi_temp_2023_soil, 
+                               by = "Date")
+qhi_temp_2023_all <- full_join(qhi_temp_2023_merge, qhi_temp_2023_surface, by = "Date")
+
+qhi_temp_2023_long <- qhi_temp_2023_all %>% # make long version
+  pivot_longer(cols = 2:4,
+               names_to = "Variable",
+               values_to = "Value")
+
+(qhi_temp_2023_plot <- ggplot(qhi_temp_2023_long, aes(x = Date, y = Value, color = Variable)) +
+  geom_point() + 
+    ylab("Temperature ºC") + 
+    theme_classic() + 
+    theme(panel.border = element_blank(),
+                         panel.grid.major = element_blank(),
+                         panel.grid.minor = element_blank(),
+                         strip.text = element_text(size = 15, color = "black", face = "italic"),
+                         legend.title = element_text(size=15), #change legend title font size
+                         legend.text = element_text(size=12),
+                         axis.line = element_line(colour = "black"),
+                         axis.title = element_text(size = 18),
+                         axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
+                         axis.text.y = element_text(size = 15, colour = "black")))
+
+
+qhi_temp_aug <- qhi_tomst_data %>% 
+  dplyr::group_by(Date, doy, year) %>% 
+  filter(Value < 30) %>% 
+  filter(doy > 212 & doy < 227) %>% 
+  filter(Variable == "T2: Surface sensor") %>% 
+  summarise(mean_daily_surface = mean(Value), 
+            sd_daily_surface = sd(Value))
+
+(qhi_temp_aug_plot <- ggplot(qhi_temp_aug, aes(x = doy, y = mean_daily_surface, color = year)) +
+    geom_point() + 
+    geom_line() +
+    ylab("Temperature ºC") + 
+    theme_classic() + 
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "italic"),
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=12),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
+          axis.text.y = element_text(size = 15, colour = "black")))
+
+qhi_temp_aug_soil <- qhi_tomst_data %>% 
+  dplyr::group_by(Date, doy, year) %>% 
+  filter(Value < 30) %>% 
+  filter(doy > 212 & doy < 227) %>% 
+  filter(Variable == "T1: Soil sensor") %>% 
+  summarise(mean_daily_soil = mean(Value), 
+            sd_daily_soil = sd(Value))
+
+(qhi_temp_aug_plot <- ggplot(qhi_temp_aug_soil, aes(x = doy, y = mean_daily_soil, color = year)) +
+    geom_point(size = 2) + 
+    geom_line() +
+    geom_errorbar(aes(ymin=mean_daily_soil - sd_daily_soil, ymax = mean_daily_soil + sd_daily_soil), width=.2) + 
+    theme_QHI() +     
+    theme(panel.border = element_blank(),
+                            panel.grid.major = element_blank(),
+                            panel.grid.minor = element_blank(),
+                            strip.text = element_text(size = 15, color = "black", face = "italic"),
+                            legend.title = element_text(size=15), #change legend title font size
+                            legend.text = element_text(size=12),
+                            axis.line = element_line(colour = "black"),
+                            axis.title = element_text(size = 18),
+                            axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
+                            axis.text.y = element_text(size = 15, colour = "black")) + 
+    scale_x_continuous(breaks = c(212, 214, 216, 218, 220, 222, 224, 226)) +
+    ylab("Soil temperature ºC") + 
+    xlab("Day of year"))
+
+theme_QHI <- function(){
+  theme_bw() +
+    theme(axis.text = element_text(size = 16), 
+          axis.title = element_text(size = 20),
+          axis.text.x = element_text(angle = -45, hjust = -0.05),
+          axis.line.x = element_line(color = "black"), 
+          axis.line.y = element_line(color = "black"),
+          panel.border = element_blank(),
+          panel.grid.major.x = element_blank(),                                          
+          panel.grid.minor.x = element_blank(),
+          panel.grid.minor.y = element_blank(),
+          panel.grid.major.y = element_blank(),  
+          plot.margin = unit(c(1, 1, 1, 1), units = , "cm"),
+          plot.title = element_text(size = 20, vjust = 1, hjust = 0),
+          legend.text = element_text(size = 16, face = "italic"),          
+          legend.title = element_blank(),                              
+          legend.position = c(0.9, 0.9), 
+          legend.key = element_blank(),
+          legend.background = element_rect(color = "black", 
+                                           fill = "transparent", 
+                                           size = 4, linetype = "blank"))
+}
 
 # TOMST ----
 # from 2022 27 July - 16 August 2022 
