@@ -81,8 +81,11 @@ qhi_tomst_data$doy <- yday(qhi_tomst_data$Date) # make DOY column
 qhi_tomst_data$year <- format(as.Date(qhi_tomst_data$Date, format="%Y-%m-%d"),"%Y") # make year column
 qhi_tomst_data$month <- format(as.Date(qhi_tomst_data$Date, format="%Y-%m-%d"),"%m") # make month column
 
-# save as .csv
+# save as .csv ====
 saveRDS(qhi_tomst_data, "data/tomst/2023/tomst_qhi_2023_data.rds")
+
+tomst_qhi_2023_data <- readRDS("data/tomst/2023/tomst_qhi_2023_data.rds")
+qhi_tomst_data <- tomst_qhi_2023_data
 
 qhi_top_sensor_july2023 <- qhi_tomst_data %>% 
   filter(year == "2023") %>% 
@@ -176,7 +179,7 @@ qhi_temp_2023_long <- qhi_temp_2023_all %>% # make long version
 qhi_temp_aug <- qhi_tomst_data %>% 
   dplyr::group_by(Date, doy, year) %>% 
   filter(Value < 30) %>% 
-  filter(doy > 212 & doy < 227) %>% 
+  filter(doy > 152 & doy < 227) %>% 
   filter(Variable == "T2: Surface sensor") %>% 
   summarise(mean_daily_surface = mean(Value), 
             sd_daily_surface = sd(Value))
@@ -200,29 +203,39 @@ qhi_temp_aug <- qhi_tomst_data %>%
 qhi_temp_aug_soil <- qhi_tomst_data %>% 
   dplyr::group_by(Date, doy, year) %>% 
   filter(Value < 30) %>% 
-  filter(doy > 212 & doy < 227) %>% 
+  filter(doy > 151 & doy < 227) %>% 
   filter(Variable == "T1: Soil sensor") %>% 
   summarise(mean_daily_soil = mean(Value), 
             sd_daily_soil = sd(Value))
 
 (qhi_temp_aug_plot <- ggplot(qhi_temp_aug_soil, aes(x = doy, y = mean_daily_soil, color = year)) +
-    geom_point(size = 2) + 
+    geom_point(aes(shape = year, color = year), size = 3) + 
     geom_line() +
     geom_errorbar(aes(ymin=mean_daily_soil - sd_daily_soil, ymax = mean_daily_soil + sd_daily_soil), width=.2) + 
     theme_QHI() +     
+    scale_x_continuous(breaks = c(152, 157, 162, 167, 172, 177, 182, 187, 192, 195, 199, 203,
+                                  208, 213, 218, 223, 228)) +
+    scale_color_manual(values = c("#009E73", "#D55E00"), name = "", 
+                       labels = c("2022", "2023")) +
     theme(panel.border = element_blank(),
                             panel.grid.major = element_blank(),
                             panel.grid.minor = element_blank(),
                             strip.text = element_text(size = 15, color = "black", face = "italic"),
                             legend.title = element_text(size=15), #change legend title font size
-                            legend.text = element_text(size=12),
+                            legend.text = element_text(size=18),
                             axis.line = element_line(colour = "black"),
                             axis.title = element_text(size = 18),
-                            axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
-                            axis.text.y = element_text(size = 15, colour = "black")) + 
-    scale_x_continuous(breaks = c(212, 214, 216, 218, 220, 222, 224, 226)) +
+                            axis.text.x = element_text(vjust = 0.5, size = 18, colour = "black"),
+                            axis.text.y = element_text(size = 18, colour = "black")) +
     ylab("Soil temperature ºC") + 
-    xlab("Day of year"))
+    xlab("Day of year") + 
+    theme(legend.position = c(0.1, 0.9), 
+          axis.line.x = element_line(color = "black", size = 0.5),
+          axis.line.y = element_line(color = "black", size = 0.5),
+          axis.text = element_text(size = 20),
+          axis.title = element_text(size = 20),
+          plot.title = element_text(size = 20)) +
+    guides(shape = FALSE, colour = guide_legend(override.aes = list(linetype = 0))))
 
 theme_QHI <- function(){
   theme_bw() +
