@@ -87,6 +87,19 @@ saveRDS(qhi_tomst_data, "data/tomst/2023/tomst_qhi_2023_data.rds")
 tomst_qhi_2023_data <- readRDS("data/tomst/2023/tomst_qhi_2023_data.rds")
 qhi_tomst_data <- tomst_qhi_2023_data
 
+
+qhi_temp_2023 <- qhi_tomst_data %>% 
+  dplyr::group_by(year, doy, Variable) %>% 
+  filter(doy > 152 & doy < 280) %>% 
+  filter(Value < 30) %>% 
+  filter(Variable != "SoilMoistureCount") %>% 
+  summarise(mean_temp = mean(Value), 
+            sd_temp = sd(Value))
+
+qhi_temp_2023$Variable <- recode_factor(qhi_temp_2023$Variable, "T1: Soil sensor" = "Soil", 
+                                "T2: Surface sensor" = "Surface", 
+                                "T3: Top sensor" = "Above ground")
+
 qhi_top_sensor_july2023 <- qhi_tomst_data %>% 
   filter(year == "2023") %>% 
   filter(doy > 181 & doy < 213) %>% 
@@ -200,15 +213,31 @@ qhi_temp_aug <- qhi_tomst_data %>%
           axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
           axis.text.y = element_text(size = 15, colour = "black")))
 
-qhi_temp_aug_soil <- qhi_tomst_data %>% 
+qhi_temp_aug_soil_sum <- qhi_tomst_data %>% 
   dplyr::group_by(Date, doy, year) %>% 
   filter(Value < 30) %>% 
-  filter(doy > 151 & doy < 227) %>% 
+  filter(doy > 151 & doy < 280) %>% 
   filter(Variable == "T1: Soil sensor") %>% 
   summarise(mean_daily_soil = mean(Value), 
             sd_daily_soil = sd(Value))
 
-(qhi_temp_aug_plot <- ggplot(qhi_temp_aug_soil, aes(x = doy, y = mean_daily_soil, color = year)) +
+qhi_temp_aug_surface_sum <- qhi_tomst_data %>% 
+  dplyr::group_by(Date, doy, year) %>% 
+  filter(Value < 30) %>% 
+  filter(doy > 151 & doy < 280) %>% 
+  filter(Variable == "T2: Surface sensor") %>% 
+  summarise(mean_daily_surface = mean(Value), 
+            sd_daily_surface = sd(Value))
+
+qhi_temp_aug_top_sum <- qhi_tomst_data %>% 
+  dplyr::group_by(Date, doy, year) %>% 
+  filter(Value < 30) %>% 
+  filter(doy > 151 & doy < 280) %>% 
+  filter(Variable == "T3: Top sensor") %>% 
+  summarise(mean_daily_top = mean(Value), 
+            sd_daily_top = sd(Value))
+
+(qhi_temp_aug_plot <- ggplot(qhi_temp_aug_soil_sum, aes(x = doy, y = mean_daily_soil, color = year)) +
     geom_point(aes(shape = year, color = year), size = 3) + 
     geom_line() +
     geom_errorbar(aes(ymin=mean_daily_soil - sd_daily_soil, ymax = mean_daily_soil + sd_daily_soil), width=.2) + 
@@ -236,6 +265,45 @@ qhi_temp_aug_soil <- qhi_tomst_data %>%
           axis.title = element_text(size = 20),
           plot.title = element_text(size = 20)) +
     guides(shape = FALSE, colour = guide_legend(override.aes = list(linetype = 0))))
+
+(qhi_temp_all_plot <- ggplot(qhi_temp_2023, 
+                             aes(x = doy, y = mean_temp, ymax = mean_temp + sd_temp, ymin = mean_temp - sd_temp, 
+                                 color = year)) +
+    geom_line() +
+    scale_color_manual(values = c("#009E73", "#D55E00"), name = "", 
+                       labels = c("2022", "2023")) +
+    facet_wrap(~factor(Variable, levels=c('Above ground', 'Surface', 'Soil')), nrow = 3) + 
+    scale_fill_manual(values = c("#009E73", "#D55E00"), name = "", 
+                       labels = c("2022", "2023")) +
+    geom_ribbon(alpha = 0.15, aes(fill = year), colour = NA) +
+    theme_QHI() +     
+    scale_x_continuous(breaks = c(150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270)) +
+    scale_y_continuous(breaks = c(0, 5, 10, 15, 20)) +
+    theme(panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size = 15, color = "black", face = "bold"),
+          strip.background = element_rect(fill = "white", 
+                                          linetype = 0), 
+          legend.title = element_text(size=15), #change legend title font size
+          legend.text = element_text(size=18),
+          axis.line = element_line(colour = "black"),
+          axis.title = element_text(size = 18),
+          axis.text.x = element_text(vjust = 0.5, size = 18, colour = "black"),
+          axis.text.y = element_text(size = 18, colour = "black")) +
+    ylab("Temperature ºC") + 
+    xlab("Day of year") + 
+    theme(legend.position = "bottom", 
+          axis.line.x = element_line(color = "black", size = 0.5),
+          axis.line.y = element_line(color = "black", size = 0.5),
+          axis.text = element_text(size = 20),
+          axis.title = element_text(size = 20),
+          plot.title = element_text(size = 20))+
+    guides(shape = FALSE, colour = guide_legend(override.aes = list(linetype = 1))))
+
+ggsave(qhi_temp_all_plot, filename ="figures/qhi_temp_year_compare.png",
+       width = 8.5, height = 11, units = "in")
+
 
 theme_QHI <- function(){
   theme_bw() +
