@@ -62,10 +62,10 @@ arctica_all_traits <- all_CG_source_traits %>%
   filter(SLA < 24 | is.na(SLA)) 
 pulchra_all_traits <- all_CG_source_traits %>% 
   filter(Species == "Salix pulchra") %>% 
-  filter(LDMC_g_g != 0.7000000)
+  filter(LDMC_g_g < 0.7000000)
 richardsonii_all_traits <- all_CG_source_traits %>% 
   filter(Species == "Salix richardsonii") %>% 
-  filter(SLA < 24 | is.na(SLA)) 
+  filter(SLA < 24 | is.na(SLA)) %>% 
 
 # to run separate models per species filter out species for leaf length: 
 arctica_all_growth <- all_CG_source_growth %>% 
@@ -482,7 +482,6 @@ pulchra_LDMC_log <- brms::brm(log(LDMC_percent) ~ population + (1|year), data = 
                           iter = 3000, warmup = 1000, 
                           control = list(max_treedepth = 15, adapt_delta = 0.99)) 
 summary(pulchra_LDMC_log) 
-tab_model(pulchra_LDMC_log)
 plot(pulchra_LDMC_log)
 pp_check(pulchra_LDMC_log, type = "dens_overlay", ndraws = 100) 
 saveRDS(pulchra_LDMC_log, file = "output/traits/models/ldmc_pulchra_compare.rds")
@@ -1255,7 +1254,7 @@ colnames(rich_SLA.pred) = c('population','fit', 'lwr', 'upr')
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0)) + # raw data
     geom_point(aes(x = population, y = fit, colour = population), size = 6)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
-                  size = 1, alpha = 1) +
+                  size = 1, alpha = 1, width=0.75) +
     ylab(expression(atop("Specific Leaf Area", paste("(",mm^{2}," ",mg^{-1},")"))))+
     xlab("" ) +
     scale_color_manual(values=pal) +
@@ -1284,7 +1283,7 @@ colnames(pul_SLA.pred) = c('population','fit', 'lwr', 'upr')
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = population, y = fit, colour = population), size = 6)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
-                  size = 1, alpha = 1) +
+                  size = 1, alpha = 1, width=0.75) +
     ylab("\n") +
     xlab("" ) +
     scale_color_manual(values=pal) +
@@ -1299,7 +1298,7 @@ colnames(arc_SLA.pred) = c('population','fit', 'lwr', 'upr')
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = population, y = fit, colour = population), size = 6)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
-                  size = 1, alpha = 1) +
+                  size = 1, alpha = 1, width=0.75) +
     ylab("\n") +
     xlab("" ) +
     scale_color_manual(values=pal) +
@@ -1345,11 +1344,11 @@ colnames(rich_LDMC.pred) = c('population','fit', 'lwr', 'upr')
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = population, y = fit, colour = population), size = 6)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
-                  size = 1, alpha = 1) +
+                  size = 1, alpha = 1, width=0.75) +
 #    ylab(expression(paste("Leaf dry matter content (%)"))) +
     ylab(expression(atop("Leaf dry matter content", paste("(%)"))))+
     xlab("" ) +
-    coord_cartesian(ylim=c(15, 80)) +
+    coord_cartesian(ylim=c(15, 70)) +
     scale_color_manual(values=pal) +
     labs(title = "Salix richardsonii") +
     theme_shrub()+ 
@@ -1364,10 +1363,10 @@ colnames(pul_LDMC.pred) = c('population','fit', 'lwr', 'upr')
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = population, y = fit, colour = population), size = 6)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
-                  size = 1, alpha = 1) +
+                  size = 1, alpha = 1, width=0.75) +
     ylab("\n") +
     xlab("" )     +
-    coord_cartesian(ylim=c(15, 80)) +
+    coord_cartesian(ylim=c(15, 70)) +
   scale_color_manual(values=pal) +
     labs(title = "Salix pulchra") +
     theme_shrub())
@@ -1379,11 +1378,11 @@ colnames(arc_LDMC.pred) = c('population','fit', 'lwr', 'upr')
                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
     geom_point(aes(x = population, y = fit, colour = population), size = 6)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
-                  size = 1, alpha = 1) +
+                  size = 1, alpha = 1, width=0.75) +
     ylab("\n") +
     xlab("" ) +
     scale_color_manual(values=pal) +
-    coord_cartesian(ylim=c(15, 80)) +
+    coord_cartesian(ylim=c(15, 70)) +
     labs(title = "Salix arctica") +
     theme_shrub())
 
