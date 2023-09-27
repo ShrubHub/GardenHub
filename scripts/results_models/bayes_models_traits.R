@@ -55,12 +55,18 @@ all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population
                                                    "source_south"="S. Source",
                                                    "source_north"="N. Source")) 
 # to run separate models per species filter out species: 
+# also filter extreme outliers 
 arctica_all_traits <- all_CG_source_traits %>% 
-  filter(Species == "Salix arctica")
+  filter(Species == "Salix arctica") %>% 
+  filter(LDMC_g_g < 0.60 | is.na(LDMC_g_g)) %>% 
+  filter(SLA < 24 | is.na(SLA)) 
 pulchra_all_traits <- all_CG_source_traits %>% 
-  filter(Species == "Salix pulchra")
+  filter(Species == "Salix pulchra") %>% 
+  filter(LDMC_g_g != 0.7000000)
 richardsonii_all_traits <- all_CG_source_traits %>% 
-  filter(Species == "Salix richardsonii")
+  filter(Species == "Salix richardsonii") %>% 
+  filter(SLA < 24 | is.na(SLA)) 
+
 # to run separate models per species filter out species for leaf length: 
 arctica_all_growth <- all_CG_source_growth %>% 
   filter(Species == "Salix arctica")
@@ -1342,7 +1348,6 @@ colnames(rich_LDMC.pred) = c('population','fit', 'lwr', 'upr')
                   size = 1, alpha = 1) +
 #    ylab(expression(paste("Leaf dry matter content (%)"))) +
     ylab(expression(atop("Leaf dry matter content", paste("(%)"))))+
-    
     xlab("" ) +
     coord_cartesian(ylim=c(15, 80)) +
     scale_color_manual(values=pal) +
