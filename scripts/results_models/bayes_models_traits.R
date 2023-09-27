@@ -545,19 +545,19 @@ rownames(pul_ldmc_extract_all) <- c("Intercept", "Northern Source", "Southern So
 # S. Garden  |     36.86 | [28.26, 48.09]
 
 # S. arctica ---- 
-arctica_LDMC_log <- brms::brm(log(LDMC_percent) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
+# not log transforming bc that gives divergent transistions 
+arctica_LDMC <- brms::brm(LDMC_percent ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
                               iter = 5000, warmup = 1000, 
-                              control = list(max_treedepth = 15, adapt_delta = 0.99)) #There were 5 divergent transitions after warmup.
-summary(arctica_LDMC_log)
-tab_model(arctica_LDMC_log)
-plot(arctica_LDMC_log)
-pp_check(arctica_LDMC_log, type = "dens_overlay", ndraws = 100) 
-saveRDS(arctica_LDMC_log, file = "output/traits/models/ldmc_arctica_compare.rds")
-arctica_LDMC_log <- readRDS("output/traits/models/ldmc_arctica_compare.rds")
-arc_LDMC.pred <- ggpredict(arctica_LDMC_log, terms = c('population'))
+                              control = list(max_treedepth = 15, adapt_delta = 0.99)) 
+summary(arctica_LDMC)
+plot(arctica_LDMC)
+pp_check(arctica_LDMC, type = "dens_overlay", ndraws = 100) 
+saveRDS(arctica_LDMC, file = "output/traits/models/ldmc_arctica_compare.rds")
+arctica_LDMC <- readRDS("output/traits/models/ldmc_arctica_compare.rds")
+arc_LDMC.pred <- ggpredict(arctica_LDMC, terms = c('population'))
 
 # extract output with function
-arctica_LDMC_results <- model_summ(arctica_LDMC_log)
+arctica_LDMC_results <- model_summ(arctica_LDMC)
 
 arctica_LDMC_results <- arctica_LDMC_results %>% 
   dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
