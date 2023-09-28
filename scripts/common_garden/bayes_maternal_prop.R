@@ -1,6 +1,6 @@
 # BAYESIAN maternal effects / propagation effects ------
 # script by Erica and Madi
-# last update: 28/02/2023
+# last update: 28/09/2023 by madi 
 
 # 1. Loading libraries ----
 library(brms)
@@ -47,8 +47,69 @@ model_summ_simple <- function(x) {
   modelTerms <- as.data.frame(bind_rows(fixed, sigma))  # merge it all together
 }
 
+# data ----
+max_cg_heights <- read.csv("data/common_garden_data_2023/max_heights_cg.csv")
+max_cg_widths <- read.csv("data/common_garden_data_2023/max_widths_cg.csv")
+max_cg_biovol <-  read.csv("data/common_garden_data_2023/max_biovol_cg.csv")
+mother_data <- read.csv("data/source_pops/mother_data.csv")
+
+# format maternal data 
+# rename variables to make clear mother metrics before merge
+mother_data_merge <-  mother_data %>% 
+  dplyr::rename("Mother_Canopy_Height_cm" = "Canopy_Height_cm", 
+                "Mother_Width_cm" = "Width_cm",
+                "Mother_Width_2_cm" = "Width_2_cm",
+                "Mother_Mother_LS" = "Mother_LS",
+                "Mother_Length_1_mm" = "Length_1_mm",
+                "Mother_Length_2_mm" = "Length_2_mm",
+                "Mother_Length_3_mm" = "Length_3_mm",
+                "Mother_Stem_Elongation_1_mm" = "Stem_Elongation_1_mm",
+                "Mother_Stem_Elongation_2_mm" = "Stem_Elongation_2_mm",
+                "Mother_Stem_Elongation_3_mm" = "Stem_Elongation_3_mm",
+                "Mother_mean_stem_elong" = "mean_stem_elong",
+                "Mother_mean_leaf_length" = "mean_leaf_length",
+                "Mother_mean_width" = "mean_width", 
+                "Mother_biovolume" = "biovolume") %>% 
+  # dplyr::select(-Match, -...1, -...2) %>%   # these columns are useless and will only cause anger and pain
+  dplyr::select(-SampleID, - Site) %>%
+  dplyr::mutate(Site = case_when(SampleSite %in% c("Kluane", "Kluane Plateau", "Pika Camp", "Printers Pass") ~ 'Kluane', 
+                                 SampleSite %in% c("Qikiqtaruk","QHI") ~ 'Qikiqtaruk'))%>%
+  dplyr::select(-SampleSite) # also drop this because it's weird inconsistent and will cause merging issues 
+
+mother_data_merge <- mother_data_merge %>% 
+  mutate(Species = ifelse(grepl("SA", mother_data_merge $SampleID_standard), "Salix arctica",
+                          ifelse(grepl("SR", mother_data_merge $SampleID_standard), "Salix richardsonii", 
+                                 ifelse(grepl("SP", mother_data_merge $SampleID_standard), "Salix pulchra", NA))))
+
+mother_data_merge$Species <- as.factor(mother_data_merge$Species)
+
+# need to merge mother data with max values from 2023
+max_cg_heights_merge <- max_cg_heights %>% 
+  dplyr::select(c(Species, max_canopy_height_cm, population, SampleID_standard)) 
+
+max_cg_biovol_merge <- max_cg_biovol %>% 
+  dplyr::select((c(Species, max_biovol, population, SampleID_standard)))
+
+max_cg_widths_merge <- max_cg_widths %>% 
+  dplyr::select(c(Species, max_mean_width_cm, population, SampleID_standard))
+
+mother_data_merge_1 <- mother_data_merge %>% 
+  dplyr::select(-c(SampleDate, Date_propagated, Match))
+
+mother_cg_height <- full_join(mother_data_merge_1, max_cg_heights_merge, 
+                              by = c("SampleID_standard" = "SampleID_standard", 
+                                     "Species" = "Species"))
+
+mother_cg_widths <- full_join(mother_cg_height, max_cg_widths_merge, 
+                              by = c("SampleID_standard" = "SampleID_standard", 
+                                     "Species" = "Species"))
+
+mother_cg <- full_join(mother_cg_widths, max_cg_biovol_merge, 
+                       by = c("SampleID_standard" = "SampleID_standard", 
+                              "Species" = "Species"))
+
 # 2. Loading data ---- 
-mother_cg <- read_csv("data/source_pops/mother_cg.csv")
+mother_cg <- read.csv("data/source_pops/mother_cg_2023.csv")
 
 # 3. Wrangle ------
 # make species specific dfs
@@ -113,6 +174,15 @@ summary(maternal_rich_height_site) # not significant
 whichplot(maternal_rich_height_site)
 pp_check(maternal_rich_height_site, type = "dens_overlay", nsamples = 100)  # good) 
 mat_rich_height_results <- model_summ_simple(maternal_rich_height_site)
+maternal_rich_height.pred <- ggpredict(maternal_rich_height_site)
+
+cor(mother_cg_rich$max_canopy_height_cm, mother_cg_rich$Mother_Canopy_Height_cm, method = "pearson", use = "complete.obs")
+
+ggscatter(mother_cg_rich, x = "max_canopy_height_cm", y = "Mother_Canopy_Height_cm", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "max canopy height (cm)", ylab = "mother height (cm)")
+
 mat_rich_height_results$Species <- "Salix richardsonii"
 
 #maternal_rich_height_site_year <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm)* Site +(1|SampleYear),
@@ -143,6 +213,11 @@ pp_check(maternal_pul_height, type = "dens_overlay", nsamples = 100)  # good)
 mat_pul_height_results <- model_summ_simple(maternal_pul_height)
 mat_pul_height_results$Species <- "Salix pulchra"
 
+ggscatter(mother_cg_pulchra, x = "max_canopy_height_cm", y = "Mother_Canopy_Height_cm", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "max canopy height (cm)", ylab = "mother height (cm)")
+
 #maternal_pul_height_old <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site,
                               #   data = mother_cg_pulchra, family = gaussian(), chains = 3,
                               ##   iter = 3000, warmup = 1000, 
@@ -162,6 +237,11 @@ plot(maternal_arc_height)
 pp_check(maternal_arc_height, type = "dens_overlay", nsamples = 100)  # good) 
 mat_arc_height_results <- model_summ_simple(maternal_arc_height)
 mat_arc_height_results$Species <- "Salix arctica" 
+
+ggscatter(mother_cg_arctica, x = "max_canopy_height_cm", y = "Mother_Canopy_Height_cm", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "max canopy height (cm)", ylab = "mother height (cm)")
 
 mat_height_results <- rbind(mat_rich_height_results, mat_pul_height_results, mat_arc_height_results)
 
@@ -215,6 +295,11 @@ pp_check(maternal_rich_width, type = "dens_overlay", ndraws = 100)  # good)
 mat_rich_width_results <- model_summ_simple(maternal_rich_width)
 mat_rich_width_results$Species <- "Salix richardsonii"
 
+ggscatter(mother_cg_rich, x = "max_mean_width_cm", y = "Mother_mean_width", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "max canopy width (cm)", ylab = "mother width (cm)")
+
 # Salix pulchra -------
 maternal_pul_width <- brms::brm(log(max_mean_width_cm) ~ log(Mother_mean_width) * Site,
                                  data = mother_cg_pulchra, family = gaussian(), chains = 3,
@@ -226,6 +311,11 @@ pp_check(maternal_pul_width, type = "dens_overlay", nsamples = 100)  # good)
 mat_pul_width_results <- model_summ_simple(maternal_pul_width)
 mat_pul_width_results$Species <- "Salix pulchra"
 
+ggscatter(mother_cg_pulchra, x = "max_mean_width_cm", y = "Mother_mean_width", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "max canopy width (cm)", ylab = "mother width (cm)")
+
 # Salix arctica --------
 maternal_arc_width <- brms::brm(log(max_mean_width_cm) ~ log(Mother_mean_width) * Site,
                                 data = mother_cg_arctica, family = gaussian(), chains = 3,
@@ -236,6 +326,11 @@ plot(maternal_arc_width)
 pp_check(maternal_arc_width, type = "dens_overlay", nsamples = 100)  # meh 
 mat_arc_width_results <- model_summ_simple(maternal_arc_width)
 mat_arc_width_results$Species <- "Salix arctica"
+
+ggscatter(mother_cg_arctica, x = "max_mean_width_cm", y = "Mother_mean_width", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "max canopy width (cm)", ylab = "mother width (cm)")
 
 mat_width_results <- rbind(mat_rich_width_results,mat_pul_width_results,mat_arc_width_results)
 
