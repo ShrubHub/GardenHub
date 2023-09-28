@@ -672,6 +672,17 @@ save_kable(kable_ldmc, file = "output/traits/kable_ldmc.pdf",
 
 # LA ----
 # S. richardsonii ----
+# running models with only LA from Madi's 2021, 2022, 2023 measurements because 2015 and 2017 are sketchy 
+richardsonii_mad_traits <- richardsonii_all_traits %>% 
+  filter(year %in% c(2021, 2022, 2023))
+hist(richardsonii_mad_traits$LA_cm2) # mild right skew
+
+rich_LA_mad <- brms::brm((LA_cm2) ~ population + (1|year), data = richardsonii_mad_traits, family = gaussian(), chains = 3,
+                     iter = 3000, warmup = 1000, 
+                     control = list(max_treedepth = 15, adapt_delta = 0.99))
+rich_LA.mad.pred <- ggpredict(rich_LA_mad, terms = c('population'))
+summary(rich_LA_mad)
+
 rich_LA <- brms::brm(log(LA_cm2) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
                      iter = 3000, warmup = 1000, 
                      control = list(max_treedepth = 15, adapt_delta = 0.99))
