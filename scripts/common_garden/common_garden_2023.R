@@ -195,7 +195,8 @@ length(unique(all_cg_data$SampleID_standard)) # 836
 max_cg_heights <- all_cg_data %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(Canopy_Height_cm)) %>% 
-  dplyr::rename("max_canopy_height_cm" = "Canopy_Height_cm")
+  dplyr::rename("max_canopy_height_cm" = "Canopy_Height_cm") %>%  
+  select(max_canopy_height_cm, SampleID_standard, Year, Site, population, Species)
 
 max(max_cg_heights$max_canopy_height_cm) # 127
 mean(max_cg_heights$max_canopy_height_cm)#  21.52
@@ -206,7 +207,8 @@ mean(all_cg_data$Canopy_Height_cm, na.rm = TRUE)# 19.68
 max_cg_widths <- all_cg_data %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(mean_width)) %>% 
-  dplyr::rename("max_mean_width_cm" = "mean_width")
+  dplyr::rename("max_mean_width_cm" = "mean_width") %>%  
+  select(max_mean_width_cm, SampleID_standard, Year, Site, population, Species)
 
 max(max_cg_widths$max_mean_width_cm) # 256.25
 mean(max_cg_widths$max_mean_width_cm) # 32.79
@@ -217,19 +219,22 @@ mean(all_cg_data$mean_width, na.rm = TRUE) # 30.14
 max_cg_biovol <- all_cg_data %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(biovolume)) %>% 
-  dplyr::rename("max_biovol" = "biovolume")
+  dplyr::rename("max_biovol" = "biovolume")%>%  
+  select(max_biovol, SampleID_standard, Year, Site, population, Species)
 
 # stem elongation max
 max_cg_elong <- all_cg_data %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(mean_stem_elong)) %>% 
-  dplyr::rename("max_stem_elong" = "mean_stem_elong")
+  dplyr::rename("max_stem_elong" = "mean_stem_elong")%>%  
+  select(max_stem_elong, SampleID_standard, Year, Site, population, Species)
 
 # stem diameter max
 max_cg_diam <- all_cg_data %>% 
   group_by(SampleID_standard) %>%
   slice(which.max(Stem_diameter)) %>% 
-  dplyr::rename("max_stem_diam" = "Stem_diameter")
+  dplyr::rename("max_stem_diam" = "Stem_diameter") %>%  
+  select(max_stem_diam, SampleID_standard, Year, Site, population, Species)
 
 # save 
 write.csv(max_cg_heights, "data/common_garden_data_2023/max_heights_cg.csv")
