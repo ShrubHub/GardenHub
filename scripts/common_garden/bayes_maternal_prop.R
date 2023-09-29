@@ -386,11 +386,22 @@ pp_check(maternal_rich_biovol, type = "dens_overlay", nsamples = 100)  # good)
 mat_rich_biovol_results <- model_summ_simple(maternal_rich_biovol)
 mat_rich_biovol_results$Species <- "Salix richardsonii"
 
+ggscatter(mother_cg_rich, x = "max_biovol", y = "Mother_biovolume", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "max biovol (cm)", ylab = "mother biovol (cm)")
+
 # Salix pulchra -------
 maternal_pul_biovol <- brms::brm(log(max_biovol) ~ log(Mother_biovolume) * Site,
                                   data = mother_cg_pulchra, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+ggscatter(mother_cg_pulchra, x = "max_biovol", y = "Mother_biovolume", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "max biovol (cm)", ylab = "mother biovol (cm)")
+
 summary(maternal_pul_biovol) # not significant
 plot(maternal_pul_biovol)
 pp_check(maternal_pul_biovol, type = "dens_overlay", nsamples = 100)  # good) 
@@ -402,6 +413,11 @@ maternal_arc_biovol <- brms::brm(log(max_biovol) ~ log(Mother_biovolume) * Site,
                                  data = mother_cg_arctica, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000, 
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
+ggscatter(mother_cg_arctica, x = "max_biovol", y = "Mother_biovolume", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "max biovol (cm)", ylab = "mother biovol (cm)")
+
 summary(maternal_arc_biovol) # not significant
 plot(maternal_arc_biovol)
 pp_check(maternal_arc_biovol, type = "dens_overlay", nsamples = 100)  # decent? 
@@ -454,6 +470,12 @@ prop_rich <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_rich) # not significant
+
+ggscatter(mother_cg_rich, x = "max_canopy_height_cm", y = "Cutting_length", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "max height (cm)", ylab = "cutting length (cm)")
+
 plot(prop_rich)
 pp_check(prop_rich, type = "dens_overlay", ndraws = 100)  # good 
 prop_rich_results <- model_summ_simple(prop_rich)
@@ -464,6 +486,12 @@ prop_pul <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
                        data = mother_cg_pulchra, family = gaussian(), chains = 3,
                        iter = 3000, warmup = 1000, 
                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+ggscatter(mother_cg_pulchra, x = "max_canopy_height_cm", y = "Cutting_length", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "max height (cm)", ylab = "cutting length (cm)")
+
 summary(prop_pul) # not significant
 plot(prop_pul)
 pp_check(prop_pul, type = "dens_overlay", ndraws = 100)  # good 
@@ -476,6 +504,12 @@ prop_arc <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
                       iter = 3000, warmup = 1000, 
                       control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_arc) # not significant
+
+ggscatter(mother_cg_arctica, x = "max_canopy_height_cm", y = "Cutting_length", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "max height (cm)", ylab = "cutting length (cm)")
+
 plot(prop_arc)
 pp_check(prop_arc, type = "dens_overlay", ndraws = 100)  # okay? kind of wonky 
 prop_arc_results <- model_summ_simple(prop_arc)
@@ -525,6 +559,12 @@ prop_biovol_rich <- brms::brm(log(max_biovol) ~ log(Cutting_length) * Site,
                        iter = 3000, warmup = 1000, 
                        control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_biovol_rich) # not significant
+
+ggscatter(mother_cg_rich, x = "Cutting_length", y = "max_biovol", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "cutting length (cm)", ylab = "max biovol (cm)")
+
 plot(prop_biovol_rich)
 pp_check(prop_biovol_rich, type = "dens_overlay", ndraws = 100)  # kind of bimodal? 
 
@@ -534,6 +574,12 @@ prop_biovol_pul <- brms::brm(log(max_biovol) ~ log(Cutting_length) * Site,
                               iter = 3000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_biovol_pul) # not significant
+
+ggscatter(mother_cg_pulchra, x = "Cutting_length", y = "max_biovol", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "cutting length (cm)", ylab = "max biovol (cm)")
+
 plot(prop_biovol_pul)
 pp_check(prop_biovol_pul, type = "dens_overlay", ndraws = 100)  # good
 
@@ -546,6 +592,57 @@ summary(prop_biovol_arc) # not significant
 plot(prop_biovol_arc)
 pp_check(prop_biovol_arc, type = "dens_overlay", ndraws = 100)  # good) 
 
+ggscatter(mother_cg_arctica, x = "Cutting_length", y = "max_biovol", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "cutting length (cm)", ylab = "max biovol (cm)")
+
+# Width vs Cutting length ------
+# Salix richardsonii ------
+prop_width_rich <- brms::brm(log(max_mean_width_cm) ~ log(Cutting_length) * Site,
+                              data = mother_cg_rich, family = gaussian(), chains = 3,
+                              iter = 3000, warmup = 1000, 
+                              control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(prop_width_rich) # not significant
+
+ggscatter(mother_cg_rich, x = "Cutting_length", y = "max_mean_width_cm", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "cutting length (cm)", ylab = "max width (cm)")
+
+plot(prop_width_rich)
+pp_check(prop_width_rich, type = "dens_overlay", ndraws = 100)  # kind of bimodal-y 
+
+# Salix pulchra  ------
+prop_width_pul <- brms::brm(log(max_mean_width_cm) ~ log(Cutting_length) * Site,
+                             data = mother_cg_pulchra, family = gaussian(), chains = 3,
+                             iter = 3000, warmup = 1000, 
+                             control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(prop_width_pul) # not significant
+
+ggscatter(mother_cg_pulchra, x = "Cutting_length", y = "max_mean_width_cm", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "cutting length (cm)", ylab = "max width (cm)")
+
+plot(prop_width_pul)
+pp_check(prop_width_pul, type = "dens_overlay", ndraws = 100)  # good 
+
+# Salix arctica  ------
+prop_width_arc <- brms::brm(log(max_mean_width_cm) ~ log(Cutting_length) * Site,
+                            data = mother_cg_arctica, family = gaussian(), chains = 3,
+                            iter = 3000, warmup = 1000, 
+                            control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(prop_width_arc) # not significant
+
+ggscatter(mother_cg_arctica, x = "Cutting_length", y = "max_mean_width_cm", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "cutting length (cm)", ylab = "max width (cm)")
+
+plot(prop_width_arc)
+pp_check(prop_width_arc, type = "dens_overlay", ndraws = 100)  # meh 
+
 # Cutting length vs mother canopy height  ------
 
 # Salix richardsonii ------
@@ -554,8 +651,20 @@ prop_cutting_rich <- brms::brm(log(Cutting_length) ~ log(Mother_Canopy_Height_cm
                               iter = 3000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_cutting_rich) # YES. Taller mothers, longer cuttings 
+
+ggscatter(mother_cg_rich, x = "Cutting_length", y = "Mother_Canopy_Height_cm", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "cutting length (cm)", ylab = "mother height (cm)")
+
 plot(prop_cutting_rich)
 pp_check(prop_cutting_rich, type = "dens_overlay", nsamples = 100)  # good) 
+
+# with width because that's a better metric for S. arctica 
+ggscatter(mother_cg_rich, x = "Cutting_length", y = "Mother_mean_width", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "cutting length (cm)", ylab = "mother width (cm)")
 
 # Salix pulchra -------
 prop_cutting_pul <- brms::brm(log(Cutting_length) ~ log(Mother_Canopy_Height_cm) * Site,
@@ -563,17 +672,40 @@ prop_cutting_pul <- brms::brm(log(Cutting_length) ~ log(Mother_Canopy_Height_cm)
                                iter = 3000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(prop_cutting_pul) # no
+
+ggscatter(mother_cg_pulchra, x = "Cutting_length", y = "Mother_Canopy_Height_cm", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "cutting length (cm)", ylab = "mother height (cm)")
+
 plot(prop_cutting_pul)
 pp_check(prop_cutting_pul, type = "dens_overlay", nsamples = 100)  # good) 
+
+# with width too
+ggscatter(mother_cg_pulchra, x = "Cutting_length", y = "Mother_mean_width", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "cutting length (cm)", ylab = "mother width (cm)")
 
 # Salix arctica --------
 prop_cutting_arc <- brms::brm(log(Cutting_length) ~ log(Mother_Canopy_Height_cm) * Site,
                               data = mother_cg_arctica, family = gaussian(), chains = 3,
                               iter = 3000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(prop_cutting_arc) #no 
+summary(prop_cutting_arc) # longer cuttings from taller mothers 
+
+ggscatter(mother_cg_arctica, x = "Cutting_length", y = "Mother_Canopy_Height_cm", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "cutting length (cm)", ylab = "mother height (cm)")
+
 plot(prop_cutting_arc)
 pp_check(prop_cutting_arc, type = "dens_overlay", nsamples = 100)  # good)
+# with width because that's a better metric for S. arctica 
+ggscatter(mother_cg_arctica, x = "Cutting_length", y = "Mother_mean_width", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "cutting length (cm)", ylab = "mother width (cm)")
 
 # 5. DATA VISUALISATION --------
 
@@ -659,6 +791,18 @@ theme_shrub <- function(){ theme(legend.position = "right",
    scale_colour_viridis_d(begin = 0.1, end = 0.95) +
    scale_fill_viridis_d(begin = 0.1, end = 0.95)+ 
    labs(title = "Salix arctica"))
+
+arc_height.mat.pred <- ggpredict(maternal_arc_height, terms = c('Site'))
+colnames(arc_height.mat.pred) = c('Site','fit', 'lwr', 'upr')
+
+(arc_height.mat_plot <-ggplot(arc_height.mat.pred) +
+    geom_point(data = mother_cg_arctica, aes(x = Mother_Canopy_Height_cm, y = max_canopy_height_cm, colour = Site),
+               alpha = 0.5) + # raw data
+    xlab("" ) +
+    labs(title = "Salix arctica", size = 20, family = "Helvetica Light") +
+    theme_shrub()+
+    theme(axis.title.y = element_text(margin = margin (r = 10))))
+
 
 # arrange maternal height and max height figure 
 (mat_height_plots <- ggarrange(rich_height_mat_plot, pul_height_mat_plot, arc_height_mat_plot, 
