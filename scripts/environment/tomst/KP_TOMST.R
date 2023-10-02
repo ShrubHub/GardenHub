@@ -1,6 +1,6 @@
 ### Processing TOMST logger data from Kluane Plateau (KP) (2022)
 ### Script by Erica Zaja, based on script by Elise Gallois
-### Last updated: 19/12/2022 by Madi 
+### Last updated: 02/10/2023 by Madi 
 
 ### 1. LOADING LIBRARIES -----
 library(readr)
@@ -9,9 +9,10 @@ library(esquisse)
 library(lubridate)
 library(gridExtra)
 
+
 # Loading dataset
 
-tomst_kp <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_FullTOMST_2022.csv") 
+#tomst_kp <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_FullTOMST_2022.csv") 
 
 ### 2. READING DATA ----
 # Using function created by Elise Gallois to read the TOMST raw data 
@@ -52,7 +53,8 @@ read_tms4 <- function(file) {
 
 # Read-in data files
 # TOMST data (12 loggers in total) from Kluane plateau collected on August 15th 2022
-tomst <- "data/tomst/Kluane_Plateau_TOMST_15August2022" 
+
+tomst <- "data/tomst/KLU_TOMST_backup_2023/KP_data_files_aug2023" 
 files <- list.files(path = tomst, pattern = "^data_*", full.names = T)
 kp_data <- map_dfr(files, read_tms4)
 
@@ -68,7 +70,7 @@ tomst_kp <-  kp_data %>%
                names_to = "Variable",
                values_to = "Value") 
 # Saving as csv
-write.csv(tomst_kp, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_FullTOMST_2022.csv", row.names = FALSE)
+saveRDS(tomst_kp, "data/tomst/2023/tomst_KP_2023_data.rds") # save as Rdata bc too big for a csv 
 
 # Reading in file 
 # NOTE THIS FILE ONLY HAS 2022 DATA, MUST LOAD ABOVE, FILE TOO LARGE TO COMMIT 
