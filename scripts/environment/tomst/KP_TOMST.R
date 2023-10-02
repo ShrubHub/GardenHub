@@ -61,21 +61,27 @@ kp_data <- map_dfr(files, read_tms4)
 # change date (GMT to newty time) - 6 hours time difference 
 kp_data$Datetime_UTC <- kp_data$Datetime_UTC - hours(6)
 
-
-### 3. DATA MANIPULATION ----
-
-tomst_kp <-  kp_data %>% 
-#filter(Datetime_UTC > lubridate::ymd_hm("2022-06-01 15:00")) %>% # keeping summer 2022 values only 
+tomst_kp_data <-  kp_data %>% 
+  filter(Datetime_UTC > lubridate::ymd_hm("2021-07-29 15:00")) %>% 
   pivot_longer(cols = 5:8,
                names_to = "Variable",
-               values_to = "Value") 
+               values_to = "Value")
+
+# make doy, month and year columns 
+tomst_kp_data <- tomst_kp_data %>% 
+  mutate(Date = lubridate::date(Datetime_UTC))
+tomst_kp_data$doy <- yday(tomst_kp_data$Date) # make DOY column
+tomst_kp_data$year <- format(as.Date(tomst_kp_data$Date, format="%Y-%m-%d"),"%Y") # make year column
+tomst_kp_data$month <- format(as.Date(tomst_kp_data$Date, format="%Y-%m-%d"),"%m") # make month column
+
 # Saving as csv
-saveRDS(tomst_kp, "data/tomst/2023/tomst_KP_2023_data.rds") # save as Rdata bc too big for a csv 
+saveRDS(tomst_kp_data, "data/tomst/2023/tomst_KP_2023_data.rds") # save as Rdata bc too big for a csv 
 
 # Reading in file 
-# NOTE THIS FILE ONLY HAS 2022 DATA, MUST LOAD ABOVE, FILE TOO LARGE TO COMMIT 
-# tomst_kp <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_FullTOMST_2022.csv")
-  
+load("data/tomst/2023/tomst_KP_2023_data.rds")
+
+
+
 ### 4. DATA VISUALISATION ----
 
 (kp_tomst_summary <- ggplot(tomst_kp, aes(x = Datetime_UTC, y = Value)) +
