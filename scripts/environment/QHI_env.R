@@ -539,12 +539,13 @@ monthly_QHI_colhead_mean <- colhead_hobo_all  %>%
 
 # SUMMARY MEANS with TOMST -----
 
-
-
 # mean temp colhobo 2022 8.018875 +/- 7.130952 
 # mean air temp hobo col head 2016-17: 10.7161888 +/- 4.995366
 # mean air temp hobo pheno ridge 2016-17: 11.532801 +/- 5.270756
-# mean air temp TOMST 2022 5.01368 +/- 2.42599
+
+# mean air temp TOMST 2022 5.230957 sd 2.42599
+# mean air temp tomst 2023 10.86351 sd = 3.317263
+
 # mean of QHI for 2016-17: 
 july_qhi_16_17 <- c(10.7161888, 11.532801)
 mean(july_qhi_16_17) 
@@ -553,9 +554,10 @@ july_qhi_16_17_sd <- c(4.995366, 5.270756)
 mean(july_qhi_16_17_sd) # 5.133061 mean sd 
 
 #use tomst and hobo 2017 bc overlap from 2022 of tomst and hobo 
-air_temp_july <- c(5.01368, 13.19234, 11.12449)
-mean(air_temp_july) # 9.776837
-sd(air_temp_july) #4.252616
+
+air_temp_july <- c(5.01368, 13.19234, 11.12449, 10.86351)
+mean(air_temp_july) # 10.04851
+sd(air_temp_july) #3.5145
 
 # mean standard deviation 
 air_sd_july <- c(2.42599, 5.133061, 7.130952)
@@ -568,15 +570,15 @@ mean(air_sd_july)
 # mean of QHI july soil temp from Haydn summary: 7.45063 sd: 4.195172
 
 #use tomst and hobo 2017 bc overlap from 2022 of tomst and hobo 
-soil_temp_july <- c(3.6884819, 3.323774, 7.45063)
+soil_temp_july <- c(3.6884819, 3.323774, 7.45063, 8.517848)
 mean(soil_temp_july)
-# 4.820962
-sd(soil_temp_july)
+# 5.745183
+sd(soil_temp_july) #2.626116
 
 # mean standard deviation 
-soil_temp_sd_july <- c(1.0665079, 0.7855326, 4.195172)
+soil_temp_sd_july <- c(1.0665079, 0.7855326, 4.195172, 3.230547)
 mean(soil_temp_sd_july)
-# 2.015738
+# 2.31944
 
 
             

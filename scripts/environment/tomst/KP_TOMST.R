@@ -81,10 +81,9 @@ saveRDS(tomst_kp_data, "data/tomst/2023/tomst_KP_2023_data.rds") # save as Rdata
 load("data/tomst/2023/tomst_KP_2023_data.rds")
 
 
-
 ### 4. DATA VISUALISATION ----
 
-(kp_tomst_summary <- ggplot(tomst_kp, aes(x = Datetime_UTC, y = Value)) +
+(kp_tomst_summary <- ggplot(tomst_kp_data, aes(x = Datetime_UTC, y = Value)) +
   geom_line(aes(color=SerialID)) + 
   facet_wrap(~ Variable, scales = "free_y") +
   theme_classic() +
@@ -103,15 +102,9 @@ load("data/tomst/2023/tomst_KP_2023_data.rds")
 
 # a. Surface temperature (T2: Surface sensor) ----
 
-# get date column
-kp_data <- tomst_kp %>% 
-  mutate(Date = lubridate::date(Datetime_UTC)) %>% 
-  filter(Date >= '2021-07-29') # only keep dates after sensors were deployed
-
 # Daily mean surface temperature
-KP_mean_daily_temp <- kp_data  %>%
+KP_mean_daily_temp <- tomst_kp_data  %>%
   filter(Variable %in% "T2: Surface sensor") %>% 
-  filter(Date > lubridate::ymd("2021-07-29")) %>% # when they were deployed
   group_by(Date) %>% 
   summarise(mean_temp = mean(Value)) %>% 
   group_by(Date) %>% 
@@ -119,46 +112,68 @@ KP_mean_daily_temp <- kp_data  %>%
   glimpse()
 
 range(KP_mean_daily_temp$mean_temp)
-# -3.802463 11.828776
+# -4.00148 to 13.20301
 
 # subsetting to start the season on June 18th 2022 (post 2022 snow melt)
 season_surface_temp_2022 <- KP_mean_daily_temp %>%
-  subset(Date >= "2022-06-18" & Date <= "2022-08-15")
+  subset(Date >= "2022-06-18" & Date <= "2022-08-31")
 
 mean(season_surface_temp_2022$mean_temp)
-# 7.188471
+# 6.963005
+
+season_surface_temp_2023 <- KP_mean_daily_temp %>%
+  subset(Date >= "2023-06-18" & Date <= "2023-08-22")
+
+mean(season_surface_temp_2023$mean_temp)
+# 8.823751
 
 # subsetting to growing seasons 2021 and 2022 
 season_surface_temp <- KP_mean_daily_temp %>%
   subset(Date >= "2021-07-28" & Date <= "2021-08-31" | # 2021 growing season
-         Date >= "2022-06-18" & Date <= "2022-08-15") # 2022 growing season
+         Date >= "2022-06-18" & Date <= "2022-08-31" | # 2022 growing season
+        Date >= "2023-06-18" & Date <= "2023-08-22"  ) # 2023 growing season
 
 mean(season_surface_temp$mean_temp)
-# 6.695886
+# 7.477066 
 
 # Save as csv
-write.csv(KP_mean_daily_temp, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_temp.csv", row.names = FALSE)
-KP_mean_daily_temp <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_temp.csv")
+write.csv(KP_mean_daily_temp, file = "data/tomst/2023/KP_mean_daily_temp_2023.csv", row.names = FALSE)
+KP_mean_daily_temp <- read_csv("data/tomst/2023/KP_mean_daily_temp_2023.csv")
 
 # Monthly means
 # filter out june 2022, only 2022 because tomst wasnt in place in June 2021
-june_surface_temp_2022 <- KP_mean_daily_temp %>%
-  subset(Date >= "2022-06-18" & Date <= "2022-06-30")
+KP_mean_daily_temp$month <- format(as.Date(KP_mean_daily_temp$Date, format="%Y-%m-%d"),"%m") # make month column
 
-mean(june_surface_temp_2022$mean_temp) # 6.274342
+june_surface_temp_2023 <- KP_mean_daily_temp %>%
+  subset(month == "06")
 
-# filter out july 2022
-july_surface_temp_2022 <- KP_mean_daily_temp %>%
-  subset(Date >= "2022-07-01" & Date <= "2022-07-31")
+mean(june_surface_temp_2023$mean_temp) # 4.063052
 
-mean(july_surface_temp_2022$mean_temp) # 7.805064
-sd(july_surface_temp_2022$mean_temp) #  2.179662
+# filter out july 2021, 2022, 2023
+
+july_surface_temp <- KP_mean_daily_temp %>%
+  subset(month == "07")
+
+mean(july_surface_temp_2023$mean_temp) # 8.885591
+sd(july_surface_temp_2023$mean_temp) # 2.276723
 
 july_surface_temp_2021 <- KP_mean_daily_temp %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31")
 
-mean(july_surface_temp_2021$mean_temp) # 8.504422
-sd(july_surface_temp_2021$mean_temp) # 0.7201118
+mean(july_surface_temp_2021$mean_temp) # 9.838716
+sd(july_surface_temp_2021$mean_temp) # 2.444737
+
+july_surface_temp_2022 <- KP_mean_daily_temp %>%
+  subset(Date >= "2022-07-01" & Date <= "2022-07-31")
+
+mean(july_surface_temp_2022$mean_temp) # 7.776408
+sd(july_surface_temp_2022$mean_temp) # 2.175941
+
+july_surface_temp_2023 <- KP_mean_daily_temp %>%
+  subset(Date >= "2023-07-01" & Date <= "2023-07-31")
+
+mean(july_surface_temp_2023$mean_temp) # 9.902535
+sd(july_surface_temp_2023$mean_temp) # 1.869253
 
 july_surface_temp <- KP_mean_daily_temp %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31" | # sensor deployed midway through month
@@ -168,15 +183,15 @@ mean(july_surface_temp$mean_temp) # 7.847449
 
 # filter out august 2022
 aug_surface_temp_2022 <- KP_mean_daily_temp %>%
-  subset(Date >= "2022-08-01" & Date <= "2022-08-15")
+  subset(Date >= "2022-08-01" & Date <= "2022-08-31")
 
-mean(aug_surface_temp_2022$mean_temp) # 6.706426
-# august 2021 and 2022
+mean(aug_surface_temp_2022$mean_temp) # 6.398539
+
+# august 2021, 2022, 2023
 aug_surface_temp <- KP_mean_daily_temp %>%
-  subset(Date >= "2021-08-01" & Date <= "2021-08-31" |
-    Date >= "2022-08-01" & Date <= "2022-08-15")
+  subset(month == "08")
 
-mean(aug_surface_temp$mean_temp) # 5.988896
+mean(aug_surface_temp$mean_temp) # 6.513912
 
 # Plot daily mean temp over full year
 (kp_mean_daily_temp <- ggplot(KP_mean_daily_temp, aes(x = Date, y = mean_temp)) +
@@ -223,7 +238,7 @@ mean(aug_surface_temp$mean_temp) # 5.988896
 # b. Above-surface temperature (T3: Top sensor) ----
 
 # Daily mean top sensor temperature (10cm above surface)
-KP_mean_daily_top_sensor <- kp_data  %>%
+KP_mean_daily_top_sensor <- tomst_kp_data  %>%
   filter(Variable %in% "T3: Top sensor") %>% 
   filter(Date > lubridate::ymd("2021-07-29"))   %>% 
   group_by(Date) %>% 
@@ -232,65 +247,80 @@ KP_mean_daily_top_sensor <- kp_data  %>%
   top_n(-5, mean_temp) %>%  # see top 5 warmest days
   glimpse()
 
+KP_mean_daily_top_sensor$month <- format(as.Date(KP_mean_daily_top_sensor$Date, format="%Y-%m-%d"),"%m") # make month column
+
 range(KP_mean_daily_top_sensor$mean_temp)
 # for all TOMST
-# -7.625651 16.4200304
+# -8.17081 17.87311
 
-# subsetting to start the season on June 18th (post snow melt)
+# subsetting to start the season on June 18th (post snow melt) to end of August 
 season_topsensor_temp_2022 <- KP_mean_daily_top_sensor %>%
-  subset(Date >= "2022-06-18" & Date <= "2022-08-15")
+  subset(Date >= "2022-06-18" & Date <= "2022-08-31")
 range(season_topsensor_temp_2022$mean_temp) # for summer 2022: 
-# 3.703179 16.420030
+# 3.703179 16.419152
 mean(season_topsensor_temp_2022$mean_temp)
-# 8.943557
+# 8.51564
 
 # 2021 and 2021 data 
-season_topsensor_temp <- KP_mean_daily_top_sensor %>%
+season_topsensor_temp <- KP_mean_daily_top_sensor %>% 
   subset(Date >= "2021-07-29" & Date <= "2021-08-31" | # 2021 growing season
            Date >= "2022-06-18" & Date <= "2022-08-15") # 2022 growing season
 mean(season_topsensor_temp$mean_temp)
 # 8.203
 
 # Save as csv
-write.csv(KP_mean_daily_top_sensor, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_top_sensor.csv", row.names = FALSE)
-KP_mean_daily_top_sensor <- read_csv("data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_top_sensor.csv")
+write.csv(KP_mean_daily_top_sensor, file = "data/tomst/2023/KP_mean_daily_top_sensor.csv", row.names = FALSE)
+KP_mean_daily_top_sensor <- read.csv("data/tomst/2023/KP_mean_daily_top_sensor.csv")
 
 # Monthly means
 # filter out june 2022
 june_topsensor_temp_2022 <- KP_mean_daily_top_sensor %>%
-  subset(Date >= "2022-06-18" & Date <= "2022-06-30")
+  subset(Date >= "2022-06-18" & Date <= "2022-06-31")
 
-mean(june_topsensor_temp_2022$mean_temp) # 9.330219
+mean(june_topsensor_temp_2022$mean_temp) # 9.411094
+
+# filter out july 2021
+july_topsensor_temp_2021 <- KP_mean_daily_top_sensor %>%
+  subset(Date >= "2021-07-29" & Date <= "2021-07-31")
+
+mean(july_topsensor_temp_2021$mean_temp) # 11.15368
+sd(july_topsensor_temp_2021$mean_temp) # 1.475441
 
 # filter out july 2022
 july_topsensor_temp_2022 <- KP_mean_daily_top_sensor %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
-mean(july_topsensor_temp_2022$mean_temp) # 9.465119
-sd(july_topsensor_temp_2022$mean_temp) # 3.547377
+mean(july_topsensor_temp_2022$mean_temp) # 9.440068
+sd(july_topsensor_temp_2022$mean_temp) # 3.546498
+
+# filter out july 2023
+july_topsensor_temp_2023 <- KP_mean_daily_top_sensor %>%
+  subset(Date >= "2023-07-01" & Date <= "2023-07-31")
+
+mean(july_topsensor_temp_2023$mean_temp) # 11.7165
+sd(july_topsensor_temp_2023$mean_temp) # 2.704851
 
 july_topsensor_temp_2021 <- KP_mean_daily_top_sensor %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31")
 
-mean(july_topsensor_temp_2021$mean_temp) # 11.20757
-sd(july_topsensor_temp_2021$mean_temp) # 1.479431
+mean(july_topsensor_temp_2021$mean_temp) # 11.15368
+sd(july_topsensor_temp_2021$mean_temp) # 1.475441
 
 july_topsensor_temp <- KP_mean_daily_top_sensor %>%
-  subset(Date >= "2021-07-29" & Date <= "2021-07-31" |
-    Date >= "2022-07-01" & Date <= "2022-07-31")
+  subset(month == "07")
 
-mean(july_topsensor_temp$mean_temp) # 9.570722
+mean(july_topsensor_temp$mean_temp) # 10.59626
 
 # filter out august 2022
 aug_topsensor_temp_2022 <- KP_mean_daily_top_sensor %>%
   subset(Date >= "2022-08-01" & Date <= "2022-08-15")
 
-mean(aug_topsensor_temp_2022$mean_temp) # 7.530555
-# 2021 and 2022 august 
+mean(aug_topsensor_temp_2022$mean_temp) # 7.56839
+
+# 2021 and 2022 2023 august 
 aug_topsensor_temp <- KP_mean_daily_top_sensor %>%
-  subset(Date >= "2021-08-01" & Date <= "2021-08-31" |
-           Date >= "2022-08-01" & Date <= "2022-08-15")
-mean(aug_topsensor_temp$mean_temp) # 6.815827
+  subset(month == "08")
+mean(aug_topsensor_temp$mean_temp) # 7.317902
 
 # Plot daily mean top sensor temp over 
 # time series
@@ -338,7 +368,7 @@ mean(aug_topsensor_temp$mean_temp) # 6.815827
 # c. Soil temperature (T1: Soil sensor) ----
 
 # Daily mean soil temperature 
-KP_mean_daily_soil_temp <- kp_data  %>%
+KP_mean_daily_soil_temp <- tomst_kp_data  %>%
   filter(Variable %in% "T1: Soil sensor") %>% 
   filter(Date > lubridate::ymd("2021-07-29"))   %>% 
   group_by(Date) %>% 
@@ -347,68 +377,75 @@ KP_mean_daily_soil_temp <- kp_data  %>%
   top_n(-5, mean_temp) %>%  # see top 5 warmest days
   glimpse()
 
+KP_mean_daily_soil_temp$month <- format(as.Date(KP_mean_daily_soil_temp$Date, format="%Y-%m-%d"),"%m") # make month column
+
 range(KP_mean_daily_soil_temp$mean_temp)
 # for all dates 
-# -2.632107 6.825955
-
+# -3.105054  8.271958
 
 # subsetting to start the season on June 18th (post snow melt)
 season_soil_temp_2022 <- KP_mean_daily_soil_temp %>%
-  subset(Date >= "2022-06-18" & Date <= "2022-08-15")
+  subset(Date >= "2022-06-18" & Date <= "2022-08-31")
 # summer 2022:
 # -0.4803571  5.4093424
 # warmest: 13th August, coldest: 1st June 
 mean(season_soil_temp_2022$mean_temp)
-# 3.556209
+# 3.792667
 
-# subsetting growing seasons 2021 and 2022 
+# subsetting growing seasons 2021 and 2022 2023
 season_soil_temp <- KP_mean_daily_soil_temp %>%
   subset(Date >= "2021-07-29" & Date <= "2021-08-31" |
-    Date >= "2022-06-18" & Date <= "2022-08-15")
+    Date >= "2022-06-18" & Date <= "2022-08-31" |
+      Date >= "2023-06-18" & Date <= "2023-08-22")
 mean(season_soil_temp$mean_temp)
-# 3.826141
+# 4.482087
 
 # Save as csv
-write.csv(KP_mean_daily_soil_temp, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_soil_temp.csv", row.names = FALSE)
+write.csv(KP_mean_daily_soil_temp, file = "data/tomst/2023/KP_mean_daily_soil_temp.csv", row.names = FALSE)
 
 # Monthly means
-# filter out june 2022
-june_soil_temp_2022 <- KP_mean_daily_soil_temp %>%
-  subset(Date >= "2022-06-18" & Date <= "2022-06-30")
+# filter out june 
+june_soil_temp <- KP_mean_daily_soil_temp %>%
+  subset(month == "06")
 
-mean(june_soil_temp_2022$mean_temp) # 1.361704
+mean(june_soil_temp$mean_temp) # 0.8666971
 
 # filter out july 2022 
 july_soil_temp_2022 <- KP_mean_daily_soil_temp %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
-mean(july_soil_temp_2022$mean_temp) # 3.925377
-sd(july_soil_temp_2022$mean_temp) # 0.5224132
+mean(july_soil_temp_2022$mean_temp) # 3.980058
+sd(july_soil_temp_2022$mean_temp) # 0.5259824
+
+# filter out july 2023
+july_soil_temp_2023 <- KP_mean_daily_soil_temp %>%
+  subset(Date >= "2023-07-01" & Date <= "2023-07-31")
+
+mean(july_soil_temp_2023$mean_temp) # 6.028433
+sd(july_soil_temp_2023$mean_temp) # 1.698395
    
 july_soil_temp_2021 <- KP_mean_daily_soil_temp %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31")
 
-mean(july_soil_temp_2021$mean_temp) # 4.632053
-sd(july_soil_temp_2021$mean_temp) #0.09782565
+mean(july_soil_temp_2021$mean_temp) # 4.623698
+sd(july_soil_temp_2021$mean_temp) # 0.09449853
 
-# 2021 and 2022 july 
+# 2021 and 2022 2023 july 
 july_soil_temp <- KP_mean_daily_soil_temp %>%
-  subset(Date >= "2021-07-29" & Date <= "2021-07-31" |
-    Date >= "2022-07-01" & Date <= "2022-07-31")
+  subset(month == "07")
 
-mean(july_soil_temp$mean_temp) # 3.968206
+mean(july_soil_temp$mean_temp) # 4.992354
 
 # filter aug
 aug_soil_temp_2022 <- KP_mean_daily_soil_temp %>%
-  subset(Date >= "2022-08-01" & Date <= "2022-08-15")
+  subset(Date >= "2022-08-01" & Date <= "2022-08-31")
 
-mean(aug_soil_temp_2022$mean_temp) #  4.695168
+mean(aug_soil_temp_2022$mean_temp) # 4.588177
 
 # filter 2022 and 2021 aug
 aug_soil_temp <- KP_mean_daily_soil_temp %>%
-  subset(Date >= "2021-08-01" & Date <= "2021-08-31" |
-    Date >= "2022-08-01" & Date <= "2022-08-15")
-mean(aug_soil_temp$mean_temp) #  4.314712
+  subset(month == "08")
+mean(aug_soil_temp$mean_temp) # 4.836923
 
 # Plot daily mean soil temp over full year
 # timeseries
@@ -442,23 +479,25 @@ mean(aug_soil_temp$mean_temp) #  4.314712
 # d. Soil moisture (SoilMoistureCount) ----
 
 # filter the full dataset to start from date of water bath
-KP_moist <- tomst_kp %>% 
+KP_moist <- tomst_kp_data %>% 
   mutate(Date = lubridate::date(Datetime_UTC)) %>%  
   filter(Date >= '2021-07-23') %>% # date of water bath 23rd July 2021
   filter(Variable %in% "SoilMoistureCount")
 
-max(KP_moist$Value) #3698
-min(KP_moist$Value) # 301
-mean(KP_moist$Value) # 1535.597
+KP_moist$month <- format(as.Date(KP_moist$Date, format="%Y-%m-%d"),"%m") # make month column
+
+max(KP_moist$Value) # 3700
+min(KP_moist$Value) # 337
+mean(KP_moist$Value) # 1543.042
 
 # making moisture into a percentage
 # formula: ((input - min) * 100) / (max - min)
 KP_moist_percent <- KP_moist %>%
-  mutate(moisture_percent = (Value - 301)*100/(3698-301))
+  mutate(moisture_percent = (Value - 337)*100/(3700-337))
 
 max(KP_moist_percent$moisture_percent) # 100%
-min(KP_moist_percent$moisture_percent) # 0%
-mean(KP_moist_percent$moisture_percent) # 36.34373 %
+min(KP_moist_percent$moisture_percent) # 0%
+mean(KP_moist_percent$moisture_percent) # 35.8621 %
 
 # Daily mean soil moisture for all year
 KP_mean_daily_soil_moist <- KP_moist_percent  %>%
@@ -470,63 +509,71 @@ KP_mean_daily_soil_moist <- KP_moist_percent  %>%
  glimpse() 
   #filter(Date >= "2021-07-29" & Date <= "2021-08-31" |
           # Date >= "2022-06-18" & Date <= "2022-08-15") 
-  
+
+KP_mean_daily_soil_moist$month <- format(as.Date(KP_mean_daily_soil_moist$Date, format="%Y-%m-%d"),"%m") # make month column
+
 range(KP_mean_daily_soil_moist$mean_moist)
-# 25.60355 65.80822
+# 24.87957 65.93007
 # driest: 20 march 2022, wettest: 30th june 2022
 mean(KP_mean_daily_soil_moist$mean_moist)
-# 36.84612
+# 35.86221
 
 # subsetting growing seasons 2021 and 2022 
 season_soil_moist <- KP_mean_daily_soil_moist %>%
   subset(Date >= "2021-07-29" & Date <= "2021-08-31" |
-           Date >= "2022-06-18" & Date <= "2022-08-15")
+           Date >= "2022-06-18" & Date <= "2022-08-31" |
+           Date >= "2023-06-18" & Date <= "2023-08-22" )
 
-mean(season_soil_moist$mean_moist) # 50.54856
+mean(season_soil_moist$mean_moist) # 47.06433
 
 # Monthly means
 # filter june 2022
-june_soil_moist <- KP_mean_daily_soil_moist %>%
+june_soil_moist_2022 <- KP_mean_daily_soil_moist %>%
   subset(Date >= "2022-06-01" & Date <= "2022-06-30")
 
-mean(june_soil_moist$mean_moist) #  51.43146
+mean(june_soil_moist_2022$mean_moist) # 50.8985
+
+# filter july 2023
+july_soil_moist_2023 <- KP_mean_daily_soil_moist %>%
+  subset(Date >= "2023-07-01" & Date <= "2023-07-31")
+
+mean(july_soil_moist_2023$mean_moist) # 42.11462
+sd(july_soil_moist_2023$mean_moist) # 6.501787
 
 # filter july 2022
 july_soil_moist_2022 <- KP_mean_daily_soil_moist %>%
   subset(Date >= "2022-07-01" & Date <= "2022-07-31")
 
-mean(july_soil_moist_2022$mean_moist) # 48.50145
-sd(july_soil_moist_2022$mean_moist) # 4.630409
+mean(july_soil_moist_2022$mean_moist) # 48.42088
+sd(july_soil_moist_2022$mean_moist) # 4.523732
 
 # july 2021 
 july_soil_moist_2021 <- KP_mean_daily_soil_moist %>%
   subset(Date >= "2021-07-29" & Date <= "2021-07-31")
 
-mean(july_soil_moist_2021$mean_moist) #  45.15257
-sd(july_soil_moist_2021$mean_moist) # 0.2783909
+mean(july_soil_moist_2021$mean_moist) #  45.55465
+sd(july_soil_moist_2021$mean_moist) # 0.2655338
 
 # 2021 and 2022 july 
 july_soil_moist <- KP_mean_daily_soil_moist %>%
-  subset(Date >= "2021-07-29" & Date <= "2021-07-31" |
-           Date >= "2022-07-01" & Date <= "2022-07-31")
+  subset(month == "07")
 
-mean(july_soil_moist$mean_moist) # 48.29849
-
+mean(july_soil_moist$mean_moist) # 45.27671
+sd(july_soil_moist$mean_moist)
 # filter august 2022
 aug_soil_moist_2022 <- KP_mean_daily_soil_moist %>%
-  subset(Date >= "2022-08-01" & Date <= "2022-08-15")
+  subset(Date >= "2022-08-01" & Date <= "2022-08-31")
 
-mean(aug_soil_moist_2022$mean_moist) # 47.91319
+mean(aug_soil_moist_2022$mean_moist) # 44.10483
 
 # filter 2022 and 2021 aug
 aug_soil_moist <- KP_mean_daily_soil_moist %>%
-  subset(Date >= "2021-08-01" & Date <= "2021-08-31" |
-           Date >= "2022-08-01" & Date <= "2022-08-15")
+  subset(month == "08")
 
-mean(aug_soil_moist$mean_moist) #  49.41268
+mean(aug_soil_moist$mean_moist) # 45.18861
 
 # Save as csv
-write.csv(KP_mean_daily_soil_moist, file = "data/tomst/Kluane_Plateau_TOMST_15August2022/KP_mean_daily_soil_moist.csv", row.names = FALSE)
+write.csv(KP_mean_daily_soil_moist, file = "data/tomst/2023/KP_mean_daily_soil_moist.csv", row.names = FALSE)
 
 # Plot daily mean soil moisture over full year
 # time series
@@ -571,30 +618,51 @@ facet_env_kp_hist <- grid.arrange(kp_mean_daily_soil_moist_hist, kp_mean_daily_s
 # SUMMARY DATA -----
 # Surface + top sensor -----
 # July mean temperatures (average of top sensor, surface temp) (TOMST):
-# 2021 = mean(11.20757, 8.504422) = 9.855996
-# 2021 sd = mean(1.479431,  0.7201118) = 1.099771
-# 2022 = mean(9.465119, 7.805064) = 8.635091
-# 2022 sd = mean(3.547377,2.179662 )=  2.86352
-# overall mean & sd (OF THE MEAN)
-# overall SD 
-mean_kp_temp <- c(9.855996, 8.635091) # 9.245544
+mean(july_surface_temp_2021$mean_temp) # 9.838716
+sd(july_surface_temp_2021$mean_temp) # 2.444737
+mean(july_topsensor_temp_2021$mean_temp) # 11.15368
+sd(july_topsensor_temp_2021$mean_temp) # 1.475441
+# 2021 = mean(9.838716, 11.15368) = 9.838716
+# 2021 sd = mean(2.444737,  1.475441) = 2.444737
+
+mean(july_surface_temp_2022$mean_temp) # 7.776408
+sd(july_surface_temp_2022$mean_temp) # 2.175941
+mean(july_topsensor_temp_2022$mean_temp) # 9.440068
+sd(july_topsensor_temp_2022$mean_temp) # 3.546498
+# 2022 = mean(7.776408, 9.440068) = 7.776408
+# 2022 sd = mean(2.175941, 3.546498) =  2.175941
+
+mean(july_surface_temp_2023$mean_temp) # 9.902535
+sd(july_surface_temp_2023$mean_temp) # 1.869253
+mean(july_topsensor_temp_2023$mean_temp) # 11.7165
+sd(july_topsensor_temp_2023$mean_temp) # 2.704851
+
+# 2023 mean(9.902535, 11.7165) = 9.902535
+# 2023 mean(1.869253, 2.704851) =  1.869253
+
+# overall mean & sd (OF THE MEAN)
+# overall SD 
+mean_kp_temp <- c(9.838716, 7.776408, 9.902535) # 9.172553
 mean(mean_kp_temp)
-sd(mean_kp_temp) # 0.8633102
+sd(mean_kp_temp) # 1.209518
 
 # Soil temp (2021-22 TOMST + (other years HOBO, see KP_env.R script)-----
-# 2021 = # 4.632053, 2021 sd = 0.09782565
-# 2022 =3.925377, 2022 sd = 0.5224132
+# 2021 = # 4.623698, 2021 sd = 0.09449853
+# 2022 = 3.980058, 2022 sd = 0.5259824
+# 2023 = 6.028433, sd = 1.698395
+
 # 2015 = 4.568919, 2015 sd = 1.385542
 # 2016 = 8.252268, 2016 sd =2.993852
 # 2017 = 4.763441, 2017 sd = 1.545860
 # overall mean: 
-mean_soiltemp_kp <- c(4.632053,3.925377,4.568919,8.252268, 4.763441)
-mean(mean_soiltemp_kp) #  5.228412
-sd(mean_soiltemp_kp) #  1.721074
+mean_soiltemp_kp <- c(4.623698, 3.980058, 6.028433, 4.568919, 8.252268, 4.763441)
+mean(mean_soiltemp_kp) #  5.36947
+sd(mean_soiltemp_kp) #  1.56458
 
 # Soil moisture -----
-# 2021: 45.15257
-# 2022:48.50145
-mean_soilmoist_kp <- c(45.15257, 48.50145)
-mean(mean_soilmoist_kp) # 46.82701
-sd(mean_soilmoist_kp) # 2.368016
+# 2021: 45.55465
+# 2022:48.42088
+# 2023: 42.11462
+mean_soilmoist_kp <- c(45.55465, 48.42088, 42.11462)
+mean(mean_soilmoist_kp) # 45.36338
+sd(mean_soilmoist_kp) # 3.157478
