@@ -49,7 +49,7 @@ read_tms4 <- function(file) {
 
 # Read-in data files
 # TOMST data (3 loggers in total) from Common Garden collected on August 17th 2022
-tomst <- "data/tomst/Common_garden_TOMST_17August2022"
+tomst <- "data/tomst/KLU_TOMST_backup_2023/Common_garden/data_files"
 files <- list.files(path = tomst, pattern = "^data_*", full.names = T)
 cg_data <- map_dfr(files, read_tms4)
 
@@ -66,6 +66,19 @@ tomst_cg <-  cg_data %>%
                values_to = "Value")
 
 str(tomst_cg)
+
+# make doy, month and year columns 
+tomst_cg <- tomst_cg %>% 
+  mutate(Date = lubridate::date(Datetime_UTC))
+tomst_cg$doy <- yday(tomst_cg$Date) # make DOY column
+tomst_cg$year <- format(as.Date(tomst_cg$Date, format="%Y-%m-%d"),"%Y") # make year column
+tomst_cg$month <- format(as.Date(tomst_cg$Date, format="%Y-%m-%d"),"%m") # make month column
+
+# Saving as csv
+saveRDS(tomst_cg, "data/tomst/2023/tomst_CG_2023_data.rds") # save as Rdata bc too big for a csv 
+
+# Reading in file 
+load("data/tomst/2023/tomst_KP_2023_data.rds")
 
 # Saving as csv
 # write.csv(tomst_cg, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_FullTOMST_2022.csv", row.names = FALSE)
