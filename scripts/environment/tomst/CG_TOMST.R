@@ -77,9 +77,6 @@ tomst_cg$month <- format(as.Date(tomst_cg$Date, format="%Y-%m-%d"),"%m") # make 
 # Saving as csv
 saveRDS(tomst_cg, "data/tomst/2023/tomst_CG_2023_data.rds") # save as Rdata bc too big for a csv 
 
-# Reading in file 
-load("data/tomst/2023/tomst_KP_2023_data.rds")
-
 # Saving as csv
 # write.csv(tomst_cg, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_FullTOMST_2022.csv", row.names = FALSE)
 
@@ -107,10 +104,6 @@ load("data/tomst/2023/tomst_KP_2023_data.rds")
 ### 5. EXPLORING VARIABLES ----
 
 # a. Surface temperature (T2: Surface sensor) ----
-
-# get date column
-cg_data <- tomst_cg %>% 
-  mutate(Date = lubridate::date(Datetime_UTC))
 range(cg_data$Date) # "2021-06-24" "2022-08-17"
 str(cg_data)
 
@@ -125,21 +118,26 @@ CG_mean_daily_temp <- cg_data %>%
   glimpse()
 
 range(CG_mean_daily_temp$mean_temp)
-# -14.46593  19.01866
+# -19.10612  20.99501
 # warmest: 1st June, coldest: 12th July
 mean(CG_mean_daily_temp$mean_temp)
-# 3.968781
+# 2.347723
 
 # Saving as csv
-write.csv(CG_mean_daily_temp, file = "data/tomst/Common_Garden_TOMST_17August2022/CG_mean_daily_temp.csv", row.names = FALSE)
-CG_mean_daily_temp <- read_csv("data/tomst/Common_garden_TOMST_17August2022/CG_mean_daily_temp.csv")
+write.csv(CG_mean_daily_temp, file = "data/tomst/2023/CG_mean_daily_temp.csv", row.names = FALSE)
+CG_mean_daily_temp <- read.csv("data/tomst/2023/CG_mean_daily_temp.csv")
 
 # Monthly means
 # filter out june 2022
-june_surface_temp <- CG_mean_daily_temp %>%
+june_surface_temp_2022 <- CG_mean_daily_temp %>%
   subset(Date >= "2022-06-01" & Date <= "2022-06-30")
 
-mean(june_surface_temp$mean_temp) # 13.47703
+mean(june_surface_temp_2022$mean_temp) # 13.47703
+
+june_surface_temp_2023 <- CG_mean_daily_temp %>%
+  subset(Date >= "2023-06-01" & Date <= "2023-06-30")
+
+mean(june_surface_temp_2023$mean_temp) # 13.0406
 
 # filter out july 2022
 july_surface_temp_2022 <- CG_mean_daily_temp %>%
@@ -152,6 +150,12 @@ july_surface_temp_2021 <- CG_mean_daily_temp %>%
   subset(Date >= "2021-07-30" & Date <= "2021-07-31")
 
 mean(july_surface_temp_2021$mean_temp) # 17.97439
+
+july_surface_temp_2023 <- CG_mean_daily_temp %>%
+  subset(Date >= "2023-07-01" & Date <= "2023-07-31")
+
+mean(july_surface_temp_2023$mean_temp) # 15.85066
+sd(july_surface_temp_2023$mean_temp) # 2.490295
 
 # 2021 and 2022 july 
 july_surface_temp <- CG_mean_daily_temp %>%
