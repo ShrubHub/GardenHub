@@ -272,7 +272,7 @@ cg_2023 <- all_data_2023 %>%
           axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
           axis.text.y = element_text(size = 15, colour = "black")))
 
-(plot_canopy_2023 <- ggplot(cg_2023) +
+(plot_canopy_2023 <- ggplot(cg_2023, aes(x = Sample_age, y = Canopy_Height_cm)) +
     geom_line(aes(x = Sample_age, y = Canopy_Height_cm, colour = population, fill = population) +
     geom_point(aes(x = Sample_age, y= Canopy_Height_cm, colour = SampleID_standard), size = 1.5, alpha = 0.5) +
     facet_wrap(~Species, scales = "free_y") +
