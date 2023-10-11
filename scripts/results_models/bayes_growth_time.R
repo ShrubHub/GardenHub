@@ -823,6 +823,86 @@ save_kable(kable_rich_pul_arc,file = "outputs/tables/kable_rich_pul_arc.pdf", # 
            keep_tex = FALSE,
            density = 300)
 
+# WDITH 2023 ####
+# S. richardsonii width ----
+width_ric <- brms::brm(log(mean_width) ~ Sample_age*population+(Sample_age|SampleID_standard),
+                       data = all_CG_growth_ric,  family = gaussian(), chains = 3,
+                       iter = 5000, warmup = 1000, 
+                       control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(width_ric)
+saveRDS(width_ric, file = "output/models/width_ric_2023.rds")
+width_ric <- readRDS("output/models/width_ric_2023.rds")
+
+ggpred_width_ric <- ggpredict(width_ric, terms = c("Sample_age", "population"))
+colnames(ggpred_width_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_height_arc_plot <-ggplot(ggpred_width_ric) +
+    geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = mean_width, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Shrub width (cm)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() + 
+    theme( axis.text.x  = element_text(angle = 0)) + 
+    labs(title = "Salix richardsonii", size = 20, family = "Helvetica Light"))
+
+# S. pulchra width ----
+width_pul <- brms::brm(log(mean_width) ~ Sample_age*population+(Sample_age|SampleID_standard),
+                       data = all_CG_growth_pul,  family = gaussian(), chains = 3,
+                       iter = 5000, warmup = 1000, 
+                       control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(width_pul)
+saveRDS(width_pul, file = "output/models/width_pul_2023.rds")
+width_pul <- readRDS("output/models/width_pul_2023.rds")
+
+ggpred_width_pul <- ggpredict(width_pul, terms = c("Sample_age", "population"))
+colnames(ggpred_width_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_height_arc_plot <-ggplot(ggpred_width_pul) +
+    geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = mean_width, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Shrub width (cm)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() + 
+    theme( axis.text.x  = element_text(angle = 0)) + 
+    labs(title = "Salix pulchra", size = 20, family = "Helvetica Light"))
+
+# # S arctica width ----
+width_arc <- brms::brm(log(mean_width) ~ Sample_age*population+(Sample_age|SampleID_standard),
+                       data = all_CG_growth_arc,  family = gaussian(), chains = 3,
+                       iter = 5000, warmup = 1000, 
+                       control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(width_arc)
+saveRDS(width_arc, file = "output/models/width_arc_2023.rds")
+width_arc <- readRDS("output/models/width_arc_2023.rds")
+
+ggpred_width_arc <- ggpredict(width_arc, terms = c("Sample_age", "population"))
+colnames(ggpred_width_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_height_arc_plot <-ggplot(ggpred_width_arc) +
+    geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = mean_width, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Shrub width (cm)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() + 
+    theme( axis.text.x  = element_text(angle = 0)) + 
+    labs(title = "Salix arctica", size = 20, family = "Helvetica Light"))
+
+
 # DATA VISUALISATION -----
 # color palette for garden only
 pal_garden <- c("#440154FF", "#7AD151FF")
