@@ -776,15 +776,18 @@ tab_model(yellow_cg_mod_2)
 # data 
 all_phenocam_data_salix <- read_csv("data/phenology/phenocam_pics/all_phenocam_data_salix.csv")
 all_growing_season <- read_csv("data/phenology/phenocam_pics/all_growing_season.csv")
+# updating for 2023
+#qhi_2022 <- read_csv("data/phenology/QHI_phenology_plots/qiki_phen_with_before_2022.csv")
+qhi <- read.csv("data/phenology/QHI_phenology_plots/qiki_phen_2023.csv")
 
-qhi <- read_csv("data/phenology/QHI_phenology_plots/qiki_phen_with_before_2022.csv")
+qhi$Spp[qhi$Spp == 'SALARC'] <- 'Salix arctica'
 
 str(qhi)
-unique(qhi$Spp)
+unique(qhi$Spp) # only want SALARC
 unique(all_phenocam_data_salix$population)
 
 qhi_arctica <- qhi %>% 
-  dplyr::filter(Spp == "SALARC") %>% 
+  dplyr::filter(Spp == "Salix arctica") %>% 
   dplyr::filter(Year >= "2014") %>% 
   mutate("population" = "Northern Source") %>% 
   dplyr::rename("Species" = "Spp", 
@@ -793,9 +796,7 @@ qhi_arctica <- qhi %>%
          "First_leaf_yellow_DOY" = "P5", 
          "All_leaves_yellow_DOY" = "P6",
          "PhenocamID" = "Plot.ID") %>% 
-  select(-c(P7_before, P6_before, P5_before, P4_before, P3_before, P2_before, 
-            P1_before, P3, P4, P7
-            ))
+  select(-c(P3, P4, P7))
 
 # merge with phenocam data 
 all_phenocam_update <- full_join(qhi_arctica, all_phenocam_data_salix, 
@@ -809,7 +810,7 @@ all_phenocam_update <- full_join(qhi_arctica, all_phenocam_data_salix,
 unique(all_growing_season$population)
 
 qhi_arctica_2 <- qhi %>% 
-  dplyr::filter(Spp == "SALARC") %>% 
+  dplyr::filter(Spp == "Salix arctica") %>% 
   dplyr::filter(Year >= "2014") %>% 
   mutate("population" = "QHI") %>% 
   dplyr::rename("Species" = "Spp", 
@@ -818,9 +819,7 @@ qhi_arctica_2 <- qhi %>%
          "Salix_first_yellow_DOY" = "P5", 
          "Salix_last_yellow_DOY" = "P6",
          "PhenocamID" = "Plot.ID") %>% 
-  select(-c(P7_before, P6_before, P5_before, P4_before, P3_before, P2_before, 
-            P1_before, P3, P4, P7
-  )) %>% 
+  select(-c(P3, P4, P7)) %>% 
   mutate(growing_season = Salix_first_yellow_DOY - Salix_first_bud_burst_DOY)
 
 str(all_growing_season)
