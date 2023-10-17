@@ -14,8 +14,8 @@ library(ggpubr)
 library(ggeffects)
 
 # Load data ----
-all_phenocam_data_salix <- read_csv("data/phenology/all_phenocam_update.csv")
-all_growing_season <- read_csv("data/phenology/all_growing_season_salix.csv")
+all_phenocam_data_salix <- read.csv("data/phenology/all_phenocam_update.csv")
+all_growing_season <- read.csv("data/phenology/all_growing_season_salix.csv")
 
 # Wrangle data ------
 # ordering levels so source and garden populations side by side

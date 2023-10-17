@@ -1,0 +1,151 @@
+PLOT,Year,Site,Observer,NOTES,Plants_first_visible_through_snow,Snow_Free_Melt_Date,First_snow_free_day,First_snow_return_day _end_of_season,50_snow_coverge_end_of_season,100_snow_coverage_end_of_season,First_leaf_bud_burst,50_Leaves_Green,100_Leaves_Green,First_yellow_leaf,50_Leaves_Yellow,100_Leaves_Yellow,Species,First_Leaf_Bud_Burst,First_Yellowing_of_Leaves,Last_Leaf_Turns_Yellow
+QHI_1,2019,QHI,Elise Gallois,Gaps between 22nd June - 15th July. NOTE: Camera labelled Slump D1 but actually phenocam 1,NA,NA,08/06/2019,NA,NA,NA,NA,NA,04/07/2019,16/07/2019,NA,NA,ARC,NA,25-Jul,NA
+QHI_2,2019,QHI,Elise Gallois,Limited selection (4th-12th August)- no phenophases can be noted,NA,NA,08/06/2019,NA,NA,NA,NA,NA,NA,24/07/2019,NA,NA,ARC,NA,NA,NA
+QHI_3,2019,QHI,Elise Gallois,,NA,NA,08/06/2019,NA,NA,NA,NA,NA,NA,31/07/2019,NA,NA,,,,
+QHI_6,2019,QHI,Elise Gallois,,NA,NA,01/06/2019,NA,NA,NA,NA,NA,02/07/2019,28/07/2019,NA,NA,,,,
+QHI_14 (prev called Phenocam 4),2019,QHI,Elise Gallois,"Limited selection (20th July - 13th August), gaps between 21st July - 9th Aug -  no phenophases can be noted",NA,NA,14/06/2019,NA,NA,NA,14/06/2019,NA,03/07/2019,27/07/2019,NA,NA,RICH,NA,NA,NA
+QHI_1,2018,QHI,Elise Gallois,,03/06/2018,07/06/2018,11/06/2018,NA,NA,NA,18/06/2018,29/06/2018,12/07/2018,NA,NA,NA,ARC,24/06/2018,NA,NA
+QHI_2,2018,QHI,Elise Gallois,"Gap 15th-21st July, ends 9th August",NA,NA,14/06/2018,NA,NA,NA,16/06/2018,28/06/2018,08/07/2018,03/08/2018,NA,NA,ARC,NA,NA,NA
+QHI_3,2018,QHI,Elise Gallois,Ends 8th Aug - lots of senescence phenophases hadn't happened yet,04/06/2018,12/06/2018,14/06/2018,,,,17/06/2018,02/07/2018,19/07/2018,01/08/2018,NA,NA,PUL,25/06/2018,NA,NA
+QHI_14 (prev called Phenocam 4),2018,QHI,Elise Gallois,Very limited selection - 12 Jun to 11 July,NA,02/07/2018,21/06/2018,30/08/2018,07/10/2018,NA,24/06/2018,01/07/2018,NA,NA,24/08/2018,18/09/2018,RICH,26/06/2018,NA,NA
+QHI_5,2018,QHI,Elise Gallois,,NA,NA,14/06/2018,NA,NA,NA,16/06/2018,02/07/2018,12/07/2018,NA,NA,NA,ARC,NA,NA,NA
+QHI_6,2018,QHI,Elise Gallois,Big gap between 5th July and 12th August,02/06/2018,12/06/2018,14/06/2018,02/09/2018,04/10/2018,11/10/2018,15/06/2018,01/07/2018,09/07/2018,NA,02/09/2018,22/09/2018,PUL,24/06/2018,16-Aug,11-Sep
+QHI_1,2017,QHI,Elise Gallois,,NA,27/05/2017,30/05/2017,NA,NA,NA,13/06/2017,21/06/2017,05/07/2017,01/08/2017,20/08/2017,NA,ARC,17/06/2017,30-Jul,04-Sep
+QHI_2,2017,QHI,Elise Gallois,"Gaps from 4th June - 11th June, 16th June - 7th Aug",NA,NA,30/05/2017,NA,NA,NA,07/06/2017,22/06/2017,NA,01/08/2017,NA,NA,ARC,11/06/2017,09-Aug,NA
+QHI_3,2017,QHI,Elise Gallois,Gaps from17th July - 01 August,03/05/2017(pre set up),16/05/2017,19/05/2017,NA,NA,NA,NA,NA,NA,21/07/2017,14/08/2017,11/09/2023,PUL,18/06/2017,09-Aug,03-Sep
+QHI_14 (prev called Phenocam 4),2017,QHI,Elise Gallois,"Limited selection (10th July to 9th August), Gaps from 10th-20th July, 20th July-2nd August",NA,04/06/2017,08/06/2017,NA,NA,NA,11/06/2017,25/06/2017,06/07/2017,03/08/2017,25/08/2017,NA,RICH,NA,05-Aug,NA
+QHI_5,2017,QHI,Elise Gallois,Gaps between 6th-15th June as phenocam knocked down,04/05/2017 (pre set up),15/05/2017,28/05/2017,NA,NA,NA,06/06/2017,23/06/2017,05/07/2017,01/08/2017,24/08/2017,NA,ARC,16/06/2017,09-Aug,NA
+QHI_6,2017,QHI,Elise Gallois,Gaps between 27th June - 25th July,04/05/2017 (pre set up),17/05/2017,19/05/2017,NA,NA,NA,07/06/2017,19/06/2017,05/07/2017,23/07/2017,24/08/2017,NA,PUL,10/06/2017,26-Jul,24-Aug
+QHI_1,2016,QHI,Elise Gallois,Only starts 19th June so many phenophases missed,NA,NA,06/06/2016,NA,NA,NA,NA,21/06/2016,07/07/2016,20/07/2016,23/08/2016,NA,ARC,NA,29-Jul,NA
+QHI_2,2016,QHI,Elise Gallois,Only starts 19th June so many phenophases missed,NA,NA,06/06/2016,NA,NA,NA,NA,NA,NA,29/07/2016,NA,NA,ARC,NA,29-Jul,NA
+QHI_3,2016,QHI,Elise Gallois,"Limited selection (5th July to 12th August), Gaps from 8th July - 28th August",NA,NA,06/06/2016,NA,NA,NA,NA,27/06/2016,10/07/2016,28/07/2016,18/08/2016,NA,PUL,NA,NA,NA
+QHI_14 (prev called Phenocam 4),2016,QHI,Elise Gallois,"Limited selection (14th July - 31st Aug), gap between 18th - 28th jul",NA,25/06/2016,12/06/2016,NA,NA,NA,NA,20/06/2016,05/07/2016,27/07/2016,18/08/2016,NA,RICH,NA,NA,28-Aug
+QHI_5,2016,QHI,Elise Gallois,"Limited selection (23rd July - 26th Aug), gaps 29th July-28th Aug",NA,NA,06/06/2016,NA,NA,NA,NA,21/06/2016,08/07/2016,28/07/2016,19/08/2016,NA,ARC,NA,29-Jul,26-Aug
+QHI_6,2016,QHI,Elise Gallois,"Limited selection (24th-Jul - 1st September), gaps 24th July - 16th August",NA,NA,06/06/2016,NA,NA,NA,NA,NA,09/07/2016,26/07/2016,21/08/2016,NA,PUL,NA,NA,27-Aug
+Latnja_Phenocam 1,2020,Latnjajaure,Geerte de Jong,,26/06/2020,29/06/2020,01/07/2020,NA,NA,NA,,,,,,,,25/06/2020,08-Aug,NA
+TL-01,2021,Toolik Lake,Elise Gallois and Michelle Bastien,Only starts 3 June (fully snow free on this date) Photos labelled as 2020,NA,NA,07/06/2021,17-Aug,17-09-2021,22-09-2021,08/06/2021,14/06/2021,24/06/2021,10/07/2021,16/08/2021,24/08/2021,,,,
+TL-02,2021,Toolik Lake,Elise Gallois and Michelle Bastien,Only starts 3 June (snow free) Photos labelled as 2020,NA,NA,07/06/2021,17/08/2021,18/09/2021,23/09/2021,07/06/2021,13/06/2021,22/06/2021,24/07/2021,10/08/2021,13/09/2021,,,,
+TL-03,2021,Toolik Lake,Elise Gallois and Michelle Bastien,Limited selection 7July - 22 Oct Photos start from WSCT0819. Camera is not stable and by WSCT1850 it is facing the ground. Can't determine 100% snow as don't have full landscape view. Photos labelled as 2020,NA,NA,07/06/2021,16/08/2021,17/09/2021,NA,NA,NA,NA,12/07/2021,19/08/2022,30/08/2021,,,,
+TL-04,2021,Toolik Lake,Elise Gallois and Michelle Bastien,Starts 3 June. Photos labelled as 2020,NA,NA,12/06/2021,16/08/2021,18/09/2021,14/10/2021,08/06/2021,13/06/2021,22/06/2021,11/07/2021,12/08/2021,04/09/2021,,,,
+TL-05,2021,Toolik Lake,Elise Gallois and Michelle Bastien,Starts 3 June,NA,05/06/2021,07/06/2021,16/08/2021,18/09/2021,02/10/2021,07/06/2021,17/06/2021,27/06/2021,04/07/2021,18/08/2021,29/08/2021,,,,
+TL-06,2021,Toolik Lake,Elise Gallois and Michelle Bastien,Starts 9 June,NA,NA,07/06/2021,16/08/2021,18/09/2021,02/10/2021,11/06/2021,NA,NA,NA,NA,12/09/2021,,,,
+TL-07,2021,Toolik Lake,Elise Gallois and Michelle Bastien,Limited selection 9 June - 19 August,NA,NA,16-06-2021,16/08/2021,NA,NA,09/06/2021,15/06/2021,25/06/2021,10/07/2021,13/08/2021,NA,,,,
+TL-08,2021,Toolik Lake,Lisa Pilkinton and Michelle Bastien,First photo 9 June then jumps to 7 July then full photos to 27 Oct,NA,NA,16-06-2021,16-08-2021,17/09/2021,2/10/2021,NA,NA,NA,NA,44443,44443,,,,
+TL-11,2021,Toolik Lake,Lisa Pilkinton and Michelle Bastien,starts 17 June,NA,NA,14/06/2021,16/08/2021,18/09/2021,2/10/2021,NA,NA,44370,44409,44418,44441,,,,
+TL-12,2021,Toolik Lake,Lisa Pilkinton and Michelle Bastien,17 June -21 Oct,NA,NA,14/06/2021,17/08/2021,18/09/2021,2/10/2021,NA,NA,44370,44373,44421,44434,,,,
+TL-13,2021,Toolik Lake,Lisa Pilkinton and Michelle Bastien,17 June  - 21 Oct,NA,NA,14/06/2021,17/08/2021,18/09/2021,2/10/2021,NA,NA,44370,44385,44427,44441,,,,
+TL-14,2021,Toolik Lake,Lisa Pilkinton and Michelle Bastien,17 June - 21 Oct,NA,NA,14/06/2021,16/08/2021,18/09/2021,2/10/2021,NA,27/06/2021,04/07/2021,09/07/2021,13/08/2021,26/08/2021,,,,
+TL-15,2021,Toolik Lake,Lisa Pilkinton and Michelle Bastien,17 June - 19 June ; 8 July - 31 Oct (2-4th Oct no clear image),NA,NA,17/06/2021,17/08/2021,18/09/2021,2/10/2021,NA,NA,NA,44389,44420,44430,,,,
+TL-16,2021,Toolik Lake,Lisa Pilkinton ,17 June - 21st October,NA,NA,17/06/2021,17/08/2021,18/09/2021,2/10/2021,NA,18/06/2021,25/06/2021,04/07/2021,11/08/2021,28/08/2021,,,,
+TL-17,2021,Toolik Lake,Lisa Pilkinton ,17 June-21/10/2021,NA,NA,17/06/2021,16/08/2021,18/09/2021,2/10/2021,NA,17/06/2021,27/06/2021,11/07/2021,15/08/2021,01/09/2021,,,,
+TL-18,2021,Toolik Lake,Lisa Pilkinton ,7/07/2021-21/10/2021,NA,NA,17/06/2021,17/08/2021,18/09/2021,2/10/2021,NA,NA,44390,44392,44423,44430,,,,
+TL-19,2021,Toolik Lake,Lisa Pilkinton ,"17/06/2021,06/08/2021 -29/10/2021",NA,NA,17/06/2021,17/08/2021,18/09/2021,2/10/2021,NA,NA,44384,44399,44418,44439,,,,
+TL-20,2021,Toolik Lake,Lisa Pilkinton ,17/06/2021-20/08/2021,NA,NA,09/06/2021,NA,NA,NA,NA,19/06/2021,27/06/2021,03/08/25021,15/08/2021,NA,,,,
+TL-21,2021,Toolik Lake,Lisa Pilkinton ,10/07/2021-29/10/2021 (Snow snorm from 2-6th Oct. not visible cam footage),NA,NA,09/06/2021,17/08/2021,18/09/2021,2/10/2021,NA,NA,44402,44407,44419,44430,,,,
+TL-22,2021,Toolik Lake,Lisa Pilkinton ,17/06/2021-29/10/2021 (not visible 2/10-5/10),NA,NA,09/06/2021,16/08/2021,18/09/2021,1/10/2021,NA,NA,44378,44427,44442,44449,,,,
+TL-23,2021,Toolik Lake,Lisa Pilkinton ,17/06/2021-29/10/2021,NA,NA,09/06/2021,17/08/2021,17/09/2021,18/09/2021,NA,NA,44374,44389,44417,44438,,,,
+TL-24,2021,Toolik Lake,Lisa Pilkinton ,10/07/202-29/10/2021 (non clear pics between 1-5th /10th),NA,NA,09/06/2021,17/08/2021,17/09/2021,1/10/2021,NA,NA,44389,44389,44434,44449,,,,
+TL-25,2021,Toolik Lake,Lisa Pilkinton ,19/08/2021-21/10/2021,NA,NA,09/06/2021,17/08/2021,18/09/2021,23/09/2021,NA,NA,NA,44404,44425,44434,,,,
+TL-01,2022,Toolik Lake,Elise Gallois,"starts may 25th, ends august 23rd, big jump between 13th and 22nd june",NA,NA,11/06/2022,13/07/2022,NA,NA,01/06/2022,NA,28/06/2022,15/07/2022,12/08/2022,NA,,,,
+TL-02,2022,Toolik Lake,Elise Gallois,"starts may 25th, ends oct 13th",NA,NA,11/06/2022,13/07/2022,09/10/2022,NA,07/06/2022,17/06/2022,05/07/2022,15/07/2022,13/08/2022,18/09/2022,,,,
+TL-03,2022,Toolik Lake,Elise Gallois,"starts may 25th, ends oct 13th, jump from 21st aug to 12th sept",NA,NA,11/06/2022,13/07/2022,09/10/2022,NA,01/06/2022,16/06/2022,04/07/2022,11/07/2022,14/08/2022,17/09/2022,,,,
+TL-04,2022,Toolik Lake,Elise Gallois,"starts may 25th, ends oct 13th",NA,13/06/2022,17/06/2022,13/07/2022,09/10/2022,NA,12/06/2022,18/06/2022,29/06/2022,07/07/2022,11/08/2022,04/09/2022,,,,
+TL-05,2022,Toolik Lake,Elise Gallois,"starts may 25th, ends oct 13th",NA,01/06/2022,11/06/2022,13/07/2022,09/10/2022,NA,03/06/2022,17/06/2022,04/07/2022,05/07/2022,13/08/2022,03/09/2022,,,,
+TL-06,2022,Toolik Lake,Elise Gallois,,,,11/06/2022,,,,,,,,,,,,,
+TL-07,2022,Toolik Lake,Elise Gallois,"starts may 25th, ends oct 13th",,27/05/2022,11/06/2022,12/07/2022,08/10/2022,10/10/2022,04/06/2022,17/06/2022,05/07/2022,08/07/2022,05/08/2022,27/08/2022,,,,
+TL-08,2022,Toolik Lake,Elise Gallois,"starts may 25th, cuts from may 27th to sep 3rd",NA,NA,11/06/2022,NA,09/10/2022,NA,NA,NA,NA,NA,NA,11/09/2022,,,,
+TL-11,2022,Toolik Lake,Elise Gallois,"starts may 27th, ends may 29th",NA,NA,11/06/2022,NA,NA,NA,NA,NA,NA,NA,NA,NA,,,,
+TL-16,2022,Toolik Lake,Elise Gallois,"starts may 25th, cuts from jul 14th to sep 3rd",NA,01/06/2022,11/06/2022,NA,08/10/2022,NA,16/06/2022,20/06/2022,07/07/2022,08/07/2022,NA,04/09/2022,,,,
+TL-17,2022,Toolik Lake,Elise Gallois,"starts may 25th, ends oct 13th",NA,31/05/2022,11/06/2022,NA,09/10/2022,NA,05/06/2022,17/06/2022,08/07/2022,11/07/2022,09/08/2022,17/09/2022,,,,
+CRN_SN,2020,Cairngorms,Elise Gallois,DISCOUNTING EVERGREEN TREES FOR ALL! The main winter snow period starts 10th Feb - So I'm using this as my snow data,NA,07/03/2020,09/03/2020,NA,NA,NA,NA,10/03/2020,11/06/2020,04/09/2020,27/10/2020,NA,,,,
+CRN_SN,2021,Cairngorms,Elise Gallois,"Starts 25th feb, missing data july to november!",NA,07/05/2021,08/05/2021,26/11/2021,29/11/2021,NA,NA,NA,44392,NA,NA,NA,,,,
+CRN_SN,2022,Cairngorms,Elise Gallois,Missing some data between November to December,NA,10/04/2022,12/02/2022,NA,NA,NA,NA,25/04/2022,14/07/2022,08/09/2022,26/10/2022,NA,,,,
+CRN_TL,2020,Cairngorms,Elise Gallois,"Starts 5th feb, big gap between feb and end of july",NA,NA,13/03/2020,20/11/2020,04/12/2020,29/12/2020,NA,NA,NA,44069,44132,NA,,,,
+CRN_TL,2021,Cairngorms,Elise Gallois,,NA,12/03/2021,14/03/2021,26/11/2021,26/11/2021,27/11/2021,NA,22/02/2021,03/07/2021,10/08/2021,01/11/2021,NA,,,,
+CRN_TL,2022,Cairngorms,Elise Gallois,,NA,10/04/2022,11/04/2022,08/12/2022,09/12/2022,11/12/2022,NA,16/03/2022,15/07/2022,05/08/2022,11/10/2022,NA,,,,
+CRN_Snowcam,2020,Cairngorms,Elise Gallois,"all data are listed as DOYs annoyingly lol - I have now changed them to short dates, massive gaps betweek march and august",NA,18/03/2020,22/03/2020,04/12/2020,04/12/2020,05/12/2020,NA,NA,NA,NA,44116,NA,,,,
+CRN_Snowcam,2021,Cairngorms,Elise Gallois,massive gap between mid june and mid aug,23/02/2021,17/05/2021,18/05/2021,26/11/2021,26/11/2021,27/11/2021,NA,05/06/2021,NA,25/08/2021,13/10/2021,NA,,,,
+CRN_Snowcam,2022,Cairngorms,Elise Gallois,massive gap between july and november,NA,09/04/2022,10/04/2022,NA,NA,NA,NA,11/05/2022,12/07/2022,NA,NA,15/11/2022,,,,
+CRN_Tikee,2022,Cairngorms,Elise Gallois,starts 1st june,NA,NA,12/04/2022,05/12/2022,09/12/2022,12/12/2022,NA,10/05/2022,19/07/2022,14/09/2022,18/10/2022,01/12/2022,,,,
+KP1,2021,Kluane,Elise Gallois,"photos start 24 June 2021. Early photos (in late June) show Dryas flowers in bottom right corner, but disappear from view by June 27. Unclear if viewshed moved. Gap in photos July 6 to 20? Camera knocked askew sometime between November 17 and December 7",NA,NA,21/06/2021,28/08/2021,NA,29/08/2021,NA,NA,NA,20/07/2021,18/08/2021,14/09/2021,pulchra,NA,20/07/2021,12/09/2021
+KP2,2021,Kluane,Elise Gallois,"Lens very cloud after 7 August 2021, did not take photos at initial set up. Photos start 6 July 2021",NA,NA,21/06/2021,28/08/2021,NA,28/08/2021,NA,NA,NA,19/07/2021,23/08/2021,19/09/2021,pulchra,NA,19/07/2021,11/08/2021
+KP7,2021,Kluane,Elise Gallois,did not take photos at initial set up. Photos start 6 July 2021. ,NA,NA,23/06/2021,28/08/2021,NA,29/08/2021,NA,NA,08/07/2021,18/07/2021,20/08/2021,20/09/2021,richardsonii,NA,21/07/2021,27/08/2021
+KP3,2021,Kluane,Elise Gallois,"photos start 24 June 2021. Camera covered in snow Nov. 17-Dec 7, then from Dec. 21.",NA,NA,21/06/2021,28/08/2021,NA,27/09/2021,NA,NA,07/07/2021,28/07/2021,21/08/2021,11/09/2021,richardsonii,NA,18/07/2021,12/09/2021
+KP5,2021,Kluane,Elise Gallois,Photos start July 28,NA,NA,21/06/2021,28/08/2021,NA,29/08/2021,NA,NA,NA,02/08/2021,21/08/2021,19/09/2021,pulchra,NA,11/08/2021,04/09/2021
+KP9,2021,Kluane,Elise Gallois,"from 10-20 July 2021 camera is facing the sky, did not take photos at initial set up. Photos start 6 July 2021",NA,NA,23/06/2021,28/08/2021,NA,22/09/2021,NA,NA,07/07/2021,02/08/2021,26/08/2021,12/09/2021,richardsonii,NA,12/07/2021,08/09/2021
+KP4,2021,Kluane,Elise Gallois,did not take photos at initial set up. Photos start 6 July 2021,NA,NA,21/06/2021,28/08/2021,NA,28/09/2021,NA,NA,NA,04/08/2021,27/08/2021,09/09/2021,pulchra,NA,13/08/2021,03/09/2021
+KP6,2021,Kluane,Elise Gallois,photos start 24 June 2021,NA,NA,26/06/2021,28/08/2021,NA,03/10/2021,NA,27/06/2021,06/07/2021,10/08/2021,25/08/2021,05/09/2021,richardsonii,NA,03/08/2021,03/09/2021
+KP8,2021,Kluane,Elise Gallois,did not take photos at initial set up. Photos start 6 July 2021,NA,NA,23/06/2021,28/08/2021,NA,21/09/2021,NA,NA,09/07/2021,08/08/2021,24/08/2021,08/09/2021,richardsonii,NA,04/08/2021,03/09/2021
+KP1,2022,Kluane,Elise Gallois,Frame very crooked until June 22. Pictures end August 15th so no info on snow at end of season,02/06/2022,18/06/2022,23/06/2022,26/09/2022,27/09/2022,13/10/2022,22/06/2022,27/06/2022,07/07/2022,13/08/2022,31/08/2022,17/09/2022,pulchra,23/06/2022,17/08/2022,18/09/2022
+KP2,2022,Kluane,Elise Gallois,"Did not record Nov. 13 2021 to June 22 2022, so snowmelt data NA.",NA,NA,23/06/2022,26/09/2022,01/10/2022,NA,NA,23/06/2022,05/07/2022,14/08/2022,05/09/2022,24/09/2022,pulchra,22/06/2022,14/08/2022,17/09/2022
+KP7,2022,Kluane,Elise Gallois,,02/06/2022,15/06/2022,16/06/2022,26/09/2022,09/10/2022,13/10/2022,21/06/2022,26/06/2022,08/07/2022,02/08/2022,27/08/2022,09/09/2022,richardsonii,19/06/2022,12/08/2022,04/09/2022
+KP3,2022,Kluane,Elise Gallois,,05/06/2022,21/06/2022,22/06/2022,26/09/2022,05/10/2022,10/10/2022,24/06/2022,28/06/2022,08/07/2022,30/07/2022,03/09/2022,25/09/2022,richardsonii,23/06/2022,27/07/2022,15/09/2022
+KP5,2022,Kluane,Elise Gallois,,14/06/2022,17/06/2022,18/06/2022,26/09/2022,10/10/2022,13/10/2022,19/06/2022,27/06/2022,09/07/2022,02/08/2022,03/09/2022,22/09/2022,pulchra,26/06/2022,NA,NA
+KP9,2022,Kluane,Elise Gallois,,13/06/2022,18/06/2022,19/06/2022,26/09/2022,26/09/2022,15/10/2022,22/06/2022,27/06/2022,05/07/2022,10/08/2022,01/09/2022,25/09/2022,richardsonii,24/06/2022,16/08/2022,NA
+KP4,2022,Kluane,Elise Gallois,Frame very askew 8-26 June,11/06/2022,19/06/2022,21/06/2022,26/09/2022,02/10/2022,15/10/2022,24/06/2022,28/06/2022,03/07/2022,15/08/2022,31/08/2022,13/09/2022,pulchra,24/06/2022,15/08/2022,11/09/2022
+KP6,2022,Kluane,Elise Gallois,Knocked askew sometime between March 21 and June 7,08/06/2022,26/06/2022,28/06/2022,NA,NA,NA,26/06/2022,01/07/2022,10/07/2022,23/08/2022,01/09/2022,NA,richardsonii,25/06/2022,21/08/2022,NA
+KP8,2022,Kluane,Elise Gallois,,12/06/2022,21/06/2022,22/06/2022,NA,NA,NA,17/06/2022,26/06/2022,07/07/2022,15/08/2022,NA,NA,richardsonii,27/06/2022,14/08/2022,NA
+QHI_1,2022,QHI,Elise Gallois,,NA,NA,12/06/2022,NA,NA,NA,NA,NA,NA,23/07/2022,17/08/2022,NA,Arctica,NA,23/07/2022,21/08/2022
+QHI_2,2022,QHI,Elise Gallois,,NA,NA,12/06/2022,25/09/2022,14/10/2022,NA,NA,NA,NA,26/07/2022,24/08/2022,19/09/2022,Arctica,NA,26/07/2022,24/08/2022
+QHI_3,2022,QHI,Elise Gallois,,NA,NA,12/06/2022, v,12/10/2022,27/10/2022,NA,NA,NA,21/07/2022,18/08/2022,19/09/2022,Pulchra,NA,21/07/2022,27/08/2022
+QHI_4,2022,QHI,Elise Gallois,,NA,NA,28/06/2022,NA,NA,NA,NA,NA,NA,25/07/2022,23/08/2022,15/09/2022,Richardsonii,NA,25/07/2022,29/08/2022
+QHI_5,2022,QHI,Elise Gallois,,NA,NA,26/05/2022,NA,NA,NA,NA,NA,NA,02/08/2022,27/08/0202,NA,Arctica,NA,01/08/2022,01/09/2022
+QHI_6,2022,QHI,Elise Gallois,,NA,NA,26/05/2022,NA,NA,NA,NA,NA,NA,31/07/2022,NA,NA,Pulchra,NA,31/07/2022,NA
+QHI_7,2022,QHI,Elise Gallois,,NA,NA,28/06/2022,NA,NA,NA,NA,NA,NA,28/07/2022,24/08/2022,NA,Richardsonii,NA,28/07/2022,01/09/2022
+QHI_8,2022,QHI,Elise Gallois,,NA,NA,30/06/2022,25/09/2022,09/10/2022,NA,NA,NA,NA,05/08/2022,06/09/2022,24/09/2022,Reticulata,NA,NA,NA
+QHI_9,2022,QHI,Elise Gallois,,NA,NA,12/06/2022,25/09/2022,10/10/2022,27/10/2022,NA,NA,NA,24/07/2022,16/08/2022,25/09/2022,Richardsonii,NA,24/07/2022,01/09/2022
+QHI_10,2022,QHI,Elise Gallois,,NA,NA,26/05/2022,25/09/2022,NA,NA,NA,NA,NA,04/08/2022,25/08/2022,22/09/2022,Arctica,NA,04/08/2022,01/09/2022
+QHI_11,2022,QHI,Elise Gallois,,NA,NA,26/05/2022,NA,NA,NA,NA,NA,NA,26/07/2022,21/08/2022,NA,Richarsonii,NA,26/07/2022,02/09/2022
+QHI_12,2022,QHI,Elise Gallois,,NA,NA,16/06/2022,NA,NA,NA,NA,NA,NA,28/07/2022,24/08/2022,17/09/2022,Pulchra,NA,28/07/2022,02/09/2022
+QHI_13,2022,QHI,Elise Gallois,,NA,NA,16/06/2022,NA,NA,NA,NA,NA,NA,27/07/2022,NA,NA,Arctica,NA,27/07/2022,NA
+QHI_14,2022,QHI,Elise Gallois,,NA,NA,28/06/2022,NA,NA,NA,NA,NA,NA,07/08/2022,NA,NA,Richardsonii,NA,07/08/2022,NA
+QHI_15,2022,QHI,Elise Gallois,,NA,NA,13/06/2022,27/09/2022,09/10/2022,NA,NA,NA,NA,02/08/2022,25/08/2022,13/09/2022,Pulchra,NA,02/08/2022,08/09/2022
+QHI_16,2022,QHI,Elise Gallois,,NA,NA,13/06/2022,25/09/2022,09/10/2022,27/10/2022,NA,NA,NA,30/07/2022,22/08/2022,26/09/2022,Reticulata,NA,NA,NA
+QHI_17,2022,QHI,Elise Gallois,,NA,NA,13/06/2022,NA,NA,NA,NA,NA,NA,01/08/2022,25/08/2022,NA,Reticulata,NA,NA,NA
+QHI_18,2022,QHI,Elise Gallois,,NA,NA,30/06/2022,25/09/2022,03/10/2022,NA,NA,NA,NA,10/08/2022,24/08/2022,22/09/2022,Arctica,NA,04/08/2022,30/08/2022
+QHI_19,2022,QHI,Elise Gallois,,NA,NA,26/06/2022,25/09/2022,09/10/2022,NA,NA,NA,NA,28/07/2022,19/08/2022,20/09/2022,Arctica,NA,28/07/2022,27/08/2022
+QHI_20,2022,QHI,Elise Gallois,,NA,NA,26/06/2022,NA,NA,NA,NA,NA,NA,26/07/2022,22/08/2022,NA,Arctica,NA,26/07/2022,29/08/2022
+NIW_08,2022,Niwot Ridge,Elise Gallois,,NA,6/6/2022,7/6/2022,23/10/2022,24/10/2022,30/10/2022,5/6/2022,17/6/2022,10/7/2022,25/7/2022,3/9/2022,12/10/2022,,,,
+NIW_11,2022,Niwot Ridge,Elise Gallois,,NA,NA,8/6/2022,23/10/2022,23/10/2022,27/10/2022,NA,NA,44748,44769,44800,44852,,,,
+NIW_12,2022,Niwot Ridge,Elise Gallois,,NA,6/6/2022,10/6/2022,23/10/2022,23/10/2022,27/10/2022,8/6/2022,20/6/2022,9/7/2022,24/7/2022,5/9/2022,22/10/2022,,,,
+NIW_13,2022,Niwot Ridge,Elise Gallois,,3/6/2022,6/6/2022,8/6/2022,23/10/2022,24/10/2022,NA,11/6/2022,22/6/2022,14/7/2022,14/8/2022,13/9/2022,15/10/2022,,,,
+BRA_BC,2022,Mt Brew,Elise Gallois,,4/7/2022,25/7/2022,29/7/2022,NA,NA,NA,19/7/2022,5/8/2022,25/8/2022,2/9/2022,17/9/2022,NA,,,,
+TRI_BC,2022,Mt Brew,Elise Gallois,slightly switches viewshed on 31st july ,2/7/2022,25/7/2022,30/7/2022,NA,NA,NA,21/7/2022,28/7/2022,8/8/2022,10/8/2022,16/9/2022,NA,,,,
+QHI_1,2023,QHI,Elise Gallois,,30/5/2023,NA,10/6/2023,NA,NA,NA,21/6/2023,25/6/2023,4/7/2023,27/7/2023,9/8/2023,NA,Arctica,NA,27/07/2023,NA
+QHI_2,2023,QHI,Elise Gallois,,12/5/2023,20/5/2023,10/6/2023,NA,NA,NA,11/6/2023,20/6/2023,3/7/2023,26/7/2023,14/8/2023,NA,Arctica,11/06/2023,28/07/2023,NA
+QHI_3,2023,QHI,Elise Gallois,tipped over for most of july,21/5/2023,31/5/2023,10/6/2023,NA,NA,NA,10/6/2023,25/6/2023,6/7/2023,NA,3/8/2023,NA,Pulchra,17/06/2023,NA,12/08/2023
+QHI_4,2023,QHI,Elise Gallois,tipped over at the start ,NA,NA,09/10/2023,NA,NA,NA,NA,23/6/2023,6/7/2023,26/7/2023,13/8/2023,NA,Richardsonii,NA,26/07/2023,NA
+QHI_5,2023,QHI,Elise Gallois,,NA,NA,10/6/2023,NA,NA,NA,12/6/2023,24/6/2023,5/7/2023,30/7/2023,14/8/2023,NA,Arctica,NA,30/07/2023, NA
+QHI_6,2023,QHI,Elise Gallois,,NA,NA,10/6/2023,NA,NA,NA,NA,27/6/2023,12/7/2023,26/7/2023,14/8/2023,NA,Pulchra,NA,24/07/2023,14/08/2023
+QHI_7,2023,QHI,Elise Gallois,"tipped over until end of may, and tipped again early aug",NA,NA,10/6/2023,NA,NA,NA,NA,NA,45106,45123,NA,NA,Richardsonii,NA,29/07/2023,NA
+QHI_8,2023,QHI,Elise Gallois,,NA,NA,10/6/2023,NA,NA,NA,NA,28/6/2023,6/7/2023,28/7/2023,NA,NA,Reticulata,NA,NA,NA
+QHI_9,2023,QHI,Elise Gallois,,22/5/2023,31/5/2023,09/10/2023,NA,NA,NA,12/6/2023,24/6/2023,9/7/2023,26/7/2023,NA,NA,Richardsonii,14/06/2023,26/07/2023,NA
+QHI_10,2023,QHI,Elise Gallois,,28/5/2023,3/6/2023,10/6/2023,NA,NA,NA,16/6/2023,26/6/2023,13/7/2023,27/7/2023,NA,NA,Arctica,NA,26/07/2023,NA
+QHI_11,2023,QHI,Elise Gallois,missing may and most of june (and also! most of august.),NA,NA,10/6/2023,NA,NA,NA,NA,NA,45115,NA,NA,NA,Richarsonii,NA,NA,NA
+QHI_12,2023,QHI,Elise Gallois,missing august,23/05/2023,NA,10/6/2023,NA,NA,NA,NA,03/07/2023,15/07/2023,NA,NA,NA,Pulchra,NA,NA,NA
+QHI_13,2023,QHI,Elise Gallois,missing may and most of june  ,NA,NA,10/6/2023,NA,NA,NA,NA,NA,NA,45139,NA,NA,Arctica,NA,30/07/2023,NA
+QHI_14,2023,QHI,Elise Gallois,,15/5/2023,21/6/2023,22/6/2023,NA,NA,NA,21/6/2023,23/6/2023,30/6/2023,24/7/2023,8/8/2023,NA,Richardsonii,19/06/2023,28/07/2023,NA
+QHI_15,2023,QHI,Elise Gallois,,23/5/2023,31/5/2023,11/6/2023,NA,NA,NA,16/6/2023,29/6/2023,11/7/2023,26/7/2023,9/8/2023,NA,Pulchra,NA,26/07/2023,15/08/2023
+QHI_16,2023,QHI,Elise Gallois,tipped over in august,21/5/2023,NA,11/6/2023,NA,NA,NA,14/6/2023,28/6/2023,13/7/2023,31/7/2023,NA,NA,Reticulata,NA,NA,
+QHI_17,2023,QHI,Elise Gallois,,21/5/2023,28/5/2023,10/6/2023,NA,NA,NA,17/6/2023,26/6/2023,8/7/2023,30/7/2023,NA,NA,Reticulata,NA,NA,
+QHI_18,2023,QHI,Elise Gallois,,22/5/2023,29/5/2023,10/6/2023,NA,NA,NA,15/6/2023,24/6/2023,5/7/2023,2/8/2023,15/8/2023,NA,Arctica,15/06/2023,02/08/2023,NA
+QHI_19,2023,QHI,Elise Gallois,,23/5/2023,31/5/2023,10/6/2023,NA,NA,NA,08/06/2023,20/06/2023,28/06/2023,22/07/2023,14/08/2023,NA,Arctica,14/06/2023,24/07/2023,NA
+QHI_20,2023,QHI,Elise Gallois,missing may and most of june,NA,NA,10/6/2023,NA,NA,NA,NA,NA,45108,45120,45141,NA,Arctica,NA,21/07/2023,
+KP1,2023,Kluane,Elise Gallois,,18/05/2023,01/06/2023,08/06/2023,NA,NA,NA,07/06/2023,22/06/2023,12/07/2023,09/08/2023,NA,NA,pulchra,19/06/2023,12/08/2023,NA
+KP2,2023,Kluane,Elise Gallois,missing data between october 22 and july 23,NA,NA,07/06/2023,NA,NA,NA,NA,NA,45123,45149,NA,NA,pulchra,NA,11/08/2023,NA
+KP3,2023,Kluane,Elise Gallois,,17/05/2023,06/06/2023,08/06/2023,NA,NA,NA,11/06/2023,23/06/2023,15/07/2023,13/08/2023,NA,NA,richardsonii,11/06/2023,16/08/2023,NA
+KP4,2023,Kluane,Elise Gallois,data missing between mid june and mid july,21/05/2023,05/06/2023,06/06/2023,NA,NA,NA,11/06/2023,NA,NA,07/08/2023,NA,NA,pulchra,NA,07/08/2023,NA
+KP7,2023,Kluane,Elise Gallois,,18/05/2023,27/05/2023,05/06/2023,NA,NA,NA,08/06/2023,21/06/2023,04/07/2023,04/08/2023,21/08/2022,NA,richardsonii,08/06/2023,10/08/2023,
+KP8,2023,Kluane,Elise Gallois,data missing 15th aug 22 - mid july 23,NA,NA,08/06/2023,NA,NA,NA,NA,NA,NA,21/08/2023,NA,NA,richardsonii,NA,12/08/2023,NA
+KP9,2023,Kluane,Elise Gallois,,28/05/2023,,08/06/2023,NA,NA,NA,06/06/2023,25/06/2023,13/07/2023,08/08/2023,NA,NA,richardsonii,NA,20/08/2023,
+TL-01,2023,Toolik Lake,Elise Gallois,,,,,,,,,,,,,,,,,
+TL-02,2023,Toolik Lake,Elise Gallois,,,,,,,,,,,,,,,,,
+TL-03,2023,Toolik Lake,Elise Gallois,,,,,,,,,,,,,,,,,
+TL-04,2023,Toolik Lake,Elise Gallois,,,,,,,,,,,,,,,,,
+TL-05,2023,Toolik Lake,Elise Gallois,,,,,,,,,,,,,,,,,
+TL-06,2023,Toolik Lake,Elise Gallois,,,,,,,,,,,,,,,,,
+TL-07,2023,Toolik Lake,Elise Gallois,,,,,,,,,,,,,,,,,
+TL-08,2023,Toolik Lake,Elise Gallois,,,,,,,,,,,,,,,,,
+TL-11,2023,Toolik Lake,Elise Gallois,,,,,,,,,,,,,,,,,
+TL-16,2023,Toolik Lake,Elise Gallois,,,,,,,,,,,,,,,,,
+TL-17,2023,Toolik Lake,Elise Gallois,,,,,,,,,,,,,,,,,

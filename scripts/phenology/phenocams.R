@@ -771,6 +771,25 @@ tab_model(yellow_cg_mod_2)
           axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
           axis.text.y = element_text(size = 15, colour = "black")))
 
+# 2023 ----
+# import source data (QHI, KP)
+
+source_pheno_2023 <- read.csv("data/phenology/Phenocams_2023.csv")
+
+# clean up data sheet 
+source_pheno_2023_working <- source_pheno_2023 %>% 
+  dplyr::select(-c(Observer, NOTES, Plants_first_visible_through_snow, 
+            X50_snow_coverge_end_of_season, 
+            X50_Leaves_Green, X100_Leaves_Green, X50_Leaves_Yellow, 
+            First_leaf_bud_burst, 
+            First_yellow_leaf, X100_Leaves_Yellow, 
+            X100_snow_coverage_end_of_season, 
+            Plants_first_visible_through_snow)) %>% 
+  dplyr::filter(Site %in% c("Kluane", "QHI")) %>% 
+  dplyr::rename("PhenocamID" = "PLOT",
+                "First_bud_burst" = "First_Leaf_Bud_Burst", 
+                "First_leaf_yellow" = "First_Yellowing_of_Leaves", 
+                "All_leaves_yellow" = "Last_Leaf_Turns_Yellow")
 
 # adding QHI data ----
 # data 

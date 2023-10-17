@@ -22,6 +22,26 @@ center_scale <- function(x) {
 
 # 2. extract model result function =====
 
+# funciton to extract model summary
+model_summ <- function(x) {
+  sum = summary(x)
+  fixed = sum$fixed
+  sigma = sum$spec_pars
+  random = sum$random$Sample_age # change name of random effect here
+  random = sum$random$SampleID_standard # change name of random effect here
+  obs = sum$nobs
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  # fixed$effect <- "population"  # add ID column for type of effect (fixed, random, residual)
+  random$effect <- "random"
+  # random$effect <- "SampleID_standard"
+  sigma$effect <- "residual"
+  fixed$nobs <- obs  # add column with number of observations
+  random$nobs <- obs
+  sigma$nobs <- obs
+  row.names(random)[row.names(random) == "sd(Intercept)"] <- "random" # could change rowname here of random effect if you'd like
+  modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge together
+}
+
 model_summ_growth <- function(x) {
   sum = summary(x)
   fixed = sum$fixed
@@ -84,520 +104,7 @@ all_CG_growth_pul<-  all_CG_height_growth_rates %>%
 all_CG_growth_arc <-all_CG_height_growth_rates %>%
   filter(Species == "Salix arctica")
 
-# 1. HEIGHT OVER TIME MODEL -------
-# Salix rich ------
-height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population + (1|Year),
-                         data = all_CG_growth_ric,  family = gaussian(), chains = 3,
-                         iter = 5000, warmup = 1000, 
-                         control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(height_rich) # significant height growth over time
-plot(height_rich)
-pp_check(height_rich, type = "dens_overlay", nsamples = 100) 
-
-# extract outputs
-height_rich_extract <- model_summ_time(height_rich)
-
-# extraction for model output table
-rownames(height_rich_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
-height_rich_extract_df <- height_rich_extract %>% 
-  mutate(Species = rep("Salix richardsonii")) %>% 
-  # "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
-
-# Salix pulchra -------
-height_pul <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year),
-                        data = all_CG_growth_pul,  family = gaussian(), chains = 3,
-                        iter = 5000, warmup = 1000, 
-                        control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-summary(height_pul) # significant height growth over time
-plot(height_pul)
-pp_check(height_pul, type = "dens_overlay", nsamples = 100) 
-
-# extract outputs
-height_pul_extract <- model_summ_time(height_pul)
-
-# extraction for model output table
-rownames(height_pul_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
-height_pul_extract_df <- height_pul_extract %>% 
-  mutate(Species = rep("Salix pulchra")) %>% 
-  # "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
-
-# Salix arctica -------
-height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year),
-                        data = all_CG_growth_arc,  family = gaussian(), chains = 3,
-                        iter = 5000, warmup = 1000, 
-                        control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-summary(height_arc) # significant growth over time
-plot(height_arc)
-pp_check(height_arc, type = "dens_overlay", nsamples = 100) 
-
-# extract outputs
-height_arc_extract <- model_summ_time(height_arc)
-
-# extraction for model output table
-rownames(height_arc_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
-height_arc_extract_df <- height_arc_extract %>% 
-  mutate(Species = rep("Salix arctica")) %>% 
-  # "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
-
-garden_heights_interact <- rbind(height_rich_extract_df,height_pul_extract_df,height_arc_extract_df)
-
-# back transforming from log
-garden_heights_interact_back <- garden_heights_interact %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(Estimate), 
-         Est.Error_trans = 10^(Est.Error)) %>% 
-  select(-CI_range)
-
-# madi thinks to back transform you exp(#) ?
-garden_heights_interact_back_mad <- garden_heights_interact %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = exp(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = exp(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = exp(Estimate), 
-         Est.Error_trans = exp(Est.Error)) %>% 
-  select(-CI_range)
-
-# save df of results 
-write.csv(garden_heights_interact_back, "output/garden_heights_interact_back.csv")
-
-# adding spaces before/after each name so they let me repeat them in the table
-rownames(garden_heights_interact_back) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma", 
-                                       " Intercept", " Sample age", " Southern Garden", " Sample age*Southern Garden", " Year", " sigma",
-                                       "Intercept ", "Sample age ", "Southern Garden ", "Sample age*Southern Garden ", "Year ", "sigma ")
-
-
-# making sure Rhat keeps the .00 
-garden_heights_interact_back$Rhat <- as.character(formatC(garden_heights_interact_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
-# creating table
-kable_time_interact <- garden_heights_interact_back %>% 
-  kbl(caption="Table.xxx BRMS model outputs: canopy height (log cm) over time of northern vs southern shrubs in the common garden. 
-      Model structure per species:log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year)", 
-      col.names = c("Species","Estimate",
-                    "Est. Error",
-                    "Lower 95% CI (log)",
-                    "Upper 95% CI (log)", 
-                    "Rhat", 
-                    "Bulk Effective Sample Size",
-                    "Tail Effective Sample Size", 
-                    "Sample Size",
-                    "Effect",
-                    "Lower 95% CI 
-                    (back transformed)", "Upper 95% CI
-                    (back transformed)", 
-                    "Estimate transformed", 
-                    "Error transformed"), digits=2, align = "c") %>% 
-  kable_classic(full_width=FALSE, html_font="Cambria")
-
-# making species column in cursive
-column_spec(kable_time_interact, 2, width = NULL, bold = FALSE, italic = TRUE)
-
-# 1.1 HEIGHT GROWTH RATE  ------
-# Salix richardsonii ------
-hist(all_CG_growth_ric$height_growth_diff) # normal 
-height_rich_time <- brms::brm(height_growth_diff ~ population + (1|SampleID_standard) + (1|Sample_age),
-                              data = all_CG_growth_ric,  family = gaussian(), chains = 3,
-                              iter = 5000, warmup = 1000, 
-                              control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-summary(height_rich_time) # faster height growth rate over time
-pp_check(height_rich_time, type = "dens_overlay", nsamples = 100) 
-z <- model_summ_RE(height_rich_time_test)
-# extract output with function
-rich_extract_time <- model_summ_RE(height_rich_time)
-
-# extraction for model output table
-rownames(rich_extract_time) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age", "sigma")
-rich_extract_time_df <- rich_extract_time %>% 
-  mutate(Species = rep("Salix richardsonii")) %>% 
-  # "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
-
-# S.pulchra -----
-hist(all_CG_growth_pul$height_growth_diff) # normal 
-height_pul_time <- brms::brm(height_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
-                             data = all_CG_growth_pul,  family = gaussian(), chains = 3,
-                             iter = 5000, warmup = 1000, 
-                             control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(height_pul_time) # no diff
-pp_check(height_pul_time, type = "dens_overlay", nsamples = 100) 
-
-# extract output with function
-pul_extract_time <- model_summ_RE(height_pul_time)
-
-# extraction for model output table
-rownames(pul_extract_time) <-  c("Intercept", "Southern Garden", "Sample ID", "Sample age", "sigma")
-pul_extract_time_df <- pul_extract_time %>% 
-  mutate(Species = rep("Salix pulchra")) %>% 
-  # "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
-
-# S. arctica -----
-hist(all_CG_growth_arc$height_growth_diff) # normal 
-height_arc_time <- brms::brm(height_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
-                             data = all_CG_growth_arc,  family = gaussian(), chains = 3,
-                             iter = 5000, warmup = 1000, 
-                             control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(height_arc_time) # faster for southern 
-pp_check(height_arc_time, type = "dens_overlay", nsamples = 100) 
-
-# extract output with function
-arc_extract_time <- model_summ_RE(height_arc_time)
-
-# extraction for model output table
-rownames(arc_extract_time) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age", "sigma")
-arc_extract_time_df <- arc_extract_time %>% 
-  mutate(Species = rep("Salix arctica")) %>% 
-  # "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
-
-garden_heights_time <- rbind(rich_extract_time_df,pul_extract_time_df,arc_extract_time_df)
-
-# save df of results 
-write.csv(garden_heights_time, "output/garden_heights_time.csv")
-
-# adding spaces before/after each name so they let me repeat them in the table
-rownames(garden_heights_time) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age",
-                                   "Sigma", " Intercept", " Southern Garden", " Sample ID", " Sample age",
-                                   " Sigma", "Intercept ", "Southern Garden ", "Sample ID ", "Sample age ",
-                                   "Sigma ")
-
-# making sure Rhat keeps the .00 
-garden_heights_time$Rhat <- as.character(formatC(garden_heights_time$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
-# creating table
-kable_heights_time <- garden_heights_time %>% 
-  kbl(caption="Table.xxx BRMS model outputs: growth rate (height change per year) northern vs southern shrubs in the common garden. 
-      Model structure per species: (height_difference ~ population + (1|Year).", 
-      col.names = c( "Species","Estimate",
-                     "Est. Error",
-                     "Lower 95% CI ",
-                     "Upper 95% CI ", 
-                     "Rhat", 
-                     "Bulk Effective Sample Size",
-                     "Tail Effective Sample Size", 
-                     "Sample Size",
-                     "Effect"), digits=2, align = "c") %>% 
-  kable_classic(full_width=FALSE, html_font="Cambria")
-
-# making species column in cursive
-column_spec(kable_heights_time, 2, width = NULL, bold = FALSE, italic = TRUE)
-
-
-# 1. BIOVOLUME over time ------
-# S. Richardsonii -----
-# model
-garden_rich_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (Sample_age|SampleID_standard),
-                                     data = all_CG_growth_ric, family = gaussian(), chains = 3,
-                                     iter = 5000, warmup = 1000, 
-                                     control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-
-summary(garden_rich_biovol_time) # significantly larger biovolume for southern shrubs in garden
-plot(garden_rich_biovol_time) # fine
-pp_check(garden_rich_biovol_time,  type = "dens_overlay", ndraws = 100) # fine
-
-ggpred_biovol_ric <- ggpredict(garden_rich_biovol_time, terms = c("Sample_age", "population"))
-colnames(ggpred_biovol_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
-
-(ggpred_biovol_ric_plot <-ggplot(ggpred_biovol_ric) +
-    geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = biovolume, colour = population),
-               alpha = 0.5)+ # raw data
-    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
-    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
-                alpha = 0.2) +
-    ylab("Biovolume (cm3)\n") +
-    xlab("\n Sample age " ) +
-    ylim(0, 2376000.000)+
-    xlim(3, 9)+
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    ggtitle(expression(italic("Salix richardsonii"))) +
-    theme_shrub_e()+ theme(text=element_text(family="Helvetica Light")) +
-    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
-
-# extract outputs
-# extract outputs
-rich_biovol_time_extract <- model_summ_time(garden_rich_biovol_time)
-
-# extraction for model output table
-rownames(rich_biovol_time_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
-rich_biovol_time_extract_df <- rich_biovol_time_extract %>% 
-  mutate(Species = rep("Salix richardsonii")) %>% 
-  # "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
-
-# S. Pulchra -----
-garden_pul_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (Sample_age|SampleID_standard),
-                                    data = all_CG_growth_pul, family = gaussian(), chains = 3,
-                                    iter = 5000, warmup = 1000, 
-                                    control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-
-summary(garden_pul_biovol_time) # significantly larger biovolume for southern shrubs in garden
-plot(garden_pul_biovol_time) # fine
-pp_check(garden_pul_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
-
-ggpred_biovol_pul <- ggpredict(garden_pul_biovol_time, terms = c("Sample_age", "population"))
-colnames(ggpred_biovol_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
-
-(ggpred_biovol_pul_plot <-ggplot(ggpred_biovol_pul) +
-    geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = biovolume, colour = population),
-               alpha = 0.5)+ # raw data
-    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
-    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
-                alpha = 0.2) +
-    ylab("Biovolume (cm3)\n") +
-    xlab("\n Sample age " ) +
-    ylim(0, 466096.890)+
-    xlim(3, 9)+
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    ggtitle(expression(italic("Salix pulchra"))) +
-    theme_shrub_e()+ theme(text=element_text(family="Helvetica Light")) +
-    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
-
-# extract outputs
-pul_biovol_time_extract <- model_summ_time(garden_pul_biovol_time)
-
-# extraction for model output table
-rownames(pul_biovol_time_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
-pul_biovol_time_extract_df <- pul_biovol_time_extract %>% 
-  mutate(Species = rep("Salix pulchra")) %>% 
-  # "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
-
-# S. Arctica -----
-garden_arc_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population +  (Sample_age|SampleID_standard),
-                                    data = all_CG_growth_arc, family = gaussian(), chains = 3,
-                                    iter = 5000, warmup = 1000, 
-                                    control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-
-summary(garden_arc_biovol_time) # NOT significant diff. 
-plot(garden_arc_biovol_time) # fine
-pp_check(garden_arc_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
-
-library(ggeffects)
-ggpred_biovol_arc <- ggpredict(garden_arc_biovol_time, terms = c("Sample_age", "population"))
-colnames(ggpred_biovol_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
-
-(ggpred_biovol_arc_plot <-ggplot(ggpred_biovol_arc) +
-    geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = biovolume, colour = population),
-               alpha = 0.5)+ # raw data
-    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
-    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
-                alpha = 0.2) +
-    ylab("Biovolume (cm3)\n") +
-    xlab("\n Sample age " ) +
-    xlim(3, 7)+
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    ggtitle(expression(italic("Salix arctica"))) +
-    theme_shrub_e()+ theme(text=element_text(family="Helvetica Light")) +
-    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
-
-ggpred_CG_biovol_panel <- ggarrange(ggpred_biovol_ric_plot,
-                                    ggpred_biovol_pul_plot, 
-                                    ggpred_biovol_arc_plot, nrow = 1,
-                                    common.legend = TRUE, legend="none")
-
-ggsave("output/figures/ggpred_CG_biovol_panel.png", width = 14.67, height = 6.53, units = "in")
-
-# extract outputs
-arc_biovol_time_extract <- model_summ_time(garden_arc_biovol_time)
-
-# extraction for model output table
-rownames(arc_biovol_time_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
-arc_biovol_time_extract_df <- arc_biovol_time_extract %>% 
-  mutate(Species = rep("Salix arctica")) %>% 
-  # "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
-
-garden_biovol_interact <- rbind(rich_biovol_time_extract_df,pul_biovol_time_extract_df,arc_biovol_time_extract_df)
-
-# back transforming from log
-garden_biovol_interact_back <- garden_biovol_interact %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(Estimate), 
-         Est.Error_trans = 10^(Est.Error)) %>% 
-  select(-CI_range)
-
-# save df of results 
-write.csv(garden_biovol_interact_back, "output/garden_biovol_interact_back.csv")
-
-# adding spaces before/after each name so they let me repeat them in the table
-rownames(garden_biovol_interact_back) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma", 
-                                            " Intercept", " Sample age", " Southern Garden", " Sample age*Southern Garden", " Year", " sigma",
-                                            "Intercept ", "Sample age ", "Southern Garden ", "Sample age*Southern Garden ", "Year ", "sigma ")
-
-
-# making sure Rhat keeps the .00 
-garden_biovol_interact_back$Rhat <- as.character(formatC(garden_biovol_interact_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
-# creating table
-kable_time_interact_biovol <- garden_biovol_interact_back %>% 
-  kbl(caption="Table.xxx BRMS model outputs: biovolume (log cm3) over time of northern vs southern shrubs in the common garden. 
-      Model structure per species:log(biovolume) ~ Sample_age*population+ (1|Year)", 
-      col.names = c("Species","Estimate",
-                    "Est. Error",
-                    "Lower 95% CI (log)",
-                    "Upper 95% CI (log)", 
-                    "Rhat", 
-                    "Bulk Effective Sample Size",
-                    "Tail Effective Sample Size", 
-                    "Sample Size",
-                    "Effect",
-                    "Lower 95% CI 
-                    (back transformed)", "Upper 95% CI
-                    (back transformed)", 
-                    "Estimate transformed", 
-                    "Error transformed"), digits=2, align = "c") %>% 
-  kable_classic(full_width=FALSE, html_font="Cambria")
-
-# making species column in cursive
-column_spec(kable_time_interact_biovol, 2, width = NULL, bold = FALSE, italic = TRUE)
-
-#2.1. BIOVOL GROWTH RATE -------
-
-# S.richardsonii ------
-hist(all_CG_growth_ric$biovol_growth_diff) # normal 
-biovol_rich_time <- brms::brm(biovol_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
-                              data = all_CG_growth_ric,  family = gaussian(), chains = 3,
-                              iter = 5000, warmup = 1000, 
-                              control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(biovol_rich_time) # no diff
-pp_check(biovol_rich_time, type = "dens_overlay", nsamples = 100) 
-
-# extract output with function
-rich_extract_timeb <- model_summ_RE(biovol_rich_time)
-
-# extraction for model output table
-rownames(rich_extract_timeb) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age", "Sigma")
-rich_extract_timeb_df <- rich_extract_timeb %>% 
-  mutate(Species = rep("Salix richardsonii")) %>% 
-  # "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
-
-# S. pulchra -----
-hist(all_CG_growth_pul$biovol_growth_diff) # normal 
-biovol_pul_time <- brms::brm(biovol_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
-                             data = all_CG_growth_pul,  family = gaussian(), chains = 3,
-                             iter = 5000, warmup = 1000, 
-                             control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(biovol_pul_time) # no diff
-pp_check(biovol_pul_time, type = "dens_overlay", nsamples = 100) 
-
-# extract output with function
-pul_extract_timeb <- model_summ_RE(biovol_pul_time)
-
-# extraction for model output table
-rownames(pul_extract_timeb) <-  c("Intercept", "Southern Garden", "Sample ID", "Sample age", "Sigma")
-pul_extract_timeb_df <- pul_extract_timeb %>% 
-  mutate(Species = rep("Salix pulchra")) %>% 
-  # "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
-
-# S. arctica-----
-hist(all_CG_growth_arc$biovol_growth_diff) # normal 
-biovol_arc_time <- brms::brm(biovol_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
-                             data = all_CG_growth_arc,  family = gaussian(), chains = 3,
-                             iter = 10000, warmup = 1000, 
-                             control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(biovol_arc_time) # no diff
-pp_check(biovol_arc_time, type = "dens_overlay", nsamples = 100) 
-
-# extract output with function
-arc_extract_timeb <- model_summ_RE(biovol_arc_time)
-
-# extraction for model output table
-rownames(arc_extract_timeb) <-c("Intercept", "Southern Garden", "Sample ID", "Sample age", "Sigma")
-arc_extract_timeb_df <- arc_extract_timeb %>% 
-  mutate(Species = rep("Salix arctica")) %>% 
-  # "Sample Size" = rep(105)) %>% 
-  relocate("Species", .before = "Estimate")%>%
-  relocate("nobs", .before = "effect")
-
-garden_heights_timeb <- rbind(rich_extract_timeb_df,pul_extract_timeb_df,arc_extract_timeb_df)
-
-# save df of results 
-write.csv(garden_heights_timeb, "output/garden_heights_timeb.csv")
-
-# adding spaces before/after each name so they let me repeat them in the table
-rownames(garden_heights_timeb) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age",
-                                    "Sigma", " Intercept", " Southern Garden", " Sample ID", " Sample age",
-                                    " Sigma", "Intercept ", "Southern Garden ", "Sample ID ", "Sample age ",
-                                    "Sigma ")
-
-
-# making sure Rhat keeps the .00 
-garden_heights_timeb$Rhat <- as.character(formatC(garden_heights_timeb$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
-# creating table
-kable_biovol_time <- garden_heights_timeb %>% 
-  kbl(caption="Table.xxx BRMS model outputs: growth rate (biovolume change per year) northern vs southern shrubs in the common garden. 
-      Model structure per species: (biovolume_difference ~ population + (1|Year).", 
-      col.names = c( "Species","Estimate",
-                     "Est. Error",
-                     "Lower 95% CI ",
-                     "Upper 95% CI ", 
-                     "Rhat", 
-                     "Bulk Effective Sample Size",
-                     "Tail Effective Sample Size", 
-                     "Sample Size",
-                     "Effect"), digits=2, align = "c") %>% 
-  kable_classic(full_width=FALSE, html_font="Cambria")
-
-# making species column in cursive
-column_spec(kable_biovol_time, 2, width = NULL, bold = FALSE, italic = TRUE)
-
-# ERICA's MSC height over time models -------
-# funciton to extract model summary
-model_summ <- function(x) {
-  sum = summary(x)
-  fixed = sum$fixed
-  sigma = sum$spec_pars
-  random = sum$random$Sample_age # change name of random effect here
-  random = sum$random$SampleID_standard # change name of random effect here
-  obs = sum$nobs
-  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
-  # fixed$effect <- "population"  # add ID column for type of effect (fixed, random, residual)
-  random$effect <- "random"
-  # random$effect <- "SampleID_standard"
-  sigma$effect <- "residual"
-  fixed$nobs <- obs  # add column with number of observations
-  random$nobs <- obs
-  sigma$nobs <- obs
-  row.names(random)[row.names(random) == "sd(Intercept)"] <- "random" # could change rowname here of random effect if you'd like
-  modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge together
-}
 # Salix richardsonii -------
 height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
                          data = all_CG_growth_ric,  family = gaussian(), chains = 3,
@@ -902,6 +409,32 @@ colnames(ggpred_width_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
     theme( axis.text.x  = element_text(angle = 0)) + 
     labs(title = "Salix arctica", size = 20, family = "Helvetica Light"))
 
+# BIOVOLUME 2023 ----
+# S. richardsonii biovolume ----
+biovol_ric <- brms::brm(biovolume ~ Sample_age*population+(Sample_age), # removed sample_id as nester RE bc bulk effective sample size was too low
+                       data = all_CG_growth_ric,  family = gaussian(), chains = 3,
+                       iter = 5000, warmup = 1000, 
+                       control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(biovol_ric)
+saveRDS(biovol_ric, file = "output/models/biovol_ric_2023.rds")
+biovol_ric <- readRDS("output/models/biovol_ric_2023.rds")
+
+ggpred_biovol_ric <- ggpredict(biovol_ric, terms = c("Sample_age", "population"))
+colnames(ggpred_biovol_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_height_arc_plot <-ggplot(ggpred_biovol_ric) +
+    geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = biovolume, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) + 
+    ylab("Shrub biovolume (UNIT)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() + 
+    theme( axis.text.x  = element_text(angle = 0)) + 
+    labs(title = "Salix richardsonii", size = 20, family = "Helvetica Light"))
 
 # DATA VISUALISATION -----
 # color palette for garden only
@@ -1226,35 +759,227 @@ grid.arrange(ric_rate_plot, pul_rate_plot, arc_rate_plot,
              nrow=1)
 
 
-# 2023 UPDATED data ----
 # by 05 Aug 2023
+# 1. HEIGHT OVER TIME MODEL -------
+# Salix rich ------
+height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population + (1|Year),
+                         data = all_CG_growth_ric,  family = gaussian(), chains = 3,
+                         iter = 5000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(height_rich) # significant height growth over time
+plot(height_rich)
+pp_check(height_rich, type = "dens_overlay", nsamples = 100) 
+
+# extract outputs
+height_rich_extract <- model_summ_time(height_rich)
+
+# extraction for model output table
+rownames(height_rich_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
+height_rich_extract_df <- height_rich_extract %>% 
+  mutate(Species = rep("Salix richardsonii")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+# Salix pulchra -------
+height_pul <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year),
+                        data = all_CG_growth_pul,  family = gaussian(), chains = 3,
+                        iter = 5000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(height_pul) # significant height growth over time
+plot(height_pul)
+pp_check(height_pul, type = "dens_overlay", nsamples = 100) 
+
+# extract outputs
+height_pul_extract <- model_summ_time(height_pul)
+
+# extraction for model output table
+rownames(height_pul_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
+height_pul_extract_df <- height_pul_extract %>% 
+  mutate(Species = rep("Salix pulchra")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+# Salix arctica -------
+height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year),
+                        data = all_CG_growth_arc,  family = gaussian(), chains = 3,
+                        iter = 5000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(height_arc) # significant growth over time
+plot(height_arc)
+pp_check(height_arc, type = "dens_overlay", nsamples = 100) 
+
+# extract outputs
+height_arc_extract <- model_summ_time(height_arc)
+
+# extraction for model output table
+rownames(height_arc_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
+height_arc_extract_df <- height_arc_extract %>% 
+  mutate(Species = rep("Salix arctica")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+garden_heights_interact <- rbind(height_rich_extract_df,height_pul_extract_df,height_arc_extract_df)
+
+# back transforming from log
+garden_heights_interact_back <- garden_heights_interact %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI") %>%
+  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
+  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(Estimate), 
+         Est.Error_trans = 10^(Est.Error)) %>% 
+  select(-CI_range)
+
+# madi thinks to back transform you exp(#) ?
+garden_heights_interact_back_mad <- garden_heights_interact %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI") %>%
+  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
+  mutate(CI_low_trans = exp(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = exp(Estimate + CI_range)) %>% 
+  mutate(Estimate_trans = exp(Estimate), 
+         Est.Error_trans = exp(Est.Error)) %>% 
+  select(-CI_range)
+
+# save df of results 
+write.csv(garden_heights_interact_back, "output/garden_heights_interact_back.csv")
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_heights_interact_back) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma", 
+                                            " Intercept", " Sample age", " Southern Garden", " Sample age*Southern Garden", " Year", " sigma",
+                                            "Intercept ", "Sample age ", "Southern Garden ", "Sample age*Southern Garden ", "Year ", "sigma ")
+
+
+# making sure Rhat keeps the .00 
+garden_heights_interact_back$Rhat <- as.character(formatC(garden_heights_interact_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_time_interact <- garden_heights_interact_back %>% 
+  kbl(caption="Table.xxx BRMS model outputs: canopy height (log cm) over time of northern vs southern shrubs in the common garden. 
+      Model structure per species:log(Canopy_Height_cm) ~ Sample_age*population+ (1|Year)", 
+      col.names = c("Species","Estimate",
+                    "Est. Error",
+                    "Lower 95% CI (log)",
+                    "Upper 95% CI (log)", 
+                    "Rhat", 
+                    "Bulk Effective Sample Size",
+                    "Tail Effective Sample Size", 
+                    "Sample Size",
+                    "Effect",
+                    "Lower 95% CI 
+                    (back transformed)", "Upper 95% CI
+                    (back transformed)", 
+                    "Estimate transformed", 
+                    "Error transformed"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_time_interact, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+# 1.1 HEIGHT GROWTH RATE  ------
+# Salix richardsonii ------
+hist(all_CG_growth_ric$height_growth_diff) # normal 
+height_rich_time <- brms::brm(height_growth_diff ~ population + (1|SampleID_standard) + (1|Sample_age),
+                              data = all_CG_growth_ric,  family = gaussian(), chains = 3,
+                              iter = 5000, warmup = 1000, 
+                              control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(height_rich_time) # faster height growth rate over time
+pp_check(height_rich_time, type = "dens_overlay", nsamples = 100) 
+z <- model_summ_RE(height_rich_time_test)
+# extract output with function
+rich_extract_time <- model_summ_RE(height_rich_time)
+
+# extraction for model output table
+rownames(rich_extract_time) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age", "sigma")
+rich_extract_time_df <- rich_extract_time %>% 
+  mutate(Species = rep("Salix richardsonii")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+# S.pulchra -----
+hist(all_CG_growth_pul$height_growth_diff) # normal 
+height_pul_time <- brms::brm(height_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
+                             data = all_CG_growth_pul,  family = gaussian(), chains = 3,
+                             iter = 5000, warmup = 1000, 
+                             control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(height_pul_time) # no diff
+pp_check(height_pul_time, type = "dens_overlay", nsamples = 100) 
+
+# extract output with function
+pul_extract_time <- model_summ_RE(height_pul_time)
+
+# extraction for model output table
+rownames(pul_extract_time) <-  c("Intercept", "Southern Garden", "Sample ID", "Sample age", "sigma")
+pul_extract_time_df <- pul_extract_time %>% 
+  mutate(Species = rep("Salix pulchra")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+# S. arctica -----
+hist(all_CG_growth_arc$height_growth_diff) # normal 
+height_arc_time <- brms::brm(height_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
+                             data = all_CG_growth_arc,  family = gaussian(), chains = 3,
+                             iter = 5000, warmup = 1000, 
+                             control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(height_arc_time) # faster for southern 
+pp_check(height_arc_time, type = "dens_overlay", nsamples = 100) 
+
+# extract output with function
+arc_extract_time <- model_summ_RE(height_arc_time)
+
+# extraction for model output table
+rownames(arc_extract_time) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age", "sigma")
+arc_extract_time_df <- arc_extract_time %>% 
+  mutate(Species = rep("Salix arctica")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+garden_heights_time <- rbind(rich_extract_time_df,pul_extract_time_df,arc_extract_time_df)
+
+# save df of results 
+write.csv(garden_heights_time, "output/garden_heights_time.csv")
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_heights_time) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age",
+                                   "Sigma", " Intercept", " Southern Garden", " Sample ID", " Sample age",
+                                   " Sigma", "Intercept ", "Southern Garden ", "Sample ID ", "Sample age ",
+                                   "Sigma ")
+
+# making sure Rhat keeps the .00 
+garden_heights_time$Rhat <- as.character(formatC(garden_heights_time$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_heights_time <- garden_heights_time %>% 
+  kbl(caption="Table.xxx BRMS model outputs: growth rate (height change per year) northern vs southern shrubs in the common garden. 
+      Model structure per species: (height_difference ~ population + (1|Year).", 
+      col.names = c( "Species","Estimate",
+                     "Est. Error",
+                     "Lower 95% CI ",
+                     "Upper 95% CI ", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Sample Size",
+                     "Effect"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_heights_time, 2, width = NULL, bold = FALSE, italic = TRUE)
+
 
 # Loading data ---- 
 all_2023_growth <- read_csv("data/common_garden_data_2023/all_data_2023.csv")
-
-# WRANGLE ------
-# Filtering data for height over time model 
-all_CG_growth <- all_2023_growth %>%
-  filter(population %in% c("Northern", "Southern"))
-
-# making a growth rate column
-all_CG_height_growth_rates <- all_CG_growth %>%
-  group_by(SampleID_standard) %>% 
-  arrange(Sample_age) %>%
-  mutate(height_growth_diff = Canopy_Height_cm-lag(Canopy_Height_cm)) %>%
-  mutate(height_growth_diffpercent = (height_growth_diff/Canopy_Height_cm)*100) %>%
-  mutate(biovol_growth_diff = biovolume-lag(biovolume)) %>%
-  mutate(biovol_growth_diffpercent = (biovol_growth_diff/biovolume)*100)
-
-# Species specific 
-all_CG_growth_ric <- all_CG_height_growth_rates %>%
-  filter(Species == "Salix richardsonii")
-
-all_CG_growth_pul<-  all_CG_height_growth_rates %>%
-  filter(Species == "Salix pulchra")
-
-all_CG_growth_arc <-all_CG_height_growth_rates %>%
-  filter(Species == "Salix arctica")
 
 # # Salix richardsonii -------
 height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
@@ -1331,3 +1056,281 @@ colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
     ggtitle(expression(italic("Salix pulchra"))) +
     theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
     theme(axis.text.x  = element_text(angle = 0)))
+
+# older models from 2022 ----
+# 1. BIOVOLUME over time ------
+# S. Richardsonii -----
+# model
+garden_rich_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (Sample_age|SampleID_standard),
+                                     data = all_CG_growth_ric, family = gaussian(), chains = 3,
+                                     iter = 5000, warmup = 1000, 
+                                     control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(garden_rich_biovol_time) # significantly larger biovolume for southern shrubs in garden
+plot(garden_rich_biovol_time) # fine
+pp_check(garden_rich_biovol_time,  type = "dens_overlay", ndraws = 100) # fine
+
+ggpred_biovol_ric <- ggpredict(garden_rich_biovol_time, terms = c("Sample_age", "population"))
+colnames(ggpred_biovol_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_biovol_ric_plot <-ggplot(ggpred_biovol_ric) +
+    geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = biovolume, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Biovolume (cm3)\n") +
+    xlab("\n Sample age " ) +
+    ylim(0, 2376000.000)+
+    xlim(3, 9)+
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    ggtitle(expression(italic("Salix richardsonii"))) +
+    theme_shrub_e()+ theme(text=element_text(family="Helvetica Light")) +
+    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+
+# extract outputs
+# extract outputs
+rich_biovol_time_extract <- model_summ_time(garden_rich_biovol_time)
+
+# extraction for model output table
+rownames(rich_biovol_time_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
+rich_biovol_time_extract_df <- rich_biovol_time_extract %>% 
+  mutate(Species = rep("Salix richardsonii")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+# S. Pulchra -----
+garden_pul_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (Sample_age|SampleID_standard),
+                                    data = all_CG_growth_pul, family = gaussian(), chains = 3,
+                                    iter = 5000, warmup = 1000, 
+                                    control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(garden_pul_biovol_time) # significantly larger biovolume for southern shrubs in garden
+plot(garden_pul_biovol_time) # fine
+pp_check(garden_pul_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
+
+ggpred_biovol_pul <- ggpredict(garden_pul_biovol_time, terms = c("Sample_age", "population"))
+colnames(ggpred_biovol_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_biovol_pul_plot <-ggplot(ggpred_biovol_pul) +
+    geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = biovolume, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Biovolume (cm3)\n") +
+    xlab("\n Sample age " ) +
+    ylim(0, 466096.890)+
+    xlim(3, 9)+
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    ggtitle(expression(italic("Salix pulchra"))) +
+    theme_shrub_e()+ theme(text=element_text(family="Helvetica Light")) +
+    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+
+# extract outputs
+pul_biovol_time_extract <- model_summ_time(garden_pul_biovol_time)
+
+# extraction for model output table
+rownames(pul_biovol_time_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
+pul_biovol_time_extract_df <- pul_biovol_time_extract %>% 
+  mutate(Species = rep("Salix pulchra")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+# S. Arctica -----
+garden_arc_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population +  (Sample_age|SampleID_standard),
+                                    data = all_CG_growth_arc, family = gaussian(), chains = 3,
+                                    iter = 5000, warmup = 1000, 
+                                    control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
+summary(garden_arc_biovol_time) # NOT significant diff. 
+plot(garden_arc_biovol_time) # fine
+pp_check(garden_arc_biovol_time,  type = "dens_overlay", nsamples = 100) # fine
+
+library(ggeffects)
+ggpred_biovol_arc <- ggpredict(garden_arc_biovol_time, terms = c("Sample_age", "population"))
+colnames(ggpred_biovol_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_biovol_arc_plot <-ggplot(ggpred_biovol_arc) +
+    geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = biovolume, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Biovolume (cm3)\n") +
+    xlab("\n Sample age " ) +
+    xlim(3, 7)+
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    ggtitle(expression(italic("Salix arctica"))) +
+    theme_shrub_e()+ theme(text=element_text(family="Helvetica Light")) +
+    theme( axis.text.x  = element_text(angle = 0))) # if i log everything it's exactly the same plot as with conditional effects! 
+
+ggpred_CG_biovol_panel <- ggarrange(ggpred_biovol_ric_plot,
+                                    ggpred_biovol_pul_plot, 
+                                    ggpred_biovol_arc_plot, nrow = 1,
+                                    common.legend = TRUE, legend="none")
+
+ggsave("output/figures/ggpred_CG_biovol_panel.png", width = 14.67, height = 6.53, units = "in")
+
+# extract outputs
+arc_biovol_time_extract <- model_summ_time(garden_arc_biovol_time)
+
+# extraction for model output table
+rownames(arc_biovol_time_extract) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma")
+arc_biovol_time_extract_df <- arc_biovol_time_extract %>% 
+  mutate(Species = rep("Salix arctica")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+garden_biovol_interact <- rbind(rich_biovol_time_extract_df,pul_biovol_time_extract_df,arc_biovol_time_extract_df)
+
+# back transforming from log
+garden_biovol_interact_back <- garden_biovol_interact %>%
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI") %>%
+  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
+  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
+  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
+  mutate(Estimate_trans = 10^(Estimate), 
+         Est.Error_trans = 10^(Est.Error)) %>% 
+  select(-CI_range)
+
+# save df of results 
+write.csv(garden_biovol_interact_back, "output/garden_biovol_interact_back.csv")
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_biovol_interact_back) <- c("Intercept", "Sample age", "Southern Garden", "Sample age*Southern Garden", "Year", "sigma", 
+                                           " Intercept", " Sample age", " Southern Garden", " Sample age*Southern Garden", " Year", " sigma",
+                                           "Intercept ", "Sample age ", "Southern Garden ", "Sample age*Southern Garden ", "Year ", "sigma ")
+
+
+# making sure Rhat keeps the .00 
+garden_biovol_interact_back$Rhat <- as.character(formatC(garden_biovol_interact_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_time_interact_biovol <- garden_biovol_interact_back %>% 
+  kbl(caption="Table.xxx BRMS model outputs: biovolume (log cm3) over time of northern vs southern shrubs in the common garden. 
+      Model structure per species:log(biovolume) ~ Sample_age*population+ (1|Year)", 
+      col.names = c("Species","Estimate",
+                    "Est. Error",
+                    "Lower 95% CI (log)",
+                    "Upper 95% CI (log)", 
+                    "Rhat", 
+                    "Bulk Effective Sample Size",
+                    "Tail Effective Sample Size", 
+                    "Sample Size",
+                    "Effect",
+                    "Lower 95% CI 
+                    (back transformed)", "Upper 95% CI
+                    (back transformed)", 
+                    "Estimate transformed", 
+                    "Error transformed"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_time_interact_biovol, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+#2.1. BIOVOL GROWTH RATE -------
+
+# S.richardsonii ------
+hist(all_CG_growth_ric$biovol_growth_diff) # normal 
+biovol_rich_time <- brms::brm(biovol_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
+                              data = all_CG_growth_ric,  family = gaussian(), chains = 3,
+                              iter = 5000, warmup = 1000, 
+                              control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(biovol_rich_time) # no diff
+pp_check(biovol_rich_time, type = "dens_overlay", nsamples = 100) 
+
+# extract output with function
+rich_extract_timeb <- model_summ_RE(biovol_rich_time)
+
+# extraction for model output table
+rownames(rich_extract_timeb) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age", "Sigma")
+rich_extract_timeb_df <- rich_extract_timeb %>% 
+  mutate(Species = rep("Salix richardsonii")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+# S. pulchra -----
+hist(all_CG_growth_pul$biovol_growth_diff) # normal 
+biovol_pul_time <- brms::brm(biovol_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
+                             data = all_CG_growth_pul,  family = gaussian(), chains = 3,
+                             iter = 5000, warmup = 1000, 
+                             control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(biovol_pul_time) # no diff
+pp_check(biovol_pul_time, type = "dens_overlay", nsamples = 100) 
+
+# extract output with function
+pul_extract_timeb <- model_summ_RE(biovol_pul_time)
+
+# extraction for model output table
+rownames(pul_extract_timeb) <-  c("Intercept", "Southern Garden", "Sample ID", "Sample age", "Sigma")
+pul_extract_timeb_df <- pul_extract_timeb %>% 
+  mutate(Species = rep("Salix pulchra")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+# S. arctica-----
+hist(all_CG_growth_arc$biovol_growth_diff) # normal 
+biovol_arc_time <- brms::brm(biovol_growth_diff ~ population  + (1|SampleID_standard) + (1|Sample_age),
+                             data = all_CG_growth_arc,  family = gaussian(), chains = 3,
+                             iter = 10000, warmup = 1000, 
+                             control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(biovol_arc_time) # no diff
+pp_check(biovol_arc_time, type = "dens_overlay", nsamples = 100) 
+
+# extract output with function
+arc_extract_timeb <- model_summ_RE(biovol_arc_time)
+
+# extraction for model output table
+rownames(arc_extract_timeb) <-c("Intercept", "Southern Garden", "Sample ID", "Sample age", "Sigma")
+arc_extract_timeb_df <- arc_extract_timeb %>% 
+  mutate(Species = rep("Salix arctica")) %>% 
+  # "Sample Size" = rep(105)) %>% 
+  relocate("Species", .before = "Estimate")%>%
+  relocate("nobs", .before = "effect")
+
+garden_heights_timeb <- rbind(rich_extract_timeb_df,pul_extract_timeb_df,arc_extract_timeb_df)
+
+# save df of results 
+write.csv(garden_heights_timeb, "output/garden_heights_timeb.csv")
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(garden_heights_timeb) <- c("Intercept", "Southern Garden", "Sample ID", "Sample age",
+                                    "Sigma", " Intercept", " Southern Garden", " Sample ID", " Sample age",
+                                    " Sigma", "Intercept ", "Southern Garden ", "Sample ID ", "Sample age ",
+                                    "Sigma ")
+
+
+# making sure Rhat keeps the .00 
+garden_heights_timeb$Rhat <- as.character(formatC(garden_heights_timeb$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_biovol_time <- garden_heights_timeb %>% 
+  kbl(caption="Table.xxx BRMS model outputs: growth rate (biovolume change per year) northern vs southern shrubs in the common garden. 
+      Model structure per species: (biovolume_difference ~ population + (1|Year).", 
+      col.names = c( "Species","Estimate",
+                     "Est. Error",
+                     "Lower 95% CI ",
+                     "Upper 95% CI ", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Sample Size",
+                     "Effect"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_biovol_time, 2, width = NULL, bold = FALSE, italic = TRUE)
+
