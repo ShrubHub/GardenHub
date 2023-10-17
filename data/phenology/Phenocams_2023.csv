@@ -1,5 +1,5 @@
 PLOT,Year,Site,Observer,NOTES,Plants_first_visible_through_snow,Snow_Free_Melt_Date,First_snow_free_day,First_snow_return_day _end_of_season,50_snow_coverge_end_of_season,100_snow_coverage_end_of_season,First_leaf_bud_burst,50_Leaves_Green,100_Leaves_Green,First_yellow_leaf,50_Leaves_Yellow,100_Leaves_Yellow,Species,First_Leaf_Bud_Burst,First_Yellowing_of_Leaves,Last_Leaf_Turns_Yellow
-QHI_1,2019,QHI,Elise Gallois,Gaps between 22nd June - 15th July. NOTE: Camera labelled Slump D1 but actually phenocam 1,NA,NA,08/06/2019,NA,NA,NA,NA,NA,04/07/2019,16/07/2019,NA,NA,ARC,NA,25-Jul,NA
+QHI_1,2019,QHI,Elise Gallois,Gaps between 22nd June - 15th July. NOTE: Camera labelled Slump D1 but actually phenocam 1,NA,NA,08/06/2019,NA,NA,NA,NA,NA,04/07/2019,16/07/2019,NA,NA,ARC,NA,25/07/2019,NA
 QHI_2,2019,QHI,Elise Gallois,Limited selection (4th-12th August)- no phenophases can be noted,NA,NA,08/06/2019,NA,NA,NA,NA,NA,NA,24/07/2019,NA,NA,ARC,NA,NA,NA
 QHI_3,2019,QHI,Elise Gallois,,NA,NA,08/06/2019,NA,NA,NA,NA,NA,NA,31/07/2019,NA,NA,,,,
 QHI_6,2019,QHI,Elise Gallois,,NA,NA,01/06/2019,NA,NA,NA,NA,NA,02/07/2019,28/07/2019,NA,NA,,,,
@@ -87,7 +87,7 @@ KP6,2022,Kluane,Elise Gallois,Knocked askew sometime between March 21 and June 7
 KP8,2022,Kluane,Elise Gallois,,12/06/2022,21/06/2022,22/06/2022,NA,NA,NA,17/06/2022,26/06/2022,07/07/2022,15/08/2022,NA,NA,richardsonii,27/06/2022,14/08/2022,NA
 QHI_1,2022,QHI,Elise Gallois,,NA,NA,12/06/2022,NA,NA,NA,NA,NA,NA,23/07/2022,17/08/2022,NA,Arctica,NA,23/07/2022,21/08/2022
 QHI_2,2022,QHI,Elise Gallois,,NA,NA,12/06/2022,25/09/2022,14/10/2022,NA,NA,NA,NA,26/07/2022,24/08/2022,19/09/2022,Arctica,NA,26/07/2022,24/08/2022
-QHI_3,2022,QHI,Elise Gallois,,NA,NA,12/06/2022, v,12/10/2022,27/10/2022,NA,NA,NA,21/07/2022,18/08/2022,19/09/2022,Pulchra,NA,21/07/2022,27/08/2022
+QHI_3,2022,QHI,Elise Gallois,,NA,NA,12/06/2022,,12/10/2022,27/10/2022,NA,NA,NA,21/07/2022,18/08/2022,19/09/2022,Pulchra,NA,21/07/2022,27/08/2022
 QHI_4,2022,QHI,Elise Gallois,,NA,NA,28/06/2022,NA,NA,NA,NA,NA,NA,25/07/2022,23/08/2022,15/09/2022,Richardsonii,NA,25/07/2022,29/08/2022
 QHI_5,2022,QHI,Elise Gallois,,NA,NA,26/05/2022,NA,NA,NA,NA,NA,NA,02/08/2022,27/08/0202,NA,Arctica,NA,01/08/2022,01/09/2022
 QHI_6,2022,QHI,Elise Gallois,,NA,NA,26/05/2022,NA,NA,NA,NA,NA,NA,31/07/2022,NA,NA,Pulchra,NA,31/07/2022,NA
