@@ -148,13 +148,26 @@ write.csv(cg_2023_merge, "data/phenology/cg_phenology_2023.csv")
 cg_2023_merge <- read.csv("data/phenology/cg_phenology_2023.csv")
 all_source_phenocam_merge <- read.csv("data/phenology/all_source_pheno_2023.csv")
 
-all_pheno_2023 <- full_join(cg_2023_working, all_source_phenocam_merge, 
-                            by = c(PhenocamID, Year, 
-                                   Snow_Free_Melt_Date, 
-                                   First_snow_free_day, 
-                                   First_snow_return_day_end_of_season, 
-                                   snow_coverage_end_of_season_100, ))
+all_pheno_2023 <- full_join(cg_2023_merge, all_source_phenocam_merge, 
+                            by = c("PhenocamID", "Year", "Species", 
+                                   "population", 
+                                   "All_snow_free_DOY", 
+                                   "First_bud_burst_DOY", 
+                                   "First_leaf_yellow_DOY",
+                                   'All_leaves_yellow_DOY',
+                                   "Snow_Free_Melt_Date",
+                                   'First_snow_free_day',
+                                   'First_snow_return_day_end_of_season',
+                                   'First_bud_burst',
+                                   'First_leaf_yellow',
+                                   'All_leaves_yellow',
+                                   'Snow_melt_DOY', 
+                                   'Snow_return_EoS_DOY', 
+                                   'growing_season',
+                                   'snow_free_days'))
 
+# save ALL phenology 2023
+write.csv(all_pheno_2023, "data/phenology/all_phenology_2023.csv")
 
 # OLD ----
 # data ----
