@@ -94,7 +94,67 @@ all_source_phenocam_merge <- all_source_phenocam_merge %>%
 write.csv(all_source_phenocam_merge, "data/phenology/all_source_pheno_2023.csv")
 
 # Common garden ---- 
-cg_2023 <- 
+cg_2023 <- read.csv("data/phenology/Common_garden_phenocams_2023.csv")
+
+cg_2023$SampleID_standard <- toupper(cg_2023$Shrub) # make all uppercase characters 
+cg_2023$SampleID_standard <- gsub("-","",as.character(cg_2023$SampleID_standard)) # remove "-"
+cg_2023$SampleID_standard <- gsub("_","",as.character(cg_2023$SampleID_standard)) # remove "-"
+cg_2023$SampleID_standard <- gsub(" ","",as.character(cg_2023$SampleID_standard)) 
+
+cg_2023_working <- cg_2023 %>% 
+  dplyr::select(-c(Observer, Notes, Plants_first_visible_through_snow, 
+                   snow_coverge_end_of_season_50, Shrub)) %>% 
+  dplyr::rename("PhenocamID" = "Plot",
+                "First_bud_burst" = "First_leaf_bud_burst", 
+                "First_leaf_yellow" = "First_yellowing_leaves", 
+                "All_leaves_yellow" = "Last_leaf_starts_turning_yellow", 
+                "First_snow_return_day_end_of_season" = "First_snow_return_day_end_of_season") %>% 
+  mutate(Species = ifelse(grepl("SA", cg_2023$SampleID_standard), "Salix arctica",
+                          ifelse(grepl("SR", cg_2023$SampleID_standard), "Salix richardsonii", 
+                                 ifelse(grepl("SP", cg_2023$SampleID_standard), "Salix pulchra", NA)))) %>%  # species col
+  mutate(population_1 = ifelse(grepl("HE" , cg_2023$SampleID_standard), "QHI", # working population col 1
+                               ifelse(grepl("KP", cg_2023$SampleID_standard), "Kluane", 
+                                      ifelse(grepl("PC", cg_2023$SampleID_standard), "Kluane", NA)))) %>% 
+  mutate(population_2 = ifelse(grepl("H" , cg_2023$SampleID_standard), "QHI", # working population col 1
+                               ifelse(grepl("K", cg_2023$SampleID_standard), "Kluane", 
+                                      ifelse(grepl("PP", cg_2023$SampleID_standard), "Kluane", NA)))) %>%
+  mutate(population = case_when(population_1 == "QHI" | population_2 == "QHI" ~ "Northern Garden", # final population col 
+                                population_1  == "Kluane" | population_2 == "Kluane" ~ "Southern Garden")) %>%
+  select(-population_1, -population_2) 
+
+# make date columns dates 
+cg_2023_working$Snow_Free_Melt_Date <- as.POSIXct(cg_2023_working$Snow_Free_Melt_Date, format = "%d/%m/%Y")
+cg_2023_working$First_snow_free_day <- as.POSIXct(cg_2023_working$First_snow_free_day, format = "%d/%m/%Y")
+cg_2023_working$First_snow_return_day_end_of_season <- as.POSIXct(cg_2023_working$First_snow_return_day_end_of_season, format = "%d/%m/%Y")
+cg_2023_working$First_bud_burst <- as.POSIXct(cg_2023_working$First_bud_burst, format = "%d/%m/%Y")
+cg_2023_working$First_leaf_yellow <- as.POSIXct(cg_2023_working$First_leaf_yellow, format = "%d/%m/%Y")
+cg_2023_working$All_leaves_yellow <- as.POSIXct(cg_2023_working$All_leaves_yellow, format = "%d/%m/%Y")
+# make DOY columns
+cg_2023_working$Snow_melt_DOY <-  lubridate::yday(as.POSIXct(cg_2023_working$Snow_Free_Melt_Date, format = "%d-%m-%Y"))
+cg_2023_working$All_snow_free_DOY <-  lubridate::yday(as.POSIXct(cg_2023_working$First_snow_free_day, format = "%d-%m-%Y"))
+cg_2023_working$Snow_return_EoS_DOY <-  lubridate::yday(as.POSIXct(cg_2023_working$First_snow_return_day_end_of_season, format = "%d-%m-%Y"))
+cg_2023_working$First_bud_burst_DOY <-  lubridate::yday(as.POSIXct(cg_2023_working$First_bud_burst, format = "%d-%m-%Y"))
+cg_2023_working$First_leaf_yellow_DOY <-  lubridate::yday(as.POSIXct(cg_2023_working$First_leaf_yellow, format = "%d-%m-%Y"))
+cg_2023_working$All_leaves_yellow_DOY <-  lubridate::yday(as.POSIXct(cg_2023_working$All_leaves_yellow, format = "%d-%m-%Y"))
+
+cg_2023_merge <-  cg_2023_working %>% 
+  mutate(growing_season = First_leaf_yellow_DOY - First_bud_burst_DOY) %>% 
+  mutate(snow_free_days = Snow_return_EoS_DOY - All_snow_free_DOY)
+
+# save CG phenology 
+write.csv(cg_2023_merge, "data/phenology/cg_phenology_2023.csv")
+
+# merge all phenology 2023 ----
+cg_2023_merge <- read.csv("data/phenology/cg_phenology_2023.csv")
+all_source_phenocam_merge <- read.csv("data/phenology/all_source_pheno_2023.csv")
+
+all_pheno_2023 <- full_join(cg_2023_working, all_source_phenocam_merge, 
+                            by = c(PhenocamID, Year, 
+                                   Snow_Free_Melt_Date, 
+                                   First_snow_free_day, 
+                                   First_snow_return_day_end_of_season, 
+                                   snow_coverage_end_of_season_100, ))
+
 
 # OLD ----
 # data ----
