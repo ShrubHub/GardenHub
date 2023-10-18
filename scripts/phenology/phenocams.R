@@ -1,6 +1,6 @@
 #### PHENOCAMS: common garden, Kluane and QHI
 #### Script by Erica Zaja, created 14/12/22
-### Last updated: 28/02/23 by Madi 
+### Last updated: 18/10/23 by Madi 
 
 # 1. LOADING LIBRARIES ----
 library(tidyverse)
@@ -476,7 +476,123 @@ means_growing_season <- all_growing_season_means %>%
   summarise(overall_mean_growing_season = mean(growing_season_length))
 
 
-# 4. MODELS -----
+
+
+# 2023 ----
+# import source data (QHI, KP)
+
+source_pheno_2023 <- read.csv("data/phenology/Phenocams_2023.csv")
+
+# clean up data sheet 
+source_pheno_2023$Species[source_pheno_2023$Species %in% c('ARC', 'Arctica')] <- 'Salix arctica'
+source_pheno_2023$Species[source_pheno_2023$Species %in% c('RICH', 'Richarsonii', 'Richardsonii', 'richardsonii')] <- 'Salix richardsonii'
+source_pheno_2023$Species[source_pheno_2023$Species %in% c('PUL', 'Pulchra', 'pulchra')] <- 'Salix pulchra'
+
+source_pheno_2023_working <- source_pheno_2023 %>% 
+  dplyr::select(-c(Observer, NOTES, Plants_first_visible_through_snow, 
+                   X50_snow_coverge_end_of_season, 
+                   X50_Leaves_Green, X100_Leaves_Green, X50_Leaves_Yellow, 
+                   First_leaf_bud_burst, 
+                   First_yellow_leaf, X100_Leaves_Yellow, 
+                   X100_snow_coverage_end_of_season, 
+                   Plants_first_visible_through_snow)) %>% 
+  dplyr::filter(Site %in% c("Kluane", "QHI")) %>% 
+  dplyr::filter(Species %in% c("Salix richardsonii", "Salix pulchra", 'Salix arctica')) %>% 
+  dplyr::rename("PhenocamID" = "PLOT",
+                "First_bud_burst" = "First_Leaf_Bud_Burst", 
+                "First_leaf_yellow" = "First_Yellowing_of_Leaves", 
+                "All_leaves_yellow" = "Last_Leaf_Turns_Yellow", 
+                "First_snow_return_day_end_of_season" = "First_snow_return_day._end_of_season")
+
+# make date columns dates 
+source_pheno_2023_working$Snow_Free_Melt_Date <- as.POSIXct(source_pheno_2023_working$Snow_Free_Melt_Date, format = "%d/%m/%Y")
+source_pheno_2023_working$First_snow_free_day <- as.POSIXct(source_pheno_2023_working$First_snow_free_day, format = "%d/%m/%Y")
+source_pheno_2023_working$First_snow_return_day_end_of_season <- as.POSIXct(source_pheno_2023_working$First_snow_return_day_end_of_season, format = "%d/%m/%Y")
+source_pheno_2023_working$First_bud_burst <- as.POSIXct(source_pheno_2023_working$First_bud_burst, format = "%d/%m/%Y")
+source_pheno_2023_working$First_leaf_yellow <- as.POSIXct(source_pheno_2023_working$First_leaf_yellow, format = "%d/%m/%Y")
+source_pheno_2023_working$All_leaves_yellow <- as.POSIXct(source_pheno_2023_working$All_leaves_yellow, format = "%d/%m/%Y")
+# make DOY columns
+source_pheno_2023_working$Snow_melt_DOY <-  lubridate::yday(as.POSIXct(source_pheno_2023_working$Snow_Free_Melt_Date, format = "%d-%m-%Y"))
+source_pheno_2023_working$All_snow_free_DOY <-  lubridate::yday(as.POSIXct(source_pheno_2023_working$First_snow_free_day, format = "%d-%m-%Y"))
+source_pheno_2023_working$Snow_return_EoS_DOY <-  lubridate::yday(as.POSIXct(source_pheno_2023_working$First_snow_return_day_end_of_season, format = "%d-%m-%Y"))
+source_pheno_2023_working$First_bud_burst_DOY <-  lubridate::yday(as.POSIXct(source_pheno_2023_working$First_bud_burst, format = "%d-%m-%Y"))
+source_pheno_2023_working$First_leaf_yellow_DOY <-  lubridate::yday(as.POSIXct(source_pheno_2023_working$First_leaf_yellow, format = "%d-%m-%Y"))
+source_pheno_2023_working$All_leaves_yellow_DOY <-  lubridate::yday(as.POSIXct(source_pheno_2023_working$All_leaves_yellow, format = "%d-%m-%Y"))
+
+# make population column 
+source_pheno_2023_merge <- source_pheno_2023_working %>% 
+  mutate(population = case_when(startsWith(as.character(Site), "Q") ~ "Northern Source",
+                                TRUE ~ "Southern Source"))
+
+# adding QHI S. actica data ----
+# updating for 2023
+#qhi_2022 <- read_csv("data/phenology/QHI_phenology_plots/qiki_phen_with_before_2022.csv")
+qhi <- read.csv("data/phenology/QHI_phenology_plots/qiki_phen_2023.csv")
+
+qhi$Spp[qhi$Spp == 'SALARC'] <- 'Salix arctica'
+
+str(qhi)
+unique(qhi$Spp) # only want SALARC
+unique(all_phenocam_data_salix$population)
+
+qhi_arctica <- qhi %>% 
+  dplyr::filter(Spp == "Salix arctica") %>% 
+  dplyr::filter(Year >= "2014") %>% 
+  mutate("population" = "Northern Source") %>% 
+  dplyr::rename("Species" = "Spp", 
+         "All_snow_free_DOY" = "P1",
+         "First_bud_burst_DOY" = "P2", 
+         "First_leaf_yellow_DOY" = "P5", 
+         "All_leaves_yellow_DOY" = "P6",
+         "PhenocamID" = "Plot.ID") %>% 
+  select(-c(P3, P4, P7))
+
+# merge with phenocam data 
+all_source_phenocam_merge <- full_join(qhi_arctica, source_pheno_2023_merge, 
+                                      by = c("Year", "population", "PhenocamID", 
+                                             "Species", 
+                                             "All_snow_free_DOY",
+                                             "First_bud_burst_DOY", 
+                                            "First_leaf_yellow_DOY", 
+                                            "All_leaves_yellow_DOY"))
+# adding growing season column 
+# adding snow free days column 
+all_source_phenocam_merge <- all_source_phenocam_merge %>% 
+  mutate(growing_season = First_leaf_yellow_DOY - First_bud_burst_DOY) %>% 
+  mutate(snow_free_days = Snow_return_EoS_DOY - All_snow_free_DOY)
+ 
+# saving updated data frames 
+write.csv(all_source_phenocam_merge, "data/phenology/all_source_pheno_2023.csv")
+ 
+# second merge 
+#unique(all_growing_season$population)
+
+#qhi_arctica_2 <- qhi %>% 
+#  dplyr::filter(Spp == "Salix arctica") %>% 
+#  dplyr::filter(Year >= "2014") %>% 
+#  mutate("population" = "QHI") %>% 
+#  dplyr::rename("Species" = "Spp", 
+#         "All_snow_free_DOY" = "P1",
+#         "Salix_first_bud_burst_DOY" = "P2", 
+#         "Salix_first_yellow_DOY" = "P5", 
+#         "Salix_last_yellow_DOY" = "P6",
+#         "PhenocamID" = "Plot.ID") %>% 
+#  select(-c(P3, P4, P7)) %>% 
+#  mutate(growing_season = Salix_first_yellow_DOY - Salix_first_bud_burst_DOY)
+
+#str(all_growing_season)
+
+#all_growing_season_salix <- full_join(qhi_arctica_2, all_growing_season, 
+#                                      by = c("Year", "population", "PhenocamID", 
+#                                             "Species", 
+#                                             "Salix_first_bud_burst_DOY", 
+##                                             "Salix_first_yellow_DOY", 
+#                                             "Salix_last_yellow_DOY"))
+
+
+
+# OLD ----
+# models -----
 # load all data 
 CG_phenocams_individual_2021_2022_wrangle <- read_csv("data/phenology/phenocam_pics/CG_phenocams_individual_2021_2022_wrangle.csv")
 QHI_phenocams_2022_wrangle <- read_csv("data/phenology/phenocam_pics/QHI_phenocams_2022_wrangle.csv")
@@ -491,10 +607,10 @@ KP_phenocams_2021_2022_merge <- KP_phenocams_2021_2022_wrangle %>%
                 Salix_last_yellow_DOY) %>%
   mutate(population = rep("Southern_source")) %>%
   rename("PhenocamID" = "Plot", 
-          "First_bud_burst" ="Salix_bud_burst"  , 
-        "First_leaf_yellow" = "Salix_first_yellow" ,
+         "First_bud_burst" ="Salix_bud_burst"  , 
+         "First_leaf_yellow" = "Salix_first_yellow" ,
          "All_leaves_yellow" = "Salix_last_yellow" , 
-          "First_bud_burst_DOY" ="Salixbud_burst_DOY", 
+         "First_bud_burst_DOY" ="Salixbud_burst_DOY", 
          "First_leaf_yellow_DOY" = "Salix_first_yellow_DOY"  ,
          "All_leaves_yellow_DOY" = "Salix_last_yellow_DOY")
 
@@ -523,16 +639,16 @@ QHI_phenocams_2022_merge <- QHI_phenocams_2022_wrangle %>%
                 Salix_last_yellow_DOY) %>%
   mutate(population = rep("Northern_source")) %>%
   rename( "First_bud_burst" ="Salix_bud_burst"  , 
-         "First_leaf_yellow" = "Salix_first_yellow" ,
-         "All_leaves_yellow" = "Salix_last_yellow" , 
-         "First_bud_burst_DOY" ="Salix_first_bud_burst_DOY", 
-         "First_leaf_yellow_DOY" = "Salix_first_yellow_DOY"  ,
-         "All_leaves_yellow_DOY" = "Salix_last_yellow_DOY")
-         
+          "First_leaf_yellow" = "Salix_first_yellow" ,
+          "All_leaves_yellow" = "Salix_last_yellow" , 
+          "First_bud_burst_DOY" ="Salix_first_bud_burst_DOY", 
+          "First_leaf_yellow_DOY" = "Salix_first_yellow_DOY"  ,
+          "All_leaves_yellow_DOY" = "Salix_last_yellow_DOY")
+
 # merge all 
 
 all_phenocam_data_salix <- rbind(QHI_phenocams_2022_merge, CG_phenocams_individual_2021_2022_merge,
-                           KP_phenocams_2021_2022_merge) 
+                                 KP_phenocams_2021_2022_merge) 
 
 all_phenocam_data_salix$Species <- as.factor(all_phenocam_data_salix$Species)
 all_phenocam_data_salix$population <- as.factor(all_phenocam_data_salix$population)
@@ -542,20 +658,20 @@ write.csv(all_phenocam_data_salix, "data/phenology/phenocam_pics/all_phenocam_da
 
 # ordering levels so source and garden populations side by side
 all_phenocam_data_salix$population <- plyr::revalue(all_phenocam_data_salix$population, 
-                                                 c("QHI"="Northern Garden",
-                                                   "Kluane"="Southern Garden",
-                                                   "Southern_source"="Southern Source",
-                                                   "Northern_source"="Northern Source"))
+                                                    c("QHI"="Northern Garden",
+                                                      "Kluane"="Southern Garden",
+                                                      "Southern_source"="Southern Source",
+                                                      "Northern_source"="Northern Source"))
 
 all_phenocam_data_salix$population <- ordered(all_phenocam_data_salix$population, 
-                                           levels = c("Northern Source", 
-                                                      "Northern Garden", 
-                                                      "Southern Source",
-                                                      "Southern Garden"))
+                                              levels = c("Northern Source", 
+                                                         "Northern Garden", 
+                                                         "Southern Source",
+                                                         "Southern Garden"))
 
 all_phenocam_data_salix$Year <- as.factor(all_phenocam_data_salix$Year)
 
-# 4.1. SOURCE POP ONLY -----
+# source pop -----
 # keeping only source pops
 all_phenocam_data_salix_sources <- all_phenocam_data_salix %>%
   filter(population %in% c("Northern Source", "Southern Source"))
@@ -611,11 +727,11 @@ tab_model(yellow_mod_source)
           axis.text.y = element_text(size = 12, colour = "black")))
 
 (pheno_source_panel <- ggarrange(budburst_source_plot, yellow_leaf_source_plot, 
-                                                 labels = c("A", "B"), common.legend = TRUE, legend = "bottom",
-                                                 ncol = 2, nrow = 1))
+                                 labels = c("A", "B"), common.legend = TRUE, legend = "bottom",
+                                 ncol = 2, nrow = 1))
 
 
-# 4.2 CG vs SOURCES ------
+# CG vs sources ------
 # model bud burst doy: spp random
 bud_burst_mod <- lmer(First_bud_burst_DOY ~ population + (1|Species) + (1|Year), data = all_phenocam_data_salix)
 tab_model(bud_burst_mod)
@@ -702,7 +818,7 @@ tab_model(growing_season_mod)
           axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
           axis.text.y = element_text(size = 15, colour = "black")))
 
-# 4.3. CG ONLY MODELS ------
+# CG only ------
 all_phenocam_data_cg <- all_phenocam_data_salix %>% 
   filter(population %in% c("Northern Garden", "Southern Garden"))
 
@@ -770,96 +886,5 @@ tab_model(yellow_cg_mod_2)
           axis.title = element_text(size = 18),
           axis.text.x = element_text(angle = 45, vjust = 0.5, size = 15, colour = "black"),
           axis.text.y = element_text(size = 15, colour = "black")))
-
-# 2023 ----
-# import source data (QHI, KP)
-
-source_pheno_2023 <- read.csv("data/phenology/Phenocams_2023.csv")
-
-# clean up data sheet 
-source_pheno_2023$Species[source_pheno_2023$Species %in% c('ARC', 'Arctica')] <- 'Salix arctica'
-source_pheno_2023$Species[source_pheno_2023$Species %in% c('RICH', 'Richarsonii', 'Richardsonii', 'richardsonii')] <- 'Salix richardsonii'
-source_pheno_2023$Species[source_pheno_2023$Species %in% c('PUL', 'Pulchra', 'pulchra')] <- 'Salix pulchra'
-
-source_pheno_2023_working <- source_pheno_2023 %>% 
-  dplyr::select(-c(Observer, NOTES, Plants_first_visible_through_snow, 
-                   X50_snow_coverge_end_of_season, 
-                   X50_Leaves_Green, X100_Leaves_Green, X50_Leaves_Yellow, 
-                   First_leaf_bud_burst, 
-                   First_yellow_leaf, X100_Leaves_Yellow, 
-                   X100_snow_coverage_end_of_season, 
-                   Plants_first_visible_through_snow)) %>% 
-  dplyr::filter(Site %in% c("Kluane", "QHI")) %>% 
-  dplyr::filter(Species %in% c("Salix richardsonii", "Salix pulchra", 'Salix arctica')) %>% 
-  dplyr::rename("PhenocamID" = "PLOT",
-                "First_bud_burst" = "First_Leaf_Bud_Burst", 
-                "First_leaf_yellow" = "First_Yellowing_of_Leaves", 
-                "All_leaves_yellow" = "Last_Leaf_Turns_Yellow")
-
-
-
-# adding QHI data ----
-# data 
-all_phenocam_data_salix <- read_csv("data/phenology/phenocam_pics/all_phenocam_data_salix.csv")
-all_growing_season <- read_csv("data/phenology/phenocam_pics/all_growing_season.csv")
-# updating for 2023
-#qhi_2022 <- read_csv("data/phenology/QHI_phenology_plots/qiki_phen_with_before_2022.csv")
-qhi <- read.csv("data/phenology/QHI_phenology_plots/qiki_phen_2023.csv")
-
-qhi$Spp[qhi$Spp == 'SALARC'] <- 'Salix arctica'
-
-str(qhi)
-unique(qhi$Spp) # only want SALARC
-unique(all_phenocam_data_salix$population)
-
-qhi_arctica <- qhi %>% 
-  dplyr::filter(Spp == "Salix arctica") %>% 
-  dplyr::filter(Year >= "2014") %>% 
-  mutate("population" = "Northern Source") %>% 
-  dplyr::rename("Species" = "Spp", 
-         "All_snow_free_DOY" = "P1",
-         "First_bud_burst_DOY" = "P2", 
-         "First_leaf_yellow_DOY" = "P5", 
-         "All_leaves_yellow_DOY" = "P6",
-         "PhenocamID" = "Plot.ID") %>% 
-  select(-c(P3, P4, P7))
-
-# merge with phenocam data 
-all_phenocam_update <- full_join(qhi_arctica, all_phenocam_data_salix, 
-                                      by = c("Year", "population", "PhenocamID", 
-                                             "Species", 
-                                             "First_bud_burst_DOY", 
-                                            "First_leaf_yellow_DOY", 
-                                            "All_leaves_yellow_DOY"))
-
-# second merge 
-unique(all_growing_season$population)
-
-qhi_arctica_2 <- qhi %>% 
-  dplyr::filter(Spp == "Salix arctica") %>% 
-  dplyr::filter(Year >= "2014") %>% 
-  mutate("population" = "QHI") %>% 
-  dplyr::rename("Species" = "Spp", 
-         "All_snow_free_DOY" = "P1",
-         "Salix_first_bud_burst_DOY" = "P2", 
-         "Salix_first_yellow_DOY" = "P5", 
-         "Salix_last_yellow_DOY" = "P6",
-         "PhenocamID" = "Plot.ID") %>% 
-  select(-c(P3, P4, P7)) %>% 
-  mutate(growing_season = Salix_first_yellow_DOY - Salix_first_bud_burst_DOY)
-
-str(all_growing_season)
-
-all_growing_season_salix <- full_join(qhi_arctica_2, all_growing_season, 
-                                      by = c("Year", "population", "PhenocamID", 
-                                             "Species", 
-                                             "Salix_first_bud_burst_DOY", 
-                                             "Salix_first_yellow_DOY", 
-                                             "Salix_last_yellow_DOY"))
-# saving updated data frames 
-write.csv(all_phenocam_update, "data/phenology/all_phenocam_update.csv")
-write.csv(all_growing_season_salix, "data/phenology/all_growing_season_salix.csv")
-  
-  
   
   
