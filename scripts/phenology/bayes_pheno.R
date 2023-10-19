@@ -919,20 +919,9 @@ save_kable(kable_yellow_garden, file = "output/phenology/yellow_garden_results.p
 
 # 3. GROWING SEASON LENGTH -----
 # Salix richardsonii ------
-growing_season_rich <- brms::brm(growing_season_length ~ population + (1|Year), 
-                                data = all_phenocam_rich, family = gaussian(), chains = 3,
-                                iter = 3000, warmup = 1000,
-                                control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-summary(growing_season_rich) 
-plot(growing_season_rich)
-pp_check(growing_season_rich, type = "dens_overlay", ndraws = 100) # looks decent
-season_rich_results <- model_summ_pheno(growing_season_rich)
-season_rich_results$Species <- "Salix richardsonii"
-
 # center on 0
-all_phenocam_rich$growing_season_length_scale <- center_scale(all_phenocam_rich$growing_season_length)
-growing_season_rich_scale <- brms::brm(growing_season_length_scale ~ population + (1|Year), 
+all_phenocam_rich$growing_season_length_scale <- center_scale(all_phenocam_rich$growing_season)
+growing_season_rich_scale <- brms::brm(growing_season ~ population + (1|Year), 
                                  data = all_phenocam_rich, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000,
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -994,7 +983,7 @@ ric_season_extract_all <- full_join(ric_season_extract_df_1, ric_season_extract_
 rownames(ric_season_extract_all) <- c("Intercept", "Southern Garden", "Southern Source", "Year", "Sigma")
 
 # Salix pulchra ------
-growing_season_pul <- brms::brm(growing_season.y ~ population + (1|Year), 
+growing_season_pul <- brms::brm(growing_season ~ population + (1|Year), 
                                  data = all_growing_season_pul, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000,
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -1006,15 +995,15 @@ season_pul_results <- model_summ_pheno(growing_season_pul)
 season_pul_results$Species <- "Salix pulchra"
 
 # center on 0
-all_phenocam_pulchra$growing_season_length_scale <- center_scale(all_phenocam_pulchra$growing_season_length)
+all_phenocam_pulchra$growing_season_length_scale <- center_scale(all_phenocam_pulchra$growing_season)
 growing_season_pul_scaled <- brms::brm(growing_season_length_scale ~ population + (1|Year), 
                                 data = all_phenocam_pulchra, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000,
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
-saveRDS(growing_season_pul_scaled, file = "output/phenology/garden_pul_growing_compare.rds")
 summary(growing_season_pul_scaled) # 
 plot(growing_season_pul_scaled)
 pp_check(growing_season_pul_scaled, type = "dens_overlay", ndraws = 100) # looks decent
+saveRDS(growing_season_pul_scaled, file = "output/phenology/garden_pul_growing_compare.rds")
 growing_season_pul_scaled<- readRDS(file = "output/phenology/garden_pul_growing_compare.rds")
 
 # extract output with function
@@ -1072,19 +1061,8 @@ pul_season_extract_all <- full_join(pul_season_extract_df_1, pul_season_extract_
 rownames(pul_season_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
 
 # Salix arctica ------
-growing_season_arc <- brms::brm(growing_season.y ~ population + (1|Year),
-                                data = all_growing_season_arc, family = gaussian(), chains = 3,
-                                iter = 3000, warmup = 1000,
-                                control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-summary(growing_season_arc)
-plot(growing_season_arc)
-pp_check(growing_season_arc, type = "dens_overlay", ndraws = 100) # looks good
-season_arc_results <- model_summ_pheno(growing_season_arc)
-season_arc_results$Species <- "Salix arctica"
-
 # center on 0
-all_phenocam_arctica$growing_season_length_scale <- center_scale(all_phenocam_arctica$growing_season_length)
+all_phenocam_arctica$growing_season_length_scale <- center_scale(all_phenocam_arctica$growing_season)
 growing_season_arc_scaled <- brms::brm(growing_season_length_scale ~ population + (1|Year), 
                                        data = all_phenocam_arctica, family = gaussian(), chains = 3,
                                        iter = 3000, warmup = 1000,
@@ -1202,23 +1180,6 @@ theme_shrub <- function(){ theme(legend.position = "right",
                                  plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
                                  legend.title=element_text(size=16, family = "Helvetica Light"),
                                  legend.text=element_text(size = 15, family = "Helvetica Light"))}
-
-# reorder levels to be consistent
-all_growing_season_rich$population <- ordered(all_growing_season_rich$population, 
-                                         levels = c("N. Source", 
-                                                    "N. Garden", 
-                                                    "S. Source",  
-                                                    "S. Garden"))
-all_growing_season_pul$population <- ordered(all_growing_season_pul$population, 
-                                              levels = c("N. Source", 
-                                                         "N. Garden", 
-                                                         "S. Source",  
-                                                         "S. Garden"))
-all_growing_season_arc$population <- ordered(all_growing_season_arc$population, 
-                                              levels = c("N. Source", 
-                                                         "N. Garden", 
-                                                         "S. Source",  
-                                                         "S. Garden"))
 
 all_phenocam_rich$population <- ordered(all_phenocam_rich$population, 
                                         levels = c("N. Source", 
