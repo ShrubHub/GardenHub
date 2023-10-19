@@ -1,6 +1,6 @@
 # BAYESIAN phenology script ----
 # BY Erica and Madi 
-# Last update: 20/03/2023
+# Last update: 19/10/2023 by Madi 
 
 # Libraries----
 library(plyr)
@@ -14,19 +14,20 @@ library(ggpubr)
 library(ggeffects)
 
 # Load data ----
-all_phenocam_data_salix <- read.csv("data/phenology/all_phenocam_update.csv")
-all_growing_season <- read.csv("data/phenology/all_growing_season_salix.csv")
+# 2023: 
+all_pheno_2023 <- read.csv("data/phenology/all_phenology_2023.csv")
+
+# from 2022: 
+#all_phenocam_data_salix <- read.csv("data/phenology/all_phenocam_update.csv")
+#all_growing_season <- read.csv("data/phenology/all_growing_season_salix.csv")
 
 # Wrangle data ------
 # ordering levels so source and garden populations side by side
-all_phenocam_data_salix$population <- plyr::revalue(all_phenocam_data_salix$population, 
+all_pheno_2023$population <- plyr::revalue(all_pheno_2023$population, 
                                                     c("Northern Garden"="N. Garden",
                                                       "Southern Garden"="S. Garden",
                                                       "Southern Source"="S. Source",
                                                       "Northern Source"="N. Source"))
-# species code from QHI pheno plots is different, change to Salix arctica 
-all_phenocam_data_salix$Species <- plyr::revalue(all_phenocam_data_salix$Species, 
-                                            c("SALARC"="Salix arctica"))
 
 #all_phenocam_data_salix$population <- ordered(all_phenocam_data_salix$population, 
 #                                              levels = c("Northern Source", 
@@ -34,13 +35,13 @@ all_phenocam_data_salix$Species <- plyr::revalue(all_phenocam_data_salix$Species
 #                                                         "Southern Source",
 #                                                         "Southern Garden"))
 
-all_phenocam_data_salix$Year <- as.factor(all_phenocam_data_salix$Year)
+all_pheno_2023$Year <- as.factor(all_pheno_2023$Year)
 
-all_growing_season$population <- plyr::revalue(all_growing_season$population, 
-                                               c("Northern"="N. Garden",
-                                                 "Southern"="S. Garden",
-                                                 "KP"="S. Source",
-                                                 "QHI"="S. Source"))
+#all_growing_season$population <- plyr::revalue(all_growing_season$population, 
+#                                               c("Northern"="N. Garden",
+#                                                 "Southern"="S. Garden",
+#                                                 "KP"="S. Source",
+#                                                 "QHI"="S. Source"))
 
 #all_growing_season$population <- ordered(all_growing_season$population, 
 #                                         levels = c("Northern Source", 
@@ -50,17 +51,14 @@ all_growing_season$population <- plyr::revalue(all_growing_season$population,
 
 # calculate growing season length in all_phenocam_data_salix data sheet 
 
-all_phenocam_data_salix <- all_phenocam_data_salix %>% 
-  mutate(growing_season_length = (First_leaf_yellow_DOY-First_bud_burst_DOY))
-
 # SPECIES SPECIFIC datasets: CG + Sources -----
-all_phenocam_rich <- all_phenocam_data_salix %>%
+all_phenocam_rich <- all_pheno_2023 %>%
   filter(Species == "Salix richardsonii")
 
-all_phenocam_pulchra <- all_phenocam_data_salix %>%
+all_phenocam_pulchra <- all_pheno_2023 %>%
   filter(Species == "Salix pulchra")
 
-all_phenocam_arctica <- all_phenocam_data_salix %>%
+all_phenocam_arctica <- all_pheno_2023 %>%
   filter(Species == "Salix arctica")
 
 # SOURCE POP ONLY species specific datasets -----
@@ -100,16 +98,6 @@ all_phenocam_arc_garden <- all_phenocam_arctica %>%
 all_phenocam_arc_garden$population <- as.character(all_phenocam_arc_garden$population)
 all_phenocam_arc_garden$population <- as.factor(all_phenocam_arc_garden$population)
 unique(all_phenocam_arc_garden$population)
-
-# Sp specific growing season data
-all_growing_season_rich <- all_growing_season %>%
-  filter(Species == "Salix richardsonii")
-
-all_growing_season_pul <- all_growing_season %>%
-  filter(Species == "Salix pulchra")
-
-all_growing_season_arc <- all_growing_season %>%
-  filter(Species == "Salix arctica")
 
 # exploring variables ------
 hist(all_phenocam_pul_source$First_bud_burst_DOY, breaks=30) # defo not normal
@@ -387,7 +375,6 @@ garden_arc_emerg_compare <- brms::brm(First_bud_burst_DOY_center ~ population + 
                                       control = list(max_treedepth = 15, adapt_delta = 0.99))
 
 summary(garden_arc_emerg_compare)
-tab_model(garden_arc_emerg_compare)
 plot(garden_arc_emerg_compare)
 pp_check(garden_arc_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
 saveRDS(garden_arc_emerg_compare, file = "output/phenology/garden_arc_emerg_compare.rds")

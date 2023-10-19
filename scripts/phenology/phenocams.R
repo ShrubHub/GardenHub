@@ -1,6 +1,6 @@
 #### PHENOCAMS: common garden, Kluane and QHI
 #### Script by Erica Zaja, created 14/12/22
-### Last updated: 18/10/23 by Madi 
+### Last updated: 19/10/23 by Madi 
 
 #  LIBRARIES ----
 library(tidyverse)
