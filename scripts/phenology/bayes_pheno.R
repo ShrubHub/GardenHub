@@ -921,10 +921,12 @@ save_kable(kable_yellow_garden, file = "output/phenology/yellow_garden_results.p
 # Salix richardsonii ------
 # center on 0
 all_phenocam_rich$growing_season_length_scale <- center_scale(all_phenocam_rich$growing_season)
-growing_season_rich_scale <- brms::brm(growing_season ~ population + (1|Year), 
+growing_season_rich_scale <- brms::brm(growing_season_length_scale ~ population, 
                                  data = all_phenocam_rich, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000,
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+# removed year as random effect because only one year for northern source 
 summary(growing_season_rich_scale) 
 plot(growing_season_rich_scale)
 pp_check(growing_season_rich_scale, type = "dens_overlay", ndraws = 100) # looks decent
@@ -932,7 +934,7 @@ saveRDS(growing_season_rich_scale, file = "output/phenology/garden_ric_growing_c
 growing_season_rich_scale<- readRDS(file = "output/phenology/garden_ric_growing_compare.rds")
 
 # extract output with function
-rich_season_results <- model_summ_pheno(growing_season_rich_scale)
+rich_season_results <- model_summ_pheno_no_rf(growing_season_rich_scale)
 
 rich_season_results <- rich_season_results %>% 
   dplyr::rename("l_95_CI_scale_og" = "l-95% CI", 
@@ -947,16 +949,19 @@ rich_season_results_2 <- rich_season_results %>%
 # change estimates by adding estimate to other rows 
 rich_season_results_2[2,1] <- rich_season_results_2[2,1] + rich_season_results_2[1,1]
 rich_season_results_2[3,1] <- rich_season_results_2[3,1] + rich_season_results_2[1,1]
+rich_season_results_2[4,1] <- rich_season_results_2[4,1] + rich_season_results_2[1,1]
 # change lower CI by adding 
 rich_season_results_2[2,3] <- rich_season_results_2[2,3] + rich_season_results_2[1,3]
 rich_season_results_2[3,3] <- rich_season_results_2[3,3] + rich_season_results_2[1,3]
+rich_season_results_2[4,3] <- rich_season_results_2[4,3] + rich_season_results_2[1,3]
 # change upper CI
 rich_season_results_2[2,4] <- rich_season_results_2[2,4] + rich_season_results_2[1,4]
 rich_season_results_2[3,4] <- rich_season_results_2[3,4] + rich_season_results_2[1,4]
+rich_season_results_2[4,4] <- rich_season_results_2[4,4] + rich_season_results_2[1,4]
 
 # extraction for model output table
-rownames(rich_season_results) <- c("Intercept  ", "Southern Garden  ", "Southern Source ", "Year  ", "Sigma  ")
-rownames(rich_season_results_2) <- c("Intercept ", "Southern Garden ", "Southern Source ", "Year ", "Sigma ")
+rownames(rich_season_results) <- c("Intercept  ", "Northern Source ", "Southern Garden  ", "Southern Source ", "Sigma  ")
+rownames(rich_season_results_2) <- c("Intercept ", "Northern Source ", "Southern Garden ", "Southern Source ", "Sigma ")
 
 ric_season_extract_df_1 <- rich_season_results %>% 
   mutate(Species = rep("Salix richardsonii")) %>%
@@ -980,20 +985,9 @@ ric_season_extract_all <- full_join(ric_season_extract_df_1, ric_season_extract_
                                           "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                           "Species"="Species", "Rhat"="Rhat"))
 
-rownames(ric_season_extract_all) <- c("Intercept", "Southern Garden", "Southern Source", "Year", "Sigma")
+rownames(ric_season_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Sigma")
 
 # Salix pulchra ------
-growing_season_pul <- brms::brm(growing_season ~ population + (1|Year), 
-                                 data = all_growing_season_pul, family = gaussian(), chains = 3,
-                                 iter = 3000, warmup = 1000,
-                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-summary(growing_season_pul) # 
-plot(growing_season_pul)
-pp_check(growing_season_pul, type = "dens_overlay", ndraws = 100) # looks decent
-season_pul_results <- model_summ_pheno(growing_season_pul)
-season_pul_results$Species <- "Salix pulchra"
-
 # center on 0
 all_phenocam_pulchra$growing_season_length_scale <- center_scale(all_phenocam_pulchra$growing_season)
 growing_season_pul_scaled <- brms::brm(growing_season_length_scale ~ population + (1|Year), 
@@ -1283,38 +1277,33 @@ arctica_yellow_trans <- arc_yellow_data %>%
 ric_grow <- (conditional_effects(growing_season_rich_scale)) # extracting conditional effects from bayesian model
 ric_grow_data <- ric_grow[[1]] # making the extracted model outputs into a dataset (for plotting)
 
-m_rich_grow <- mean(all_phenocam_rich$growing_season_length, na.rm = T)
+m_rich_grow <- mean(all_phenocam_rich$growing_season, na.rm = T)
 rich_grow_trans <- ric_grow_data %>% 
-  dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
   dplyr::mutate(CI_low_trans = ((lower__) + m_rich_grow)) %>% 
   dplyr::mutate(CI_high_trans = ((upper__) + m_rich_grow)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_rich_grow), 
-                Est.Error_trans = (se__ + m_rich_grow)) %>% 
-  dplyr::select(-CI_range) 
+                Est.Error_trans = (se__ + m_rich_grow))  
+
 # S. pulchra ----------
 pul_grow_scale <- (conditional_effects(growing_season_pul_scaled)) # extracting conditional effects from bayesian model
 pul_grow_data <- pul_grow_scale[[1]] # making the extracted model outputs into a dataset (for plotting)
-m_pul_grow <- mean(all_phenocam_pulchra$growing_season_length, na.rm = T)
+m_pul_grow <- mean(all_phenocam_pulchra$growing_season, na.rm = T)
 pulchra_grow_trans <- pul_grow_data %>% 
-  dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
   dplyr::mutate(CI_low_trans = ((lower__) + m_pul_grow)) %>% 
   dplyr::mutate(CI_high_trans = ((upper__) + m_pul_grow)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_pul_grow), 
-                Est.Error_trans = (se__ + m_pul_grow)) %>% 
-  dplyr::select(-CI_range) 
+                Est.Error_trans = (se__ + m_pul_grow)) 
+
 # S. arctica --------
 arc_grow_scale <- (conditional_effects(growing_season_arc_scaled)) # extracting conditional effects from bayesian model
 arc_grow_data <- arc_grow_scale[[1]] # making the extracted model outputs into a dataset (for plotting)
 
-m_arc_grow <- mean(all_phenocam_arctica$growing_season_length, na.rm = T)
+m_arc_grow <- mean(all_phenocam_arctica$growing_season, na.rm = T)
 arctica_grow_trans <- arc_grow_data %>% 
-  dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
   dplyr::mutate(CI_low_trans = ((lower__) + m_arc_grow)) %>% 
   dplyr::mutate(CI_high_trans = ((upper__) + m_arc_grow)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_arc_grow), 
-                Est.Error_trans = (se__ + m_arc_grow)) %>% 
-  dplyr::select(-CI_range) 
-
+                Est.Error_trans = (se__ + m_arc_grow)) 
 # NEW overall figure-----
 # S.rich ----
 richard_emerg_trans_2 <- richard_emerg_trans %>%
@@ -1335,24 +1324,6 @@ all_phenocam_rich_2 <- all_phenocam_rich %>%
 
 all_phenocam_rich_all <- rbind(all_phenocam_rich_1, all_phenocam_rich_2)
 
-(richard_emerg_yellow_plot_scaled <-ggplot(richard_emerg_yellow) +
-    geom_point(data = all_phenocam_rich_all, aes(x = population, y = DOY, colour = population),
-               alpha = 0.2)+
-    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), width=0.5, size = 4)+
-    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
-                  linewidth = 0.4, alpha = 0.5, width=0.2)+
-    geom_line(aes(x = effect1__, y = Estimate_trans, group = population, colour = population), 
-              linewidth = 1, alpha = 1)+
-    ylab("\nDOY") +
-    xlab("Population\n" ) +
-    coord_cartesian(xlim=c(120, 250))+
-    scale_color_manual(values=pal)+
-    coord_flip() + 
-    theme_shrub() +
-    ggtitle(expression(italic("Salix richardsonii"))) +
-    theme(text=element_text(family="Helvetica Light")))
-
-# changing x and y instead of using coor flip so we can set axis limits easily 
 (rich_emerg_yellow_plot_scaled <-ggplot(richard_emerg_yellow) +
     geom_point(data = all_phenocam_rich_all, aes(x =DOY , y =population , colour = population),
                alpha = 0.2)+
@@ -1387,22 +1358,6 @@ all_phenocam_pul_2 <- all_phenocam_pulchra %>%
 
 all_phenocam_pul_all <- rbind(all_phenocam_pul_1, all_phenocam_pul_2)
 
-(pul_emerg_yellow_plot_scaled <-ggplot(pul_emerg_yellow) +
-    geom_point(data = all_phenocam_pul_all, aes(x = population, y = DOY, colour = population),
-               alpha = 0.2)+
-    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), width=0.5, size = 4)+
-    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
-                  linewidth = 0.4, alpha = 0.5, width=0.2)+
-    geom_line(aes(x = effect1__, y = Estimate_trans, group = population, colour = population), 
-              linewidth = 1, alpha = 1)+
-    ylab("\nDOY") +
-    xlab("" ) +
-    coord_cartesian(xlim=c(120, 250))+
-    scale_color_manual(values=pal)+
-    coord_flip() + 
-    theme_shrub() +
-    ggtitle(expression(italic("Salix pulchra"))) +
-    theme(text=element_text(family="Helvetica Light")))
 
 # changing x and y instead of using coor flip so we can set axis limits easily 
 (pul_emerg_yellow_plot_scaled <-ggplot(pul_emerg_yellow) +
@@ -1440,21 +1395,6 @@ all_phenocam_arc_2 <- all_phenocam_arctica %>%
 
 all_phenocam_arc_all <- rbind(all_phenocam_arc_1, all_phenocam_arc_2)
 
-(arc_emerg_yellow_plot_scaled <-ggplot(arc_emerg_yellow) +
-    geom_point(data = all_phenocam_arc_all, aes(x = population, y = DOY, colour = population),
-               alpha = 0.2)+
-    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), width=0.5, size = 4)+
-    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans,colour = population),
-                  linewidth = 0.4, alpha = 0.5, width=0.2)+
-    geom_line(aes(x = effect1__, y = Estimate_trans, group = population, colour = population), 
-              linewidth = 1, alpha = 1)+
-    ylab("\nDOY") +
-    xlab("" ) +
-    coord_cartesian(xlim=c(100, 250))+
-    scale_color_manual(values=pal)+
-    coord_flip() + 
-    theme_shrub() +
-    ggtitle(expression(italic("Salix arctica"))))
 # changing x and y instead of using coor flip so we can set axis limits easily 
 (arc_emerg_yellow_plot_scaled <-ggplot(arc_emerg_yellow) +
     geom_point(data = all_phenocam_arc_all, aes(x =DOY , y =population , colour = population),
@@ -1478,7 +1418,7 @@ all_phenocam_arc_all <- rbind(all_phenocam_arc_1, all_phenocam_arc_2)
                               labels = c("A", "B", "C"),
                               ncol = 3, nrow = 1))
 
-ggsave(pheno_panel_new, filename ="figures/phenology/pheno_panel_new.png", width = 20, height = 6.53, units = "in")
+ggsave(pheno_panel_new, filename ="figures/phenology/pheno_panel_2023.png", width = 20, height = 6.53, units = "in")
 
 
 # old stand alone figures ----
@@ -1780,4 +1720,6 @@ arc_grow_data <- arc_grow[[1]] # making the extracted model outputs into a data
 (growing_season_panel <- ggarrange(ric_growing_plot, pul_growing_plot, arc_growing_plot, 
                                    common.legend = TRUE, legend = "bottom",
                                    ncol = 3, nrow = 1))
+# save! 
+ggsave("figures/phenology/pheno_2023.png", height = 5, width = 12, dpi = 300)
 

@@ -104,7 +104,7 @@ all_CG_growth_pul<-  all_CG_height_growth_rates %>%
 all_CG_growth_arc <-all_CG_height_growth_rates %>%
   filter(Species == "Salix arctica")
 
-
+# HEIGHT ----
 # Salix richardsonii -------
 height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
                          data = all_CG_growth_ric,  family = gaussian(), chains = 3,
@@ -228,7 +228,7 @@ height_pul_summ <- height_pul_summ %>%
 #height_pul_summ[3,4] <- height_pul_summ[3,4] + height_pul_summ[1,4]
 #height_pul_summ[4,4] <- height_pul_summ[4,4] + height_pul_summ[2,4]
 
-# Salix arctica -------
+# Salix arctica  -------
 height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
                         data = all_CG_growth_arc,  family = gaussian(), chains = 3,
                         iter = 5000, warmup = 1000, 
