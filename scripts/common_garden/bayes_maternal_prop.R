@@ -176,8 +176,6 @@ pp_check(maternal_rich_height_site, type = "dens_overlay", nsamples = 100)  # go
 mat_rich_height_results <- model_summ_simple(maternal_rich_height_site)
 maternal_rich_height.pred <- ggpredict(maternal_rich_height_site)
 
-cor(mother_cg_rich$max_canopy_height_cm, mother_cg_rich$Mother_Canopy_Height_cm, method = "pearson", use = "complete.obs")
-
 ggscatter(mother_cg_rich, x = "max_canopy_height_cm", y = "Mother_Canopy_Height_cm", 
           add = "reg.line", conf.int = TRUE, 
           cor.coef = TRUE, cor.method = "pearson",
