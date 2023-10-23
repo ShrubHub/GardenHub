@@ -149,94 +149,8 @@ model_summ_pheno_no_rf <- function(x) {
   modelTerms <- as.data.frame(bind_rows(fixed, sigma))  # merge it all together
 }
 # MODELLING ------
-# 1. LEAF EMERGENCE (only source pops) -------
 
-# Salix richardsonii -------
-all_phenocam_rich_source$First_bud_burst_DOY_scaled <- center_scale(all_phenocam_rich_source$First_bud_burst_DOY)
-source_rich_emerg_scaled <- brms::brm(First_bud_burst_DOY_scaled ~ population + (1|Year),
-                               data = all_phenocam_rich_source, family = gaussian(), chains = 3,
-                               iter = 3000, warmup = 1000, 
-                               control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(source_rich_emerg_scaled)
-
-source_rich_emerg <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
-                               data = all_phenocam_rich_source, family = gaussian(), chains = 3,
-                               iter = 3000, warmup = 1000, 
-                               control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-summary(source_rich_emerg) # not significant diff. 
-plot(source_rich_emerg)
-pp_check(source_rich_emerg , type = "dens_overlay", nsamples = 100) # fine??
-
-# extract output with function
-source_rich_emerg_extract <- model_summ_pheno(source_rich_emerg)
-
-# extraction for model output table
-rownames(source_rich_emerg_extract) <- c("Intercept", "Southern Source", "Year", "Sigma")
-
-source_rich_emerg_extract_df <- source_rich_emerg_extract %>% 
-  mutate(Species = rep("Salix richardsonii")) %>%
-  #"Sample Size" = rep(69)) %>%
-  relocate("Species", .before = "Estimate") %>%
-  relocate("nobs", .before = "effect")
-
-# Salix pulchra -------
-source_pul_emerg <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
-                               data = all_phenocam_pul_source, family = gaussian(), chains = 3,
-                               iter = 3000, warmup = 1000, 
-                               control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-summary(source_pul_emerg) # not significant
-plot(source_pul_emerg)
-pp_check(source_pul_emerg, type = "dens_overlay", nsamples = 100) # not too happy with that....
-
-# extract output with function
-source_pul_emerg_extract <- model_summ_pheno(source_pul_emerg)
-
-# extraction for model output table
-rownames(source_pul_emerg_extract) <- c("Intercept", "Southern Source", "Year", "Sigma")
-
-source_pul_emerg_extract_df <- source_pul_emerg_extract %>% 
-  mutate(Species = rep("Salix pulchra")) %>%
-  #"Sample Size" = rep(69)) %>%
-  relocate("Species", .before = "Estimate") %>%
-  relocate("nobs", .before = "effect")
-
-# merging all extracted outputs
-source_emerg <- rbind(source_rich_emerg_extract_df, source_pul_emerg_extract_df) 
-                        
-# save df of results 
-write.csv(source_emerg, "output/source_emerg.csv")
-
-# adding spaces before/after each name so they let me repeat them in the table
-rownames(source_emerg) <- c("Intercept", "Southern Source", "Year", 
-                                       "Sigma", " Intercept", " Southern Source", " Year", "Sigma ")
-
-# making sure Rhat keeps the .00 
-source_emerg$Rhat <- as.character(formatC(source_emerg$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
-# creating table
-kable_source_emerg <- source_emerg %>% 
-  kbl(caption="Table.xxx BRMS model outputs: first leaf emergence day of year of shrubs in northern (QHI) vs southern (Kluane) source populations. 
-      Model structure per species: First_bud_burst_DOY ~ population + (1|Year). Missing Salix arctica", 
-      col.names = c( "Species","Estimate",
-                     "Est. Error",
-                     "Lower 95% CI (scaled)",
-                     "Upper 95% CI (scaled)", 
-                     "Rhat", 
-                     "Bulk Effective Sample Size",
-                     "Tail Effective Sample Size", 
-                     "Sample Size",
-                     "Effect"), digits=2, align = "c") %>% 
-  kable_classic(full_width=FALSE, html_font="Cambria")
-
-# making species column in cursive
-column_spec(kable_source_emerg, 2, width = NULL, bold = FALSE, italic = TRUE)
-
-# Salix arctica -------
-# MISSING KLUANE PLATEAU DATA so cannot run 
-
-# 1.1. LEAF EMERGENCE (CG vs SOURCES)  ------
+# LEAF EMERGENCE (CG vs SOURCES)  ------
 # Salix richardsonii -----
 all_phenocam_rich$First_bud_burst_DOY_center <- center_scale(all_phenocam_rich$First_bud_burst_DOY) 
 
@@ -295,8 +209,7 @@ ric_emerg_extract_df <- rich_emerg_results_2 %>%
   dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_rich_emerg)) %>% 
   dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_rich_emerg)) %>% 
   relocate("Species", .before = "Estimate_scale_sum") %>%
-  relocate("nobs", .before = "effect")%>%
-  dplyr::select(-Est.Error)
+  relocate("nobs", .before = "effect")
 
 ric_emerg_extract_all <- full_join(ric_emerg_extract_df_1, ric_emerg_extract_df, 
                                  by = c("effect" = "effect", "nobs"="nobs",
@@ -350,14 +263,19 @@ rownames(pul_emerg_results_2) <- c("Intercept ", "Northern Source ", "Southern G
 
 m_pul_emerg <- mean(all_phenocam_pulchra$First_bud_burst_DOY, na.rm = T)
 
+pul_emerg_extract_df_1 <- pul_emerg_results %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  relocate("Species", .before = "Estimate (scale og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
 pul_emerg_extract_df <- pul_emerg_results_2 %>% 
   mutate(Species = rep("Salix pulchra")) %>%
   dplyr::mutate(l_95_CI_scale_sum = ((l_95_CI_scale_sum) + m_pul_emerg)) %>% 
   dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_pul_emerg)) %>% 
   dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_pul_emerg)) %>% 
   relocate("Species", .before = "Estimate_scale_sum") %>%
-  relocate("nobs", .before = "effect")%>%
-  dplyr::select(-Est.Error)
+  relocate("nobs", .before = "effect")
 
 pul_emerg_extract_all <- full_join(pul_emerg_extract_df_1, pul_emerg_extract_df, 
                                    by = c("effect" = "effect", "nobs"="nobs",
@@ -408,14 +326,19 @@ rownames(arc_emerg_results_2) <- c("Intercept ", "Northern Source ", "Southern G
 
 m_arc_emerg <- mean(all_phenocam_arctica$First_bud_burst_DOY, na.rm = T)
 
+arc_emerg_extract_df_1 <- arc_emerg_results %>% 
+  mutate(Species = rep("Salix arctica")) %>%
+  relocate("Species", .before = "Estimate (scale og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
 arc_emerg_extract_df <- arc_emerg_results_2 %>% 
   mutate(Species = rep("Salix arctica")) %>%
   dplyr::mutate(l_95_CI_scale_sum = ((l_95_CI_scale_sum) + m_arc_emerg)) %>% 
   dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_arc_emerg)) %>% 
   dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_arc_emerg)) %>% 
   relocate("Species", .before = "Estimate_scale_sum") %>%
-  relocate("nobs", .before = "effect")%>%
-  dplyr::select(-c(Est.Error))
+  relocate("nobs", .before = "effect") 
 
 arc_emerg_extract_all <- full_join(arc_emerg_extract_df_1, arc_emerg_extract_df, 
                                    by = c("effect" = "effect", "nobs"="nobs",
@@ -454,9 +377,10 @@ kable_emerg_pheno <- emerg_pheno_out %>%
                      "Tail Effective Sample Size", 
                      "Sample Size",
                      "Effect", 
-                     "Estimate (backscaled sum)",  
-                     "Lower 95% CI (backscaled sum)", 
-                     "Upper 95% CI (backscaled sum)"
+                     "Estimate (backscaled)",  
+                     "Error",
+                     "Lower 95% CI (backscaled)", 
+                     "Upper 95% CI (backscaled)"
                      ), digits=2, align = "l") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
@@ -471,8 +395,94 @@ save_kable(kable_emerg_pheno, file = "output/phenology/kable_emerg.pdf",
            latex_header_includes = NULL,
            keep_tex =TRUE,
            density = 300)
+# (source) LEAF EMERGENCE  -------
 
-# 1.2. LEAF EMERGENCE (CG ONLY MODELS) ------
+# Salix richardsonii -------
+all_phenocam_rich_source$First_bud_burst_DOY_scaled <- center_scale(all_phenocam_rich_source$First_bud_burst_DOY)
+source_rich_emerg_scaled <- brms::brm(First_bud_burst_DOY_scaled ~ population + (1|Year),
+                                      data = all_phenocam_rich_source, family = gaussian(), chains = 3,
+                                      iter = 3000, warmup = 1000, 
+                                      control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(source_rich_emerg_scaled)
+
+source_rich_emerg <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
+                               data = all_phenocam_rich_source, family = gaussian(), chains = 3,
+                               iter = 3000, warmup = 1000, 
+                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(source_rich_emerg) # not significant diff. 
+plot(source_rich_emerg)
+pp_check(source_rich_emerg , type = "dens_overlay", nsamples = 100) # fine??
+
+# extract output with function
+source_rich_emerg_extract <- model_summ_pheno(source_rich_emerg)
+
+# extraction for model output table
+rownames(source_rich_emerg_extract) <- c("Intercept", "Southern Source", "Year", "Sigma")
+
+source_rich_emerg_extract_df <- source_rich_emerg_extract %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  #"Sample Size" = rep(69)) %>%
+  relocate("Species", .before = "Estimate") %>%
+  relocate("nobs", .before = "effect")
+
+# Salix pulchra -------
+source_pul_emerg <- brms::brm(First_bud_burst_DOY ~ population + (1|Year),
+                              data = all_phenocam_pul_source, family = gaussian(), chains = 3,
+                              iter = 3000, warmup = 1000, 
+                              control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(source_pul_emerg) # not significant
+plot(source_pul_emerg)
+pp_check(source_pul_emerg, type = "dens_overlay", nsamples = 100) # not too happy with that....
+
+# extract output with function
+source_pul_emerg_extract <- model_summ_pheno(source_pul_emerg)
+
+# extraction for model output table
+rownames(source_pul_emerg_extract) <- c("Intercept", "Southern Source", "Year", "Sigma")
+
+source_pul_emerg_extract_df <- source_pul_emerg_extract %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  #"Sample Size" = rep(69)) %>%
+  relocate("Species", .before = "Estimate") %>%
+  relocate("nobs", .before = "effect")
+
+# merging all extracted outputs
+source_emerg <- rbind(source_rich_emerg_extract_df, source_pul_emerg_extract_df) 
+
+# save df of results 
+write.csv(source_emerg, "output/source_emerg.csv")
+
+# adding spaces before/after each name so they let me repeat them in the table
+rownames(source_emerg) <- c("Intercept", "Southern Source", "Year", 
+                            "Sigma", " Intercept", " Southern Source", " Year", "Sigma ")
+
+# making sure Rhat keeps the .00 
+source_emerg$Rhat <- as.character(formatC(source_emerg$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+
+# creating table
+kable_source_emerg <- source_emerg %>% 
+  kbl(caption="Table.xxx BRMS model outputs: first leaf emergence day of year of shrubs in northern (QHI) vs southern (Kluane) source populations. 
+      Model structure per species: First_bud_burst_DOY ~ population + (1|Year). Missing Salix arctica", 
+      col.names = c( "Species","Estimate",
+                     "Est. Error",
+                     "Lower 95% CI (scaled)",
+                     "Upper 95% CI (scaled)", 
+                     "Rhat", 
+                     "Bulk Effective Sample Size",
+                     "Tail Effective Sample Size", 
+                     "Sample Size",
+                     "Effect"), digits=2, align = "c") %>% 
+  kable_classic(full_width=FALSE, html_font="Cambria")
+
+# making species column in cursive
+column_spec(kable_source_emerg, 2, width = NULL, bold = FALSE, italic = TRUE)
+
+# Salix arctica -------
+# MISSING KLUANE PLATEAU DATA so cannot run 
+
+# (CG) LEAF EMERGENCE  ------
 # Salix richardsonii -----
 all_phenocam_rich_garden$First_bud_burst_DOY_center <- center_scale(all_phenocam_rich_garden$First_bud_burst_DOY) 
 garden_rich_emerg <- brms::brm(First_bud_burst_DOY_center ~ population,
@@ -552,39 +562,7 @@ save_kable(kable_emerg_garden, file = "output/phenology/emerg_garden_results.pdf
            keep_tex =TRUE,
            density = 300)
 
-# 2. LEAF YELLOWING (only source pops) -----
-# Salix richardsonii -------
-all_phenocam_rich_source$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_rich_source$First_leaf_yellow_DOY) 
-
-source_rich_yellow <- brms::brm(First_leaf_yellow_DOY_center ~ population + (1|Year),
-                                data = all_phenocam_rich_source, family = gaussian(), chains = 3,
-                                iter = 3000, warmup = 1000, 
-                                control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-summary(source_rich_yellow) # no significant diff
-plot(source_rich_yellow)
-pp_check(source_rich_yellow, type = "dens_overlay", ndraws = 100) # looks ok
-
-source_rich_yellow_extract <- model_summ_pheno(source_rich_yellow)
-
-# Salix pulchra -------
-all_phenocam_pul_source$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_pul_source$First_leaf_yellow_DOY) 
-
-source_pul_yellow <- brms::brm(First_leaf_yellow_DOY_center ~ population + (1|Year),
-                                data = all_phenocam_pul_source, family = gaussian(), chains = 3,
-                                iter = 3000, warmup = 1000, 
-                                control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-summary(source_pul_yellow) # no significant diff
-plot(source_pul_yellow)
-pp_check(source_pul_yellow, type = "dens_overlay", ndraws = 100) # looks ok
-
-source_pul_yellow_extract <- model_summ_pheno(source_pul_yellow)
-
-# Salix arctica -------
-# Missing KP data so cannot run
-
-# 2.1. LEAF YELLOWING (source vs garden) -------
+# LEAF YELLOWING (source vs garden) -------
 # Salix richardsonii ------
 all_phenocam_rich$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_rich$First_leaf_yellow_DOY) 
 
@@ -642,15 +620,14 @@ ric_yellow_extract_df <- rich_yellow_results_2 %>%
   dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_rich_yellow)) %>% 
   dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_rich_yellow)) %>% 
   relocate("Species", .before = "Estimate_scale_sum") %>%
-  relocate("nobs", .before = "effect")%>%
-  dplyr::select(-Est.Error)
+  relocate("nobs", .before = "effect")
 
 ric_yellow_extract_all <- full_join(ric_yellow_extract_df_1, ric_yellow_extract_df, 
                                    by = c("effect" = "effect", "nobs"="nobs",
                                           "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                           "Species"="Species", "Rhat"="Rhat"))
 
-rownames(ric_yellow_extract_all) <- c("Intercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
+rownames(ric_yellow_extract_all) <- c("Instercept", "Northern Source", "Southern Garden", "Southern Source", "Year", "Sigma")
 
 # Salix pulchra ------
 all_phenocam_pulchra$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_pulchra$First_leaf_yellow_DOY) 
@@ -710,8 +687,7 @@ pul_yellow_extract_df <- pul_yellow_results_2 %>%
   dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_pul_yellow)) %>% 
   dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_pul_yellow)) %>% 
   relocate("Species", .before = "Estimate_scale_sum") %>%
-  relocate("nobs", .before = "effect")%>%
-  dplyr::select(-Est.Error)
+  relocate("nobs", .before = "effect")
 
 pul_yellow_extract_all <- full_join(pul_yellow_extract_df_1, pul_yellow_extract_df, 
                                     by = c("effect" = "effect", "nobs"="nobs",
@@ -775,8 +751,7 @@ arc_yellow_extract_df <- arc_yellow_results_2 %>%
   dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_arc_yellow)) %>% 
   dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_arc_yellow)) %>% 
   relocate("Species", .before = "Estimate_scale_sum") %>%
-  relocate("nobs", .before = "effect")%>%
-  dplyr::select(-Est.Error)
+  relocate("nobs", .before = "effect")
 
 arc_yellow_extract_all <- full_join(arc_yellow_extract_df_1, arc_yellow_extract_df, 
                                     by = c("effect" = "effect", "nobs"="nobs",
@@ -815,9 +790,10 @@ kable_yellow_pheno <- yellow_pheno_out %>%
                      "Tail Effective Sample Size", 
                      "Sample Size",
                      "Effect", 
-                     "Estimate (backscaled sum)",  
-                     "Lower 95% CI (backscaled sum)", 
-                     "Upper 95% CI (backscaled sum)"
+                     "Error",
+                     "Estimate (backscaled)",  
+                     "Lower 95% CI (backscaled)", 
+                     "Upper 95% CI (backscaled)"
       ), digits=2, align = "l") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
@@ -832,8 +808,39 @@ save_kable(kable_yellow_pheno, file = "output/phenology/kable_yellow.pdf",
            latex_header_includes = NULL,
            keep_tex =TRUE,
            density = 300)
+# (source) LEAF YELLOWING  -----
+# Salix richardsonii -------
+all_phenocam_rich_source$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_rich_source$First_leaf_yellow_DOY) 
 
-# 2.2.  LEAF YELLOWING (only CG) -----
+source_rich_yellow <- brms::brm(First_leaf_yellow_DOY_center ~ population + (1|Year),
+                                data = all_phenocam_rich_source, family = gaussian(), chains = 3,
+                                iter = 3000, warmup = 1000, 
+                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(source_rich_yellow) # no significant diff
+plot(source_rich_yellow)
+pp_check(source_rich_yellow, type = "dens_overlay", ndraws = 100) # looks ok
+
+source_rich_yellow_extract <- model_summ_pheno(source_rich_yellow)
+
+# Salix pulchra -------
+all_phenocam_pul_source$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_pul_source$First_leaf_yellow_DOY) 
+
+source_pul_yellow <- brms::brm(First_leaf_yellow_DOY_center ~ population + (1|Year),
+                               data = all_phenocam_pul_source, family = gaussian(), chains = 3,
+                               iter = 3000, warmup = 1000, 
+                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(source_pul_yellow) # no significant diff
+plot(source_pul_yellow)
+pp_check(source_pul_yellow, type = "dens_overlay", ndraws = 100) # looks ok
+
+source_pul_yellow_extract <- model_summ_pheno(source_pul_yellow)
+
+# Salix arctica -------
+# Missing KP data so cannot run
+
+# (CG) LEAF YELLOWING  -----
 # Salix richardsonii -------
 all_phenocam_rich_garden$First_leaf_yellow_DOY_center <- center_scale(all_phenocam_rich_garden$First_leaf_yellow_DOY) 
 
@@ -969,7 +976,7 @@ ric_season_extract_df_1 <- rich_season_results %>%
   relocate("nobs", .before = "effect")%>%
   dplyr::select(-Est.Error)
 
-m_rich_grow <- mean(all_phenocam_rich$growing_season_length, na.rm = T)
+m_rich_grow <- mean(all_phenocam_rich$growing_season, na.rm = T)
 
 ric_season_extract_df <- rich_season_results_2 %>% 
   mutate(Species = rep("Salix richardsonii")) %>%
@@ -977,8 +984,7 @@ ric_season_extract_df <- rich_season_results_2 %>%
   dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_rich_grow)) %>% 
   dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_rich_grow)) %>% 
   relocate("Species", .before = "Estimate_scale_sum") %>%
-  relocate("nobs", .before = "effect")%>%
-  dplyr::select(-Est.Error)
+  relocate("nobs", .before = "effect")
 
 ric_season_extract_all <- full_join(ric_season_extract_df_1, ric_season_extract_df, 
                                    by = c("effect" = "effect", "nobs"="nobs",
@@ -1036,7 +1042,7 @@ pul_season_extract_df_1 <- pul_season_results %>%
   relocate("nobs", .before = "effect")%>%
   dplyr::select(-Est.Error)
 
-m_pul_grow <- mean(all_phenocam_pulchra$growing_season_length, na.rm = T)
+m_pul_grow <- mean(all_phenocam_pulchra$growing_season, na.rm = T)
 
 pul_season_extract_df <- pul_season_results_2 %>% 
   mutate(Species = rep("Salix pulchra")) %>%
@@ -1044,8 +1050,7 @@ pul_season_extract_df <- pul_season_results_2 %>%
   dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_pul_grow)) %>% 
   dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_pul_grow)) %>% 
   relocate("Species", .before = "Estimate_scale_sum") %>%
-  relocate("nobs", .before = "effect")%>%
-  dplyr::select(-Est.Error)
+  relocate("nobs", .before = "effect")
 
 pul_season_extract_all <- full_join(pul_season_extract_df_1, pul_season_extract_df, 
                                     by = c("effect" = "effect", "nobs"="nobs",
@@ -1100,7 +1105,7 @@ arc_season_extract_df_1 <- arc_season_results %>%
   relocate("nobs", .before = "effect")%>%
   dplyr::select(-Est.Error)
 
-m_arc_grow <- mean(all_phenocam_arctica$growing_season_length, na.rm = T)
+m_arc_grow <- mean(all_phenocam_arctica$growing_season, na.rm = T)
 
 arc_season_extract_df <- arc_season_results_2 %>% 
   mutate(Species = rep("Salix arctica")) %>%
@@ -1108,8 +1113,7 @@ arc_season_extract_df <- arc_season_results_2 %>%
   dplyr::mutate(u_95_CI_scale_sum = ((u_95_CI_scale_sum) + m_arc_grow)) %>% 
   dplyr::mutate(Estimate_scale_sum = (Estimate_scale_sum + m_arc_grow)) %>% 
   relocate("Species", .before = "Estimate_scale_sum") %>%
-  relocate("nobs", .before = "effect")%>%
-  dplyr::select(-Est.Error)
+  relocate("nobs", .before = "effect")
 
 arc_season_extract_all <- full_join(arc_season_extract_df_1, arc_season_extract_df, 
                                     by = c("effect" = "effect", "nobs"="nobs",
@@ -1122,8 +1126,8 @@ rownames(arc_season_extract_all) <- c("Intercept", "Northern Source", "Southern 
 season_results <- rbind(ric_season_extract_all, pul_season_extract_all, arc_season_extract_all)
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(season_results) <- c("Intercept", "Southern Garden",  "Southern Source", 
-                              "Year", "Sigma", 
+rownames(season_results) <- c("Intercept", "Northern Source", "Southern Garden",  "Southern Source", 
+                              "Sigma", 
                               " Intercept", " Northern Source", " Southern Garden", " Southern Source", " Year", 
                               " Sigma", 
                               "Intercept ", "Northern Source ", "Southern Garden ", "Year ", 
@@ -1146,10 +1150,11 @@ kable_season_garden <- season_results %>%
                      "Bulk Effective Sample Size",
                      "Tail Effective Sample Size", 
                      "Effect",
+        "Error",
                      "Sample Size",
-                      "Estimate (unscaled)", 
-                     "Lower 95% CI (unscaled sum)",
-                     "Upper 95% CI (unscaled sum)"
+                      "Estimate (backscaled)", 
+                     "Lower 95% CI (backscaled)",
+                     "Upper 95% CI (backscaled)"
                      ), digits=2, align = "c") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 column_spec(kable_season_garden, 2, width = NULL, bold = FALSE, italic = TRUE)
