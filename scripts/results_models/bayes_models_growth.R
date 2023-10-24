@@ -811,9 +811,10 @@ summary(garden_arc_width) # NOT significantly larger widths for southern shrubs 
 plot(garden_arc_width) # fine
 pp_check(garden_arc_width,  type = "dens_overlay", nsamples = 100) # fine
 saveRDS(garden_arc_width, file = "output/models/garden_arc_width.rds")
-
+garden_arc_width <- readRDS("output/models/garden_arc_width.rds")
 # extract output with function
 arc_extract_width <- model_summ_growth(garden_arc_width)
+arc_width.pred <- ggpredict(garden_arc_width, terms = c('population'))
 
 # extraction for model output table
 rownames(arc_extract_width) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")

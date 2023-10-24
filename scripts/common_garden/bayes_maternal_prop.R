@@ -102,11 +102,13 @@ mother_cg_height <- full_join(mother_data_merge_1, max_cg_heights_merge,
 
 mother_cg_widths <- full_join(mother_cg_height, max_cg_widths_merge, 
                               by = c("SampleID_standard" = "SampleID_standard", 
-                                     "Species" = "Species"))
+                                     "Species" = "Species", "population" = "population")) %>% 
+  mutate(mother_width_all = coalesce(Mother_mean_width, Mother_Width_cm)) # take mother width one if no mother widths 1 and 2 to make mean 
 
 mother_cg <- full_join(mother_cg_widths, max_cg_biovol_merge, 
                        by = c("SampleID_standard" = "SampleID_standard", 
                               "Species" = "Species"))
+write.csv(mother_cg, "data/source_pops/mother_cg_2023.csv")
 
 # 2. Loading data ---- 
 mother_cg <- read.csv("data/source_pops/mother_cg_2023.csv")
@@ -165,81 +167,56 @@ hist(mother_cg_rich$Mother_mean_width_log) # not much better
 # HEIGHT -------
 
 # Salix richardsonii ------
-# interactive site model without year 
-maternal_rich_height_site <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm)* Site,
-                                  data = mother_cg_rich, family = gaussian(), chains = 3,
+mother_cg_rich_height <- mother_cg_rich %>% 
+  drop_na(max_canopy_height_cm) %>% 
+  drop_na(Mother_Canopy_Height_cm) # only 62 observations
+
+maternal_rich_height_site <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site,
+                                  data = mother_cg_rich_height, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(maternal_rich_height_site) # not significant
-whichplot(maternal_rich_height_site)
+
+summary(maternal_rich_height_site) # not significant 
 pp_check(maternal_rich_height_site, type = "dens_overlay", nsamples = 100)  # good) 
+saveRDS(maternal_rich_height_site, file = "output/maternal_propagation/maternal_ric_height.rds")
 mat_rich_height_results <- model_summ_simple(maternal_rich_height_site)
 maternal_rich_height.pred <- ggpredict(maternal_rich_height_site)
 
-ggscatter(mother_cg_rich, x = "max_canopy_height_cm", y = "Mother_Canopy_Height_cm", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "max canopy height (cm)", ylab = "mother height (cm)")
-
 mat_rich_height_results$Species <- "Salix richardsonii"
-
-#maternal_rich_height_site_year <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm)* Site +(1|SampleYear),
-#                                       data = mother_cg_rich, family = gaussian(), chains = 3,
-#                                       iter = 3000, warmup = 1000, 
-#                                       control = list(max_treedepth = 15, adapt_delta = 0.99))
-# summary(maternal_rich_height_site_year) # not significant
-# plot(maternal_rich_height_site_year)
-# pp_check(maternal_rich_height_site_year, type = "dens_overlay", nsamples = 100)  # good)
-
-# maternal_rich_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site + (1|SampleYear),
-#                                data = mother_cg_rich, family = gaussian(), chains = 3,
-#                                iter = 3000, warmup = 1000, 
-#                                control = list(max_treedepth = 15, adapt_delta = 0.99))
-#summary(maternal_rich_height) # not significant
-#plot(maternal_rich_height)
-#pp_check(maternal_rich_height, type = "dens_overlay", nsamples = 100)  # good) 
 
 
 # Salix pulchra -------
-maternal_pul_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm)* Site,
+mother_cg_pulchra_height <- mother_cg_pulchra %>% 
+  drop_na(max_canopy_height_cm) %>% 
+  drop_na(Mother_Canopy_Height_cm) # 101 observations
+
+maternal_pul_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site,
                                   data = mother_cg_pulchra, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(maternal_pul_height) # not significant 
 plot(maternal_pul_height)
 pp_check(maternal_pul_height, type = "dens_overlay", nsamples = 100)  # good) 
+saveRDS(maternal_pul_height, file = "output/maternal_propagation/maternal_pul_height.rds")
 mat_pul_height_results <- model_summ_simple(maternal_pul_height)
 mat_pul_height_results$Species <- "Salix pulchra"
 
-ggscatter(mother_cg_pulchra, x = "max_canopy_height_cm", y = "Mother_Canopy_Height_cm", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "max canopy height (cm)", ylab = "mother height (cm)")
-
-#maternal_pul_height_old <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site,
-                              #   data = mother_cg_pulchra, family = gaussian(), chains = 3,
-                              ##   iter = 3000, warmup = 1000, 
-                               #  control = list(max_treedepth = 15, adapt_delta = 0.99))
-#summary(maternal_pul_height_old) # not significant
-#plot(maternal_pul_height_old)
-#pp_check(maternal_pul_height_old, type = "dens_overlay", nsamples = 100)  # good) 
-
 # Salix arctica --------
-maternal_arc_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) * Site,
-                                 data = mother_cg_arctica, family = gaussian(), chains = 3,
+mother_cg_arctica_height <- mother_cg_arctica %>% 
+  drop_na(max_canopy_height_cm) %>% 
+  drop_na(Mother_Canopy_Height_cm) #  32 observations
+
+maternal_arc_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site ,
+                                 data = mother_cg_arctica_height, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000, 
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(maternal_arc_height) # significant effect of maternal heights on child heights
+summary(maternal_arc_height) #significant effect of maternal heights on child heights 
 plot(maternal_arc_height)
 pp_check(maternal_arc_height, type = "dens_overlay", nsamples = 100)  # good) 
+saveRDS(maternal_arc_height, file = "output/maternal_propagation/maternal_arc_height.rds")
 mat_arc_height_results <- model_summ_simple(maternal_arc_height)
 mat_arc_height_results$Species <- "Salix arctica" 
-
-ggscatter(mother_cg_arctica, x = "max_canopy_height_cm", y = "Mother_Canopy_Height_cm", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "max canopy height (cm)", ylab = "mother height (cm)")
 
 mat_height_results <- rbind(mat_rich_height_results, mat_pul_height_results, mat_arc_height_results)
 
@@ -283,40 +260,47 @@ save_kable(kable_mat_height, file = "output/maternal_propagation/mat_height_resu
 
 # WIDTH ------
 # Salix richardsonii ------
-maternal_rich_width <- brms::brm(log(max_mean_width_cm) ~ log(Mother_mean_width) * Site,
-                                  data = mother_cg_rich, family = gaussian(), chains = 3,
-                                  iter = 3000, warmup = 1000, 
+mother_cg_rich_width <- mother_cg_rich %>% 
+  drop_na(max_mean_width_cm) %>% 
+  drop_na(mother_width_all) # only 45 observations
+
+maternal_rich_width <- brms::brm(log(max_mean_width_cm) ~ log(mother_width_all) + Site,
+                                  data = mother_cg_rich_width, family = gaussian(), chains = 3,
+                                  iter = 5000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(maternal_rich_width) # not significant
+summary(maternal_rich_width) # not significant  
 plot(maternal_rich_width)
 pp_check(maternal_rich_width, type = "dens_overlay", ndraws = 100)  # good) 
+saveRDS(maternal_rich_width, file = "output/maternal_propagation/maternal_ric_width.rds")
+
 mat_rich_width_results <- model_summ_simple(maternal_rich_width)
 mat_rich_width_results$Species <- "Salix richardsonii"
 
-ggscatter(mother_cg_rich, x = "max_mean_width_cm", y = "Mother_mean_width", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "max canopy width (cm)", ylab = "mother width (cm)")
-
 # Salix pulchra -------
-maternal_pul_width <- brms::brm(log(max_mean_width_cm) ~ log(Mother_mean_width) * Site,
-                                 data = mother_cg_pulchra, family = gaussian(), chains = 3,
+mother_cg_pulchra_width <- mother_cg_pulchra %>% 
+  drop_na(max_mean_width_cm) %>% 
+  drop_na(mother_width_all) # 58 observations
+
+maternal_pul_width <- brms::brm(log(max_mean_width_cm) ~ log(mother_width_all) + Site,
+                                 data = mother_cg_pulchra_width, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000, 
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(maternal_pul_width) # not significant but negative estimate 
 plot(maternal_pul_width)
 pp_check(maternal_pul_width, type = "dens_overlay", nsamples = 100)  # good) 
+saveRDS(maternal_pul_width, file = "output/maternal_propagation/maternal_pul_width.rds")
+
 mat_pul_width_results <- model_summ_simple(maternal_pul_width)
 mat_pul_width_results$Species <- "Salix pulchra"
 
-ggscatter(mother_cg_pulchra, x = "max_mean_width_cm", y = "Mother_mean_width", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "max canopy width (cm)", ylab = "mother width (cm)")
 
 # Salix arctica --------
-maternal_arc_width <- brms::brm(log(max_mean_width_cm) ~ log(Mother_mean_width) * Site,
-                                data = mother_cg_arctica, family = gaussian(), chains = 3,
+mother_cg_arctica_width <- mother_cg_arctica %>% 
+  drop_na(max_mean_width_cm) %>% 
+  drop_na(mother_width_all) # 20 observations
+
+maternal_arc_width <- brms::brm(log(max_mean_width_cm) ~ log(mother_width_all) + Site,
+                                data = mother_cg_arctica_width, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(maternal_arc_width) # not significant
@@ -324,11 +308,7 @@ plot(maternal_arc_width)
 pp_check(maternal_arc_width, type = "dens_overlay", nsamples = 100)  # meh 
 mat_arc_width_results <- model_summ_simple(maternal_arc_width)
 mat_arc_width_results$Species <- "Salix arctica"
-
-ggscatter(mother_cg_arctica, x = "max_mean_width_cm", y = "Mother_mean_width", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "max canopy width (cm)", ylab = "mother width (cm)")
+saveRDS(maternal_arc_width, file = "output/maternal_propagation/maternal_arc_width.rds")
 
 mat_width_results <- rbind(mat_rich_width_results,mat_pul_width_results,mat_arc_width_results)
 
@@ -769,7 +749,7 @@ theme_shrub <- function(){ theme(legend.position = "right",
     add_predicted_draws(maternal_pul_height, allow_new_levels = TRUE) %>%
     ggplot(aes(x = log(Mother_Canopy_Height_cm), y = log(max_canopy_height_cm), color = Site, fill = Site)) +
     stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
-    geom_point(data = mother_cg_rich) +
+    geom_point(data = mother_cg_pulchra) +
     theme_shrub() +
     ylab("Child canopy height (log, cm) \n") +
     xlab("\nMother canopy height (log, cm) ")+ 
@@ -782,7 +762,7 @@ theme_shrub <- function(){ theme(legend.position = "right",
     add_predicted_draws(maternal_arc_height, allow_new_levels = TRUE) %>%
     ggplot(aes(x = log(Mother_Canopy_Height_cm), y = log(max_canopy_height_cm), color = Site, fill = Site)) +
     stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
-    geom_point(data = mother_cg_rich) +
+    geom_point(data = mother_cg_arctica) +
     theme_shrub() +
     ylab("Child canopy height (log, cm) \n") +
     xlab("\nMother canopy height (log, cm) ") + 
@@ -852,7 +832,7 @@ colnames(arc_height.mat.pred) = c('Site','fit', 'lwr', 'upr')
 # Maternal width ------
 (rich_width_mat_plot <-  mother_cg_rich %>%
    add_predicted_draws(maternal_rich_width, allow_new_levels = TRUE) %>%
-   ggplot(aes(x = log(Mother_mean_width), y = log(max_mean_width_cm), color = Site, fill = Site)) +
+   ggplot(aes(x = log(mother_width_all), y = log(max_mean_width_cm), color = Site, fill = Site)) +
    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
    geom_point(data = mother_cg_rich) +
    theme_shrub() +
