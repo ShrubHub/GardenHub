@@ -171,7 +171,7 @@ mother_cg_rich_height <- mother_cg_rich %>%
   drop_na(max_canopy_height_cm) %>% 
   drop_na(Mother_Canopy_Height_cm) # only 62 observations
 
-maternal_rich_height_site <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site,
+maternal_rich_height_site <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) * Site,
                                   data = mother_cg_rich_height, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -190,7 +190,7 @@ mother_cg_pulchra_height <- mother_cg_pulchra %>%
   drop_na(max_canopy_height_cm) %>% 
   drop_na(Mother_Canopy_Height_cm) # 101 observations
 
-maternal_pul_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site,
+maternal_pul_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) * Site,
                                   data = mother_cg_pulchra, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -206,7 +206,7 @@ mother_cg_arctica_height <- mother_cg_arctica %>%
   drop_na(max_canopy_height_cm) %>% 
   drop_na(Mother_Canopy_Height_cm) #  32 observations
 
-maternal_arc_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) + Site ,
+maternal_arc_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_Height_cm) * Site ,
                                  data = mother_cg_arctica_height, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000, 
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -221,10 +221,9 @@ mat_arc_height_results$Species <- "Salix arctica"
 mat_height_results <- rbind(mat_rich_height_results, mat_pul_height_results, mat_arc_height_results)
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(mat_height_results) <- c("Intercept", "log(Mother Canopy Height)", "Site:Qikiqtaruk", "log(Mother Height) * Site", "Sigma",
-                             " Intercept", " log(Mother Canopy Height)", " Site:Qikiqtaruk", " log(Mother Height) * Site", " Sigma", 
-                            "Intercept ", "log(Mother Canopy Height) ", "Site:Qikiqtaruk ", "log(Mother Height) * Site ", "Sigma ")
-
+rownames(mat_height_results) <- c("Intercept", "log(Mother Canopy Height)", "Site:Qikiqtaruk", "log(Mother Canopy Height)*Site", "Sigma",
+                             " Intercept", " log(Mother Canopy Height)", " Site:Qikiqtaruk", " log(Mother Canopy Height)*Site", " Sigma", 
+                            "Intercept ", "log(Mother Canopy Height) ", "Site:Qikiqtaruk ", "log(Mother Canopy Height)*Site ", "Sigma ")
 
 # making sure Rhat keeps the .00 
 mat_height_results$Rhat <- as.character(formatC(mat_height_results$Rhat, digits = 2, format = 'f')) #new character variable with format specification
@@ -234,7 +233,7 @@ write.csv(mat_height_results, "output/maternal_propagation/maternal_height_outpu
 
 kable_mat_height <- mat_height_results %>% 
   kbl(caption="Table.xxx BRMS model outputs: maternal height effects analysis across species. 
-      Model structure per species: (log(max height) ~ log(maternal height)*Site.", 
+      Model structure per species: (log(max height) ~ log(maternal height) * Site.", 
       col.names = c( "Estimate",
                      "Est. Error",
                      "Lower 95% CI (log)",
@@ -264,7 +263,7 @@ mother_cg_rich_width <- mother_cg_rich %>%
   drop_na(max_mean_width_cm) %>% 
   drop_na(mother_width_all) # only 45 observations
 
-maternal_rich_width <- brms::brm(log(max_mean_width_cm) ~ log(mother_width_all) + Site,
+maternal_rich_width <- brms::brm(log(max_mean_width_cm) ~ log(mother_width_all) * Site,
                                   data = mother_cg_rich_width, family = gaussian(), chains = 3,
                                   iter = 5000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -281,7 +280,7 @@ mother_cg_pulchra_width <- mother_cg_pulchra %>%
   drop_na(max_mean_width_cm) %>% 
   drop_na(mother_width_all) # 58 observations
 
-maternal_pul_width <- brms::brm(log(max_mean_width_cm) ~ log(mother_width_all) + Site,
+maternal_pul_width <- brms::brm(log(max_mean_width_cm) ~ log(mother_width_all) * Site,
                                  data = mother_cg_pulchra_width, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000, 
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -293,29 +292,28 @@ saveRDS(maternal_pul_width, file = "output/maternal_propagation/maternal_pul_wid
 mat_pul_width_results <- model_summ_simple(maternal_pul_width)
 mat_pul_width_results$Species <- "Salix pulchra"
 
-
 # Salix arctica --------
 mother_cg_arctica_width <- mother_cg_arctica %>% 
   drop_na(max_mean_width_cm) %>% 
   drop_na(mother_width_all) # 20 observations
 
-maternal_arc_width <- brms::brm(log(max_mean_width_cm) ~ log(mother_width_all) + Site,
+maternal_arc_width <- brms::brm(log(max_mean_width_cm) ~ log(mother_width_all) * Site,
                                 data = mother_cg_arctica_width, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000, 
                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(maternal_arc_width) # not significant
 plot(maternal_arc_width)
-pp_check(maternal_arc_width, type = "dens_overlay", nsamples = 100)  # meh 
+pp_check(maternal_arc_width, type = "dens_overlay", nsamples = 100)  # okay 
+saveRDS(maternal_arc_width, file = "output/maternal_propagation/maternal_arc_width.rds")
 mat_arc_width_results <- model_summ_simple(maternal_arc_width)
 mat_arc_width_results$Species <- "Salix arctica"
-saveRDS(maternal_arc_width, file = "output/maternal_propagation/maternal_arc_width.rds")
 
 mat_width_results <- rbind(mat_rich_width_results,mat_pul_width_results,mat_arc_width_results)
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(mat_width_results) <- c("Intercept", "log(Mother Canopy Width)", "Site:Qikiqtaruk", "log(Mother Width) * Site", "Sigma",
-                                  " Intercept", " log(Mother Canopy Width)", " Site:Qikiqtaruk", " log(Mother Width) * Site", " Sigma", 
-                                  "Intercept ", "log(Mother Canopy Width) ", "Site:Qikiqtaruk ", "log(Mother Width) * Site ", "Sigma ")
+rownames(mat_width_results) <- c("Intercept", "log(Mother Canopy Width)", "Site:Qikiqtaruk", "Sigma",
+                                  " Intercept", " log(Mother Canopy Width)", " Site:Qikiqtaruk", " Sigma", 
+                                  "Intercept ", "log(Mother Canopy Width) ", "Site:Qikiqtaruk ", "Sigma ")
 
 
 # making sure Rhat keeps the .00 
@@ -326,7 +324,7 @@ write.csv(mat_width_results, "output/maternal_propagation/maternal_width_output.
 
 kable_mat_width <- mat_width_results %>% 
   kbl(caption="Table.xxx BRMS model outputs: maternal width effects analysis across species. 
-      Model structure per species: (log(max height) ~ log(maternal height)*Site.", 
+      Model structure per species: (log(max height) ~ log(maternal height) * Site.", 
       col.names = c( "Estimate",
                      "Est. Error",
                      "Lower 95% CI (log)",
@@ -351,8 +349,6 @@ save_kable(kable_mat_width, file = "output/maternal_propagation/mat_width_result
            density = 300)
 
 # BIOVOLUME -------
-maternal_biovol_pulchra_mod <-  lm(mother_biovol_log ~ child_max_biovol_log*Site, data = mother_cg_edit_biovol_pulchra)
-
 # Salix richardsonii ------
 maternal_rich_biovol <- brms::brm(log(max_biovol) ~ log(Mother_biovolume) * Site,
                                  data = mother_cg_rich, family = gaussian(), chains = 3,
@@ -361,28 +357,21 @@ maternal_rich_biovol <- brms::brm(log(max_biovol) ~ log(Mother_biovolume) * Site
 summary(maternal_rich_biovol) # not significant
 plot(maternal_rich_biovol)
 pp_check(maternal_rich_biovol, type = "dens_overlay", nsamples = 100)  # good) 
+saveRDS(maternal_rich_biovol, file = "output/maternal_propagation/maternal_ric_biovol.rds")
+
 mat_rich_biovol_results <- model_summ_simple(maternal_rich_biovol)
 mat_rich_biovol_results$Species <- "Salix richardsonii"
-
-ggscatter(mother_cg_rich, x = "max_biovol", y = "Mother_biovolume", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "max biovol (cm)", ylab = "mother biovol (cm)")
 
 # Salix pulchra -------
 maternal_pul_biovol <- brms::brm(log(max_biovol) ~ log(Mother_biovolume) * Site,
                                   data = mother_cg_pulchra, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-ggscatter(mother_cg_pulchra, x = "max_biovol", y = "Mother_biovolume", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "max biovol (cm)", ylab = "mother biovol (cm)")
-
 summary(maternal_pul_biovol) # not significant
 plot(maternal_pul_biovol)
 pp_check(maternal_pul_biovol, type = "dens_overlay", nsamples = 100)  # good) 
+saveRDS(maternal_pul_biovol, file = "output/maternal_propagation/maternal_pul_biovol.rds")
+
 mat_pul_biovol_results <- model_summ_simple(maternal_pul_biovol)
 mat_pul_biovol_results$Species <- "Salix pulchra"
 
@@ -391,22 +380,19 @@ maternal_arc_biovol <- brms::brm(log(max_biovol) ~ log(Mother_biovolume) * Site,
                                  data = mother_cg_arctica, family = gaussian(), chains = 3,
                                  iter = 3000, warmup = 1000, 
                                  control = list(max_treedepth = 15, adapt_delta = 0.99))
-ggscatter(mother_cg_arctica, x = "max_biovol", y = "Mother_biovolume", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "max biovol (cm)", ylab = "mother biovol (cm)")
-
 summary(maternal_arc_biovol) # not significant
 plot(maternal_arc_biovol)
 pp_check(maternal_arc_biovol, type = "dens_overlay", nsamples = 100)  # decent? 
+saveRDS(maternal_arc_biovol, file = "output/maternal_propagation/maternal_arc_biovol.rds")
+
 mat_arc_biovol_results <- model_summ_simple(maternal_arc_biovol)
 mat_arc_biovol_results$Species <- "Salix arctica"
 
 mat_biovol_results <- rbind(mat_rich_biovol_results,mat_pul_biovol_results,mat_arc_biovol_results)
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(mat_biovol_results) <- c("Intercept", "log(Mother Canopy Biovolume)", "Site:Qikiqtaruk", "log(Mother Biovolume) * Site", "Sigma",
-                                 " Intercept", " log(Mother Canopy Biovolume)", " Site:Qikiqtaruk", " log(Mother Biovolume) * Site", " Sigma", 
-                                 "Intercept ", "log(Mother Canopy Biovolume) ", "Site:Qikiqtaruk ", "log(Mother Biovolume) * Site ", "Sigma ")
+rownames(mat_biovol_results) <- c("Intercept", "log(Mother Canopy Biovolume)", "Site:Qikiqtaruk", "Sigma",
+                                 " Intercept", " log(Mother Canopy Biovolume)", " Site:Qikiqtaruk", " Sigma", 
+                                 "Intercept ", "log(Mother Canopy Biovolume) ", "Site:Qikiqtaruk ", "Sigma ")
 
 # making sure Rhat keeps the .00 
 mat_biovol_results$Rhat <- as.character(formatC(mat_biovol_results$Rhat, digits = 2, format = 'f')) #new character variable with format specification
@@ -415,7 +401,7 @@ mat_biovol_results$Rhat <- as.character(formatC(mat_biovol_results$Rhat, digits 
 write.csv(mat_biovol_results, "output/maternal_propagation/maternal_biovol_output.csv")
 kable_mat_biovol <- mat_biovol_results %>% 
   kbl(caption="Table.xxx BRMS model outputs: maternal biovolume effects analysis across species. 
-      Model structure per species: (log(max biovolume) ~ log(maternal biovolume)*Site.", 
+      Model structure per species: (log(max biovolume) ~ log(maternal biovolume) * Site.", 
       col.names = c( "Estimate",
                      "Est. Error",
                      "Lower 95% CI (log)",
@@ -443,54 +429,42 @@ save_kable(kable_mat_biovol, file = "output/maternal_propagation/mat_biovol_resu
 
 # Height vs Cutting length ------
 # Salix richardsonii ------
-prop_rich <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
+prop_height_rich <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
                                   data = mother_cg_rich, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(prop_rich) # not significant
+summary(prop_height_rich) # not significant
+plot(prop_height_rich)
+pp_check(prop_height_rich, type = "dens_overlay", ndraws = 100)  # good 
+saveRDS(prop_height_rich, file = "output/maternal_propagation/propagation_ric_height.rds")
 
-ggscatter(mother_cg_rich, x = "max_canopy_height_cm", y = "Cutting_length", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "max height (cm)", ylab = "cutting length (cm)")
-
-plot(prop_rich)
-pp_check(prop_rich, type = "dens_overlay", ndraws = 100)  # good 
-prop_rich_results <- model_summ_simple(prop_rich)
+prop_rich_results <- model_summ_simple(prop_height_rich)
 prop_rich_results$Species <- "Salix richardsonii"
 
 # Salix pulchra -------
-prop_pul <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
+prop_height_pul <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
                        data = mother_cg_pulchra, family = gaussian(), chains = 3,
                        iter = 3000, warmup = 1000, 
                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(prop_height_pul) # not significant
+plot(prop_height_pul)
+pp_check(prop_height_pul, type = "dens_overlay", ndraws = 100)  # good 
+saveRDS(prop_height_pul, file = "output/maternal_propagation/propagation_pul_height.rds")
 
-ggscatter(mother_cg_pulchra, x = "max_canopy_height_cm", y = "Cutting_length", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "max height (cm)", ylab = "cutting length (cm)")
-
-summary(prop_pul) # not significant
-plot(prop_pul)
-pp_check(prop_pul, type = "dens_overlay", ndraws = 100)  # good 
-prop_pul_results <- model_summ_simple(prop_pul)
+prop_pul_results <- model_summ_simple(prop_height_pul)
 prop_pul_results$Species <- "Salix pulchra"
 
 # Salix arctica --------
-prop_arc <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
+prop_height_arc <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
                       data = mother_cg_arctica, family = gaussian(), chains = 3,
                       iter = 3000, warmup = 1000, 
                       control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(prop_arc) # not significant
+summary(prop_height_arc) # not significant
+plot(prop_height_arc)
+pp_check(prop_height_arc, type = "dens_overlay", ndraws = 100)  # okay? kind of wonky 
+saveRDS(prop_height_arc, file = "output/maternal_propagation/propagation_arc_height.rds")
 
-ggscatter(mother_cg_arctica, x = "max_canopy_height_cm", y = "Cutting_length", 
-          add = "reg.line", conf.int = TRUE, 
-          cor.coef = TRUE, cor.method = "pearson",
-          xlab = "max height (cm)", ylab = "cutting length (cm)")
-
-plot(prop_arc)
-pp_check(prop_arc, type = "dens_overlay", ndraws = 100)  # okay? kind of wonky 
-prop_arc_results <- model_summ_simple(prop_arc)
+prop_arc_results <- model_summ_simple(prop_height_arc)
 prop_arc_results$Species <- "Salix arctica"
 
 prop_results <- rbind(prop_rich_results,prop_pul_results,prop_arc_results)
