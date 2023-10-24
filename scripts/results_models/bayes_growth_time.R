@@ -104,7 +104,7 @@ all_CG_growth_pul<-  all_CG_height_growth_rates %>%
 all_CG_growth_arc <-all_CG_height_growth_rates %>%
   filter(Species == "Salix arctica")
 
-# HEIGHT ----
+# HEIGHT 2023 ----
 # Salix richardsonii -------
 height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
                          data = all_CG_growth_ric,  family = gaussian(), chains = 3,
@@ -451,29 +451,6 @@ theme_shrub <- function(){ theme(legend.position = "right",
                                  plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
                                  legend.title=element_text(size=16, family = "Helvetica Light"),
                                  legend.text=element_text(size = 15, family = "Helvetica Light"))}
-
-theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", size=12),
-                                 axis.text.x  = element_text(vjust=0.5, size=12, colour = "black", angle = 45), 
-                                 axis.title.y = element_text(face="bold", size=12),
-                                 axis.text.y  = element_text(vjust=0.5, size=12, colour = "black"),
-                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
-                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
-                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5),
-                                 plot.margin = unit(c(1,1,1,1), units = , "cm"))}
-
-theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", size=16),
-                                 axis.text.x  = element_text(vjust=0.5, size=16, colour = "black", angle = 60), 
-                                 axis.title.y = element_text(face="bold", size=16),
-                                 axis.text.y  = element_text(vjust=0.5, size=16, colour = "black"),
-                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
-                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
-                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 16, face = "bold.italic", hjust = 0.5),
-                                 legend.title=element_text(size=16),
-                                 legend.text=element_text(size = 15))}
 
 theme_shrub_e <- function(){ theme(legend.position = "right",
                                 axis.title.x = element_text(size=18),
@@ -1057,8 +1034,8 @@ colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
     theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
     theme(axis.text.x  = element_text(angle = 0)))
 
-# older models from 2022 ----
-# 1. BIOVOLUME over time ------
+# OLDER models from 2022 ----
+# Biovolume over time ------
 # S. Richardsonii -----
 # model
 garden_rich_biovol_time <- brms::brm(log(biovolume) ~ Sample_age*population + (Sample_age|SampleID_standard),
@@ -1239,7 +1216,7 @@ kable_time_interact_biovol <- garden_biovol_interact_back %>%
 # making species column in cursive
 column_spec(kable_time_interact_biovol, 2, width = NULL, bold = FALSE, italic = TRUE)
 
-#2.1. BIOVOL GROWTH RATE -------
+# BIOVOL GROWTH RATE -------
 
 # S.richardsonii ------
 hist(all_CG_growth_ric$biovol_growth_diff) # normal 
