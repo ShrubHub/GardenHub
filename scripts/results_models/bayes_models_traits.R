@@ -764,7 +764,7 @@ pulchra_LA_mad <- brms::brm((LA_cm2) ~ population + (1|year), data = pulchra_mad
 summary(pulchra_LA_mad)
 plot(pulchra_LA_mad)
 pp_check(pulchra_LA_mad, type = "dens_overlay", ndraws = 100) # okay
-saveRDS(pulchra_LA_mad, file = "output/traits/models/la_richardsonii_compare.rds")
+saveRDS(pulchra_LA_mad, file = "output/traits/models/la_pulchra_compare.rds")
 pulchra_LA_mad <- readRDS("output/traits/models/la_pulchra_compare.rds")
 pulchra_LA.pred <- ggpredict(pulchra_LA_mad, terms = c('population'))
 
