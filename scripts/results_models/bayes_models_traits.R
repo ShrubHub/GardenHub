@@ -1129,8 +1129,8 @@ arc_LL_results_2[3,4] <- arc_LL_results_2[3,4] + arc_LL_results_2[1,4]
 arc_LL_results_2[4,4] <- arc_LL_results_2[4,4] + arc_LL_results_2[1,4]
 
 # extraction for model output table
-rownames(arc_LL_results) <- c("Intercept  ", "Northern Source ", "Southern Source  ", "Southern Garden ", "Year  ", "Sigma  ")
-rownames(arc_LL_results_2) <- c("Intercept ", "Northern Source ", "Southern Source ", "Southern Garden ", "Year ", "Sigma ")
+rownames(arc_LL_results) <- c("Intercept  ", "Northern Source ", "Southern Source  ", "Southern Garden ", "Year  ", "SampleID_standard ", "Sigma  ")
+rownames(arc_LL_results_2) <- c("Intercept ", "Northern Source ", "Southern Source ", "Southern Garden ", "Year ", " SampleID_standard", "Sigma ")
 
 arc_ll_extract_df_1 <- arc_LL_results %>% 
   mutate(Species = rep("Salix arctica")) %>%
