@@ -194,6 +194,8 @@ maternal_pul_height <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Canopy_H
                                   data = mother_cg_pulchra, family = gaussian(), chains = 3,
                                   iter = 3000, warmup = 1000, 
                                   control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+
 summary(maternal_pul_height) # not significant 
 plot(maternal_pul_height)
 pp_check(maternal_pul_height, type = "dens_overlay", nsamples = 100)  # good) 
@@ -437,9 +439,9 @@ summary(prop_height_rich) # not significant
 plot(prop_height_rich)
 pp_check(prop_height_rich, type = "dens_overlay", ndraws = 100)  # good 
 saveRDS(prop_height_rich, file = "output/maternal_propagation/propagation_ric_height.rds")
-
-prop_rich_results <- model_summ_simple(prop_height_rich)
-prop_rich_results$Species <- "Salix richardsonii"
+prop_height_rich <- readRDS("output/maternal_propagation/propagation_ric_height.rds")
+prop_height_rich_results <- model_summ_simple(prop_height_rich)
+prop_height_rich_results$Species <- "Salix richardsonii"
 
 # Salix pulchra -------
 prop_height_pul <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
@@ -450,9 +452,10 @@ summary(prop_height_pul) # not significant
 plot(prop_height_pul)
 pp_check(prop_height_pul, type = "dens_overlay", ndraws = 100)  # good 
 saveRDS(prop_height_pul, file = "output/maternal_propagation/propagation_pul_height.rds")
+prop_height_pul <- readRDS("output/maternal_propagation/propagation_pul_height.rds")
 
-prop_pul_results <- model_summ_simple(prop_height_pul)
-prop_pul_results$Species <- "Salix pulchra"
+prop_height_pul_results <- model_summ_simple(prop_height_pul)
+prop_height_pul_results$Species <- "Salix pulchra"
 
 # Salix arctica --------
 prop_height_arc <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
@@ -463,11 +466,12 @@ summary(prop_height_arc) # not significant
 plot(prop_height_arc)
 pp_check(prop_height_arc, type = "dens_overlay", ndraws = 100)  # okay? kind of wonky 
 saveRDS(prop_height_arc, file = "output/maternal_propagation/propagation_arc_height.rds")
+prop_height_arc <- readRDS("output/maternal_propagation/propagation_arc_height.rds")
 
-prop_arc_results <- model_summ_simple(prop_height_arc)
-prop_arc_results$Species <- "Salix arctica"
+prop_height_arc_results <- model_summ_simple(prop_height_arc)
+prop_height_arc_results$Species <- "Salix arctica"
 
-prop_results <- rbind(prop_rich_results,prop_pul_results,prop_arc_results)
+prop_results <- rbind(prop_height_rich_results,prop_height_pul_results,prop_height_arc_results)
 # adding spaces before/after each name so they let me repeat them in the table
 rownames(prop_results) <- c("Intercept", "log(Cutting length)", "Site:Qikiqtaruk", "log(Cutting length) * Site", "Sigma",
                                   " Intercept", " log(Cutting length)", " Site:Qikiqtaruk", " log(Cutting length) * Site", " Sigma", 
@@ -482,7 +486,7 @@ kable_prop_height <- prop_results %>%
   kbl(caption="Table.xxx BRMS model outputs: propagation effects on maximum height analysis across species. 
       Model structure per species: (log(max height) ~ log(cutting length)*Site.", 
       col.names = c( "Estimate",
-                     "Est. Error",
+                     "Error",
                      "Lower 95% CI (log)",
                      "Upper 95% CI (log)", 
                      "Rhat", 
@@ -546,6 +550,7 @@ summary(prop_width_rich) # not significant
 plot(prop_width_rich)
 pp_check(prop_width_rich, type = "dens_overlay", ndraws = 100)  # kind of bimodal-y 
 saveRDS(prop_width_rich, file = "output/maternal_propagation/propagation_ric_width.rds")
+prop_width_rich <- readRDS("output/maternal_propagation/propagation_ric_width.rds")
 prop_rich_width_results <- model_summ_simple(prop_width_rich)
 prop_rich_width_results$Species <- "Salix richardsonii"
 
@@ -558,22 +563,30 @@ summary(prop_width_pul) # not significant
 plot(prop_width_pul)
 pp_check(prop_width_pul, type = "dens_overlay", ndraws = 100)  # good 
 saveRDS(prop_width_pul, file = "output/maternal_propagation/propagation_pul_width.rds")
+prop_width_pul <- readRDS("output/maternal_propagation/propagation_pul_width.rds")
 
 prop_pul_width_results <- model_summ_simple(prop_width_pul)
 prop_pul_width_results$Species <- "Salix pulchra"
 
 # Salix arctica  ------
+mother_cg_arctica_width <- mother_cg_arctica %>% 
+  drop_na(max_mean_width_cm) %>% 
+  drop_na(Cutting_length) # 23 observations
+
 prop_width_arc <- brms::brm(log(max_mean_width_cm) ~ log(Cutting_length) * Site,
                             data = mother_cg_arctica, family = gaussian(), chains = 3,
                             iter = 3000, warmup = 1000, 
                             control = list(max_treedepth = 15, adapt_delta = 0.99))
+
 summary(prop_width_arc) # not significant
 plot(prop_width_arc)
 pp_check(prop_width_arc, type = "dens_overlay", ndraws = 100)  # meh 
 saveRDS(prop_width_arc, file = "output/maternal_propagation/propagation_arc_width.rds")
+prop_width_arc <- readRDS("output/maternal_propagation/propagation_arc_width.rds")
 
 prop_arc_width_results <- model_summ_simple(prop_width_arc)
 prop_arc_width_results$Species <- "Salix arctica"
+arc_prop_width.pred <- ggpredict(prop_width_arc, terms = "Site")
 
 prop_width_results <- rbind(prop_rich_width_results, prop_pul_width_results, prop_arc_width_results)
 # adding spaces before/after each name so they let me repeat them in the table
@@ -857,7 +870,7 @@ ggsave(mat_height_plots, filename ="outputs/figures/maternal_height_panel_2023.p
 
 # Propagation: Height vs cutting length------
 (rich_prop_1 <-  mother_cg_rich %>%
-   add_predicted_draws(prop_rich, allow_new_levels = TRUE) %>%
+   add_predicted_draws(prop_height_rich, allow_new_levels = TRUE) %>%
    ggplot(aes(x = log(Cutting_length), y = log(max_canopy_height_cm), color = Site, fill = Site)) +
    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
    geom_point(data = mother_cg_rich) +
@@ -869,25 +882,25 @@ ggsave(mat_height_plots, filename ="outputs/figures/maternal_height_panel_2023.p
    labs(title = "Salix richardsonii"))
 
 (pul_prop_1 <-  mother_cg_pulchra %>%
-    add_predicted_draws(prop_pul, allow_new_levels = TRUE) %>%
+    add_predicted_draws(prop_height_pul, allow_new_levels = TRUE) %>%
     ggplot(aes(x = log(Cutting_length), y = log(max_canopy_height_cm), color = Site, fill = Site)) +
     stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
     geom_point(data = mother_cg_pulchra) +
     theme_shrub() +
     ylab("Child canopy height (log, cm) \n") +
-    xlab("\nMother cutting length (log, cm) ")+ 
+    xlab("\n Cutting length (log, cm) ")+ 
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
     labs(title = "Salix pulchra"))
 
 (arc_prop_1 <-  mother_cg_arctica %>%
-    add_predicted_draws(prop_arc, allow_new_levels = TRUE) %>%
+    add_predicted_draws(prop_height_arc, allow_new_levels = TRUE) %>%
     ggplot(aes(x = log(Cutting_length), y = log(max_canopy_height_cm), color = Site, fill = Site)) +
     stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
     geom_point(data = mother_cg_arctica) +
     theme_shrub() +
     ylab("Child canopy height (log, cm) \n") +
-    xlab("\nMother cutting length (log, cm) ")+ 
+    xlab("\n Cutting length (log, cm) ")+ 
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
     labs(title = "Salix arctica"))
@@ -897,7 +910,7 @@ ggsave(mat_height_plots, filename ="outputs/figures/maternal_height_panel_2023.p
                               common.legend = TRUE, legend = "bottom",
                               ncol = 3, nrow = 1))
 
-# Propagation:biovol vs cutting length------
+# Propagation:width vs cutting length------
 (rich_prop_2 <-  mother_cg_rich %>%
    add_predicted_draws(prop_biovol_rich, allow_new_levels = TRUE) %>%
    ggplot(aes(x = log(Cutting_length), y = log(max_biovol), color = Site, fill = Site)) +
