@@ -953,7 +953,8 @@ ggsave(mat_height_plots, filename ="outputs/figures/maternal_height_panel_2023.p
                            common.legend = TRUE, legend = "bottom",
                            ncol = 3, nrow = 1))
 
-
+ggsave(prop_plots_width, filename ="output/figures/prop_width_plot.png", 
+       width = 14.67, height = 6.53, units = "in")
 
 # Propagation:Cutting length vs mother canopy height -----
 (rich_prop_3 <-  mother_cg_rich %>%

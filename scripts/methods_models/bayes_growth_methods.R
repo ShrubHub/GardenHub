@@ -762,7 +762,7 @@ theme_shrub_source <- function(){ theme(legend.position = "right",
                                  plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
                                  legend.title=element_text(size=16, family = "Helvetica Light"),
                                  legend.text=element_text(size = 15, family = "Helvetica Light"))}
-pal_source  <- c("#FDE725FF", "#2A788EFF") # for when southern source is missing  
+pal_source  <- c("#FDE725FF", "#2A788EFF")  
 
 # CANOPY HEIGHT -------
 # S.rich ----
@@ -794,6 +794,7 @@ unique_source_mother_rich$Site  <- plyr::revalue(unique_source_mother_rich$Site 
     xlab("\n Source population" ) +
     scale_color_manual(values=pal_source) +
     theme_shrub_source() +
+    coord_cartesian(ylim=c(20, 200)) +
     ggtitle(expression(italic("Salix richardsonii"))) +
     theme(text=element_text(family="Helvetica Light")) )
 
@@ -814,8 +815,6 @@ unique_source_mother_pulchra$Site  <- plyr::revalue(unique_source_mother_pulchra
                                                  c("Kluane"="S. Source",
                                                    "Qikiqtaruk"="N. Source"))
 
-
-
 (pul_source_height_plot <-ggplot(pul_source_height_data) +
     #geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = log(Canopy_Height_cm), fill = Site, colour = Site),
       #          alpha = 0.1)+ # raw data
@@ -830,6 +829,7 @@ unique_source_mother_pulchra$Site  <- plyr::revalue(unique_source_mother_pulchra
     scale_colour_manual(values =pal_source) +
     theme_shrub_source() +
     ggtitle(expression(italic("Salix pulchra"))) +
+    coord_cartesian(ylim=c(10, 200)) +
     theme(text=element_text(family="Helvetica Light")) )
 
 # S.arctica -----
@@ -848,9 +848,6 @@ unique_source_mother_arctica$Site  <- plyr::revalue(unique_source_mother_arctica
                                                     c("Kluane"="S. Source",
                                                       "Qikiqtaruk"="N. Source"))
 
-
-
-
 (arc_source_height_plot <-ggplot(arc_source_height_data) +
    # geom_violin(data = unique_source_mother_arctica, aes(x = Site, y = log(Canopy_Height_cm), fill = Site, colour = Site),
          #       alpha = 0.1)+ # raw data
@@ -863,6 +860,7 @@ unique_source_mother_arctica$Site  <- plyr::revalue(unique_source_mother_arctica
     xlab("\n Source population" ) +
     scale_colour_manual(values = pal_source) +
     theme_shrub_source()  +
+    coord_cartesian(ylim=c(0, 25)) +
     ggtitle(expression(italic("Salix arctica"))) +
     theme(text=element_text(family="Helvetica Light")) )
 
@@ -870,8 +868,6 @@ unique_source_mother_arctica$Site  <- plyr::revalue(unique_source_mother_arctica
 (source_growth_heights_plots <- ggarrange(rich_source_height_plot, pul_source_height_plot, arc_source_height_plot, 
                                 common.legend = TRUE, legend = "bottom",
                                 ncol = 3, nrow = 1))
-
-
 ggsave(source_growth_heights_plots, filename ="output/figures/source_growth_heights_plots.png", width = 14.67, height = 6.53, units = "in")
 
 # STEM ELONG -----
@@ -921,62 +917,104 @@ pul_source_elong_data <- pul_source_elong[[1]] # making the extracted model out
 rich_source_width <- (conditional_effects(source_rich_width)) # extracting conditional effects from bayesian model
 rich_source_width_data <- rich_source_width[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
+rich_source_width_data$Site  <- plyr::revalue(rich_source_width_data$Site , 
+                                               c("Kluane"="S. Source",
+                                                 "Qikiqtaruk"="N. Source"))
 
+rich_source_width_data$effect1__  <- plyr::revalue(rich_source_width_data$effect1__ , 
+                                                    c("Kluane"="S. Source",
+                                                      "Qikiqtaruk"="N. Source"))
+
+rich_source_width_data$Site  <- plyr::revalue(rich_source_width_data$Site , 
+                                                 c("Kluane"="S. Source",
+                                                   "Qikiqtaruk"="N. Source"))
 (rich_source_width_plot <-ggplot(rich_source_width_data) +
-    geom_violin(data = unique_source_mother_rich, aes(x = Site, y = log(mean_width), fill = Site, colour = Site),
-                alpha = 0.1)+ # raw data
-    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = log(mean_width), colour = Site),
+#    geom_violin(data = unique_source_mother_rich, aes(x = Site, y = (mean_width), fill = Site, colour = Site),
+#                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = (mean_width), colour = Site),
                 alpha = 0.8)+
     geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
                   alpha = 1,  width=0.5) +
-    ylab("Mean width (log, cm)\n") +
+    ylab("Mean width (cm)\n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    coord_cartesian(ylim=c(10, 500)) +
+    scale_color_manual(values=pal_source) +
     theme_shrub() +
-    labs(title = "Salix richardsonii"))
+    labs(title = "Salix richardsonii")+
+    theme(text=element_text(family="Helvetica Light")))
 
 # S. pul----
 pul_source_width <- (conditional_effects(source_pul_width)) # extracting conditional effects from bayesian model
 pul_source_width_data <- pul_source_width[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
+pul_source_width_data$Site  <- plyr::revalue(pul_source_width_data$Site , 
+                                              c("Kluane"="S. Source",
+                                                "Qikiqtaruk"="N. Source"))
+
+pul_source_width_data$effect1__  <- plyr::revalue(pul_source_width_data$effect1__ , 
+                                                   c("Kluane"="S. Source",
+                                                     "Qikiqtaruk"="N. Source"))
+
+pul_source_width_data$Site  <- plyr::revalue(pul_source_width_data$Site , 
+                                              c("Kluane"="S. Source",
+                                                "Qikiqtaruk"="N. Source"))
 
 (pul_source_width_plot <-ggplot(pul_source_width_data) +
-    geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = log(mean_width), fill = Site, colour = Site),
-                alpha = 0.1)+ # raw data
-    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = log(mean_width), colour = Site),
+#    geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = (mean_width), fill = Site, colour = Site),
+#                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = (mean_width), colour = Site),
                 alpha = 0.8)+
     geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
                   alpha = 1,  width=0.5) +
-    ylab("Mean width (log, cm)\n") +
+    ylab("Mean width (cm)\n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    scale_color_manual(values=pal_source) +
     theme_shrub() +
-    labs(title = "Salix pulchra"))
+    coord_cartesian(ylim=c(10, 500)) +
+    labs(title = "Salix pulchra")+
+    theme(text=element_text(family="Helvetica Light")))
 
 # S.arctica -----
 arc_source_width <- (conditional_effects(source_arc_width)) # extracting conditional effects from bayesian model
 arc_source_width_data <- arc_source_width[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
 
+arc_source_width_data$Site  <- plyr::revalue(arc_source_width_data$Site , 
+                                             c("Kluane"="S. Source",
+                                               "Qikiqtaruk"="N. Source"))
+
+arc_source_width_data$effect1__  <- plyr::revalue(arc_source_width_data$effect1__ , 
+                                                  c("Kluane"="S. Source",
+                                                    "Qikiqtaruk"="N. Source"))
+
+arc_source_width_data$Site  <- plyr::revalue(arc_source_width_data$Site , 
+                                             c("Kluane"="S. Source",
+                                               "Qikiqtaruk"="N. Source"))
+
 (arc_source_width_plot <-ggplot(arc_source_width_data) +
-    geom_violin(data = unique_source_mother_arctica, aes(x = Site, y = log(mean_width), fill = Site, colour = Site),
-                alpha = 0.1)+ # raw data
-    geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = log(mean_width), colour = Site),
+#    geom_violin(data = unique_source_mother_arctica, aes(x = Site, y = log(mean_width), fill = Site, colour = Site),
+#                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = (mean_width), colour = Site),
                 alpha = 0.8)+
     geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
                   alpha = 1,  width=0.5) +
-    ylab("Mean width (log, cm)\n") +
+    ylab("Mean width (cm)\n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    scale_color_manual(values=pal_source) +
+    coord_cartesian(ylim=c(0, 60)) +
     theme_shrub() +
-    labs(title = "Salix arctica"))
+    labs(title = "Salix arctica")+
+    theme(text=element_text(family="Helvetica Light")))
 
+# arrange 
+(source_growth_width_plots <- ggarrange(rich_source_width_plot, pul_source_width_plot, arc_source_width_plot, 
+                                          common.legend = TRUE, legend = "bottom",
+                                          ncol = 3, nrow = 1))
+ggsave(source_growth_width_plots, filename ="output/figures/source_growth_width_plot.png", 
+       width = 14.67, height = 6.53, units = "in")
 
 
 # STEM DIAM -----
