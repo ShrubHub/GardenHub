@@ -586,7 +586,6 @@ prop_width_arc <- readRDS("output/maternal_propagation/propagation_arc_width.rds
 
 prop_arc_width_results <- model_summ_simple(prop_width_arc)
 prop_arc_width_results$Species <- "Salix arctica"
-arc_prop_width.pred <- ggpredict(prop_width_arc, terms = "Site")
 
 prop_width_results <- rbind(prop_rich_width_results, prop_pul_width_results, prop_arc_width_results)
 # adding spaces before/after each name so they let me repeat them in the table
@@ -911,48 +910,50 @@ ggsave(mat_height_plots, filename ="outputs/figures/maternal_height_panel_2023.p
                               ncol = 3, nrow = 1))
 
 # Propagation:width vs cutting length------
-(rich_prop_2 <-  mother_cg_rich %>%
-   add_predicted_draws(prop_biovol_rich, allow_new_levels = TRUE) %>%
-   ggplot(aes(x = log(Cutting_length), y = log(max_biovol), color = Site, fill = Site)) +
+(rich_prop_width <-  mother_cg_rich %>%
+   add_predicted_draws(prop_width_rich, allow_new_levels = TRUE) %>%
+   ggplot(aes(x = log(Cutting_length), y = log(max_mean_width_cm), color = Site, fill = Site)) +
    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
    geom_point(data = mother_cg_rich) +
    theme_shrub() +
-   ylab("Child biovolume (log, cm3) \n") +
-   xlab("\nMother cutting length (log, cm) ")+ 
+   ylab("Shrub biovolume (log scale) \n") +
+   xlab("\n Cutting length (log scale) ")+ 
    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
    labs(title = "Salix richardsonii"))
 
-(pul_prop_2 <-  mother_cg_pulchra %>%
-    add_predicted_draws(prop_biovol_pul, allow_new_levels = TRUE) %>%
-    ggplot(aes(x = log(Cutting_length), y = log(max_biovol), color = Site, fill = Site)) +
+(pul_prop_width <-  mother_cg_pulchra %>%
+    add_predicted_draws(prop_width_pul, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Cutting_length), y = log(max_mean_width_cm), color = Site, fill = Site)) +
     stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
     geom_point(data = mother_cg_pulchra) +
     theme_shrub() +
-    ylab("Child biovolume (log, cm3) \n") +
-    xlab("\nMother cutting length (log, cm) ")+ 
+    ylab("Shrub width (log scale) \n") +
+    xlab("\n Cutting length (log scale) ")+ 
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
     labs(title = "Salix pulchra"))
 
-(arc_prop_2 <-  mother_cg_arctica %>%
+(arc_prop_width <-  mother_cg_arctica %>%
     group_by(Site) %>%
-    add_predicted_draws(prop_biovol_arc, allow_new_levels = TRUE) %>%
-    ggplot(aes(x = log(Cutting_length), y = log(max_biovol), color = Site, fill = Site)) +
+    add_predicted_draws(prop_width_arc, allow_new_levels = TRUE) %>%
+    ggplot(aes(x = log(Cutting_length), y = log(max_mean_width_cm), color = Site, fill = Site)) +
     stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
     geom_point(data = mother_cg_arctica) +
     theme_shrub() +
-    ylab("Child biovolume (log, cm3) \n") +
-    xlab("\nMother cutting length (log, cm) ")+ 
+    ylab("Shrub width (log scale) \n") +
+    xlab("\n Cutting length (log scale) ")+ 
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
     labs(title = "Salix arctica"))
 
 
-# arrange maternal width fig. 
-(prop_plots_2 <- ggarrange(rich_prop_2, pul_prop_2, arc_prop_2, 
+# arrange cutting length by width  fig. 
+(prop_plots_width <- ggarrange(rich_prop_width, pul_prop_width, arc_prop_width, 
                            common.legend = TRUE, legend = "bottom",
                            ncol = 3, nrow = 1))
+
+
 
 # Propagation:Cutting length vs mother canopy height -----
 (rich_prop_3 <-  mother_cg_rich %>%
