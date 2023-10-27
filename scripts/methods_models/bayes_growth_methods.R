@@ -1,6 +1,6 @@
 # BAYESIAN growth methods models -----
 # Script by Erica
-# Last update: 21/02/2023
+# Last update: 27/10/2023 by Madi
 
 # 1. Loading libraries ----
 
@@ -82,7 +82,7 @@ source_rich_height <- brms::brm(log(Canopy_Height_cm) ~ Site + (1|SampleYear),
 
 summary(source_rich_height) # sig. lower heights for QHi
 plot(source_rich_height)
-pp_check(source_rich_height, type = "dens_overlay", nsamples = 100)  # good) 
+pp_check(source_rich_height, type = "dens_overlay", ndraws = 100)  # good) 
 saveRDS(source_rich_height, file = "output/models/source_rich_height.rds")
 source_rich_height <- readRDS(file = "output/models/source_rich_height.rds")
 
@@ -118,8 +118,7 @@ source_rich_height_df_1 <- source_rich_height_dat %>%
 source_rich_height_df <- source_rich_height_dat_2 %>% 
   mutate(Species = rep("Salix richardsonii")) %>%
   relocate("Species", .before = "Estimate (log sum)") %>%
-  relocate("nobs", .before = "effect")%>%
-  dplyr::select(-Est.Error)
+  relocate("nobs", .before = "effect")
 
 rich_source_extract_all <- full_join(source_rich_height_df_1, source_rich_height_df, 
                              by = c("effect" = "effect", "nobs"="nobs",
@@ -174,8 +173,7 @@ source_pul_height_df_1 <- source_pul_height_dat %>%
 source_pul_height_df <- source_pul_height_dat_2 %>% 
   mutate(Species = rep("Salix pulchra")) %>%
   relocate("Species", .before = "Estimate (log sum)") %>%
-  relocate("nobs", .before = "effect")%>%
-  dplyr::select(-Est.Error)
+  relocate("nobs", .before = "effect")
 
 pul_source_extract_all <- full_join(source_pul_height_df_1, source_pul_height_df, 
                                      by = c("effect" = "effect", "nobs"="nobs",
@@ -183,8 +181,6 @@ pul_source_extract_all <- full_join(source_pul_height_df_1, source_pul_height_df
                                             "Species"="Species", "Rhat"="Rhat"))
 
 rownames(pul_source_extract_all) <- c("Intercept ", "Northern Source ", "Sample year", "Sigma  ")
-
-
 
 # Salix arctica -----
 source_arc_height <- brms::brm(log(Canopy_Height_cm) ~ Site + (1|SampleYear),
@@ -216,7 +212,6 @@ source_arc_height_dat_2[2,3] <- source_arc_height_dat_2[2,3] + source_arc_height
 # change upper CI
 source_arc_height_dat_2[2,4] <- source_arc_height_dat_2[2,4] + source_arc_height_dat_2[1,4]
 
-
 # extraction for model output table
 rownames(source_arc_height_dat) <- c("Intercept", "Northern source", "Sample year", "Sigma")
 rownames(source_arc_height_dat_2) <- c("Intercept", "Northern source", "Sample year", "Sigma")
@@ -230,8 +225,7 @@ source_arc_height_df_1 <- source_arc_height_dat %>%
 source_arc_height_df <- source_arc_height_dat_2 %>% 
   mutate(Species = rep("Salix arctica")) %>%
   relocate("Species", .before = "Estimate (log sum)") %>%
-  relocate("nobs", .before = "effect")%>%
-  dplyr::select(-Est.Error)
+  relocate("nobs", .before = "effect")
 
 arc_source_extract_all <- full_join(source_arc_height_df_1, source_arc_height_df, 
                                     by = c("effect" = "effect", "nobs"="nobs",
@@ -267,7 +261,6 @@ rownames(source_heights_out_back) <- c("Intercept", "Northern source", "Sample y
                                        "Sigma", " Intercept", " Northern source", " Sample year", 
                                        " Sigma", "Intercept ", "Northern source ", "Sample year ", 
                                        "Sigma ")
-
 # making sure Rhat keeps the .00 
 source_heights_out_back$Rhat <- as.character(formatC(source_heights_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
 
@@ -276,10 +269,13 @@ kable_heights_source <- source_heights_out_back %>%
   kbl(caption="Table.xxx BRMS model outputs: canopy heights of northern vs southern shrubs in source populations. 
       Model structure per species: log(Canopy_Height_cm) ~ Site + (1|SampleYear). 
       Including model output back-transformed in the table below.", 
-      col.names = c( "Species","Estimate (log)",
+      col.names = c( "Species",
+                     "Estimate (log)",
+                     "Error",
                      "Lower 95% CI (log)",
                      "Upper 95% CI (log)",
-                     "Estimate (log sum)",  "Lower 95% CI 
+                     "Estimate (log sum)",  
+                     "Lower 95% CI 
                     (log sum)", "Upper 95% CI
                     (log sum)",  
                      "Estimate (transformed)","Lower 95% CI 
@@ -295,6 +291,14 @@ kable_heights_source <- source_heights_out_back %>%
 # making species column in cursive
 column_spec(kable_heights_source, 2, width = NULL, bold = FALSE, italic = TRUE)
 row_spec(kable_heights_source, 1:12, align = "c") 
+
+save_kable(kable_heights_source, file = "output/source/source_height_results.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # b. STEM ELONGATION ---- 
 # Salix richardsonii -------
@@ -400,7 +404,7 @@ row_spec(kable_heights_source, 1:12, align = "c")
 
 # c. WIDTH ----
 # Salix richardsonii -------
-source_rich_width<- brms::brm(log(mean_width) ~ Site + (1|SampleYear),
+source_rich_width<- brms::brm((mean_width) ~ Site + (1|SampleYear),
                                data = unique_source_mother_rich, family = gaussian(), chains = 3,
                                iter = 3000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -408,6 +412,9 @@ source_rich_width<- brms::brm(log(mean_width) ~ Site + (1|SampleYear),
 summary(source_rich_width) # significantly LARGER width for QHI shrubs
 plot(source_rich_width)
 pp_check(source_rich_width, type = "dens_overlay", nsamples = 100)  # fine
+saveRDS(source_rich_width, file = "output/models/source_rich_width.rds")
+source_rich_width <- readRDS(file = "output/models/source_rich_width.rds")
+rich_width.pred <- ggpredict(source_rich_width, terms = c('Site'))
 
 # extract output with function
 source_rich_width <- model_summ_methods(source_rich_width)
@@ -420,15 +427,18 @@ source_rich_width_df <- source_rich_width %>%
   relocate("nobs", .before = "effect")
 
 # Salix pulchra -----
-source_pul_width<- brms::brm(log(mean_width) ~ Site + (1|SampleYear),
+source_pul_width<- brms::brm((mean_width) ~ Site + (1|SampleYear),
                               data = unique_source_mother_pulchra, family = gaussian(), chains = 3,
                               iter = 3000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(source_pul_width) # significantly lower width for QHI shrubs
+summary(source_pul_width) # no sig diff 
+pul_width.pred <- ggpredict(source_pul_width, terms = c('Site'))
+
 plot(source_pul_width)
 pp_check(source_pul_width, type = "dens_overlay", nsamples = 100)  # fine
-
+saveRDS(source_pul_width, file = "output/models/source_pul_width.rds")
+source_pul_width <- readRDS(file = "output/models/source_pul_width.rds")
 # extract output with function
 source_pul_width <- model_summ_methods(source_pul_width)
 
@@ -439,9 +449,8 @@ source_pul_width_df <- source_pul_width %>%
   relocate("Species", .before = "Estimate")%>%
   relocate("nobs", .before = "effect")
 
-
 # Salix arctica -------
-source_arc_width<- brms::brm(log(mean_width) ~ Site + (1|SampleYear),
+source_arc_width<- brms::brm((mean_width) ~ Site + (1|SampleYear),
                              data = unique_source_mother_arctica, family = gaussian(), chains = 3,
                              iter = 3000, warmup = 1000, 
                              control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -449,6 +458,8 @@ source_arc_width<- brms::brm(log(mean_width) ~ Site + (1|SampleYear),
 summary(source_arc_width) # no significant diff
 plot(source_arc_width)
 pp_check(source_arc_width, type = "dens_overlay", nsamples = 100)  # fine
+saveRDS(source_arc_width, file = "output/models/source_arc_width.rds")
+source_arc_width <- readRDS(file = "output/models/source_arc_width.rds")
 
 # extract output with function
 source_arc_width <- model_summ_methods(source_arc_width)
@@ -464,17 +475,10 @@ source_arc_width_df <- source_arc_width %>%
 source_width_out <- rbind(source_rich_width_df, source_pul_width_df, 
                             source_arc_width_df) 
 
-
 # back transforming from log
 source_width_out_back <- source_width_out %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(Estimate), 
-         Est.Error_trans = 10^(Est.Error)) %>% 
-  select(-CI_range)
+  dplyr::rename("l_95_CI" = "l-95% CI", 
+                "u_95_CI" = "u-95% CI") 
 
 # save df of results 
 write.csv(source_width_out_back, "output/source_width_out_back.csv")
@@ -491,28 +495,32 @@ source_width_out_back$Rhat <- as.character(formatC(source_width_out_back$Rhat, d
 # creating table
 kable_width_source <- source_width_out_back %>% 
   kbl(caption="Table.xxx BRMS model outputs: canopy widths of northern vs southern shrubs in source populations. 
-      Model structure per species: log(mean_width) ~ Site + (1|SampleYear). 
+      Model structure per species: (mean_width) ~ Site + (1|SampleYear). 
       Including model output back-transformed in the table below.", 
-      col.names = c( "Species","Estimate",
-                     "Est. Error",
-                     "Lower 95% CI (log)",
-                     "Upper 95% CI (log)", 
+      col.names = c( "Species",
+                     "Estimate",
+                     "Error",
+                     "Lower 95% CI",
+                     "Upper 95% CI", 
                      "Rhat", 
                      "Bulk Effective Sample Size",
                      "Tail Effective Sample Size", 
                      "Sample Size",
-                     "Effect",
-                     "Lower 95% CI 
-                    (back transformed)", "Upper 95% CI
-                    (back transformed)", 
-                     "Estimate transformed", 
-                     "Error transformed"), digits=2, align = "l") %>% 
+                     "Effect"
+                     ), digits=2, align = "l") %>% 
   kable_classic(full_width=FALSE, html_font="Cambria")
 
 # making species column in cursive
 column_spec(kable_width_source, 2, width = NULL, bold = FALSE, italic = TRUE)
 row_spec(kable_heights_source, 1:12, align = "c") 
 
+save_kable(kable_width_source, file = "output/source/source_width_results.pdf",
+           bs_theme = "simplex",
+           self_contained = TRUE,
+           extra_dependencies = NULL,
+           latex_header_includes = NULL,
+           keep_tex =TRUE,
+           density = 300)
 
 # d. STEM DIAMETER -----
 # Salix richardsonii -------
