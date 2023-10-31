@@ -162,7 +162,7 @@ model_summ_no_re <- function(x) {
 # SLA ----
 # S. richardsonii ----
 rich_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-                      iter = 3000, warmup = 1000, 
+                      iter = 5000, warmup = 1000, 
                       control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(rich_SLA) 
 plot(rich_SLA)
@@ -430,7 +430,7 @@ save_kable(kable_sla,file = "output/traits/kable_sla.pdf",
 
 # LDMC ----
 # S. richardsonii ----
-rich_LDMC <- brms::brm((LDMC_percent) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
+rich_LDMC_check <- brms::brm((LDMC_percent) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
                            iter = 3000, warmup = 1000, 
                            control = list(max_treedepth = 15, adapt_delta = 0.99)) # 2 divergent transitions after warmup
 summary(rich_LDMC)
@@ -614,7 +614,7 @@ arc_ldmc_extract_all <- full_join(arc_ldmc_extract_df_1, arc_ldmc_extract_df,
                                          "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                          "Species"="Species", "Rhat"="Rhat"))
 
-rownames(arc_ldmc_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year ", "Sigma")
+rownames(arc_ldmc_extract_all) <- c("Intercept", "Northern Source", "Southern Source", "Southern Garden", "Year", "Sigma")
 
 # interpretation (none sig diff)
 # N. Garden  |     31.41 | [23.73, 42.69]
@@ -693,16 +693,6 @@ saveRDS(rich_LA_mad, file = "output/traits/models/la_richardsonii_compare.rds")
 rich_LA_mad <- readRDS("output/traits/models/la_richardsonii_compare.rds")
 rich_LA_mad.pred <- ggpredict(rich_LA_mad, terms = c('population'))
 
-#rich_LA <- brms::brm(log(LA_cm2) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
-#                     iter = 3000, warmup = 1000, 
-#                     control = list(max_treedepth = 15, adapt_delta = 0.99))
-#summary(rich_LA) 
-#plot(rich_LA)
-#pp_check(rich_LA, type = "dens_overlay", ndraws = 100)
-#saveRDS(rich_LA, file = "output/traits/models/la_richardsonii_compare.rds")
-#rich_LA <- readRDS("output/traits/models/la_richardsonii_compare.rds")
-#rich_LA.pred <- ggpredict(rich_LA, terms = c('population'))
-
 # extract output with function
 rich_LA_results <- model_summ(rich_LA_mad)
 
@@ -758,7 +748,8 @@ hist(pulchra_mad_traits$LA_cm2)
 pulchra_mad_traits$LA_cm2_log <- log(pulchra_mad_traits$LA_cm2)
 hist(pulchra_mad_traits$LA_cm2_log) # meh 
 
-pulchra_LA_mad <- brms::brm((LA_cm2) ~ population + (1|year), data = pulchra_mad_traits, family = gaussian(), chains = 3,
+pulchra_LA_mad <- brms::brm((LA_cm2) ~ population + (1|year), data = pulchra_mad_traits, 
+                            family = gaussian(), chains = 3,
                          iter = 3000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(pulchra_LA_mad)
@@ -905,7 +896,6 @@ rownames(arc_la_extract_all) <- c("Intercept", "Northern Source", "Southern Sour
 # merging all extracted outputs
 garden_LA_out <- rbind(rich_la_extract_all, pul_la_extract_all, 
                          arc_la_extract_all) 
-
 
 garden_LA_out <- garden_LA_out %>%
   dplyr::rename("Estimate_sum" = "Estimate (sum)", 
@@ -1469,40 +1459,6 @@ colnames(rich_LA_mad.pred) = c('population','fit', 'lwr', 'upr')
     labs(title = "Salix richardsonii") +
     theme_shrub())
 
-#richard_la <- (conditional_effects(rich_LA_mad)) # extracting conditional effects from bayesian model
-#richard_la_data <- richard_la[[1]] # making the extracted model outputs into a dataset (for plotting)
-#[[1]] is to extract the first term in the model which in our case is population
-#richard_la_data_trans <- richard_la_data %>% 
-#    mutate(CI_low_trans = exp(lower__)) %>% 
-#    mutate(CI_high_trans = exp(upper__)) %>% 
-#    mutate(Estimate_trans = exp(estimate__), 
-#           Est.Error_trans = exp(se__)) 
-  
-#(rich_la_plot <-ggplot(richard_la_data_trans) +
-#    geom_point(data = richardsonii_all_traits, aes(x = population, y = (LA_cm2), colour = population),
-#               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
-#    geom_point(aes(x = effect1__, y = Estimate_trans, colour = population), size = 6)+
-#    geom_errorbar(aes(x = effect1__, ymin = CI_low_trans, ymax = CI_high_trans, colour = population),
-#                  size = 1, alpha = 1) +
-#    ylab(expression(paste("\n Leaf area (",mm^{2},")"))) +
-#    xlab("" ) +
-#    scale_color_manual(values=pal) +
-#    labs(title = "Salix richardsonii") +
-#    theme_shrub())
-# keep it logged 
-#(rich_la_plot_log <-ggplot(richard_la_data) +
- #   geom_point(data = richardsonii_all_traits, aes(x = population, y = log(LA_cm2), colour = population),
-#               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
-#    geom_point(aes(x = effect1__, y = estimate__, colour = population), size = 6)+
-#    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
-#                  size = 1, alpha = 1) +
-#    ylab(expression(paste("\n log Leaf area (",cm^{2},")"))) +
-#    xlab("" ) +
-#    scale_color_manual(values=pal) +
-#    coord_cartesian(ylim=c(3, 10)) +
-#    labs(title = "Salix richardsonii") +
-#    theme_shrub())
-
 # pulchra ----
 colnames(pulchra_LA.pred) = c('population','fit', 'lwr', 'upr')
 
@@ -1537,20 +1493,6 @@ colnames(arctica_LA.pred) = c('population','fit', 'lwr', 'upr')
     labs(title = "Salix pulchra") +
     theme_shrub())
 
-# keep it log transformed 
-#(arc_la_plot <-ggplot(arc_la_data) +
-#    geom_point(data = arctica_all_traits, aes(x = population, y = log(LA_cm2), colour = population),
-#               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
-#    geom_point(aes(x = effect1__, y = estimate__, colour = population), size = 6)+
-#    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__, colour = population),
-#                  size = 1, alpha = 1) +
-#    ylab("") +
-#    xlab("" ) +
-#    scale_color_manual(values=pal) +
-#    coord_cartesian(ylim=c(3, 10)) +
-#    labs(title = "Salix arctica") +
-#    theme_shrub())
-
 (la_panel <- ggarrange(rich_la_plot, pul_la_plot, arc_la_plot, 
                         common.legend = TRUE, legend = "none",
                         labels = c("A", "B", "C"),
@@ -1561,7 +1503,6 @@ colnames(arctica_LA.pred) = c('population','fit', 'lwr', 'upr')
 ggsave("figures/leaf_area_panel.png", height = 10, width = 12, dpi = 300)
 
 # LEAF LENGTH -----
-
 # richardsonii ----
 colnames(rich_LL.pred) = c('population','fit', 'lwr', 'upr')
 

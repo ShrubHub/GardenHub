@@ -150,8 +150,8 @@ trait_2023 <- trait_2023 %>%
   mutate(LA = LA*100) %>%  #convert leaf area to mm2 instead of cm2
   mutate(LDMC_g_g = LDMC/1000) %>% # covert LDMC from mg g-1 to g g-1
   dplyr::select(-c(X, LDMC, rehydrated_leaf_sample_remarks, sample_remarks, dried_leaf_sample_remarks)) %>% 
-  mutate(population = case_when(Site %in% c("Qikiqtaruk") ~ "Northern",
-                                 Site == "Kluane" ~ "Southern")) %>% 
+  mutate(population = case_when(Site %in% c("Qikiqtaruk") ~ "source_north",
+                                 Site == "Kluane" ~ "source_south")) %>% 
   dplyr::filter(Species %in% c("Salix richardsonii", "Salix pulchra", "Salix arctica"))
 
 all_source_traits_2023 <- full_join(trait_2023, all_CG_source_traits, by = c("Site" = "Site", 
