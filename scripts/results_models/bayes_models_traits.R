@@ -598,12 +598,12 @@ arctica_LDMC_results_2[4,4] <- arctica_LDMC_results_2[4,4] + arctica_LDMC_result
 rownames(arctica_LDMC_results) <- c("Intercept  ", "Northern Source ", "Southern Source  ", "Southern Garden ", "Year  ", "Sigma  ")
 rownames(arctica_LDMC_results_2) <- c("Intercept ", "Northern Source ", "Southern Source ", "Southern Garden ", "Year ", "Sigma ")
 
-arc_ldmc_extract_df_1 <- arctica_LA_results %>% 
+arc_ldmc_extract_df_1 <- arctica_LDMC_results %>% 
   mutate(Species = rep("Salix arctica")) %>%
   relocate("Species", .before = "Estimate") %>%
   relocate("nobs", .before = "effect")
 
-arc_ldmc_extract_df <- arctica_LA_results_2 %>% 
+arc_ldmc_extract_df <- arctica_LDMC_results_2 %>% 
   mutate(Species = rep("Salix arctica")) %>%
   relocate("Species", .before = "Estimate (sum)") %>%
   relocate("nobs", .before = "effect")%>%
@@ -1569,6 +1569,5 @@ ggsave("figures/leaf_size_panel.png", height = 10, width = 12, dpi = 300)
 (sla_ldmc_panel <- ggarrange(sla_panel, ldmc_panel, 
                           common.legend = TRUE, legend = "bottom",
                           ncol = 1, nrow = 2))
-
 # save 
 ggsave("figures/sla_ldmc_panel.png", height = 10, width = 12, dpi = 300)
