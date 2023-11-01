@@ -104,6 +104,9 @@ all_CG_growth_pul<-  all_CG_height_growth_rates %>%
 all_CG_growth_arc <-all_CG_height_growth_rates %>%
   filter(Species == "Salix arctica")
 
+all_CG_growth_ric$SampleID_standard <- as.factor(all_CG_growth_ric$SampleID_standard)
+
+
 # HEIGHT 2023 ----
 # Salix richardsonii -------
 height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
@@ -129,14 +132,17 @@ colnames(ggpred_height_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
     ggtitle(expression(italic("Salix richardsonii"))) +
-    theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
+    scale_x_continuous(limits = c(1, 10), breaks = seq(1, 10, by = 1)) +
+    theme_shrub()+ theme(text=element_text(family="Helvetica
+                                           Light")) +
+    scale_y_continuous(limits = c(0, 125), breaks = seq(0, 125, by = 25)) +
     theme( axis.text.x  = element_text(angle = 0)) +
     labs(title = "Salix richardsonii", size = 20, family = "Helvetica Light")) # if i log everything it's exactly the same plot as with conditional effects! 
 
-# estimate for northern sample age: 1.50+0.09*1 = exp(1.59) = 4.903749 cm, in year 1
-# estimate for southern sample age: (1.50+0.91)+(0.09*1+0.16*1) = exp(2.66) = 14.29629 in year 1
-# estimate for southern sample age in year 9: (1.50+0.91)+(0.09*9 +0.16*9) = exp(4.66) = 105.6361 in year 9 -->105.6361/9 = 11.73734 cm/year
-# estimate for n sample age in year 9: 1.50+0.09*9 = exp(2.31) = 10.07442 in year 9 --> 10.07442/9= 1.11938 cm/year
+# estimate for northern sample age: 1.46+0.10*1 = exp(1.56) = 4.758821 cm, in year 1
+# estimate for southern sample age: (1.46+1.06)+(0.10*1+0.11*1) = exp(2.73) = 15.33289 in year 1
+# estimate for southern sample age in year 10: (1.46+1.06)+(0.10*10 +0.11*10) = exp(4.62) = 101.494 in year 10 --> 101.494/10 = 10.1494 cm/year
+# estimate for n sample age in year 10: 1.46+0.10*10 = exp(2.46) = 11.70481 in year 10 --> 11.70481/10= 1.170481 cm/year
 
 # extracting model summary
 height_rich_summ <- model_summ(height_rich)
@@ -179,8 +185,11 @@ saveRDS(height_pul, file = "output/models/height_pul_2023.rds")
 height_pul <- readRDS("output/models/height_pul_2023.rds")
 
 summary(height_pul)
-# estimate for northern sample age: 1.99-0.02=1.97 --> exp(1.97)= 7.170676 cm in year 1
-# estimate for s sample age: (1.99+0.95) + (-0.02+0.03)= 2.95, exp(2.95)= 19.10595 cm per sample age
+# estimate for northern sample age: 1.96-0.00=1.96 --> exp(1.96)= 7.099327 cm in year 1
+# estimate for s sample age: (1.96+0.99) + (-0.00+0.01)= 2.96, exp(2.96)= 19.29797 cm per sample age
+# estimate for s. sample age at year 10: (1.99+0.95) + (-0.02*9+0.03*9)= 3.03, exp(3.03)= 20.69 in year 9 --> 2.299692 per year
+
+
 # estimate for s. sample age at year 9: (1.99+0.95) + (-0.02*9+0.03*9)= 3.03, exp(3.03)= 20.69 in year 9 --> 2.299692 per year
 # estimate for northern sample age at year 9: 1.99-0.02*9=1.97= 3.03, exp(3.03)= 6.110447 in year 9 --> 0.6789386 per year
 
@@ -193,13 +202,17 @@ colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
-    ylab("Canopy height (cm)\n", family = "Helvetica Light") +
-    xlab("\n Sample age " , family = "Helvetica Light") +
+    ylab("Canopy height (cm)\n") +
+    xlab("\n Sample age " ) +
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_shrub()+ theme(text=element_text(family="Helvetica Light")) +
-    theme(axis.text.x  = element_text(angle = 0)) +
-    labs(title = "Salix pulchra", size = 20, family = "Helvetica Light")) # if i log everything it's exactly the same plot as with conditional effects! 
+    ggtitle(expression(italic("Salix pulchra"))) +
+    theme_shrub()+ theme(text=element_text(family="Helvetica
+                                           Light")) +
+    scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 20)) +
+    theme( axis.text.x  = element_text(angle = 0)) +
+    scale_x_continuous(limits = c(1, 10), breaks = seq(1, 10, by = 1)) +
+    labs(title = "Salix richardsonii", size = 20, family = "Helvetica Light"))
 
 height_pul_summ <- model_summ(height_pul)
 
@@ -254,8 +267,11 @@ colnames(ggpred_height_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
     theme_shrub() + 
+    scale_y_continuous(limits = c(0, 15), breaks = seq(0, 15, by = 3)) +
+    scale_x_continuous(limits = c(1, 8), breaks = seq(1, 8, by = 1)) +
     theme( axis.text.x  = element_text(angle = 0)) + 
     labs(title = "Salix arctica", size = 20, family = "Helvetica Light")) # if i log everything it's exactly the same plot as with conditional effects! 
+
 
 (ggpred_CG_height_panel <- ggarrange(ggpred_height_rich_plot,
                                     ggpred_height_pul_plot, 
@@ -263,7 +279,7 @@ colnames(ggpred_height_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
                                     common.legend = TRUE, legend="bottom"))
 
 ggsave(ggpred_CG_height_panel, filename ="outputs/figures/ggpred_CG_height_panel_2023.png",
-       width = 14.67, height = 6.53, units = "in")
+       width = 14.67, height = 6.53, units = "in", dpi = 300, device = png)
 
 height_arc_summ <- model_summ(height_arc)
 
