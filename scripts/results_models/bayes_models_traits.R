@@ -1451,7 +1451,7 @@ colnames(rich_LA_mad.pred) = c('population','fit', 'lwr', 'upr')
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1, width=0.75) +    coord_cartesian(ylim=c(0, 120)) +
     scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100, 120))+
-    ylab(expression("Leaf Area (cm"^"2)")+
+    ylab(expression("Leaf Area cm"^"2"))+
     xlab("" ) +
     scale_color_manual(values=pal) +
     labs(title = "Salix richardsonii") +
@@ -1488,17 +1488,17 @@ colnames(arctica_LA.pred) = c('population','fit', 'lwr', 'upr')
     coord_cartesian(ylim=c(0, 120)) +
     scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100, 120))+
     scale_color_manual(values=pal) +
-    labs(title = "Salix pulchra") +
+    labs(title = "Salix arctica") +
     theme_shrub())
 
 (la_panel <- ggarrange(rich_la_plot, pul_la_plot, arc_la_plot, 
                         common.legend = TRUE, legend = "none",
-                        labels = c("A", "B", "C"),
+                        labels = c("a)", "b)", "c)"),
                         label.x = c(0.1, 0.1, 0.1),
                         font.label = list(size = 18, color = "black", face = "bold", family = NULL),
                         ncol = 3, nrow = 1))
 
-ggsave("figures/leaf_area_panel.png", height = 10, width = 12, dpi = 300)
+ggsave("figures/leaf_area_panel.png", height = 10, width = 12, dpi = 300, device = png)
 
 # LEAF LENGTH -----
 # richardsonii ----
@@ -1551,9 +1551,9 @@ colnames(arc_LL.pred) = c('population','fit', 'lwr', 'upr')
 
 (ll_panel <- ggarrange(rich_ll_plot, pul_ll_plot, arc_ll_plot, 
                        common.legend = TRUE, legend = "none",
-                       labels = c("A", "B", "C"),
+                       labels = c("a)", "b)", "c)"),
                        ncol = 3, nrow = 1))
-ggsave("figures/leaf_length_panel.png", height = 10, width = 12, dpi = 300)
+ggsave("figures/leaf_length_panel.png", height = 10, width = 12, dpi = 300, device = png)
 
 # Arrange plots ----
 
@@ -1561,11 +1561,11 @@ ggsave("figures/leaf_length_panel.png", height = 10, width = 12, dpi = 300)
 (size_trait_panel <- ggarrange(la_panel, ll_panel, 
                                common.legend = TRUE, legend = "bottom", 
                                ncol = 1, nrow = 2))
-ggsave("figures/leaf_size_panel.png", height = 10, width = 12, dpi = 300) 
+ggsave("figures/leaf_size_panel.png", height = 10, width = 12, dpi = 300, device = png) 
 
 # SLA LDMC panel 
 (sla_ldmc_panel <- ggarrange(sla_panel, ldmc_panel, 
                           common.legend = TRUE, legend = "bottom",
                           ncol = 1, nrow = 2))
 # save 
-ggsave("figures/sla_ldmc_panel.png", height = 10, width = 12, dpi = 300)
+ggsave("figures/sla_ldmc_panel.png", height = 10, width = 12, dpi = 300, device = png)
