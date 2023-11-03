@@ -104,8 +104,20 @@ all_CG_growth_pul<-  all_CG_height_growth_rates %>%
 all_CG_growth_arc <-all_CG_height_growth_rates %>%
   filter(Species == "Salix arctica")
 
-all_CG_growth_ric$SampleID_standard <- as.factor(all_CG_growth_ric$SampleID_standard)
+rich_alive_2023 <- all_CG_growth_ric %>% 
+  filter(Year == "2023") %>% # 70 total 
+  drop_na(Canopy_Height_cm) %>% 
+  filter(population == "Northern") # 31 northern 
 
+pul_alive_2023 <- all_CG_growth_pul %>% 
+  filter(Year == "2023") %>% 
+  drop_na(Canopy_Height_cm) %>%  # 89 total 
+  filter(population == "Northern") # 42 northern 
+
+arc_alive_2023 <- all_CG_growth_arc %>% 
+  filter(Year == "2023") %>% 
+  drop_na(Canopy_Height_cm) %>%  # total 51
+  filter(population == "Northern") # 24 northern 
 
 # HEIGHT 2023 ----
 # Salix richardsonii -------
@@ -212,7 +224,7 @@ colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
     scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 20)) +
     theme( axis.text.x  = element_text(angle = 0)) +
     scale_x_continuous(limits = c(1, 10), breaks = seq(1, 10, by = 1)) +
-    labs(title = "Salix richardsonii", size = 20, family = "Helvetica Light"))
+    labs(title = "Salix pulchra", size = 20, family = "Helvetica Light"))
 
 height_pul_summ <- model_summ(height_pul)
 
@@ -272,14 +284,15 @@ colnames(ggpred_height_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
     theme( axis.text.x  = element_text(angle = 0)) + 
     labs(title = "Salix arctica", size = 20, family = "Helvetica Light")) # if i log everything it's exactly the same plot as with conditional effects! 
 
-
 (ggpred_CG_height_panel <- ggarrange(ggpred_height_rich_plot,
                                     ggpred_height_pul_plot, 
                                     ggpred_height_arc_plot, nrow = 1,
-                                    common.legend = TRUE, legend="bottom"))
+                                    common.legend = TRUE, 
+                                    labels = c("A)", "B)", "C)"),
+                                    legend="bottom"))
 
 ggsave(ggpred_CG_height_panel, filename ="outputs/figures/ggpred_CG_height_panel_2023.png",
-       width = 14.67, height = 6.53, units = "in", dpi = 300, device = png)
+       width = 14.67, height = 6.53, units = "in", device = png)
 
 height_arc_summ <- model_summ(height_arc)
 
@@ -318,6 +331,7 @@ all_height_summ_back <- all_height_summ %>%
   dplyr::rename("Lower 95% CI (log)" = "l_95_CI_log") %>%
   dplyr::rename("Upper 95% CI (log)" = "u_95_CI_log")
 
+write.csv(all_height_summ_back, "outputs/tables/all_height_time_output.csv")
 
 #all_height_summ_table <- all_height_summ_back %>% 
 #  kbl(caption="Table. Heights over time of northern and southern shrubs in the common garden. ", 
@@ -338,7 +352,7 @@ all_height_summ_table <- all_height_summ %>%
 # optional: making specific column text in italics
 column_spec(all_height_summ_table, 2, width = NULL, bold = FALSE, italic = TRUE) # 2 is my example column number 
 
-save_kable(kable_rich_pul_arc,file = "outputs/tables/kable_rich_pul_arc.pdf", # or .png, or .jpeg, save in your working directory
+save_kable(all_height_summ_table,file = "outputs/tables/kable_heights.pdf", # or .png, or .jpeg, save in your working directory
            bs_theme = "simplex",
            self_contained = TRUE,
            extra_dependencies = NULL,

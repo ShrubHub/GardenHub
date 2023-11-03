@@ -404,20 +404,20 @@ row_spec(kable_heights_source, 1:12, align = "c")
 
 # c. WIDTH ----
 # Salix richardsonii -------
-source_rich_width<- brms::brm((mean_width) ~ Site + (1|SampleYear),
+source_rich_width_mod<- brms::brm((mean_width) ~ Site + (1|SampleYear),
                                data = unique_source_mother_rich, family = gaussian(), chains = 3,
                                iter = 3000, warmup = 1000, 
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(source_rich_width) # significantly LARGER width for QHI shrubs
-plot(source_rich_width)
-pp_check(source_rich_width, type = "dens_overlay", nsamples = 100)  # fine
-saveRDS(source_rich_width, file = "output/models/source_rich_width.rds")
-source_rich_width <- readRDS(file = "output/models/source_rich_width.rds")
-rich_width.pred <- ggpredict(source_rich_width, terms = c('Site'))
+summary(source_rich_width_mod) # significantly LARGER width for QHI shrubs
+plot(source_rich_width_mod)
+pp_check(source_rich_width_mod, type = "dens_overlay", nsamples = 100)  # fine
+saveRDS(source_rich_width_mod, file = "output/models/source_rich_width.rds")
+source_rich_width_mod <- readRDS(file = "output/models/source_rich_width.rds")
+rich_source_width.pred <- ggpredict(source_rich_width_mod, terms = c('Site'))
 
 # extract output with function
-source_rich_width <- model_summ_methods(source_rich_width)
+source_rich_width <- model_summ_methods(source_rich_width_mod)
 
 # extraction for model output table
 rownames(source_rich_width) <- c("Intercept", "Northern source", "Sample year", "Sigma")
@@ -433,7 +433,7 @@ source_pul_width<- brms::brm((mean_width) ~ Site + (1|SampleYear),
                               control = list(max_treedepth = 15, adapt_delta = 0.99))
 
 summary(source_pul_width) # no sig diff 
-pul_width.pred <- ggpredict(source_pul_width, terms = c('Site'))
+pul_source_width.pred <- ggpredict(source_pul_width, terms = c('Site'))
 
 plot(source_pul_width)
 pp_check(source_pul_width, type = "dens_overlay", nsamples = 100)  # fine

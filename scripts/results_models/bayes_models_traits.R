@@ -1336,7 +1336,7 @@ colnames(arc_SLA.pred) = c('population','fit', 'lwr', 'upr')
 
 (sla_panel <- ggarrange(rich_sla_plot, pul_sla_plot, arc_sla_plot, 
                        common.legend = TRUE, legend = "none",
-                       labels = c("A", "B", "C"),
+                       labels = c("a)", "b)", "c)"),
                        label.x = c(0.1, 0.1, 0.1),
                        font.label = list(size = 18, color = "black", face = "bold", family = NULL),
                            ncol = 3, nrow = 1))
@@ -1362,7 +1362,6 @@ colnames(arc_SLA.pred) = c('population','fit', 'lwr', 'upr')
           axis.text.x = element_text(angle = 60, vjust = 0.5, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
-
 # LMDC ---- 
 # richardsonii ----
 colnames(rich_LDMC.pred) = c('population','fit', 'lwr', 'upr')
@@ -1381,7 +1380,6 @@ colnames(rich_LDMC.pred) = c('population','fit', 'lwr', 'upr')
     labs(title = "Salix richardsonii") +
     theme_shrub()+ 
     theme(axis.title.y = element_text(margin = margin (r = 10))))
-
 
 # pulchra ----
 colnames(pul_LDMC.pred) = c('population','fit', 'lwr', 'upr')
@@ -1416,7 +1414,7 @@ colnames(arc_LDMC.pred) = c('population','fit', 'lwr', 'upr')
 
 (ldmc_panel <- ggarrange(rich_ldmc_plot, pul_ldmc_plot, arc_ldmc_plot, 
                         common.legend = TRUE, legend = "bottom",
-                        labels = c("D", "E", "F"),
+                        labels = c("d)", "e)", "f)"),
                         label.x = c(0.1, 0.1, 0.1),
                         font.label = list(size = 18, color = "black", face = "bold", family = NULL),
                         ncol = 3, nrow = 1))
@@ -1453,7 +1451,7 @@ colnames(rich_LA_mad.pred) = c('population','fit', 'lwr', 'upr')
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   size = 1, alpha = 1, width=0.75) +    coord_cartesian(ylim=c(0, 120)) +
     scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100, 120))+
-    ylab(expression("Leaf Area cm"^"2"))+
+    ylab(expression("Leaf Area (cm"^"2)")+
     xlab("" ) +
     scale_color_manual(values=pal) +
     labs(title = "Salix richardsonii") +
