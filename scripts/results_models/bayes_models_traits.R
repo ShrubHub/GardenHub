@@ -1454,7 +1454,7 @@ colnames(rich_LA_mad.pred) = c('population','fit', 'lwr', 'upr')
     ylab(expression("Leaf Area cm"^"2"))+
     xlab("" ) +
     scale_color_manual(values=pal) +
-    labs(title = "Salix richardsonii") +
+    labs(title = "Salix richardsonii", bold = F) +
     theme_shrub())
 
 # pulchra ----
@@ -1551,7 +1551,7 @@ colnames(arc_LL.pred) = c('population','fit', 'lwr', 'upr')
 
 (ll_panel <- ggarrange(rich_ll_plot, pul_ll_plot, arc_ll_plot, 
                        common.legend = TRUE, legend = "none",
-                       labels = c("a)", "b)", "c)"),
+                       labels = c("d)", "e)", "f)"),
                        ncol = 3, nrow = 1))
 ggsave("figures/leaf_length_panel.png", height = 10, width = 12, dpi = 300, device = png)
 
