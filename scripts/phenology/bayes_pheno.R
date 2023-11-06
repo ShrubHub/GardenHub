@@ -1177,8 +1177,8 @@ theme_shrub <- function(){ theme(legend.position = "right",
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
                                  plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
-                                 legend.title=element_text(size=16, family = "Helvetica Light"),
-                                 legend.text=element_text(size = 15, family = "Helvetica Light"))}
+                                 legend.title=element_text(size=18, family = "Helvetica Light"),
+                                 legend.text=element_text(size = 18, family = "Helvetica Light"))}
 
 all_phenocam_rich$population <- ordered(all_phenocam_rich$population, 
                                         levels = c("N. Source", 
@@ -1207,12 +1207,10 @@ ric_emerg_data <- ric_emerg[[1]] # making the extracted model outputs into a da
 m_rich_emerg <- mean(all_phenocam_rich$First_bud_burst_DOY, na.rm = T)
 
 richard_emerg_trans <- ric_emerg_data %>% 
-  dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
   dplyr::mutate(CI_low_trans = ((lower__) + m_rich_emerg)) %>% 
   dplyr::mutate(CI_high_trans = ((upper__) + m_rich_emerg)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_rich_emerg), 
-                Est.Error_trans = (se__ + m_rich_emerg)) %>% 
-  dplyr::select(-CI_range) 
+                Est.Error_trans = (se__ + m_rich_emerg)) 
 
 # S. pulchra ------
 pul_emerg <- (conditional_effects(garden_pul_emerg_compare)) # extracting conditional effects from bayesian model
@@ -1222,26 +1220,20 @@ pul_emerg_data <- pul_emerg[[1]] # making the extracted model outputs into a da
 # back transform scaled data for figure 
 m_pul_emerg <- mean(all_phenocam_pulchra$First_bud_burst_DOY, na.rm = T)
 pulchra_emerg_trans <- pul_emerg_data %>% 
-  dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
   dplyr::mutate(CI_low_trans = ((lower__) + m_pul_emerg)) %>% 
   dplyr::mutate(CI_high_trans = ((upper__) + m_pul_emerg)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_pul_emerg), 
-                Est.Error_trans = (se__ + m_pul_emerg)) %>% 
-  dplyr::select(-CI_range) 
-
+                Est.Error_trans = (se__ + m_pul_emerg)) 
 # S. arctica -------
 arc_emerg <- (conditional_effects(garden_arc_emerg_compare)) # extracting conditional effects from bayesian model
 arc_emerg_data <- arc_emerg[[1]] # making the extracted model outputs into a dataset (for plotting)
 # back transform scaled data for figure 
 m_arc_emerg <- mean(all_phenocam_arctica$First_bud_burst_DOY, na.rm = T)
 arc_emerg_trans <- arc_emerg_data %>% 
-  dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
   dplyr::mutate(CI_low_trans = ((lower__) + m_arc_emerg)) %>% 
   dplyr::mutate(CI_high_trans = ((upper__) + m_arc_emerg)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_arc_emerg), 
-                Est.Error_trans = (se__ + m_arc_emerg)) %>% 
-  dplyr::select(-CI_range) 
-
+                Est.Error_trans = (se__ + m_arc_emerg)) 
 # LEAF YELLOW ----
 # S. richardsonii-----
 ric_yellow <- (conditional_effects(garden_rich_yellow_compare)) # extracting conditional effects from bayesian model
@@ -1250,12 +1242,10 @@ ric_yellow_data <- ric_yellow[[1]] # making the extracted model outputs into a 
 # back transform scaled data for figure 
 m_rich_yellow <- mean(all_phenocam_rich$First_leaf_yellow_DOY, na.rm = T)
 richard_yellow_trans <- ric_yellow_data %>% 
-  dplyr::mutate(CI_range = (estimate__ - lower__)) %>% 
   dplyr::mutate(CI_low_trans = ((lower__) + m_rich_yellow)) %>% 
   dplyr::mutate(CI_high_trans = ((upper__) + m_rich_yellow)) %>% 
   dplyr::mutate(Estimate_trans = (estimate__ + m_rich_yellow), 
-                Est.Error_trans = (se__ + m_rich_yellow)) %>% 
-  dplyr::select(-CI_range) 
+                Est.Error_trans = (se__ + m_rich_yellow)) 
 # S. pulchra -----
 pul_yellow <- (conditional_effects(garden_pul_yellow_compare)) # extracting conditional effects from bayesian model
 pul_yellow_data <- pul_yellow[[1]] # making the extracted model outputs into a dataset (for plotting)
@@ -1337,9 +1327,9 @@ all_phenocam_rich_all <- rbind(all_phenocam_rich_1, all_phenocam_rich_2)
                   linewidth = 0.4, alpha = 0.5, width=0.2)+
     geom_line(aes(x = Estimate_trans , y = effect1__, group = population, colour = population), 
               linewidth = 1, alpha = 1)+
-    ylab("Population\n") +
-    xlab("DOY" ) +
-    coord_cartesian(xlim=c(100, 250))+
+    ylab("") +
+    scale_x_continuous(limits = c(120, 240), breaks = seq(120, 240, by = 20)) +
+    xlab("" ) +
     scale_color_manual(values=pal)+
     theme_shrub() +
     ggtitle(expression(italic("Salix richardsonii"))))
@@ -1363,8 +1353,6 @@ all_phenocam_pul_2 <- all_phenocam_pulchra %>%
 
 all_phenocam_pul_all <- rbind(all_phenocam_pul_1, all_phenocam_pul_2)
 
-
-# changing x and y instead of using coor flip so we can set axis limits easily 
 (pul_emerg_yellow_plot_scaled <-ggplot(pul_emerg_yellow) +
     geom_point(data = all_phenocam_pul_all, aes(x =DOY , y =population , colour = population),
                alpha = 0.2)+
@@ -1374,11 +1362,10 @@ all_phenocam_pul_all <- rbind(all_phenocam_pul_1, all_phenocam_pul_2)
     geom_line(aes(x = Estimate_trans , y = effect1__, group = population, colour = population), 
               linewidth = 1, alpha = 1)+
     ylab("") +
-    xlab("DOY" ) +
-    coord_cartesian(xlim=c(100, 250))+
+    scale_x_continuous(limits = c(120, 240), breaks = seq(120, 240, by = 20)) +
+    xlab("\n DOY" ) +
     scale_color_manual(values=pal)+
     theme_shrub() +
-    theme(axis.text.y=element_blank()) +
     ggtitle(expression(italic("Salix pulchra"))))
 
 # S. arc----
@@ -1409,21 +1396,21 @@ all_phenocam_arc_all <- rbind(all_phenocam_arc_1, all_phenocam_arc_2)
                   linewidth = 0.4, alpha = 0.5, width=0.2)+
     geom_line(aes(x = Estimate_trans , y = effect1__, group = population, colour = population), 
               linewidth = 1, alpha = 1)+
+    scale_x_continuous(limits = c(120, 240), breaks = seq(120, 240, by = 20)) +
     ylab("") +
-    xlab("DOY" ) +
-    coord_cartesian(xlim=c(100, 250))+
+    xlab("") +
     scale_color_manual(values=pal_arc)+
     theme_shrub() +
-    theme(axis.text.y=element_blank()) +
     ggtitle(expression(italic("Salix arctica"))))
 
 # arrange 
 (pheno_panel_new <- ggarrange(rich_emerg_yellow_plot_scaled, pul_emerg_yellow_plot_scaled, arc_emerg_yellow_plot_scaled, 
                               common.legend = TRUE, legend = "bottom",
-                              labels = c("A", "B", "C"),
+                              labels = c("a)", "b)", "c)"),
                               ncol = 3, nrow = 1))
 
-ggsave(pheno_panel_new, filename ="figures/phenology/pheno_panel_2023.png", width = 20, height = 6.53, units = "in")
+ggsave(pheno_panel_new, filename ="figures/phenology/pheno_panel_2023.png",
+       width = 20, height = 6.53, units = "in", device = png)
 
 
 # old stand alone figures ----

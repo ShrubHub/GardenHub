@@ -1134,6 +1134,9 @@ max_heights_cg_arc$population <- ordered(max_heights_cg_arc$population,
                                           levels = c( "N. Garden", 
                                                       "S. Garden"))
 
+pal_garden  <- c("#440154FF","#7AD151FF")
+
+
 
 # CANOPY HEIGHT -----
 # S. richardsonii ----
@@ -1151,15 +1154,13 @@ ric_height_data <- ric_heights[[1]] # making the extracted model outputs into a
                   linewidth = 1, alpha = 1) +
     ylab("Max. canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.75) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.75) +
+    scale_color_manual(values=pal_garden) +
     scale_y_continuous(breaks = seq(0, 140, by = 20)) +
     theme_shrub()+
     ggtitle(expression(italic("Salix richardsonii"))) +
     theme(text=element_text(family="Helvetica Light")) )
    
-    
-# S. pulchra ----
+    # S. pulchra ----
 pul_heights <- (conditional_effects(garden_pul_height)) # extracting conditional effects from bayesian model
 pul_height_data <- pul_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
@@ -1174,8 +1175,7 @@ pul_height_data <- pul_heights[[1]] # making the extracted model outputs into a
                   linewidth = 1, alpha = 1) +
     ylab("Max. canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.75) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.75) +
+    scale_color_manual(values=pal_garden) +
     scale_y_continuous(breaks = seq(0, 100, by = 20)) +
     theme_shrub() +
     ggtitle(expression(italic("Salix pulchra")))+
@@ -1196,8 +1196,7 @@ arc_height_data <- arc_heights[[1]] # making the extracted model outputs into a
                   linewidth = 1, alpha = 1) +
     ylab("Max. canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.75) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.75) +
+    scale_color_manual(values=pal_garden) +
     theme_shrub() +
     scale_y_continuous(breaks = seq(0, 15, by = 5)) +
     ggtitle(expression(italic("Salix arctica")))+
@@ -1205,10 +1204,11 @@ arc_height_data <- arc_heights[[1]] # making the extracted model outputs into a
 
 # arrange 
 (growth_maxheights <- ggarrange(ric_height_plot, pul_height_plot, arc_height_plot, 
-                           common.legend = TRUE, legend = "bottom", labels = c("A", "B", "C"),
+                           common.legend = TRUE, legend = "none",
                            ncol = 3, nrow = 1))
 
-ggsave(growth_maxheights, filename ="output/figures/growth_maxheights.png", width = 14.67, height = 6.53, units = "in")
+ggsave(growth_maxheights, filename ="output/figures/growth_maxheights.png", 
+       width = 14.67, height = 6.53, units = "in", device = png)
 
 # WIDTH ----
 # S. richardsonii ----
@@ -1236,8 +1236,7 @@ rich_width_data$effect1__ <- plyr::revalue(rich_width_data$effect1__ ,
                   linewidth = 1, alpha = 1) +
     ylab("Max. canopy width (cm)\n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.75) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.75) +
+    scale_color_manual(values=pal_garden) +
     theme_shrub()+
     scale_y_continuous(limits = c(0, 155), breaks = seq(0, 150, by = 25)) +
     ggtitle(expression(italic("Salix richardsonii"))) +
@@ -1268,8 +1267,7 @@ pul_width_data$effect1__ <- plyr::revalue(pul_width_data$effect1__ ,
                   linewidth = 1, alpha = 1) +
     ylab("Max. canopy width (cm)\n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.75) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.75) +
+    scale_color_manual(values=pal_garden) +
     theme_shrub()+
     scale_y_continuous(limits = c(0, 125), breaks = seq(0, 125, by = 25)) +
     ggtitle(expression(italic("Salix pulchra"))) +
@@ -1300,8 +1298,7 @@ arc_width_data$effect1__ <- plyr::revalue(arc_width_data$effect1__ ,
                   linewidth = 1, alpha = 1) +
     ylab("Max. canopy width (cm)\n") +
     xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.75) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.75) +
+    scale_color_manual(values=pal_garden) +
     theme_shrub()+
     scale_y_continuous(limits = c(0, 60), breaks = seq(0, 60, by = 15)) +
     ggtitle(expression(italic("Salix arctica"))) +
@@ -1312,7 +1309,15 @@ arc_width_data$effect1__ <- plyr::revalue(arc_width_data$effect1__ ,
                                 common.legend = TRUE, legend = "bottom",
                                 ncol = 3, nrow = 1))
 
-ggsave(growth_maxwidth, filename ="output/figures/growth_maxhwidths.png", width = 14.67, height = 6.53, units = "in")
+ggsave(growth_maxwidth, filename ="output/figures/growth_maxhwidths.png", 
+       width = 14.67, height = 6.53, units = "in", device = png)
+
+(max_size_panel <- ggarrange(growth_maxheights, growth_maxwidth, 
+                                common.legend = TRUE, legend = "bottom",
+                                ncol = 1, nrow = 2))
+
+ggsave(max_size_panel, filename ="output/figures/max_size_plots.png", 
+       height = 10, width = 12, dpi = 300, units = "in", device = png)
 
 # STEM ELONG  --------
 # S. richardsonii ----

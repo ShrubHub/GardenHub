@@ -751,10 +751,10 @@ all_source_outputs <- rbind(source_heights_out_back, source_width_out_back,
 
 
 # DATA VISUALISATION --------
-theme_shrub_source <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(family = "Helvetica Light", size=20),
-                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 0), 
-                                 axis.title.y = element_text(family = "Helvetica Light", size=20),
+theme_shrub <- function(){ theme(legend.position = "right",
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 270), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
                                  axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
@@ -762,6 +762,8 @@ theme_shrub_source <- function(){ theme(legend.position = "right",
                                  plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
                                  legend.title=element_text(size=16, family = "Helvetica Light"),
                                  legend.text=element_text(size = 15, family = "Helvetica Light"))}
+
+
 pal_source  <- c("#FDE725FF", "#2A788EFF")  
 
 # CANOPY HEIGHT -------
@@ -797,7 +799,6 @@ unique_source_mother_rich$Site  <- plyr::revalue(unique_source_mother_rich$Site 
     coord_cartesian(ylim=c(20, 200)) +
     ggtitle(expression(italic("Salix richardsonii"))) +
     theme(text=element_text(family="Helvetica Light")) )
-
 
 # S. pul----
 pul_source_height <- (conditional_effects(source_pul_height)) # extracting conditional effects from bayesian model
@@ -866,55 +867,15 @@ unique_source_mother_arctica$Site  <- plyr::revalue(unique_source_mother_arctica
 
 # arrange 
 (source_growth_heights_plots <- ggarrange(rich_source_height_plot, pul_source_height_plot, arc_source_height_plot, 
-                                common.legend = TRUE, legend = "bottom",
+                                common.legend = TRUE, legend = "bottom", labels = c("a)", "b)", "c)"),
                                 ncol = 3, nrow = 1))
 ggsave(source_growth_heights_plots, filename ="output/figures/source_growth_heights_plots.png", width = 14.67, height = 6.53, units = "in")
 
-# STEM ELONG -----
-# S.rich ----
-rich_source_elong <- (conditional_effects(source_rich_elong)) # extracting conditional effects from bayesian model
-rich_source_elong_data <- rich_source_elong[[1]] # making the extracted model outputs into a dataset (for plotting)
-# [[1]] is to extract the first term in the model which in our case is population
-
-(rich_source_elong_plot <-ggplot(rich_source_elong_data) +
-    geom_violin(data = unique_source_mother_rich, aes(x = Site, y = log(mean_stem_elong), fill = Site, colour = Site),
-                alpha = 0.1)+ # raw data
-    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = log(mean_stem_elong), colour = Site),
-                alpha = 0.8)+
-    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
-                  alpha = 1,  width=0.5) +
-    ylab("Mean stem elongation (log, mm)\n") +
-    xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_shrub() +
-    labs(title = "Salix richardsonii"))
-
-# S. pul----
-pul_source_elong <- (conditional_effects(source_pul_elong)) # extracting conditional effects from bayesian model
-pul_source_elong_data <- pul_source_elong[[1]] # making the extracted model outputs into a dataset (for plotting)
-# [[1]] is to extract the first term in the model which in our case is population
-
-(pul_source_elong_plot <-ggplot(pul_source_elong_data) +
-    geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = log(mean_stem_elong), fill = Site, colour = Site),
-                alpha = 0.1)+ # raw data
-    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = log(mean_stem_elong), colour = Site),
-                alpha = 0.8)+
-    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
-                  alpha = 1,  width=0.5) +
-    ylab("Mean stem elongation (log, mm)\n") +
-    xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_shrub() +
-    labs(title = "Salix pulchra"))
 
 
 # WIDTH -----
 # S.rich ----
-rich_source_width <- (conditional_effects(source_rich_width)) # extracting conditional effects from bayesian model
+rich_source_width <- (conditional_effects(source_rich_width_mod)) # extracting conditional effects from bayesian model
 rich_source_width_data <- rich_source_width[[1]] # making the extracted model outputs into a dataset (for plotting)
 # [[1]] is to extract the first term in the model which in our case is population
 rich_source_width_data$Site  <- plyr::revalue(rich_source_width_data$Site , 
@@ -1011,11 +972,59 @@ arc_source_width_data$Site  <- plyr::revalue(arc_source_width_data$Site ,
 
 # arrange 
 (source_growth_width_plots <- ggarrange(rich_source_width_plot, pul_source_width_plot, arc_source_width_plot, 
-                                          common.legend = TRUE, legend = "bottom",
+                                          common.legend = TRUE, legend = "bottom",labels = c("d)", "e)", "f)"),
                                           ncol = 3, nrow = 1))
 ggsave(source_growth_width_plots, filename ="output/figures/source_growth_width_plot.png", 
        width = 14.67, height = 6.53, units = "in")
 
+(source_size_panel <- ggarrange(source_growth_heights_plots, source_growth_width_plots, 
+                             common.legend = TRUE, legend = "bottom",
+                             ncol = 1, nrow = 2))
+
+ggsave(source_size_panel, filename ="output/figures/source_size_plots.png", 
+       height = 10, width = 12, dpi = 300, units = "in", device = png)
+
+
+# STEM ELONG -----
+# S.rich ----
+rich_source_elong <- (conditional_effects(source_rich_elong)) # extracting conditional effects from bayesian model
+rich_source_elong_data <- rich_source_elong[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(rich_source_elong_plot <-ggplot(rich_source_elong_data) +
+    geom_violin(data = unique_source_mother_rich, aes(x = Site, y = log(mean_stem_elong), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = log(mean_stem_elong), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Mean stem elongation (log, mm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix richardsonii"))
+
+# S. pul----
+pul_source_elong <- (conditional_effects(source_pul_elong)) # extracting conditional effects from bayesian model
+pul_source_elong_data <- pul_source_elong[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
+
+(pul_source_elong_plot <-ggplot(pul_source_elong_data) +
+    geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = log(mean_stem_elong), fill = Site, colour = Site),
+                alpha = 0.1)+ # raw data
+    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = log(mean_stem_elong), colour = Site),
+                alpha = 0.8)+
+    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
+    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
+                  alpha = 1,  width=0.5) +
+    ylab("Mean stem elongation (log, mm)\n") +
+    xlab("\n Population" ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() +
+    labs(title = "Salix pulchra"))
 
 # STEM DIAM -----
 # S.rich ----
