@@ -1412,6 +1412,17 @@ all_phenocam_arc_all <- rbind(all_phenocam_arc_1, all_phenocam_arc_2)
 ggsave(pheno_panel_new, filename ="figures/phenology/pheno_panel_2023.png",
        width = 20, height = 6.53, units = "in", device = png)
 
+# mean snow melt and return timings ----
+timings_mean <- all_pheno_2023 %>% 
+  group_by(population) %>% 
+  summarise(mean_snow_melt = mean(Snow_melt_DOY, na.rm = TRUE), 
+            low_range_melt = min(Snow_melt_DOY, na.rm = TRUE), 
+            high_range_melt = max(Snow_melt_DOY, na.rm = TRUE),
+            mean_snow_return = mean(Snow_return_EoS_DOY, na.rm = TRUE),
+            low_range_return = min(Snow_return_EoS_DOY, na.rm = TRUE), 
+            high_range_return = max(Snow_return_EoS_DOY, na.rm = TRUE)
+            )
+
 
 # old stand alone figures ----
 # rich emerg plot unscaled 
