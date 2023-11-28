@@ -1414,14 +1414,16 @@ ggsave(pheno_panel_new, filename ="figures/phenology/pheno_panel_2023.png",
 
 # mean snow melt and return timings ----
 timings_mean <- all_pheno_2023 %>% 
+  mutate(snow_free_length = (Snow_return_EoS_DOY-Snow_melt_DOY)) %>% 
   group_by(population) %>% 
   summarise(mean_snow_melt = mean(Snow_melt_DOY, na.rm = TRUE), 
             low_range_melt = min(Snow_melt_DOY, na.rm = TRUE), 
             high_range_melt = max(Snow_melt_DOY, na.rm = TRUE),
             mean_snow_return = mean(Snow_return_EoS_DOY, na.rm = TRUE),
             low_range_return = min(Snow_return_EoS_DOY, na.rm = TRUE), 
-            high_range_return = max(Snow_return_EoS_DOY, na.rm = TRUE)
-            )
+            high_range_return = max(Snow_return_EoS_DOY, na.rm = TRUE),
+            snow_free_days_mean = mean(snow_free_length, na.rm = TRUE), 
+            sd_snow_free = sd(snow_free_length, na.rm = T))
 
 
 # old stand alone figures ----
