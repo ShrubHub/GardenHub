@@ -795,7 +795,7 @@ unique_source_mother_rich$Site  <- plyr::revalue(unique_source_mother_rich$Site 
     ylab("Canopy height (cm)\n") +
     xlab("\n Source population" ) +
     scale_color_manual(values=pal_source) +
-    theme_shrub_source() +
+    theme_shrub() +
     coord_cartesian(ylim=c(20, 200)) +
     ggtitle(expression(italic("Salix richardsonii"))) +
     theme(text=element_text(family="Helvetica Light")) )
@@ -828,7 +828,7 @@ unique_source_mother_pulchra$Site  <- plyr::revalue(unique_source_mother_pulchra
     ylab("Canopy height (cm)\n") +
     xlab("\n Source population" ) +
     scale_colour_manual(values =pal_source) +
-    theme_shrub_source() +
+    theme_shrub() +
     ggtitle(expression(italic("Salix pulchra"))) +
     coord_cartesian(ylim=c(10, 200)) +
     theme(text=element_text(family="Helvetica Light")) )
@@ -860,7 +860,7 @@ unique_source_mother_arctica$Site  <- plyr::revalue(unique_source_mother_arctica
     ylab("Canopy height (cm)\n") +
     xlab("\n Source population" ) +
     scale_colour_manual(values = pal_source) +
-    theme_shrub_source()  +
+    theme_shrub()  +
     coord_cartesian(ylim=c(0, 25)) +
     ggtitle(expression(italic("Salix arctica"))) +
     theme(text=element_text(family="Helvetica Light")) )
@@ -893,11 +893,11 @@ rich_source_width_data$Site  <- plyr::revalue(rich_source_width_data$Site ,
 #    geom_violin(data = unique_source_mother_rich, aes(x = Site, y = (mean_width), fill = Site, colour = Site),
 #                alpha = 0.1)+ # raw data
     geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = (mean_width), colour = Site),
-                alpha = 0.8)+
+                alpha = 0.2)+
     geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
                   alpha = 1,  width=0.5) +
-    ylab("Mean width (cm)\n") +
+    ylab("Canopy width (cm)\n") +
     xlab("\n Population" ) +
     coord_cartesian(ylim=c(10, 500)) +
     scale_color_manual(values=pal_source) +
@@ -925,11 +925,11 @@ pul_source_width_data$Site  <- plyr::revalue(pul_source_width_data$Site ,
 #    geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = (mean_width), fill = Site, colour = Site),
 #                alpha = 0.1)+ # raw data
     geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = (mean_width), colour = Site),
-                alpha = 0.8)+
+                alpha = 0.2)+
     geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
                   alpha = 1,  width=0.5) +
-    ylab("Mean width (cm)\n") +
+    ylab("Canopy width (cm)\n") +
     xlab("\n Population" ) +
     scale_color_manual(values=pal_source) +
     theme_shrub() +
@@ -958,11 +958,11 @@ arc_source_width_data$Site  <- plyr::revalue(arc_source_width_data$Site ,
 #    geom_violin(data = unique_source_mother_arctica, aes(x = Site, y = log(mean_width), fill = Site, colour = Site),
 #                alpha = 0.1)+ # raw data
     geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = (mean_width), colour = Site),
-                alpha = 0.8)+
+                alpha = 0.2)+
     geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
     geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
                   alpha = 1,  width=0.5) +
-    ylab("Mean width (cm)\n") +
+    ylab("Canopy width (cm)\n") +
     xlab("\n Population" ) +
     scale_color_manual(values=pal_source) +
     coord_cartesian(ylim=c(0, 60)) +
