@@ -179,6 +179,7 @@ maternal_rich_height_site <- brms::brm(log(max_canopy_height_cm) ~ log(Mother_Ca
 summary(maternal_rich_height_site) # not significant 
 pp_check(maternal_rich_height_site, type = "dens_overlay", nsamples = 100)  # good) 
 saveRDS(maternal_rich_height_site, file = "output/maternal_propagation/maternal_ric_height.rds")
+maternal_rich_height_site <- readRDS("output/maternal_propagation/maternal_ric_height.rds")
 mat_rich_height_results <- model_summ_simple(maternal_rich_height_site)
 maternal_rich_height.pred <- ggpredict(maternal_rich_height_site)
 
@@ -200,6 +201,8 @@ summary(maternal_pul_height) # not significant
 plot(maternal_pul_height)
 pp_check(maternal_pul_height, type = "dens_overlay", nsamples = 100)  # good) 
 saveRDS(maternal_pul_height, file = "output/maternal_propagation/maternal_pul_height.rds")
+maternal_pul_height <- readRDS("output/maternal_propagation/maternal_pul_height.rds")
+
 mat_pul_height_results <- model_summ_simple(maternal_pul_height)
 mat_pul_height_results$Species <- "Salix pulchra"
 
@@ -217,6 +220,8 @@ summary(maternal_arc_height) #significant effect of maternal heights on child he
 plot(maternal_arc_height)
 pp_check(maternal_arc_height, type = "dens_overlay", nsamples = 100)  # good) 
 saveRDS(maternal_arc_height, file = "output/maternal_propagation/maternal_arc_height.rds")
+maternal_arc_height <- readRDS("output/maternal_propagation/maternal_arc_height.rds")
+
 mat_arc_height_results <- model_summ_simple(maternal_arc_height)
 mat_arc_height_results$Species <- "Salix arctica" 
 
@@ -273,7 +278,7 @@ summary(maternal_rich_width) # not significant
 plot(maternal_rich_width)
 pp_check(maternal_rich_width, type = "dens_overlay", ndraws = 100)  # good) 
 saveRDS(maternal_rich_width, file = "output/maternal_propagation/maternal_ric_width.rds")
-
+maternal_rich_width <- readRDS("output/maternal_propagation/maternal_ric_width.rds")
 mat_rich_width_results <- model_summ_simple(maternal_rich_width)
 mat_rich_width_results$Species <- "Salix richardsonii"
 
@@ -290,6 +295,7 @@ summary(maternal_pul_width) # not significant but negative estimate
 plot(maternal_pul_width)
 pp_check(maternal_pul_width, type = "dens_overlay", nsamples = 100)  # good) 
 saveRDS(maternal_pul_width, file = "output/maternal_propagation/maternal_pul_width.rds")
+maternal_pul_width <- readRDS("output/maternal_propagation/maternal_pul_width.rds")
 
 mat_pul_width_results <- model_summ_simple(maternal_pul_width)
 mat_pul_width_results$Species <- "Salix pulchra"
@@ -307,6 +313,7 @@ summary(maternal_arc_width) # not significant
 plot(maternal_arc_width)
 pp_check(maternal_arc_width, type = "dens_overlay", nsamples = 100)  # okay 
 saveRDS(maternal_arc_width, file = "output/maternal_propagation/maternal_arc_width.rds")
+maternal_arc_width <- readRDS("output/maternal_propagation/maternal_arc_width.rds")
 mat_arc_width_results <- model_summ_simple(maternal_arc_width)
 mat_arc_width_results$Species <- "Salix arctica"
 
@@ -874,8 +881,10 @@ ggsave(mat_height_plots, filename ="outputs/figures/maternal_height_panel_2023.p
    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
    geom_point(data = mother_cg_rich) +
    theme_shrub() +
-   ylab("Child canopy height (log, cm) \n") +
-   xlab("\nMother cutting length (log, cm) ")+ 
+   ylab("Child canopy height (log) \n") +
+   scale_y_continuous(limits = c(0.5, 4.5), breaks = seq(0.5, 4.5, by = 1)) +
+   scale_x_continuous(limits = c(3, 4.5), breaks = seq(3, 4.5, by = 0.5)) +
+   xlab("\n Cutting length (log) ")+ 
    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
    labs(title = "Salix richardsonii"))
@@ -886,8 +895,10 @@ ggsave(mat_height_plots, filename ="outputs/figures/maternal_height_panel_2023.p
     stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
     geom_point(data = mother_cg_pulchra) +
     theme_shrub() +
-    ylab("Child canopy height (log, cm) \n") +
-    xlab("\n Cutting length (log, cm) ")+ 
+    scale_y_continuous(limits = c(0, 4), breaks = seq(0, 4, by = 1)) +
+    scale_x_continuous(limits = c(3, 4.5), breaks = seq(3, 4.5, by = 0.5)) +
+    ylab("Child canopy height (log) \n") +
+    xlab("\n Cutting length (log) ")+ 
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
     labs(title = "Salix pulchra"))
@@ -897,17 +908,22 @@ ggsave(mat_height_plots, filename ="outputs/figures/maternal_height_panel_2023.p
     ggplot(aes(x = log(Cutting_length), y = log(max_canopy_height_cm), color = Site, fill = Site)) +
     stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
     geom_point(data = mother_cg_arctica) +
+    scale_y_continuous(limits = c(1, 3), breaks = seq(1, 3, by = 0.5)) +
+    scale_x_continuous(limits = c(2, 4), breaks = seq(2, 4, by = 0.5)) +
     theme_shrub() +
-    ylab("Child canopy height (log, cm) \n") +
-    xlab("\n Cutting length (log, cm) ")+ 
+    ylab("Child canopy height (log) \n") +
+    xlab("\n Cutting length (log) ")+ 
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
     labs(title = "Salix arctica"))
 
 # arrange maternal width fig. 
-(prop_plots_1 <- ggarrange(rich_prop_1, pul_prop_1, arc_prop_1, 
+(prop_plots_height <- ggarrange(rich_prop_1, pul_prop_1, arc_prop_1, 
                               common.legend = TRUE, legend = "bottom",
                               ncol = 3, nrow = 1))
+
+ggsave(prop_plots_height, filename ="output/figures/prop_height_plot.png", 
+       width = 14.67, height = 6.53, units = "in", device = png)
 
 # Propagation:width vs cutting length------
 (rich_prop_width <-  mother_cg_rich %>%
@@ -916,8 +932,10 @@ ggsave(mat_height_plots, filename ="outputs/figures/maternal_height_panel_2023.p
    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
    geom_point(data = mother_cg_rich) +
    theme_shrub() +
-   ylab("Shrub biovolume (log scale) \n") +
-   xlab("\n Cutting length (log scale) ")+ 
+   ylab("Child canopy width (log) \n") +
+   scale_y_continuous(limits = c(1.5, 4.5), breaks = seq(1.5, 4.5, by = 1)) +
+   scale_x_continuous(limits = c(3, 4.5), breaks = seq(3, 4.5, by = 0.5)) +
+   xlab("\n Cutting length (log) ")+ 
    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
    labs(title = "Salix richardsonii"))
@@ -928,8 +946,10 @@ ggsave(mat_height_plots, filename ="outputs/figures/maternal_height_panel_2023.p
     stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
     geom_point(data = mother_cg_pulchra) +
     theme_shrub() +
-    ylab("Shrub width (log scale) \n") +
-    xlab("\n Cutting length (log scale) ")+ 
+    scale_y_continuous(limits = c(1.5, 4.5), breaks = seq(1.5, 4.5, by = 1)) +
+    scale_x_continuous(limits = c(3, 4.5), breaks = seq(3, 4.5, by = 0.5)) +
+    ylab("Child canopy width (log) \n") +
+    xlab("\n Cutting length (log) ")+ 
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
     labs(title = "Salix pulchra"))
@@ -940,21 +960,22 @@ ggsave(mat_height_plots, filename ="outputs/figures/maternal_height_panel_2023.p
     ggplot(aes(x = log(Cutting_length), y = log(max_mean_width_cm), color = Site, fill = Site)) +
     stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
     geom_point(data = mother_cg_arctica) +
+    scale_y_continuous(limits = c(2, 4), breaks = seq(2, 4, by = 0.5)) +
+    scale_x_continuous(limits = c(2, 4), breaks = seq(2, 4, by = 0.5)) +
     theme_shrub() +
-    ylab("Shrub width (log scale) \n") +
-    xlab("\n Cutting length (log scale) ")+ 
+    ylab("Child canopy width (log) \n") +
+    xlab("\n Cutting length (log) ")+ 
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
     labs(title = "Salix arctica"))
 
-
-# arrange cutting length by width  fig. 
+# arrange cutting length by width fig. 
 (prop_plots_width <- ggarrange(rich_prop_width, pul_prop_width, arc_prop_width, 
                            common.legend = TRUE, legend = "bottom",
                            ncol = 3, nrow = 1))
 
 ggsave(prop_plots_width, filename ="output/figures/prop_width_plot.png", 
-       width = 14.67, height = 6.53, units = "in")
+       width = 14.67, height = 6.53, units = "in", device = png)
 
 # Propagation:Cutting length vs mother canopy height -----
 (rich_prop_3 <-  mother_cg_rich %>%
@@ -963,8 +984,8 @@ ggsave(prop_plots_width, filename ="output/figures/prop_width_plot.png",
    stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
    geom_point(data = mother_cg_rich) +
    theme_shrub() +
-   ylab("Mother cutting length (log, cm) \n") +
-   xlab("\nMother canopy height (log, cm) ")+ 
+   ylab("Mother cutting length (log) \n") +
+   xlab("\n Cutting length (log) ")+ 
    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
    scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
    labs(title = "Salix richardsonii"))
@@ -975,8 +996,8 @@ ggsave(prop_plots_width, filename ="output/figures/prop_width_plot.png",
     stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
     geom_point(data = mother_cg_pulchra) +
     theme_shrub() +
-    ylab("Mother cutting length (log, cm) \n") +
-    xlab("\nMother canopy height (log, cm) ")+ 
+    ylab("Mother cutting length (log) \n") +
+    xlab("\nMother canopy height (log) ")+ 
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
     labs(title = "Salix pulchra"))
@@ -987,8 +1008,8 @@ ggsave(prop_plots_width, filename ="output/figures/prop_width_plot.png",
     stat_lineribbon(aes(y = .prediction), .width = c(.50), alpha = 1/4) +
     geom_point(data = mother_cg_arctica) +
     theme_shrub() +
-    ylab("Mother cutting length (log, cm) \n") +
-    xlab("\nMother canopy height (log, cm) ")+ 
+    ylab("Mother canopy height length (log) \n") +
+    xlab("\nMother canopy height (log) ")+ 
     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
     scale_fill_viridis_d(begin = 0.1, end = 0.85)+ 
     labs(title = "Salix arctica"))

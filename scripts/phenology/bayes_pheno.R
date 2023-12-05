@@ -61,6 +61,10 @@ all_phenocam_pulchra <- all_pheno_2023 %>%
 all_phenocam_arctica <- all_pheno_2023 %>%
   filter(Species == "Salix arctica")
 
+summary_pheno <- all_pheno_2023 %>% 
+  group_by(Species, population) %>% 
+  summarise(mean_growing = mean(growing_season, na.rm = T))
+
 # SOURCE POP ONLY species specific datasets -----
 all_phenocam_rich_source <- all_phenocam_rich %>%
   filter(population %in% c("N. Source", "S. Source"))
