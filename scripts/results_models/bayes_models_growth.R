@@ -866,7 +866,7 @@ column_spec(kable_biovol, 2, width = NULL, bold = FALSE, italic = TRUE)
 
 # S. richardsonii -----
 # model
-garden_rich_elong <- brms::brm(log(max_stem_elong) ~ population + (1|Sample_age),
+garden_rich_elong <- brms::brm(log(max_stem_elong) ~ population,
                                data = max_elong_cg_rich, family = gaussian(), chains = 3,
                                iter = 3000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -874,7 +874,8 @@ garden_rich_elong <- brms::brm(log(max_stem_elong) ~ population + (1|Sample_age)
 summary(garden_rich_elong) # southern pop significantly longer stem elong
 plot(garden_rich_elong) # fine
 pp_check(garden_rich_elong, type = "dens_overlay", nsamples = 100) # good
-saveRDS(garden_rich_elong, file = "output/models/garden_rich_elong.rds")
+#saveRDS(garden_rich_elong, file = "output/models/garden_rich_elong.rds")
+ggpred_elong <- ggpredict(garden_rich_elong, terms = "population")
 
 # extract output with function
 rich_extract_elong <- model_summ_growth(garden_rich_elong)

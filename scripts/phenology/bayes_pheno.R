@@ -167,7 +167,7 @@ summary(garden_rich_emerg_compare)
 plot(garden_rich_emerg_compare)
 pp_check(garden_rich_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
 saveRDS(garden_rich_emerg_compare, file = "output/phenology/garden_rich_emerg_compare.rds")
-garden_rich_emerg_compare<- readRDS(file = "output/phenology/garden_rich_emerg_compare.rds")
+garden_rich_emerg_compare <- readRDS(file = "output/phenology/garden_rich_emerg_compare.rds")
 
 # extract output with function
 rich_emerg_results <- model_summ_pheno(garden_rich_emerg_compare)
