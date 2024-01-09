@@ -863,7 +863,6 @@ kable_biovol <- garden_biovol_out_back %>%
 column_spec(kable_biovol, 2, width = NULL, bold = FALSE, italic = TRUE)
 
 # STEM ELONGATION ------
-
 # S. richardsonii -----
 # model
 garden_rich_elong <- brms::brm(log(max_stem_elong) ~ population,

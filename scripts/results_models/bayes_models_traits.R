@@ -158,6 +158,24 @@ model_summ_no_re <- function(x) {
   modelTerms <- as.data.frame(bind_rows(fixed, sigma))  # merge together
 }
 
+model_sum_2_RE <- function(x) {
+  sum = summary(x)
+  fixed = sum$fixed
+  sigma = sum$spec_pars
+  random_age = sum$random$year
+  random_ID = sum$random$SampleID_standard
+
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  random_age$effect <- "random"
+  random_ID$effect <- "random"
+  sigma$effect <- "residual"
+  
+  row.names(random_ID)[row.names(random_ID) == "sd(Intercept)...3"] <- "year"
+  row.names(random_age)[row.names(random_age) == "sd(Intercept)...4"] <- "sample ID"
+  
+  modelTerms <- as.data.frame(bind_rows(fixed, random_age, random_ID, sigma))  # merge together
+}
+
 # MODELS ----
 # SLA ----
 # S. richardsonii ----
@@ -1197,6 +1215,199 @@ save_kable(kable_ll, file = "output/traits/kable_ll.pdf",
            keep_tex =TRUE,
            density = 300)
 
+# STEM ELONGATION-----
+# adding here because clearer than maximum script 
+# filtering only individuals in the garden bc not many years of field stem measurements 
+# S. richardsonii ----
+richardsonii_garden_growth <- richardsonii_all_growth %>% 
+  filter(population %in% c("N. Garden", "S. Garden")) %>% 
+  filter(mean_stem_elong < 451) # omit values that are unrealistically high-- data entry issue? 
+
+richardsonii_garden_growth$population <- droplevels(richardsonii_garden_growth$population)
+
+rich_stem <- brms::brm(log(mean_stem_elong) ~ population + (1|year) + (1|SampleID_standard), data = richardsonii_garden_growth, 
+                       family = gaussian(), chains = 3,
+                     iter = 3000, warmup = 1000, 
+                     control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(rich_stem)
+plot(rich_stem)
+pp_check(rich_stem, type = "dens_overlay", ndraws = 100) 
+saveRDS(rich_stem, file = "output/traits/models/stem_elong_richardsonii_compare.rds")
+rich_stem <- readRDS("output/traits/models/stem_elong_richardsonii_compare.rds")
+rich_stem.pred <- ggpredict(rich_stem, terms = c('population'))
+
+rich_stem_results <- model_sum_2_RE(rich_stem)
+
+rich_stem_results <- rich_stem_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI", 
+                "Estimate (log og)"= "Estimate")
+
+rich_stem_results_2 <- rich_stem_results %>% 
+  dplyr::rename("l_95_CI_log_sum" = "l_95_CI_log", 
+                "u_95_CI_log_sum" = "u_95_CI_log",
+                "Estimate (log sum)"= "Estimate (log og)")
+
+# change estimates by adding estimate to other rows 
+rich_stem_results_2[2,1] <- rich_stem_results_2[2,1] + rich_stem_results_2[1,1]
+# change lower CI by adding 
+rich_stem_results_2[2,3] <- rich_stem_results_2[2,3] + rich_stem_results_2[1,3]
+# change upper CI
+rich_stem_results_2[2,4] <- rich_stem_results_2[2,4] + rich_stem_results_2[1,4]
+
+# extraction for model output table
+rownames(rich_stem_results) <- c("Intercept  ", "S. Garden  ", "Year  ", "Sample_ID  ", "Sigma  ")
+rownames(rich_stem_results_2) <- c("Intercept", "S. Garden ", "Year ", "Sample_ID", "Sigma ")
+
+rich_stem_df_1 <- rich_stem_results %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  relocate("Species", .before = "Estimate (log og)") 
+
+rich_stem_df <- rich_stem_results_2 %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  relocate("Species", .before = "Estimate (log sum)") %>%
+  dplyr::select(-Est.Error)
+
+rich_stem_extract_all <- full_join(rich_stem_df_1, rich_stem_df, 
+                                by = c("effect" = "effect", 
+                                       "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                       "Species"="Species", "Rhat"="Rhat"))
+
+rownames(rich_stem_extract_all) <- c("Intercept", "S. Garden", "Year", "Sample ID", "Sigma")
+
+# S. pulchra ----
+pulchra_garden_growth <- pulchra_all_growth %>% 
+  filter(population %in% c("N. Garden", "S. Garden")) %>% 
+  filter(mean_stem_elong < 450)
+
+pulchra_garden_growth$population <- droplevels(pulchra_garden_growth$population)
+
+pulchra_stem <- brms::brm(log(mean_stem_elong) ~ population + (1|year) + (1|SampleID_standard), data = pulchra_garden_growth, family = gaussian(), chains = 3,
+                       iter = 3000, warmup = 1000, 
+                       control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(pulchra_stem)
+plot(pulchra_stem)
+pp_check(pulchra_stem, type = "dens_overlay", ndraws = 100) 
+saveRDS(pulchra_stem, file = "output/traits/models/stem_elong_pulchra_compare.rds")
+pulchra_stem <- readRDS("output/traits/models/stem_elong_pulchra_compare.rds")
+pulchra_stem.pred <- ggpredict(pulchra_stem, terms = c('population'))
+
+pul_stem_results <- model_sum_2_RE(pulchra_stem)
+
+pul_stem_results <- pul_stem_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI", 
+                "Estimate (log og)"= "Estimate")
+
+pul_stem_results_2 <- pul_stem_results %>% 
+  dplyr::rename("l_95_CI_log_sum" = "l_95_CI_log", 
+                "u_95_CI_log_sum" = "u_95_CI_log",
+                "Estimate (log sum)"= "Estimate (log og)")
+
+# change estimates by adding estimate to other rows 
+pul_stem_results_2[2,1] <- pul_stem_results_2[2,1] + pul_stem_results_2[1,1]
+# change lower CI by adding 
+pul_stem_results_2[2,3] <- pul_stem_results_2[2,3] + pul_stem_results_2[1,3]
+# change upper CI
+pul_stem_results_2[2,4] <- pul_stem_results_2[2,4] + pul_stem_results_2[1,4]
+
+# extraction for model output table
+rownames(pul_stem_results) <- c("Intercept  ", "S. Garden  ", "Year  ", "Sample_ID  ", "Sigma  ")
+rownames(pul_stem_results_2) <- c("Intercept", "S. Garden ", "Year ", "Sample_ID", "Sigma ")
+
+pul_stem_df_1 <- pul_stem_results %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  relocate("Species", .before = "Estimate (log og)") 
+
+pul_stem_df <- pul_stem_results_2 %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  relocate("Species", .before = "Estimate (log sum)") %>%
+  dplyr::select(-Est.Error)
+
+pul_stem_extract_all <- full_join(pul_stem_df_1, pul_stem_df, 
+                                   by = c("effect" = "effect", 
+                                          "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                          "Species"="Species", "Rhat"="Rhat"))
+
+rownames(pul_stem_extract_all) <- c("Intercept", "S. Garden", "Year", "Sample ID", "Sigma")
+
+# S. arctica ----
+arctica_garden_growth <- arctica_all_growth %>% 
+  filter(population %in% c("N. Garden", "S. Garden"))
+
+arctica_garden_growth$population <- droplevels(arctica_garden_growth$population)
+
+arctica_stem <- brms::brm(log(mean_stem_elong) ~ population + (1|year) + (1|SampleID_standard), 
+                          data = arctica_garden_growth, family = gaussian(), chains = 3,
+                          iter = 3000, warmup = 1000, 
+                          control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(arctica_stem)
+plot(arctica_stem)
+pp_check(arctica_stem, type = "dens_overlay", ndraws = 100) 
+saveRDS(arctica_stem, file = "output/traits/models/stem_elong_arctica_compare.rds")
+arctica_stem <- readRDS("output/traits/models/stem_elong_arctica_compare.rds")
+arctica_stem.pred <- ggpredict(arctica_stem, terms = c('population'))
+
+arc_stem_results <- model_sum_2_RE(arctica_stem)
+
+arc_stem_results <- arc_stem_results %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI", 
+                "Estimate (log og)"= "Estimate")
+
+arc_stem_results_2 <- arc_stem_results %>% 
+  dplyr::rename("l_95_CI_log_sum" = "l_95_CI_log", 
+                "u_95_CI_log_sum" = "u_95_CI_log",
+                "Estimate (log sum)"= "Estimate (log og)")
+
+# change estimates by adding estimate to other rows 
+arc_stem_results_2[2,1] <- arc_stem_results_2[2,1] + arc_stem_results_2[1,1]
+# change lower CI by adding 
+arc_stem_results_2[2,3] <- arc_stem_results_2[2,3] + arc_stem_results_2[1,3]
+# change upper CI
+arc_stem_results_2[2,4] <- arc_stem_results_2[2,4] + arc_stem_results_2[1,4]
+
+# extraction for model output table
+rownames(arc_stem_results) <- c("Intercept  ", "S. Garden  ", "Year  ", "Sample_ID  ", "Sigma  ")
+rownames(arc_stem_results_2) <- c("Intercept", "S. Garden ", "Year ", "Sample_ID", "Sigma ")
+
+arc_stem_df_1 <- arc_stem_results %>% 
+  mutate(Species = rep("Salix arctica")) %>%
+  relocate("Species", .before = "Estimate (log og)") 
+
+arc_stem_df <- arc_stem_results_2 %>% 
+  mutate(Species = rep("Salix arctica")) %>%
+  relocate("Species", .before = "Estimate (log sum)") %>%
+  dplyr::select(-Est.Error)
+
+arc_stem_extract_all <- full_join(arc_stem_df_1, arc_stem_df, 
+                                  by = c("effect" = "effect", 
+                                         "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                         "Species"="Species", "Rhat"="Rhat"))
+
+rownames(arc_stem_extract_all) <- c("Intercept", "S. Garden", "Year", "Sample ID", "Sigma")
+
+# merging all stem elongation outputs together 
+stem_elong_out <- rbind(rich_stem_extract_all, pul_stem_extract_all, arc_stem_extract_all) 
+
+stem_elong_out <- stem_elong_out %>%
+  dplyr::rename("Estimate_log_sum" = "Estimate (log sum)")
+
+# back transforming from log
+stem_elong_out_back <- stem_elong_out %>%
+  mutate(CI_low_trans = exp(l_95_CI_log_sum)) %>% 
+  mutate(CI_high_trans = exp(u_95_CI_log_sum)) %>% 
+  mutate(Estimate_trans = exp(Estimate_log_sum))%>%
+  relocate(CI_low_trans, .before = Rhat) %>%
+  relocate(CI_high_trans, .before = Rhat) %>%
+  relocate(Estimate_trans, .before = CI_low_trans)%>%
+  relocate(Estimate_log_sum, .before = Estimate_trans) %>%
+  relocate(l_95_CI_log_sum, .before = Estimate_trans) %>%
+  relocate(u_95_CI_log_sum, .before = Estimate_trans)
+
+write.csv(stem_elong_out_back, "output/garden_stem_elong_out_back.csv")
+
+
 # PLOTS ---- 
 # note: always put richardsonii, pulchra then arctica 
 # reordering levels to go northern source, northern garden, southern source, southern garden
@@ -1554,6 +1765,59 @@ colnames(arc_LL.pred) = c('population','fit', 'lwr', 'upr')
                        labels = c("d)", "e)", "f)"),
                        ncol = 3, nrow = 1))
 ggsave("figures/leaf_length_panel.png", height = 10, width = 12, dpi = 300, device = png)
+
+
+# STEM elongation ----
+pal_garden <- c("#440154FF","#7AD151FF")
+
+# richardsonii ----
+colnames(rich_stem.pred) = c('population','fit', 'lwr', 'upr')
+
+(rich_stem_plot <-ggplot(rich_stem.pred) +
+    geom_point(data = richardsonii_garden_growth, aes(x = population, y = mean_stem_elong, colour = population),
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
+                  size = 1, alpha = 1, width=0.75) +
+    ylab("\n Stem elongation (mm)\n") +
+    xlab("") +
+    scale_color_manual(values=pal_garden) +
+    #coord_cartesian(ylim=c(0, 120)) +
+    labs(title = "Salix richardsonii") +
+    theme_shrub())
+
+# pulchra ----
+colnames(pulchra_stem.pred) = c('population','fit', 'lwr', 'upr')
+
+(pul_ll_plot <-ggplot(pulchra_stem.pred) +
+    geom_point(data = pulchra_garden_growth, aes(x = population, y = mean_stem_elong, colour = population),
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
+                  size = 1, alpha = 1, width=0.75) +
+    ylab("") +
+    xlab("" ) +
+    scale_color_manual(values=pal_garden) +
+   # coord_cartesian(ylim=c(0, 90)) +
+    labs(title = "Salix pulchra") +
+    theme_shrub())
+
+# arctica ----
+colnames(arctica_stem.pred) = c('population','fit', 'lwr', 'upr')
+
+(arc_ll_plot <-ggplot(arctica_stem.pred) +
+    geom_point(data = arctica_garden_growth, aes(x = population, y = mean_stem_elong, colour = population),
+               alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
+    geom_point(aes(x = population, y = fit, colour = population), size = 6)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
+                  size = 1, alpha = 1, width=0.75) +
+    ylab("") +
+    xlab("" ) +
+    scale_colour_manual(values = pal_garden) +
+    scale_fill_manual(values = pal_garden) +
+    labs(title = "Salix arctica") +
+    coord_cartesian(ylim=c(0, 60)) +
+    theme_shrub())
 
 # Arrange plots ----
 

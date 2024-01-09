@@ -11,7 +11,7 @@ library(ggpubr)
 library(ggeffects)
 
 # Loading data ---- 
-all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv") # 2022 data 
+#all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv") # 2022 data 
 all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv") # 2023 data
 
 # 1. scale function =====
@@ -438,6 +438,90 @@ colnames(ggpred_width_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
     theme_shrub() + 
     theme( axis.text.x  = element_text(angle = 0)) + 
     labs(title = "Salix arctica", size = 20, family = "Helvetica Light"))
+
+
+# STEM ELONGATION 2023 ----
+# S. richardsonii ---- 
+stem_ric <- brms::brm(log(mean_stem_elong) ~ Sample_age*population+(Sample_age|SampleID_standard),
+                       data = all_CG_growth_ric,  family = gaussian(), chains = 3,
+                       iter = 5000, warmup = 1000, 
+                       control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(stem_ric)
+saveRDS(stem_ric, file = "output/models/stem_elong_ric_2023.rds")
+stem_ric <- readRDS("output/models/stem_elong_ric_2023.rds")
+
+ggpred_stem_ric <- ggpredict(stem_ric, terms = c("Sample_age", "population"))
+colnames(ggpred_stem_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_stem_ric_plot <-ggplot(ggpred_stem_ric) +
+    geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = mean_stem_elong, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Stem elongation (mm)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() + 
+    theme( axis.text.x  = element_text(angle = 0)) + 
+    labs(title = "Salix richardsonii", size = 20, family = "Helvetica Light"))
+
+# S. pulchra ----
+all_CG_growth_pul_elong <- all_CG_growth_pul %>% 
+  filter(mean_stem_elong < 550) # filter some extreme values that don't make biological sense 
+
+stem_pul <- brms::brm(log(mean_stem_elong) ~ Sample_age*population+(Sample_age|SampleID_standard),
+                      data = all_CG_growth_pul_elong,  family = gaussian(), chains = 3,
+                      iter = 5000, warmup = 1000, 
+                      control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(stem_pul)
+saveRDS(stem_pul, file = "output/models/stem_elong_pul_2023.rds")
+stem_pul <- readRDS("output/models/stem_elong_ric_2023.rds")
+
+ggpred_stem_pul <- ggpredict(stem_pul, terms = c("Sample_age", "population"))
+colnames(ggpred_stem_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_stem_pul_plot <-ggplot(ggpred_stem_pul) +
+    geom_point(data = all_CG_growth_pul_elong, aes(x = Sample_age, y = mean_stem_elong, colour = population),
+               alpha = 0.5)+ # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Stem elongation (mm)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() + 
+    theme( axis.text.x  = element_text(angle = 0)) + 
+    labs(title = "Salix pulchra", size = 20, family = "Helvetica Light"))
+
+# S. arctica 
+stem_arc <- brms::brm(log(mean_stem_elong) ~ Sample_age*population+(Sample_age|SampleID_standard),
+                      data = all_CG_growth_arc,  family = gaussian(), chains = 3,
+                      iter = 5000, warmup = 1000, 
+                      control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(stem_arc)
+saveRDS(stem_arc, file = "output/models/stem_elong_arc_2023.rds")
+stem_arc <- readRDS("output/models/stem_elong_arc_2023.rds")
+
+ggpred_stem_arc <- ggpredict(stem_arc, terms = c("Sample_age", "population"))
+colnames(ggpred_stem_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
+
+(ggpred_stem_arc_plot <-ggplot(ggpred_stem_arc) +
+    geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = mean_stem_elong, colour = population),
+               alpha = 0.5) + # raw data
+    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+                alpha = 0.2) +
+    ylab("Stem elongation (mm)\n") +
+    xlab("\n Sample age " ) +
+    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    theme_shrub() + 
+    theme( axis.text.x  = element_text(angle = 0)) + 
+    labs(title = "Salix arctica", size = 20, family = "Helvetica Light"))
+
 
 # BIOVOLUME 2023 ----
 # S. richardsonii biovolume ----
