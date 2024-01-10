@@ -467,6 +467,21 @@ colnames(ggpred_stem_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
     theme( axis.text.x  = element_text(angle = 0)) + 
     labs(title = "Salix richardsonii", size = 20, family = "Helvetica Light"))
 
+stem_elong_rich_summ <- model_summ(stem_ric)
+stem_elong_rich_summ$Species <- "Salix richardsonii"
+stem_elong_rich_summ <- stem_elong_rich_summ %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+rownames(stem_elong_rich_summ) <- c("Intercept", "Sample age", "Southern population"
+                                , "Sample age:Southern population", "Random intercept", 
+                                "sd(Sample age)", "cor(Intercept, Sample age)", "sigma")
+
+stem_elong_rich_summ$Rhat <- as.character(formatC(stem_elong_rich_summ$Rhat, digits = 2, format = 'f'))
+
+stem_elong_rich_summ <- stem_elong_rich_summ %>%
+  #mutate(Species = "Salix richardsonii")%>%
+  relocate("Species", .before = "Estimate")
+
 # S. pulchra ----
 all_CG_growth_pul_elong <- all_CG_growth_pul %>% 
   filter(mean_stem_elong < 550) # filter some extreme values that don't make biological sense 
@@ -496,7 +511,21 @@ colnames(ggpred_stem_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
     theme( axis.text.x  = element_text(angle = 0)) + 
     labs(title = "Salix pulchra", size = 20, family = "Helvetica Light"))
 
-# S. arctica 
+stem_elong_pul_summ <- model_summ(stem_pul)
+stem_elong_pul_summ$Species <- "Salix pulchra"
+stem_elong_pul_summ <- stem_elong_pul_summ %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+rownames(stem_elong_pul_summ) <- c("Intercept", "Sample age", "Southern population"
+                                    , "Sample age:Southern population", "Random intercept", 
+                                    "sd(Sample age)", "cor(Intercept, Sample age)", "sigma")
+
+stem_elong_pul_summ$Rhat <- as.character(formatC(stem_elong_pul_summ$Rhat, digits = 2, format = 'f'))
+
+stem_elong_pul_summ <- stem_elong_pul_summ %>%
+  relocate("Species", .before = "Estimate")
+
+# S. arctica ----
 stem_arc <- brms::brm(log(mean_stem_elong) ~ Sample_age*population+(Sample_age|SampleID_standard),
                       data = all_CG_growth_arc,  family = gaussian(), chains = 3,
                       iter = 5000, warmup = 1000, 
@@ -521,6 +550,33 @@ colnames(ggpred_stem_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
     theme_shrub() + 
     theme( axis.text.x  = element_text(angle = 0)) + 
     labs(title = "Salix arctica", size = 20, family = "Helvetica Light"))
+
+stem_elong_arc_summ <- model_summ(stem_arc)
+stem_elong_arc_summ$Species <- "Salix arctica"
+stem_elong_arc_summ <- stem_elong_arc_summ %>% 
+  dplyr::rename("l_95_CI_log" = "l-95% CI", 
+                "u_95_CI_log" = "u-95% CI")
+rownames(stem_elong_arc_summ) <- c("Intercept", "Sample age", "Southern population"
+                                   , "Sample age:Southern population", "Random intercept", 
+                                   "sd(Sample age)", "cor(Intercept, Sample age)", "sigma")
+
+stem_elong_arc_summ$Rhat <- as.character(formatC(stem_elong_arc_summ$Rhat, digits = 2, format = 'f'))
+
+stem_elong_arc_summ <- stem_elong_arc_summ %>%
+  relocate("Species", .before = "Estimate")
+
+# binding all summaries
+all_stem_elong_summ <- rbind(stem_elong_rich_summ, stem_elong_pul_summ, stem_elong_arc_summ)
+
+all_stem_elong_summ_back <- all_stem_elong_summ %>% 
+  dplyr::mutate("Estimate (back)" = exp(Estimate)) %>% 
+  dplyr::mutate("Lower 95% CI (back)" = exp(l_95_CI_log))%>%
+  dplyr::mutate("Upper 95% CI (back)" = exp(u_95_CI_log)) %>%
+  dplyr::rename("Est.Error (log)" = "Est.Error") %>%
+  dplyr::rename("Lower 95% CI (log)" = "l_95_CI_log") %>%
+  dplyr::rename("Upper 95% CI (log)" = "u_95_CI_log")
+
+write.csv(all_stem_elong_summ_back, "outputs/tables/all_stem_elong_time_output.csv")
 
 
 # BIOVOLUME 2023 ----

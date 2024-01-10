@@ -254,8 +254,8 @@ max_diam_cg_arc <- max_diam_cg %>%
 
 # exploring variables distribution
 hist(max_diam_cg_rich$max_stem_diam) # right skew
-hist(max_diam_cg_pul$max_stem_diam, breaks = 30) #  right skew - so weird
-hist(max_diam_cg_arc$max_stem_diam,  breaks = 30)#  right skew
+hist(max_diam_cg_pul$max_stem_diam, breaks = 30) # right skew - so weird
+hist(max_diam_cg_arc$max_stem_diam,  breaks = 30)# right skew
 
 
 # MODELLING -------
