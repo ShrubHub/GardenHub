@@ -453,16 +453,18 @@ stem_ric <- readRDS("output/models/stem_elong_ric_2023.rds")
 ggpred_stem_ric <- ggpredict(stem_ric, terms = c("Sample_age", "population"))
 colnames(ggpred_stem_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
 
+pal_garden <- c("#440154FF","#7AD151FF")
+
 (ggpred_stem_ric_plot <-ggplot(ggpred_stem_ric) +
     geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = mean_stem_elong, colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5) + # raw data
     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
     ylab("Stem elongation (mm)\n") +
     xlab("\n Sample age " ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+    scale_colour_manual(values=pal_garden) +
+    scale_fill_manual(values=pal_garden) +
     theme_shrub() + 
     theme( axis.text.x  = element_text(angle = 0)) + 
     labs(title = "Salix richardsonii", size = 20, family = "Helvetica Light"))
@@ -550,6 +552,16 @@ colnames(ggpred_stem_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
     theme_shrub() + 
     theme( axis.text.x  = element_text(angle = 0)) + 
     labs(title = "Salix arctica", size = 20, family = "Helvetica Light"))
+
+(ggpred_CG_stem_panel <- ggarrange(ggpred_stem_ric_plot,
+                                   ggpred_stem_pul_plot, 
+                                   ggpred_stem_arc_plot, nrow = 1,
+                                     common.legend = TRUE, 
+                                     labels = c("D)", "E)", "F)"),
+                                     legend="bottom"))
+
+ggsave(ggpred_CG_stem_panel, filename ="outputs/figures/ggpred_CG_stem_panel_2023.png",
+       width = 14.67, height = 6.53, units = "in", device = png)
 
 stem_elong_arc_summ <- model_summ(stem_arc)
 stem_elong_arc_summ$Species <- "Salix arctica"
