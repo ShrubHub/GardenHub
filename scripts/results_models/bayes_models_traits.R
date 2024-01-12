@@ -1416,18 +1416,18 @@ pulchra_all_traits$population <- ordered(pulchra_all_traits$population,
                                                       "N. Garden", 
                                                       "S. Source",  
                                                       "S. Garden"))
-richardsonii_mad_traits$population <-  ordered(pulchra_all_traits$population, 
+richardsonii_mad_traits$population <-  ordered(richardsonii_mad_traits$population, 
                                            levels = c("N. Source", 
                                                       "N. Garden", 
                                                       "S. Source",  
                                                       "S. Garden"))
 
-pulchra_mad_traits$population <-  ordered(pulchra_all_traits$population, 
+pulchra_mad_traits$population <-  ordered(pulchra_mad_traits$population, 
                                                levels = c("N. Source", 
                                                           "N. Garden", 
                                                           "S. Source",  
                                                           "S. Garden"))
-arctica_mad_traits$population <-  ordered(pulchra_all_traits$population, 
+arctica_mad_traits$population <-  ordered(arctica_mad_traits$population, 
                                           levels = c("N. Source", 
                                                      "N. Garden", 
                                                      "S. Source",  
@@ -1475,16 +1475,31 @@ theme_shrub <- function(){ theme(legend.position = "right",
                                  legend.text=element_text(size = 15, family = "Helvetica Light"))}
 # SLA ---- 
 # richardsonii ----
-richard_sla <- (conditional_effects(rich_SLA)) # extracting conditional effects from bayesian model
-richard_sla_data <- richard_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
-#[[1]] is to extract the first term in the model which in our case is population
-richard_sla_data_trans <- richard_sla_data %>% 
-  mutate(CI_range = (estimate__ - lower__)) %>% 
-  mutate(CI_high_trans = exp(upper__)) %>% 
-  mutate(CI_low_trans = exp(lower__)) %>% 
-  mutate(Estimate_trans = exp(estimate__), 
-         Est.Error_trans = exp(se__)) %>% 
-  select(-CI_range)
+# richard_sla <- (conditional_effects(rich_SLA)) # extracting conditional effects from bayesian model
+# richard_sla_data <- richard_sla[[1]] # making the extracted model outputs into a dataset (for plotting)
+# #[[1]] is to extract the first term in the model which in our case is population
+# richard_sla_data_trans <- richard_sla_data %>% 
+#   mutate(CI_range = (estimate__ - lower__)) %>% 
+#   mutate(CI_high_trans = exp(upper__)) %>% 
+#   mutate(CI_low_trans = exp(lower__)) %>% 
+#   mutate(Estimate_trans = exp(estimate__), 
+#          Est.Error_trans = exp(se__)) %>% 
+#   select(-CI_range)
+
+# merge all richardsonii SLA, LDMC, LA outputs 
+rich_SLA.pred$trait <- "SLA"
+
+rich_SLA.long <- gather(rich_SLA.pred, key = "type", "value", 2:4)
+pul_SLA.long <- gather(pul_SLA.pred, key = "type", "value", 2:4)
+arc_SLA.long <- gather(arc_SLA.pred, key = "type", "value", 2:4)
+
+traits_preds_rich <- full_join(rich_SLA.long, )
+
+
+pul_SLA.pred$trait <- "SLA"
+pul_SLA.pred$Species <- "Salix pulchra"
+arc_SLA.pred$trait <- "SLA"
+pul_SLA.pred$Species <- "Salix arctica"
 
 colnames(rich_SLA.pred) = c('population','fit', 'lwr', 'upr')
 

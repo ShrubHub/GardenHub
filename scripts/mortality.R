@@ -66,4 +66,37 @@ all_survival <- full_join(all_survival_2021_samples, survival_2022_2023_final,
 
 # save 
 write.csv(all_survival, "data/common_garden_data_2023/all_survival_2023.csv")
+# read in data if needed ----
+all_survival <- read.csv("data/common_garden_data_2023/all_survival_2023.csv")
 
+all_survival <- all_survival %>% 
+  relocate("Survived_2022", .after = "Survived_2021") %>% 
+  relocate("Survived_2023", .after = "Survived_2022") %>% 
+  select(-c(X, Match, Sample_location_full, Field_notes, Notes, Data_notes, 
+            Date_propagated, Date_sampled, SampleID, Bed, Row, Column, Cutting_age,
+            Cutting_diameter, Cutting_length, Mother_SE3, Mother_SE2, Mother_SE1, 
+            Mother_LL3, Mother_LL2, Mother_LL1, Mother_LS, Mother_CW_2, 
+            Mother_CW_1, Mother_height, Date_planted))  
+  
+# summarize long version of data 
+long_survival <- gather(all_survival, key = "Year_survived", value = "Survival", 6:15, na.rm = F) %>% 
+  group_by(SampleID_standard, Year_survived) %>% 
+  slice(1) %>% 
+  mutate(Sample_location = (case_when((population == "Southern") ~ "Kluane",
+                   TRUE ~ "Qikiqtaruk"))) 
+
+# look at richardsonii to diagnose problem 
+pul_prob <- long_survival %>% 
+  filter(Species == "Salix pulchra")
+
+# summarize survival data 
+survival_summary <- long_survival %>% 
+  group_by(Species, Sample_location, Year_survived) %>% 
+  summarise(total_survival = sum(Survival, na.rm = TRUE))
+  
+# save summary to use as table 
+write.csv(survival_summary, "data/common_garden_data_2023/survival_summary.csv")
+  
+  
+  
+  
