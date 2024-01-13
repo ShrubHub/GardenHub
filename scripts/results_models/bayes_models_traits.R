@@ -777,7 +777,6 @@ saveRDS(pulchra_LA_mad, file = "output/traits/models/la_pulchra_compare.rds")
 pulchra_LA_mad <- readRDS("output/traits/models/la_pulchra_compare.rds")
 pulchra_LA.pred <- ggpredict(pulchra_LA_mad, terms = c('population'))
 
-
 #pulchra_LA <- brms::brm(log(LA_cm2) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
 #                        iter = 3000, warmup = 1000, 
 #                        control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -1487,19 +1486,49 @@ theme_shrub <- function(){ theme(legend.position = "right",
 #   select(-CI_range)
 
 # merge all richardsonii SLA, LDMC, LA outputs 
+colnames(rich_SLA.pred) = c('population','fit', 'lwr', 'upr')
+colnames(rich_LDMC.pred) = c('population','fit', 'lwr', 'upr')
+colnames(rich_LA_mad.pred) = c('population','fit', 'lwr', 'upr')
+
 rich_SLA.pred$trait <- "SLA"
-
 rich_SLA.long <- gather(rich_SLA.pred, key = "type", "value", 2:4)
-pul_SLA.long <- gather(pul_SLA.pred, key = "type", "value", 2:4)
-arc_SLA.long <- gather(arc_SLA.pred, key = "type", "value", 2:4)
+rich_LDMC.pred$trait <- "LDMC"
+rich_LDMC.long <- gather(rich_LDMC.pred, key = "type", "value", 2:4)
+rich_LA_mad.pred$trait <- "LA"
+rich_LA.long <- gather(rich_LA_mad.pred, key = "type", "value", 2:4)
 
-traits_preds_rich <- full_join(rich_SLA.long, )
+traits_preds_rich <- rbind(rich_SLA.long, rich_LDMC.long, rich_LA.long)
+traits_preds_rich$Species <- "Salix richardsonii"
 
+colnames(pul_SLA.pred) = c('population','fit', 'lwr', 'upr')
+colnames(pul_LDMC.pred) = c('population','fit', 'lwr', 'upr')
+colnames(pulchra_LA.pred) = c('population','fit', 'lwr', 'upr')
 
 pul_SLA.pred$trait <- "SLA"
-pul_SLA.pred$Species <- "Salix pulchra"
+pul_SLA.long <- gather(pul_SLA.pred, key = "type", "value", 2:4)
+pul_LDMC.pred$trait <- "LDMC"
+pul_LDMC.long <- gather(pul_LDMC.pred, key = "type", "value", 2:4)
+pulchra_LA.pred$trait <- "LA"
+pul_LA.long <- gather(pulchra_LA.pred, key = "type", "value", 2:4)
+
+traits_preds_pul <- rbind(pul_SLA.long, pul_LDMC.long, pul_LA.long)
+traits_preds_pul$Species <- "Salix pulchra"
+
+colnames(arc_SLA.pred) = c('population','fit', 'lwr', 'upr')
+colnames(arc_LDMC.pred) = c('population','fit', 'lwr', 'upr')
+colnames(arctica_LA.pred) = c('population','fit', 'lwr', 'upr')
+
 arc_SLA.pred$trait <- "SLA"
-pul_SLA.pred$Species <- "Salix arctica"
+arc_SLA.long <- gather(arc_SLA.pred, key = "type", "value", 2:4)
+arc_LDMC.pred$trait <- "LDMC"
+arc_LDMC.long <- gather(arc_LDMC.pred, key = "type", "value", 2:4)
+arctica_LA.pred$trait <- "LA" 
+arc_LA.long <- gather(arctica_LA.pred, key = "type", "value", 2:4)
+
+traits_preds_arc <- rbind(arc_SLA.long, arc_LDMC.long, arc_LA.long)
+traits_preds_arc$Species <- "Salix arctica"
+
+trait_predictions <- rbind(traits_preds_rich, traits_preds_pul, traits_preds_arc)
 
 colnames(rich_SLA.pred) = c('population','fit', 'lwr', 'upr')
 
