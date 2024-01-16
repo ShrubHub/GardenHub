@@ -1203,6 +1203,9 @@ pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#7AD151FF") # for reall levels
 pal_garden <- c("#440154FF", "#7AD151FF") # for only garden 
 pal_arc  <- c("#2A788EFF", "#440154FF", "#7AD151FF") # for when southern source is missing  
 
+pal_garden <- c("#332288", "#7ad151")
+shapes_garden <- c(16, 17)
+
 # LEAF EMERGENCE prep ----
 # S. richardsonii ------
 ric_emerg <- (conditional_effects(garden_rich_emerg_compare)) # extracting conditional effects from bayesian model
@@ -1312,7 +1315,6 @@ richard_yellow_trans_2 <- richard_yellow_trans %>%
   dplyr::rename("DOY" = "First_leaf_yellow_DOY_center")
 
 richard_emerg_yellow <- rbind(richard_emerg_trans_2,richard_yellow_trans_2)
-
 all_phenocam_rich_1 <- all_phenocam_rich %>%
   dplyr::rename("DOY" = "First_bud_burst_DOY")%>%
   dplyr::select(-First_leaf_yellow_DOY) 
@@ -1322,6 +1324,93 @@ all_phenocam_rich_2 <- all_phenocam_rich %>%
   dplyr::select(-First_bud_burst_DOY)
 
 all_phenocam_rich_all <- rbind(all_phenocam_rich_1, all_phenocam_rich_2)
+all_phenocam_rich_all$Species <- "Salix richardsonii"
+# pulchra 
+
+pul_emerg_trans_1 <-pulchra_emerg_trans %>%
+  dplyr::rename("DOY" = "First_bud_burst_DOY_center")
+
+pul_yellow_trans_2 <- pulchra_yellow_trans %>%
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY_center")
+
+pul_emerg_yellow <- rbind(pul_yellow_trans_2,pul_emerg_trans_1)
+
+all_phenocam_pul_1 <- all_phenocam_pulchra %>%
+  dplyr::rename("DOY" = "First_bud_burst_DOY")%>%
+  dplyr::select(-First_leaf_yellow_DOY) 
+
+all_phenocam_pul_2 <- all_phenocam_pulchra %>%
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY") %>%
+  dplyr::select(-First_bud_burst_DOY)
+
+all_phenocam_pul_all <- rbind(all_phenocam_pul_1, all_phenocam_pul_2)
+all_phenocam_pul_all$Species <- "Salix pulchra"
+
+# arctica
+arc_emerg_trans_1 <-arc_emerg_trans %>%
+  dplyr::rename("DOY" = "First_bud_burst_DOY_center")
+
+arc_yellow_trans_2 <- arctica_yellow_trans %>%
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY_center")
+
+arc_emerg_yellow <- rbind(arc_emerg_trans_1,arc_yellow_trans_2)
+
+all_phenocam_arc_1 <- all_phenocam_arctica %>%
+  dplyr::rename("DOY" = "First_bud_burst_DOY")%>%
+  dplyr::select(-First_leaf_yellow_DOY) 
+
+all_phenocam_arc_2 <- all_phenocam_arctica %>%
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY") %>%
+  dplyr::select(-First_bud_burst_DOY)
+
+all_phenocam_arc_all <- rbind(all_phenocam_arc_1, all_phenocam_arc_2)
+
+all_phenocam_figure_predictions <- rbind(all_phenocam_rich_all, all_phenocam_pul_all, all_phenocam_arc_all)
+
+all_pheno_fig_raw <- all_phenocam_figure_predictions %>% 
+  dplyr::select(Species, DOY, population) %>% 
+  mutate(group_color = (case_when(str_detect(population, '^S') ~ 'south',
+                                TRUE ~ 'north'))) %>% 
+  mutate(group_shape = (case_when(grepl("Garden", population) ~ "garden",
+                                  grepl("Source", population, ignore.case = TRUE) ~"source")))
+
+richard_emerg_yellow$Species <- "Salix richardsonii"
+pul_emerg_yellow$Species <- "Salix pulchra"
+arc_emerg_yellow$Species <- "Salix arctica"
+
+all_pheno_fig_pred_merge <- rbind(richard_emerg_yellow, pul_emerg_yellow, arc_emerg_yellow)
+
+all_pheno_fig_pred <- all_pheno_fig_pred_merge %>%
+  mutate(group_color = (case_when(str_detect(population, '^S') ~ 'south',
+                                  TRUE ~ 'north'))) %>% 
+  mutate(group_shape = (case_when(grepl("Garden", population) ~ "garden",
+                                  grepl("Source", population, ignore.case = TRUE) ~"source")))
+
+
+(facet_pheno_plot <-ggplot(all_pheno_fig_pred) + # model predictions
+    geom_jitter(data = all_pheno_fig_raw, aes(y = group_color, x = DOY, colour = group_color, shape = group_shape),
+                alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
+    geom_point(aes(x = Estimate_trans, y = group_color, shape = group_shape, color = group_color), position = position_dodge(width = 0.75), size = 6)+
+    geom_errorbar(aes(xmin = CI_low_trans, xmax = CI_high_trans, y = group_color, colour = group_color, shape = group_shape),
+                  size = 1, alpha = 1, width=0.75, position = position_dodge(width = 0.75)) +
+    #ylab(expression(atop("Specific leaf", paste("area (",mm^{2}," ",mg^{-1},")"))))+
+    #xlab("" ) +
+    geom_line(aes(x = Estimate_trans , y = group_color, colour = group_color, linetype = group_shape), 
+              linewidth = 1, alpha = 1)+
+    scale_color_manual(values=pal_garden, guide = "none") +
+    scale_fill_manual(values=pal_garden) +
+    #coord_cartesian(ylim=c(5, 25)) +
+    scale_shape_manual(values = shapes_garden)+
+    facet_wrap(~Species) +
+    theme_shrub()+ 
+    theme(legend.background=element_blank(), legend.key=element_blank())+
+    guides(shape=guide_legend(title = "Location")) +
+    theme(axis.text.x=element_blank())+
+    theme(axis.title.y = element_text(margin = margin (r = 10))))
+
+
+
+
 
 (rich_emerg_yellow_plot_scaled <-ggplot(richard_emerg_yellow) +
     geom_point(data = all_phenocam_rich_all, aes(x =DOY , y =population , colour = population),
