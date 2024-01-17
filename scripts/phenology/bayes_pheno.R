@@ -903,7 +903,7 @@ garden_yellow_out$Rhat <- as.character(formatC(garden_yellow_out$Rhat, digits = 
 
 # save df of results 
 write.csv(garden_yellow_out, "output/phenology/garden_leaf_yellow_out.csv")
-
+garden_yellow_out <- read.csv("output/phenology/garden_leaf_yellow_out.csv")
 # creating table
 kable_yellow_garden <- garden_yellow_out %>% 
   kbl(caption="Table.xxx BRMS model outputs: Day of year (DOY) of first leaf yellowing northern garden vs southern garden willows. 
@@ -1172,17 +1172,21 @@ save_kable(kable_season_garden, file = "output/phenology/season__length_results.
            density = 300)
 
 # PLOTS ====
-theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
-                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 270), 
-                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
-                                 axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
-                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
-                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
+theme_shrub <- function(){ theme(legend.position = "bottom",
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=16),
+                                 axis.text.x  = element_text(vjust=0.5, size=16, family = "Helvetica Light", colour = "black", angle = 270), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=16),
+                                 axis.text.y  = element_text(vjust=0.5, size=16, family = "Helvetica Light", colour = "black"),
+                                 panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
+                                 panel.grid.minor.y = element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
                                  plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
-                                 legend.title=element_text(size=18, family = "Helvetica Light"),
-                                 legend.text=element_text(size = 18, family = "Helvetica Light"))}
+                                 legend.title = element_text(size=16, family = "Helvetica Light"),
+                                 legend.key=element_blank(),
+                                 strip.text.x = element_text(
+                                   size = 15, color = "black", face = "italic", family = "Helvetica Light"),
+                                 strip.background = element_blank(),
+                                 legend.text=element_text(size = 15, family = "Helvetica Light"))}
 
 all_phenocam_rich$population <- ordered(all_phenocam_rich$population, 
                                         levels = c("N. Source", 
@@ -1387,28 +1391,68 @@ all_pheno_fig_pred <- all_pheno_fig_pred_merge %>%
                                   grepl("Source", population, ignore.case = TRUE) ~"source")))
 
 
+# (facet_pheno_plot <-ggplot(all_pheno_fig_pred) + # model predictions
+#     geom_jitter(data = all_pheno_fig_raw, aes(y = group_color, x = DOY, colour = group_color, shape = group_shape),
+#                 alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
+#     geom_point(aes(x = Estimate_trans, y = group_color, shape = group_shape, color = group_color), position = position_dodge(width = 0.75), size = 6)+
+#     geom_errorbar(aes(xmin = CI_low_trans, xmax = CI_high_trans, y = group_color, colour = group_color, shape = group_shape),
+#                   size = 1, alpha = 1, width=0.75, position = position_dodge(width = 0.75)) +
+#     #ylab(expression(atop("Specific leaf", paste("area (",mm^{2}," ",mg^{-1},")"))))+
+#     #xlab("" ) +
+#     geom_line(aes(x = Estimate_trans , y = group_color, colour = group_color, linetype = group_shape), 
+#               linewidth = 1, alpha = 1, position = position_dodge(width = 0.75))+
+#     scale_color_manual(values=pal_garden, guide = "none") +
+#     scale_fill_manual(values=pal_garden) +
+#     #coord_cartesian(ylim=c(5, 25)) +
+#     scale_shape_manual(values = shapes_garden)+
+#     facet_wrap(~Species) +
+#     theme_shrub()+ 
+#     theme(legend.background=element_blank(), legend.key=element_blank())+
+#     guides(shape=guide_legend(title = "Location")) +
+#     theme(axis.text.x=element_blank())+
+#     theme(axis.title.y = element_text(margin = margin (r = 10))))
+
+pal_garden <- c("#332288", "#7ad151")
+shapes_garden <- c(16, 17)
+lines_garden <- c(1,2)
+
+all_pheno_fig_pred$Species <- ordered(all_pheno_fig_pred$Species, 
+                                      levels = c("Salix richardsonii", 
+                                                 "Salix pulchra",
+                                                 "Salix arctica"))
+
+all_pheno_fig_raw$Species <- ordered(all_pheno_fig_raw$Species, 
+                                      levels = c("Salix richardsonii", 
+                                                 "Salix pulchra",
+                                                 "Salix arctica"))
+
+# FACET ----
 (facet_pheno_plot <-ggplot(all_pheno_fig_pred) + # model predictions
-    geom_jitter(data = all_pheno_fig_raw, aes(y = group_color, x = DOY, colour = group_color, shape = group_shape),
-                alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
-    geom_point(aes(x = Estimate_trans, y = group_color, shape = group_shape, color = group_color), position = position_dodge(width = 0.75), size = 6)+
-    geom_errorbar(aes(xmin = CI_low_trans, xmax = CI_high_trans, y = group_color, colour = group_color, shape = group_shape),
-                  size = 1, alpha = 1, width=0.75, position = position_dodge(width = 0.75)) +
-    #ylab(expression(atop("Specific leaf", paste("area (",mm^{2}," ",mg^{-1},")"))))+
-    #xlab("" ) +
-    geom_line(aes(x = Estimate_trans , y = group_color, colour = group_color, linetype = group_shape), 
+    geom_point(data = all_pheno_fig_raw, aes(y = population, x = DOY, colour = group_color, shape = group_shape),
+                alpha = 0.5, position = position_jitter(h = 0.2)) + # raw data
+    geom_point(aes(x = Estimate_trans, y = population, shape = group_shape, color = group_color), size = 6)+
+    geom_errorbar(aes(xmin = CI_low_trans, xmax = CI_high_trans, y = population, 
+                      colour = group_color, shape = group_shape),
+                  size = 1, alpha = 1, width=0.65) +
+    xlab("\n Day of year") +
+   geom_vline(data=filter(all_pheno_fig_pred, Species=="Salix richardsonii"), aes(xintercept=125), linetype ="dashed") + 
+   geom_vline(data=filter(all_pheno_fig_pred, Species=="Salix pulchra"), aes(xintercept=125), linetype ="dashed") + 
+   geom_hline(data=filter(all_pheno_fig_pred, Species=="Salix arctica"), aes(yintercept=125), linetype ="dashed") +
+    geom_line(aes(x = Estimate_trans , y = population, colour = group_color, linetype = group_shape), 
               linewidth = 1, alpha = 1)+
     scale_color_manual(values=pal_garden, guide = "none") +
-    scale_fill_manual(values=pal_garden) +
-    #coord_cartesian(ylim=c(5, 25)) +
-    scale_shape_manual(values = shapes_garden)+
+    scale_fill_manual(values=pal_garden, guide = "none") +
+    scale_x_continuous(limits = c(110, 240), breaks = seq(110, 240, by = 30)) +
+    scale_shape_manual(values = shapes_garden, guide = "none")+
+    scale_linetype_manual(values = lines_garden, guide = "none")+
     facet_wrap(~Species) +
     theme_shrub()+ 
-    theme(legend.background=element_blank(), legend.key=element_blank())+
-    guides(shape=guide_legend(title = "Location")) +
-    theme(axis.text.x=element_blank())+
-    theme(axis.title.y = element_text(margin = margin (r = 10))))
+    theme(legend.background=element_blank(), legend.key=element_blank(), 
+          axis.title.y = element_blank(), 
+          legend.position = "none")+
+    guides(shape=guide_legend(title = "Location")))
 
-
+ggsave("figures/pheno_panel.png", height = 12, width = 18, unit = "cm", dpi = 500, device = png)
 
 
 

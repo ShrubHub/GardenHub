@@ -1848,6 +1848,8 @@ ll_predictions_wide <- pivot_wider(length_predictions, names_from = "type", valu
 # save 
 ggsave("figures/trait_panel.png", height = 24, width = 18, unit = "cm", dpi = 500, device = png)
 
+# species specific figures ==== 
+
 # SLA ---- 
 # richardsonii ----
 # richard_sla <- (conditional_effects(rich_SLA)) # extracting conditional effects from bayesian model
