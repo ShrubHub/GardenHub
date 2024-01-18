@@ -1435,9 +1435,9 @@ all_pheno_fig_raw$Species <- ordered(all_pheno_fig_raw$Species,
                       colour = group_color, shape = group_shape),
                   size = 1, alpha = 1, width=0.65) +
     xlab("\n Day of year") +
-   geom_vline(data=filter(all_pheno_fig_pred, Species=="Salix richardsonii"), aes(xintercept=125), linetype ="dashed") + 
-   geom_vline(data=filter(all_pheno_fig_pred, Species=="Salix pulchra"), aes(xintercept=125), linetype ="dashed") + 
-   geom_hline(data=filter(all_pheno_fig_pred, Species=="Salix arctica"), aes(yintercept=125), linetype ="dashed") +
+   geom_vline(data=filter(all_pheno_fig_pred, Species=="Salix richardsonii"), aes(xintercept=137), linetype ="dashed") + 
+   geom_vline(data=filter(all_pheno_fig_pred, Species=="Salix pulchra"), aes(xintercept=140), linetype ="dashed") + 
+   geom_vline(data=filter(all_pheno_fig_pred, Species=="Salix arctica"), aes(xintercept=125), linetype ="dashed") +
     geom_line(aes(x = Estimate_trans , y = population, colour = group_color, linetype = group_shape), 
               linewidth = 1, alpha = 1)+
     scale_color_manual(values=pal_garden, guide = "none") +
