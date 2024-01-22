@@ -855,7 +855,7 @@ colnames(rich_source_width.pred) = c('Site','fit', 'lwr', 'upr')
 
 (rich_source_width_plot <-ggplot(rich_source_width.pred) +
     geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = mean_width, colour = Site),
-                alpha = 0.3, position = position_jitter(w = 0.09, h = 0, shape = 17))+
+                alpha = 0.3, position = position_jitter(w = 0.09, h = 0), shape = 17)+
     geom_point(aes(x = Site, y = fit,colour = Site), width=0.5, size = 4, shape = 17)+
     geom_errorbar(aes(x = Site, ymin = lwr, ymax = upr, colour = Site),
                   linewidth = 1, alpha = 1, width = 0.75) +
