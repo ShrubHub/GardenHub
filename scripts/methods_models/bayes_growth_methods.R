@@ -781,9 +781,9 @@ theme_shrub <- function(){ theme(legend.position = "bottom",
 
 # CANOPY HEIGHT -------
 # S.rich ----
-colnames(rich_source_width.pred) = c('Site','fit', 'lwr', 'upr')
+colnames(rich_source_height.pred) = c('Site','fit', 'lwr', 'upr')
 
-(rich_source_height_plot <-ggplot(rich_source_width.pred) +
+(rich_source_height_plot <-ggplot(rich_source_height.pred) +
     geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = Canopy_Height_cm, colour = Site),
                 alpha = 0.3, position = position_jitter(w = 0.09, h = 0), shape = 17)+
     geom_point(aes(x = Site, y = fit,colour = Site), width=0.5, size = 4, shape = 17)+
@@ -792,7 +792,7 @@ colnames(rich_source_width.pred) = c('Site','fit', 'lwr', 'upr')
     ylab("Canopy height (cm)\n") +
     xlab("\n Population" ) +
     scale_color_manual(values=pal_garden, labels=c('Northern', 'Southern')) +
-    scale_y_continuous(breaks = seq(0, 200, by = 20)) +
+    scale_y_continuous(breaks = seq(0, 200, by = 25)) +
     theme_shrub()+
     theme(axis.text.x  = element_blank(), 
           axis.title.x=element_blank())+
