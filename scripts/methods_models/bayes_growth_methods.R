@@ -821,6 +821,10 @@ colnames(pul_source_height.pred) = c('Site','fit', 'lwr', 'upr')
 # S.arctica -----
 colnames(arc_source_height.pred) = c('Site','fit', 'lwr', 'upr')
 
+arc_source_height.pred$Site <- plyr::revalue(arc_source_height.pred$Site ,
+                                                   c("Qikiqtaruk"="N. Source",
+                                                     "Kluane"="S. Source"))
+
 (arc_source_height_plot <-ggplot(arc_source_height.pred) +
     geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = Canopy_Height_cm, colour = Site),
                 alpha = 0.3, position = position_jitter(w = 0.09, h = 0), shape = 17)+
@@ -892,7 +896,7 @@ unique_source_mother_arctica$Site <- plyr::revalue(unique_source_mother_arctica$
 (arc_source_width_plot <-ggplot(arc_source_width.pred) +
     geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = mean_width, colour = Site),
                 alpha = 0.3, position = position_jitter(w = 0.09, h = 0), shape = 17)+
-    geom_point(aes(x = Site, y = fit,colour = Site), width=0.5, size = 4, , shape = 17)+
+    geom_point(aes(x = Site, y = fit,colour = Site), width=0.5, size = 4, shape = 17)+
     geom_errorbar(aes(x = Site, ymin = lwr, ymax = upr, colour = Site),
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Canopy width (cm)\n") +
