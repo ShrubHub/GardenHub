@@ -1411,56 +1411,56 @@ write.csv(stem_elong_out_back, "output/garden_stem_elong_out_back.csv")
 # PLOTS ---- 
 # note: always put richardsonii, pulchra then arctica 
 # reordering levels to go northern source, northern garden, southern source, southern garden
-pulchra_all_traits$population <- ordered(pulchra_all_traits$population, 
-                                           levels = c("N. Source", 
-                                                      "N. Garden", 
-                                                      "S. Source",  
-                                                      "S. Garden"))
-richardsonii_mad_traits$population <-  ordered(richardsonii_mad_traits$population, 
-                                           levels = c("N. Source", 
-                                                      "N. Garden", 
-                                                      "S. Source",  
-                                                      "S. Garden"))
+# pulchra_all_traits$population <- ordered(pulchra_all_traits$population, 
+#                                            levels = c("N. Source", 
+#                                                       "N. Garden", 
+#                                                       "S. Source",  
+#                                                       "S. Garden"))
+# richardsonii_mad_traits$population <-  ordered(richardsonii_mad_traits$population, 
+#                                            levels = c("N. Source", 
+#                                                       "N. Garden", 
+#                                                       "S. Source",  
+#                                                       "S. Garden"))
+# 
+# pulchra_mad_traits$population <-  ordered(pulchra_mad_traits$population, 
+#                                                levels = c("N. Source", 
+#                                                           "N. Garden", 
+#                                                           "S. Source",  
+#                                                           "S. Garden"))
+# arctica_mad_traits$population <-  ordered(arctica_mad_traits$population, 
+#                                           levels = c("N. Source", 
+#                                                      "N. Garden", 
+#                                                      "S. Source",  
+#                                                      "S. Garden"))
+# richardsonii_all_traits$population <- ordered(richardsonii_all_traits$population, 
+#                                            levels = c("N. Source", 
+#                                                       "N. Garden",
+#                                                       "S. Source", 
+#                                                       "S. Garden"))
+# 
+# arctica_all_traits$population <- ordered(arctica_all_traits$population, 
+#                                            levels = c("N. Source", 
+#                                                       "N. Garden",
+#                                                       "S. Source", 
+#                                                       "S. Garden"))
+# 
+# richardsonii_all_growth$population <- ordered(richardsonii_all_growth$population, 
+#                                            levels = c("N. Source", 
+#                                                       "N. Garden",
+#                                                       "S. Source", 
+#                                                       "S. Garden"))
+# 
+# pulchra_all_growth$population <- ordered(pulchra_all_growth$population, 
+#                                               levels = c("N. Source", 
+#                                                          "N. Garden",
+#                                                          "S. Source", 
+#                                                          "S. Garden"))
+# 
+# arctica_cg_growth$population <- ordered(arctica_cg_growth$population, 
+#                                               levels = c("N. Garden",
+#                                                          "S. Garden"))
 
-pulchra_mad_traits$population <-  ordered(pulchra_mad_traits$population, 
-                                               levels = c("N. Source", 
-                                                          "N. Garden", 
-                                                          "S. Source",  
-                                                          "S. Garden"))
-arctica_mad_traits$population <-  ordered(arctica_mad_traits$population, 
-                                          levels = c("N. Source", 
-                                                     "N. Garden", 
-                                                     "S. Source",  
-                                                     "S. Garden"))
-richardsonii_all_traits$population <- ordered(richardsonii_all_traits$population, 
-                                           levels = c("N. Source", 
-                                                      "N. Garden",
-                                                      "S. Source", 
-                                                      "S. Garden"))
-
-arctica_all_traits$population <- ordered(arctica_all_traits$population, 
-                                           levels = c("N. Source", 
-                                                      "N. Garden",
-                                                      "S. Source", 
-                                                      "S. Garden"))
-
-richardsonii_all_growth$population <- ordered(richardsonii_all_growth$population, 
-                                           levels = c("N. Source", 
-                                                      "N. Garden",
-                                                      "S. Source", 
-                                                      "S. Garden"))
-
-pulchra_all_growth$population <- ordered(pulchra_all_growth$population, 
-                                              levels = c("N. Source", 
-                                                         "N. Garden",
-                                                         "S. Source", 
-                                                         "S. Garden"))
-
-arctica_cg_growth$population <- ordered(arctica_cg_growth$population, 
-                                              levels = c("N. Garden",
-                                                         "S. Garden"))
-
-pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#35b779")
+# pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#35b779")
 
 theme_shrub <- function(){ theme(legend.position = "bottom",
                                  axis.title.x = element_text(face="bold", family = "Helvetica Light", size=16),
@@ -1632,12 +1632,24 @@ sla_predictions_wide$population <- ordered(sla_predictions_wide$population,
                                                     "S. Source",  
                                                     "S. Garden"))
 
+all_raw_traits_fig$population <- ordered(all_raw_traits_fig$population, 
+                                           levels = c("N. Source", 
+                                                      "N. Garden",
+                                                      "S. Source",  
+                                                      "S. Garden"))
+
 sla_predictions_wide$Species <- ordered(sla_predictions_wide$Species, 
                                            levels = c("Salix richardsonii", 
                                                       "Salix pulchra",
                                                       "Salix arctica"))
 
 pal_garden <- c("#332288", "#7ad151")
+pal_garden_traits <- c("#000080", "#2424a4",  "#61AA3E", "#83ba68")
+pal_garden_traits <- c("#000080", "red",  "#61AA3E", "black")
+
+names(pal_garden_traits) <- levels(sla_predictions_wide$population)                                                    # linking factor names to the colours
+names(pal_garden_traits) <- levels(all_raw_traits_fig$population)                                                    # linking factor names to the colours
+
 shapes_garden <- c(16, 17)
 
 (sla_facet_plot <-ggplot(sla_predictions_wide) + # model predictions
@@ -1658,9 +1670,28 @@ shapes_garden <- c(16, 17)
     theme_shrub()+
     theme(axis.title.y = element_text(margin = margin (r = 10))))
 
+# (sla_simple_facet_plot <-ggplot(sla_predictions_wide) + # model predictions
+#     geom_jitter(data = all_raw_traits_fig, aes(x = population, y = SLA, colour = population, shape = group_shape),
+#                  alpha = 0.5) + # raw data
+#     geom_point(aes(x = population, y = fit, shape = group_shape, color = population), size = 6)+
+#     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population, shape = group_shape),
+#                   size = 1, alpha = 1, width=0.75) +
+#     ylab(expression(atop("Specific leaf", paste("area (",mm^{2}," ",mg^{-1},")"))))+
+#     #xlab("" ) +
+#     scale_color_manual(values=pal_garden_traits, guide = "none") +
+#     scale_fill_manual(values=pal_garden_traits) +
+#     coord_cartesian(ylim=c(5, 25)) +
+#     scale_shape_manual(values = shapes_garden)+
+#     facet_wrap(~Species) +
+#     theme_shrub()+ 
+#     theme(legend.background=element_blank(), legend.key=element_blank())+
+#     guides(shape=guide_legend(title = "Location")) +
+#     theme()+
+#     theme(axis.title.y = element_text(margin = margin (r = 10))))
+
 (sla_simple_facet_plot <-ggplot(sla_predictions_wide) + # model predictions
     geom_jitter(data = all_raw_traits_fig, aes(x = group_color, y = SLA, colour = group_color, shape = group_shape),
-                 alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
+                alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
     geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), position = position_dodge(width = 0.75), size = 6)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, shape = group_shape),
                   size = 1, alpha = 1, width=0.75, position = position_dodge(width = 0.75)) +
@@ -1836,7 +1867,8 @@ ll_predictions_wide <- pivot_wider(length_predictions, names_from = "type", valu
     theme_shrub()+ 
     theme(legend.background=element_blank(), legend.key=element_blank())+
     guides(shape=guide_legend(title = "Location")) +
-    theme(strip.text.x = element_blank())+
+    theme(strip.text.x = element_blank(), 
+          axis.text.x  = element_text(angle = 0))+
     theme(axis.title.y = element_text(margin = margin (r = 10))))
 
 # trait panel 
@@ -1844,9 +1876,9 @@ ll_predictions_wide <- pivot_wider(length_predictions, names_from = "type", valu
                           ll_simple_facet_plot,
                              common.legend = TRUE, legend = "bottom",
                              ncol = 1, nrow = 4, 
-                          heights = c(0.9, 0.8, 0.8, 1.05)))
+                          heights = c(0.9, 0.8, 0.8, 0.9)))
 # save 
-ggsave("figures/trait_panel.png", height = 24, width = 18, unit = "cm", dpi = 500, device = png)
+ggsave("outputs/figures/trait_panel.png", height = 24, width = 18, unit = "cm", dpi = 500, device = png)
 
 # species specific figures ==== 
 

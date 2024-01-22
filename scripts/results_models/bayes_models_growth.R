@@ -745,7 +745,7 @@ save_kable(kable_width,file = "outputs/tables/kable_width.pdf",
            density = 300)
 
 # 3. BIOVOLUME ------
-# S. Richardsonii -----
+# S. richardsonii -----
 # model
 garden_rich_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
                                 data = max_biovol_cg_rich, family = gaussian(), chains = 3,
@@ -788,7 +788,7 @@ pul_extract_biovol_df <- pul_extract_biovol %>%
   relocate("Species", .before = "Estimate")%>% 
   relocate("nobs", .before = "effect")
 
-# S. Arctica -----
+# S. arctica -----
 garden_arc_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
                                data = max_biovol_cg_arc, family = gaussian(), chains = 3,
                                iter = 5000, warmup = 1000, 
@@ -887,7 +887,7 @@ rich_extract_elong_df <- rich_extract_elong %>%
   relocate("Species", .before = "Estimate")%>% 
   relocate("nobs", .before = "effect")
 
-# S. Pulchra -----
+# S. pulchra -----
 garden_pul_elong <- brms::brm(log(max_stem_elong) ~ population + (1|Sample_age),
                               data = max_elong_cg_pul, family = gaussian(), chains = 3,
                               iter = 3000, warmup = 1000, 
@@ -1111,18 +1111,24 @@ save_kable(kable_diam,file = "output/kable_diam.pdf",
            density = 300)
 
 # DATA VISUALISATION -----
-theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
-                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 270), 
-                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
-                                 axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
-                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
-                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
-                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
-                                 legend.title=element_text(size=16, family = "Helvetica Light"),
-                                 legend.text=element_text(size = 15, family = "Helvetica Light"))}
+pal_garden <- c("#332288", "#7ad151")
 
+
+theme_shrub <- function(){ theme(legend.position = "bottom",
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=16),
+                                 axis.text.x  = element_text(vjust=0.5, size=15, family = "Helvetica Light", colour = "black", angle = 270), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=16),
+                                 axis.text.y  = element_text(vjust=0.5, size=16, family = "Helvetica Light", colour = "black"),
+                                 panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
+                                 panel.grid.minor.y = element_blank(), panel.grid.major.y=element_blank(), 
+                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+                                 plot.title = element_text(color = "black", size = 16, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 legend.title = element_text(size=18, family = "Helvetica Light"),
+                                 legend.key=element_blank(),
+                                 strip.text.x = element_text(
+                                   size = 15, color = "black", face = "italic", family = "Helvetica Light"),
+                                 strip.background = element_blank(),
+                                 legend.text=element_text(size = 18, family = "Helvetica Light"))}
 
 max_heights_cg_rich$population <- ordered(max_heights_cg_rich$population, 
                                       levels = c( "N. Garden", 
@@ -1134,76 +1140,79 @@ max_heights_cg_arc$population <- ordered(max_heights_cg_arc$population,
                                           levels = c( "N. Garden", 
                                                       "S. Garden"))
 
-pal_garden  <- c("#440154FF","#7AD151FF")
-
-
 
 # CANOPY HEIGHT -----
 # S. richardsonii ----
-ric_heights <- (conditional_effects(garden_rich_height)) # extracting conditional effects from bayesian model
-ric_height_data <- ric_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
-# [[1]] is to extract the first term in the model which in our case is population
+# ric_heights <- (conditional_effects(garden_rich_height)) # extracting conditional effects from bayesian model
+# ric_height_data <- ric_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
+# # [[1]] is to extract the first term in the model which in our case is population
 
-(ric_height_plot <-ggplot(ric_height_data) +
-    #geom_violin(data = max_heights_cg_pul, aes(x = population, y = log(max_canopy_height_cm), fill = population, colour = population),
-    #           alpha = 0.1)+ # raw data
+colnames(rich_height.pred) = c('population','fit', 'lwr', 'upr')
+
+(ric_max_height_plot <-ggplot(rich_height.pred) +
     geom_jitter(data = max_heights_cg_rich, aes(x = population, y = max_canopy_height_cm, colour = population),
-                alpha = 0.2)+
-    geom_point(aes(x = effect1__, y = exp(estimate__),colour = population), width=0.5, size = 4)+
-    geom_errorbar(aes(x = effect1__, ymin = exp(lower__), ymax = exp(upper__),colour = population),
-                  linewidth = 1, alpha = 1) +
+                alpha = 0.3, position = position_jitter(w = 0.09, h = 0))+
+    geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
+                  linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Max. canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_garden) +
+    scale_color_manual(values=pal_garden, labels=c('Northern', 'Southern')) +
     scale_y_continuous(breaks = seq(0, 140, by = 20)) +
     theme_shrub()+
-    ggtitle(expression(italic("Salix richardsonii"))) +
-    theme(text=element_text(family="Helvetica Light")) )
+    theme(axis.text.x  = element_blank(), 
+           axis.title.x=element_blank())+
+    scale_x_discrete(labels = c('Northern','Southern'))+
+    ggtitle(expression(italic("Salix richardsonii"))))
+
    
-    # S. pulchra ----
-pul_heights <- (conditional_effects(garden_pul_height)) # extracting conditional effects from bayesian model
-pul_height_data <- pul_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
-# [[1]] is to extract the first term in the model which in our case is population
+# S. pulchra ----
+# pul_heights <- (conditional_effects(garden_pul_height)) # extracting conditional effects from bayesian model
+# pul_height_data <- pul_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
+# # [[1]] is to extract the first term in the model which in our case is population
 
-(pul_height_plot <-ggplot(pul_height_data) +
-    #geom_violin(data = max_heights_cg_pul, aes(x = population, y = log(max_canopy_height_cm), fill = population, colour = population),
-     #           alpha = 0.1)+ # raw data
+colnames(pul_height.pred) = c('population','fit', 'lwr', 'upr')
+
+(pul_max_height_plot <-ggplot(pul_height.pred) +
     geom_jitter(data = max_heights_cg_pul, aes(x = population, y = max_canopy_height_cm, colour = population),
-                alpha = 0.2)+
-    geom_point(aes(x = effect1__, y = exp(estimate__),colour = population), width=0.5, size = 4)+
-    geom_errorbar(aes(x = effect1__, ymin = exp(lower__), ymax = exp(upper__),colour = population),
-                  linewidth = 1, alpha = 1) +
+                alpha = 0.3, position = position_jitter(w = 0.09, h = 0))+
+    geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
+                  linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Max. canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_garden) +
+    scale_color_manual(values=pal_garden, labels=c('Northern', 'Southern')) +
     scale_y_continuous(breaks = seq(0, 100, by = 20)) +
-    theme_shrub() +
-    ggtitle(expression(italic("Salix pulchra")))+
-    theme(text=element_text(family="Helvetica Light")) )
+    theme_shrub()+
+    theme( axis.text.x  = element_blank(), 
+           axis.title.x=element_blank())+
+    scale_x_discrete(labels = c('Northern','Southern'))+
+    ggtitle(expression(italic("Salix pulchra"))))
 
-# S. arctica ----
-arc_heights <- (conditional_effects(garden_arc_height)) # extracting conditional effects from bayesian model
-arc_height_data <- arc_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
-# [[1]] is to extract the first term in the model which in our case is population
+# S. arctica ----
+# arc_heights <- (conditional_effects(garden_arc_height)) # extracting conditional effects from bayesian model
+# arc_height_data <- arc_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
 
-(arc_height_plot <-ggplot(arc_height_data) +
-   # geom_violin(data = max_heights_cg_arc, aes(x = population, y = log(max_canopy_height_cm), fill = population, colour = population),
-           #     alpha = 0.1)+ # raw data
+colnames(arc_height.pred) = c('population','fit', 'lwr', 'upr')
+
+(arc_max_height_plot <-ggplot(arc_height.pred) +
     geom_jitter(data = max_heights_cg_arc, aes(x = population, y = max_canopy_height_cm, colour = population),
-                alpha = 0.2)+
-    geom_point(aes(x = effect1__, y = exp(estimate__),colour = population), width=0.5, size = 4)+
-    geom_errorbar(aes(x = effect1__, ymin = exp(lower__), ymax = exp(upper__),colour = population),
-                  linewidth = 1, alpha = 1) +
+                alpha = 0.3, position = position_jitter(w = 0.09, h = 0))+
+    geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
+                  linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Max. canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_garden) +
-    theme_shrub() +
+    scale_color_manual(values=pal_garden, labels=c('Northern', 'Southern')) +
     scale_y_continuous(breaks = seq(0, 15, by = 5)) +
-    ggtitle(expression(italic("Salix arctica")))+
-    theme(text=element_text(family="Helvetica Light")) )
+    theme_shrub()+
+    theme( axis.text.x  = element_blank(), 
+           axis.title.x=element_blank())+
+    scale_x_discrete(labels = c('Northern','Southern'))+
+    ggtitle(expression(italic("Salix arctica"))))
 
 # arrange 
-(growth_maxheights <- ggarrange(ric_height_plot, pul_height_plot, arc_height_plot, 
+(growth_maxheights <- ggarrange(ric_max_height_plot, pul_max_height_plot, arc_max_height_plot, 
                            common.legend = TRUE, legend = "none",
                            ncol = 3, nrow = 1))
 
@@ -1212,100 +1221,77 @@ ggsave(growth_maxheights, filename ="output/figures/growth_maxheights.png",
 
 # WIDTH ----
 # S. richardsonii ----
-rich_width <- (conditional_effects(garden_rich_width)) # extracting conditional effects from bayesian model
-rich_width_data <- rich_width[[1]] # making the extracted model outputs into a dataset (for plotting)
-# [[1]] is to extract the first term in the model which in our case is population
+# rich_width <- (conditional_effects(garden_rich_width)) # extracting conditional effects from bayesian model
+# rich_width_data <- rich_width[[1]] # making the extracted model outputs into a dataset (for plotting)
+# rich_width_data$population <- plyr::revalue(rich_width_data$population , 
+#                                             c("Northern Garden"="N. Garden",
+#                                               "Southern Garden"="S. Garden"))
+# 
+# rich_width_data$effect1__ <- plyr::revalue(rich_width_data$effect1__ , 
+#                                            c("Northern Garden"="N. Garden",
+#                                              "Southern Garden"="S. Garden"))
 
-max_widths_cg_rich$population <- plyr::revalue(max_widths_cg_rich$population, 
-                                               c("Northern Garden"="N. Garden",
-                                                 "Southern Garden"="S. Garden"))
+colnames(rich_width.pred) = c('population','fit', 'lwr', 'upr')
 
-rich_width_data$population <- plyr::revalue(rich_width_data$population , 
-                                            c("Northern Garden"="N. Garden",
-                                              "Southern Garden"="S. Garden"))
-
-rich_width_data$effect1__ <- plyr::revalue(rich_width_data$effect1__ , 
-                                           c("Northern Garden"="N. Garden",
-                                             "Southern Garden"="S. Garden"))
-
-(ric_width_plot <-ggplot(rich_width_data) +
+(rich_max_width_plot <-ggplot(rich_width.pred) +
     geom_jitter(data = max_widths_cg_rich, aes(x = population, y = max_mean_width_cm, colour = population),
-                alpha = 0.2)+
-    geom_point(aes(x = effect1__, y = exp(estimate__),colour = population), width=0.5, size = 4)+
-    geom_errorbar(aes(x = effect1__, ymin = exp(lower__), ymax = exp(upper__),colour = population),
-                  linewidth = 1, alpha = 1) +
-    ylab("Max. canopy width (cm)\n") +
+                alpha = 0.3, position = position_jitter(w = 0.09, h = 0))+
+    geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
+                  linewidth = 1, alpha = 1, width = 0.75) +
+    ylab("Max. mean width (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_garden) +
+    scale_color_manual(values= pal_garden, labels=c('Northern', 'Southern')) +
+    scale_y_continuous(limits = c(0, 150), breaks = seq(0, 150, by = 25)) +
     theme_shrub()+
-    scale_y_continuous(limits = c(0, 155), breaks = seq(0, 150, by = 25)) +
-    ggtitle(expression(italic("Salix richardsonii"))) +
-    theme(text=element_text(family="Helvetica Light")) )
+    theme( axis.text.x  = element_text(angle = 0), 
+           axis.title.x=element_blank())+
+    scale_x_discrete(labels = c('Northern','Southern')))
 
 # S. pulchra ----
-pul_width <- (conditional_effects(garden_pul_width)) # extracting conditional effects from bayesian model
-pul_width_data <- pul_width[[1]] # making the extracted model outputs into a dataset (for plotting)
-# [[1]] is to extract the first term in the model which in our case is population
+# pul_width <- (conditional_effects(garden_pul_width)) # extracting conditional effects from bayesian model
+# pul_width_data <- pul_width[[1]] # making the extracted model outputs into a dataset (for plotting)
 
-max_widths_cg_pul$population <- plyr::revalue(max_widths_cg_pul$population, 
-                                               c("Northern Garden"="N. Garden",
-                                                 "Southern Garden"="S. Garden"))
+colnames(pul_width.pred) = c('population','fit', 'lwr', 'upr')
 
-pul_width_data$population <- plyr::revalue(pul_width_data$population , 
-                                            c("Northern Garden"="N. Garden",
-                                              "Southern Garden"="S. Garden"))
-
-pul_width_data$effect1__ <- plyr::revalue(pul_width_data$effect1__ , 
-                                           c("Northern Garden"="N. Garden",
-                                             "Southern Garden"="S. Garden"))
-
-(pul_width_plot <-ggplot(pul_width_data) +
+(pul_max_width_plot <-ggplot(pul_width.pred) +
     geom_jitter(data = max_widths_cg_pul, aes(x = population, y = max_mean_width_cm, colour = population),
-                alpha = 0.2)+
-    geom_point(aes(x = effect1__, y = exp(estimate__),colour = population), width=0.5, size = 4)+
-    geom_errorbar(aes(x = effect1__, ymin = exp(lower__), ymax = exp(upper__),colour = population),
-                  linewidth = 1, alpha = 1) +
-    ylab("Max. canopy width (cm)\n") +
+                alpha = 0.3, position = position_jitter(w = 0.09, h = 0))+
+    geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
+                  linewidth = 1, alpha = 1, width = 0.75) +
+    ylab("Max. mean width (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_garden) +
-    theme_shrub()+
+    scale_color_manual(values= pal_garden, labels=c('Northern', 'Southern')) +
     scale_y_continuous(limits = c(0, 125), breaks = seq(0, 125, by = 25)) +
-    ggtitle(expression(italic("Salix pulchra"))) +
-    theme(text=element_text(family="Helvetica Light")) )
+    theme_shrub()+
+    theme( axis.text.x  = element_text(angle = 0), 
+           axis.title.x=element_blank())+
+    scale_x_discrete(labels = c('Northern','Southern')))
 
 # S. arctica ----
-arc_width <- (conditional_effects(garden_arc_width)) # extracting conditional effects from bayesian model
-arc_width_data <- arc_width[[1]] # making the extracted model outputs into a dataset (for plotting)
-# [[1]] is to extract the first term in the model which in our case is population
+# arc_width <- (conditional_effects(garden_arc_width)) # extracting conditional effects from bayesian model
+# arc_width_data <- arc_width[[1]] # making the extracted model outputs into a dataset (for plotting)
 
-max_widths_cg_arc$population <- plyr::revalue(max_widths_cg_arc$population, 
-                                              c("Northern Garden"="N. Garden",
-                                                "Southern Garden"="S. Garden"))
+colnames(arc_width.pred) = c('population','fit', 'lwr', 'upr')
 
-arc_width_data$population <- plyr::revalue(arc_width_data$population , 
-                                           c("Northern Garden"="N. Garden",
-                                             "Southern Garden"="S. Garden"))
-
-arc_width_data$effect1__ <- plyr::revalue(arc_width_data$effect1__ , 
-                                          c("Northern Garden"="N. Garden",
-                                            "Southern Garden"="S. Garden"))
-
-(arc_width_plot <-ggplot(arc_width_data) +
-    geom_jitter(data = max_widths_cg_arc, aes(x = population, y = max_mean_width_cm, colour = population),
-                alpha = 0.2)+
-    geom_point(aes(x = effect1__, y = exp(estimate__),colour = population), width=0.5, size = 4)+
-    geom_errorbar(aes(x = effect1__, ymin = exp(lower__), ymax = exp(upper__),colour = population),
-                  linewidth = 1, alpha = 1) +
-    ylab("Max. canopy width (cm)\n") +
+(arc_max_width_plot <-ggplot(arc_width.pred) +
+    geom_jitter(data = max_widths_cg_pul, aes(x = population, y = max_mean_width_cm, colour = population),
+                alpha = 0.3, position = position_jitter(w = 0.09, h = 0))+
+    geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
+    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
+                  linewidth = 1, alpha = 1, width = 0.75) +
+    ylab("Max. mean width (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_garden) +
+    scale_color_manual(values= pal_garden, labels=c('Northern', 'Southern')) +
+    scale_y_continuous(limits = c(0, 75), breaks = seq(0, 75, by = 15)) +
     theme_shrub()+
-    scale_y_continuous(limits = c(0, 60), breaks = seq(0, 60, by = 15)) +
-    ggtitle(expression(italic("Salix arctica"))) +
-    theme(text=element_text(family="Helvetica Light")) )
+    theme( axis.text.x  = element_text(angle = 0), 
+           axis.title.x=element_blank())+
+    scale_x_discrete(labels = c('Northern','Southern')))
 
 # arrange 
-(growth_maxwidth <- ggarrange(ric_width_plot, pul_width_plot, arc_width_plot, 
+(growth_maxwidth <- ggarrange(rich_max_width_plot, pul_max_width_plot, arc_max_width_plot, 
                                 common.legend = TRUE, legend = "bottom",
                                 ncol = 3, nrow = 1))
 
@@ -1316,8 +1302,8 @@ ggsave(growth_maxwidth, filename ="output/figures/growth_maxhwidths.png",
                                 common.legend = TRUE, legend = "bottom",
                                 ncol = 1, nrow = 2))
 
-ggsave(max_size_panel, filename ="output/figures/max_size_plots.png", 
-       height = 10, width = 12, dpi = 300, units = "in", device = png)
+ggsave(max_size_panel, filename ="outputs/figures/max_size_plots.png", 
+       height = 8, width = 12, dpi = 300, units = "in", device = png)
 
 # STEM ELONG  --------
 # S. richardsonii ----
