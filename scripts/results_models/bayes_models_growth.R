@@ -1305,11 +1305,11 @@ ggsave(growth_maxwidth, filename ="output/figures/growth_maxhwidths.png",
 ggsave(max_size_panel, filename ="outputs/figures/max_size_plots.png", 
        height = 8, width = 12, dpi = 300, units = "in", device = png)
 
-# STEM ELONG  --------
+# STEM ELONG  --------
 # S. richardsonii ----
 rich_elong <- (conditional_effects(garden_rich_elong)) # extracting conditional effects from bayesian model
-rich_elong_data <- rich_elong[[1]] # making the extracted model outputs into a dataset (for plotting)
-# [[1]] is to extract the first term in the model which in our case is population
+rich_elong_data <- rich_elong[[1]] # making the extracted model outputs into a dataset (for plotting)
+# [[1]] is to extract the first term in the model which in our case is population
 
 (ric_elong_plot <-ggplot(rich_elong_data) +
     geom_violin(data = max_elong_cg_rich, aes(x = population, y = log(max_stem_elong), fill = population, colour = population),
