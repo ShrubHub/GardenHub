@@ -671,30 +671,30 @@ colnames(ggpred_biovol_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
 
 # DATA VISUALISATION -----
 # color palette for garden only
-pal_garden <- c("#440154FF", "#7AD151FF")
+# pal_garden <- c("#440154FF", "#7AD151FF")
 
-theme_shrub <- function(){ theme(legend.position = "right",
-                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
-                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 270), 
-                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
-                                 axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
-                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
-                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
-                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
-                                 legend.title=element_text(size=16, family = "Helvetica Light"),
-                                 legend.text=element_text(size = 15, family = "Helvetica Light"))}
-
-theme_shrub_e <- function(){ theme(legend.position = "right",
-                                axis.title.x = element_text(size=18),
-                                axis.text.x  = element_text(angle = 35, vjust=0.5, size=14, colour = "black"), 
-                                axis.title.y = element_text(size=18),
-                                axis.text.y  = element_text(vjust=0.5, size=14, colour = "black"),
-                                panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
-                                panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
-                                panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                plot.title = element_text(color = "black", size = 16, face = "bold", hjust = 0.5),
-                                plot.margin = unit(c(1,1,1,1), units = , "cm"))}
+# theme_shrub <- function(){ theme(legend.position = "right",
+#                                  axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
+#                                  axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 270), 
+#                                  axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
+#                                  axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
+#                                  panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
+#                                  panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
+#                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+#                                  plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
+#                                  legend.title=element_text(size=16, family = "Helvetica Light"),
+#                                  legend.text=element_text(size = 15, family = "Helvetica Light"))}
+# 
+# theme_shrub_e <- function(){ theme(legend.position = "right",
+#                                 axis.title.x = element_text(size=18),
+#                                 axis.text.x  = element_text(angle = 35, vjust=0.5, size=14, colour = "black"), 
+#                                 axis.title.y = element_text(size=18),
+#                                 axis.text.y  = element_text(vjust=0.5, size=14, colour = "black"),
+#                                 panel.grid.major.x=element_blank(), panel.grid.minor.x=element_blank(), 
+#                                 panel.grid.minor.y=element_blank(), panel.grid.major.y=element_blank(), 
+#                                 panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+#                                 plot.title = element_text(color = "black", size = 16, face = "bold", hjust = 0.5),
+#                                 plot.margin = unit(c(1,1,1,1), units = , "cm"))}
 
 # reorder levels to be consistent
 
