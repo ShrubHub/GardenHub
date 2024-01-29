@@ -867,7 +867,7 @@ unique_source_mother_arctica$Site <- ordered(unique_source_mother_arctica$Site,
                                 common.legend = TRUE, legend = "bottom",
                                 ncol = 3, nrow = 1))
 ggsave(source_growth_heights_plots, filename ="output/figures/source_growth_heights_plots.png", 
-       width = 14.67, height = 6.53, units = "in")
+       width = 12, height = 6., units = "in", device = png)
 
 
 # WIDTH -----
@@ -946,7 +946,7 @@ arc_source_width.pred$Site <- ordered(arc_source_width.pred$Site,
                                           common.legend = TRUE, legend = "bottom",
                                           ncol = 3, nrow = 1))
 ggsave(source_growth_width_plots, filename ="output/figures/source_growth_width_plot.png", 
-       width = 14.67, height = 6.53, units = "in")
+       width = 12, height = 6, units = "in", device = png)
 
 (source_size_panel <- ggarrange(source_growth_heights_plots, source_growth_width_plots, 
                              common.legend = TRUE, legend = "bottom",

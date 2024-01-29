@@ -640,7 +640,7 @@ all_stem_elong_summ_back <- all_stem_elong_summ %>%
   dplyr::rename("Upper 95% CI (log)" = "u_95_CI_log")
 
 write.csv(all_stem_elong_summ_back, "outputs/tables/all_stem_elong_time_output.csv")
-
+all_stem_elong_summ_back <- read.csv("outputs/tables/all_stem_elong_time_output.csv")
 
 # BIOVOLUME 2023 ----
 # S. richardsonii biovolume ----
