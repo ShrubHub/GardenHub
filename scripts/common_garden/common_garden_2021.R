@@ -210,6 +210,6 @@ data2017 <- data %>% filter(Year == 2017)
           axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 12, colour = "black"),
           axis.text.y = element_text(size = 12, colour = "black")))
 
-trait_plot <- grid.arrange(plot_height, plot_LA, plot_Leaf_mass, plot_SLA, ncol=2)
+trait_plot <- grid.arrange(plot_height, plot_LA, plot_Leaf_mass, plot_SLA, ncol = 2)
 
 ggsave("scripts/common_garden/common_garden_figures/common_garden_trait_data.png", width = 28, height = 20, units = "cm", dpi = 100, plot = trait_plot)

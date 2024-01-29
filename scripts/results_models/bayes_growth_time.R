@@ -14,6 +14,8 @@ library(ggeffects)
 #all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv") # 2022 data 
 all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv") # 2023 data
 
+ 
+
 # 1. scale function =====
 # centering with 'scale()'
 center_scale <- function(x) {

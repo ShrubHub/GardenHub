@@ -313,3 +313,4 @@ cg_2023 <- all_data_2023 %>%
           axis.title = element_text(size = 18),
           axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
           axis.text.y = element_text(size = 15, colour = "black")))
+
