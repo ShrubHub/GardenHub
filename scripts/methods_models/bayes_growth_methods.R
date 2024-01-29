@@ -783,6 +783,13 @@ theme_shrub <- function(){ theme(legend.position = "bottom",
 # S.rich ----
 colnames(rich_source_height.pred) = c('Site','fit', 'lwr', 'upr')
 
+rich_source_height.pred$Site <- ordered(rich_source_height.pred$Site,
+                                           levels = c("Qikiqtaruk",
+                                                      "Kluane"))
+unique_source_mother_rich$Site <- ordered(unique_source_mother_rich$Site,
+                                        levels = c("Qikiqtaruk",
+                                                   "Kluane"))
+
 (rich_source_height_plot <-ggplot(rich_source_height.pred) +
     geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = Canopy_Height_cm, colour = Site),
                 alpha = 0.3, position = position_jitter(w = 0.09, h = 0), shape = 17)+
@@ -791,16 +798,23 @@ colnames(rich_source_height.pred) = c('Site','fit', 'lwr', 'upr')
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_garden, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
     scale_y_continuous(breaks = seq(0, 200, by = 25)) +
     theme_shrub()+
     theme(axis.text.x  = element_blank(), 
           axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern','Southern'))+
+    scale_x_discrete(labels = c('Northern', 'Southern'))+
     ggtitle(expression(italic("Salix richardsonii"))))
 
 # S. pul----
 colnames(pul_source_height.pred) = c('Site','fit', 'lwr', 'upr')
+
+pul_source_height.pred$Site <- ordered(pul_source_height.pred$Site,
+                                        levels = c("Qikiqtaruk",
+                                                   "Kluane"))
+unique_source_mother_pulchra$Site <- ordered(unique_source_mother_pulchra$Site,
+                                          levels = c("Qikiqtaruk",
+                                                     "Kluane"))
 
 (pul_source_height_plot <-ggplot(pul_source_height.pred) +
     geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = Canopy_Height_cm, colour = Site),
@@ -810,20 +824,27 @@ colnames(pul_source_height.pred) = c('Site','fit', 'lwr', 'upr')
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_garden, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
     scale_y_continuous(limits = c(0, 210), breaks = seq(0, 210, by = 30)) +
     theme_shrub()+
     theme(axis.text.x  = element_blank(), 
           axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern','Southern'))+
+    scale_x_discrete(labels = c('Northern', 'Southern'))+
     ggtitle(expression(italic("Salix pulchra"))))
 
 # S.arctica -----
 colnames(arc_source_height.pred) = c('Site','fit', 'lwr', 'upr')
 
-arc_source_height.pred$Site <- plyr::revalue(arc_source_height.pred$Site ,
-                                                   c("Qikiqtaruk"="N. Source",
-                                                     "Kluane"="S. Source"))
+# arc_source_height.pred$Site <- plyr::revalue(arc_source_height.pred$Site ,
+#                                                    c("Qikiqtaruk"="N. Source",
+#                                                      "Kluane"="S. Source"))
+
+arc_source_height.pred$Site <- ordered(arc_source_height.pred$Site,
+                                       levels = c("Qikiqtaruk",
+                                                  "Kluane"))
+unique_source_mother_arctica$Site <- ordered(unique_source_mother_arctica$Site,
+                                             levels = c("Qikiqtaruk",
+                                                        "Kluane"))
 
 (arc_source_height_plot <-ggplot(arc_source_height.pred) +
     geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = Canopy_Height_cm, colour = Site),
@@ -833,7 +854,7 @@ arc_source_height.pred$Site <- plyr::revalue(arc_source_height.pred$Site ,
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_garden, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
     scale_y_continuous(limits = c(0, 25), breaks = seq(0, 25, by = 5)) +
     theme_shrub()+
     theme(axis.text.x  = element_blank(), 
@@ -853,6 +874,10 @@ ggsave(source_growth_heights_plots, filename ="output/figures/source_growth_heig
 # S.rich ----
 colnames(rich_source_width.pred) = c('Site','fit', 'lwr', 'upr')
 
+rich_source_width.pred$Site <- ordered(rich_source_width.pred$Site,
+                                       levels = c("Qikiqtaruk",
+                                                  "Kluane"))
+
 (rich_source_width_plot <-ggplot(rich_source_width.pred) +
     geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = mean_width, colour = Site),
                 alpha = 0.3, position = position_jitter(w = 0.09, h = 0), shape = 17)+
@@ -870,6 +895,10 @@ colnames(rich_source_width.pred) = c('Site','fit', 'lwr', 'upr')
 
 # S. pul----
 colnames(pul_source_width.pred) = c('Site','fit', 'lwr', 'upr')
+
+pul_source_width.pred$Site <- ordered(pul_source_width.pred$Site,
+                                       levels = c("Qikiqtaruk",
+                                                  "Kluane"))
 
 (pul_source_width_plot <-ggplot(pul_source_width.pred) +
     geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = mean_width, colour = Site),
@@ -889,9 +918,13 @@ colnames(pul_source_width.pred) = c('Site','fit', 'lwr', 'upr')
 # S.arctica -----
 colnames(arc_source_width.pred) = c('Site','fit', 'lwr', 'upr')
 
-unique_source_mother_arctica$Site <- plyr::revalue(unique_source_mother_arctica$Site ,
-                                            c("Qikiqtaruk"="N. Source",
-                                              "Kluane"="S. Source"))
+arc_source_width.pred$Site <- plyr::revalue(arc_source_width.pred$Site ,
+                                                   c("N. Source" = "Qikiqtaruk",
+                                                     "S. Source"="Kluane"))
+
+arc_source_width.pred$Site <- ordered(arc_source_width.pred$Site,
+                                      levels = c("Qikiqtaruk",
+                                                 "Kluane"))
 
 (arc_source_width_plot <-ggplot(arc_source_width.pred) +
     geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = mean_width, colour = Site),
