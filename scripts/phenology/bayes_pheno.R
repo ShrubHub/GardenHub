@@ -942,7 +942,7 @@ summary(growing_season_rich_scale)
 plot(growing_season_rich_scale)
 pp_check(growing_season_rich_scale, type = "dens_overlay", ndraws = 100) # looks decent
 saveRDS(growing_season_rich_scale, file = "output/phenology/garden_ric_growing_compare.rds")
-growing_season_rich_scale<- readRDS(file = "output/phenology/garden_ric_growing_compare.rds")
+growing_season_rich_scale <- readRDS(file = "output/phenology/garden_ric_growing_compare.rds")
 
 # extract output with function
 rich_season_results <- model_summ_pheno_no_rf(growing_season_rich_scale)
@@ -1008,7 +1008,7 @@ summary(growing_season_pul_scaled) #
 plot(growing_season_pul_scaled)
 pp_check(growing_season_pul_scaled, type = "dens_overlay", ndraws = 100) # looks decent
 saveRDS(growing_season_pul_scaled, file = "output/phenology/garden_pul_growing_compare.rds")
-growing_season_pul_scaled<- readRDS(file = "output/phenology/garden_pul_growing_compare.rds")
+growing_season_pul_scaled <- readRDS(file = "output/phenology/garden_pul_growing_compare.rds")
 
 # extract output with function
 pul_season_results <- model_summ_pheno(growing_season_pul_scaled)
@@ -1074,7 +1074,7 @@ summary(growing_season_arc_scaled) #
 plot(growing_season_arc_scaled)
 pp_check(growing_season_arc_scaled, type = "dens_overlay", ndraws = 100) # looks decent
 saveRDS(growing_season_arc_scaled, file = "output/phenology/garden_arc_growing_compare.rds")
-growing_season_arc_scaled<- readRDS(file = "output/phenology/garden_arc_growing_compare.rds")
+growing_season_arc_scaled <- readRDS(file = "output/phenology/garden_arc_growing_compare.rds")
 
 # extract output with function
 arc_season_results <- model_summ_pheno(growing_season_arc_scaled)
@@ -1450,6 +1450,9 @@ all_pheno_fig_raw$population <- ordered(all_pheno_fig_raw$population,
                                                    "S. Source"))
 
 
+write.csv(all_pheno_fig_pred, "data/phenology/all_pheno_fig_pred.csv")
+write.csv(all_pheno_fig_raw, "data/phenology/all_pheno_fig_raw.csv")
+
 (facet_pheno_plot <-ggplot(all_pheno_fig_pred) + # model predictions
    geom_point(data = all_pheno_fig_raw, aes(y = group_color, x = DOY, colour = group_color, shape = group_shape),
               alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
@@ -1482,7 +1485,7 @@ all_pheno_fig_raw$population <- ordered(all_pheno_fig_raw$population,
                       colour = group_color, shape = group_shape),
                   size = 1, alpha = 1, width=0.4) +
     xlab("\n Day of year") +
-    ylab("\n \n") +
+    ylab("") +
    geom_line(aes(x = Estimate_trans , y = population, colour = group_color, linetype = group_shape), 
               linewidth = 1, alpha = 1)+
     scale_color_manual(values=pal_garden, guide = "none") +
@@ -1491,11 +1494,10 @@ all_pheno_fig_raw$population <- ordered(all_pheno_fig_raw$population,
     scale_shape_manual(values = shapes_garden)+
     scale_linetype_manual(values = lines_garden, guide = "none")+
     scale_y_discrete(drop=FALSE,
-                     labels=c('N garden','N source', '', 'S garden','S source'), expand=c(0.2, 0.2)) +
+                     labels=c('', '\n \n \n North', "", "", '\n \n South'), expand=c(0.2, 0.2)) +
     facet_grid(~Species, scales = "free_x", drop=T) +
     theme_shrub()+ 
     theme(legend.background=element_blank(), legend.key=element_blank(), 
-          axis.text.y = element_blank(),
           legend.position = "bottom", 
           axis.ticks.y = element_blank())+
     guides(shape=guide_legend(title = "Location")))
@@ -1505,7 +1507,7 @@ all_pheno_fig_raw$population <- ordered(all_pheno_fig_raw$population,
   #geom_vline(data=filter(all_pheno_fig_pred, Species=="Salix arctica"), aes(xintercept=125), linetype ="dashed") +
   
 
-ggsave("figures/pheno_panel.png", height = 12, width = 18, unit = "cm", dpi = 500, device = png)
+ggsave("output/figures/pheno_panel.png",  height = 5, width = 12, unit = "in", dpi = 500, device = png)
 
 
 
