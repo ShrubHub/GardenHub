@@ -1454,30 +1454,6 @@ write.csv(all_pheno_fig_pred, "data/phenology/all_pheno_fig_pred.csv")
 write.csv(all_pheno_fig_raw, "data/phenology/all_pheno_fig_raw.csv")
 
 (facet_pheno_plot <-ggplot(all_pheno_fig_pred) + # model predictions
-   geom_point(data = all_pheno_fig_raw, aes(y = group_color, x = DOY, colour = group_color, shape = group_shape),
-              alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
-   geom_point(aes(x = Estimate_trans, y = group_color, shape = group_shape, color = group_color), size = 6, position = position_dodge(width = 0.75))+
-   geom_errorbar(aes(xmin = CI_low_trans, xmax = CI_high_trans, y = group_color, 
-                     colour = group_color, shape = group_shape), position = position_dodge(width = 0.75),
-                 size = 1, alpha = 1, width=0.4) +
-   xlab("\n Day of year") +
-   geom_line(aes(x = Estimate_trans , y = group_color, colour = group_color, linetype = group_shape), 
-             linewidth = 1, alpha = 1, position = position_dodge(width = 1))+
-   scale_color_manual(values=pal_garden, guide = "none") +
-   scale_fill_manual(values=pal_garden, guide = "none") +
-   scale_x_continuous(limits = c(110, 240), breaks = seq(110, 240, by = 30)) +
-    scale_y_discrete(drop=FALSE,
-                     labels=c('N garden','N source', '', 'S garden','S source')) +
-   scale_shape_manual(values = shapes_garden, guide = "none")+
-   scale_linetype_manual(values = lines_garden, guide = "none")+
-   facet_grid(~Species, scales = "free_x") +
-   theme_shrub()+ 
-   theme(legend.background=element_blank(), legend.key=element_blank(), 
-         axis.title.y = element_blank(), 
-         legend.position = "none")+
-   guides(shape=guide_legend(title = "Location")))
-
-(facet_pheno_plot <-ggplot(all_pheno_fig_pred) + # model predictions
     geom_point(data = all_pheno_fig_raw, aes(y = population, x = DOY, colour = group_color, shape = group_shape),
                 alpha = 0.5, position = position_jitter(h = 0.2)) + # raw data
     geom_point(aes(x = Estimate_trans, y = population, shape = group_shape, color = group_color), size = 6)+
@@ -1510,7 +1486,57 @@ write.csv(all_pheno_fig_raw, "data/phenology/all_pheno_fig_raw.csv")
 ggsave("output/figures/pheno_panel.png",  height = 5, width = 12, unit = "in", dpi = 500, device = png)
 
 
+(facet_presen_plot1 <-ggplot(all_pheno_fig_pred) + # model predictions
+    geom_point(aes(x = Estimate_trans, y = population, shape = group_shape, color = group_color), size = 4)+
+    geom_errorbar(aes(xmin = CI_low_trans, xmax = CI_high_trans, y = population, 
+                      colour = group_color, shape = group_shape),
+                  size = 1, alpha = 1, width=0.4) +
+    xlab("\n Day of year") +
+    ylab("") +
+    scale_color_manual(values=pal_garden, guide = "none") +
+    scale_fill_manual(values=pal_garden, guide = "none") +
+    scale_x_continuous(limits = c(110, 240), breaks = seq(110, 240, by = 30)) +
+    scale_shape_manual(values = shapes_garden)+
+    scale_linetype_manual(values = lines_garden, guide = "none")+
+    scale_y_discrete(drop=FALSE,
+                     labels=c('', '\n \n \n North', "", "", '\n \n South'), expand=c(0.2, 0.2)) +
+    facet_grid(~Species, scales = "free_x", drop=T) +
+    theme_shrub()+ 
+    theme(legend.background=element_blank(), legend.key=element_blank(), 
+          legend.position = "bottom", 
+          axis.ticks.y = element_blank())+
+    guides(shape=guide_legend(title = "Location")))
 
+ggsave("output/figures/pheno_panel_pres1.png",  height = 5, width = 12, unit = "in", dpi = 500, device = png)
+
+(facet_presen_plot2 <-ggplot(all_pheno_fig_pred) + # model predictions
+    geom_point(aes(x = Estimate_trans, y = population, shape = group_shape, color = group_color), size = 4)+
+    geom_errorbar(aes(xmin = CI_low_trans, xmax = CI_high_trans, y = population, 
+                      colour = group_color, shape = group_shape),
+                  size = 1, alpha = 1, width=0.4) +
+    xlab("\n Day of year") +
+    ylab("") +
+    geom_line(aes(x = Estimate_trans , y = population, colour = group_color, linetype = group_shape), 
+              linewidth = 1, alpha = 1)+
+    scale_color_manual(values=pal_garden, guide = "none") +
+    scale_fill_manual(values=pal_garden, guide = "none") +
+    scale_x_continuous(limits = c(110, 240), breaks = seq(110, 240, by = 30)) +
+    scale_shape_manual(values = shapes_garden)+
+    scale_linetype_manual(values = lines_garden, guide = "none")+
+    scale_y_discrete(drop=FALSE,
+                     labels=c('', '\n \n \n North', "", "", '\n \n South'), expand=c(0.2, 0.2)) +
+    facet_grid(~Species, scales = "free_x", drop=T) +
+    theme_shrub()+ 
+    theme(legend.background=element_blank(), legend.key=element_blank(), 
+          legend.position = "bottom", 
+          axis.ticks.y = element_blank())+
+    guides(shape=guide_legend(title = "Location")))
+
+ggsave("output/figures/pheno_panel_pres2.png",  height = 5, width = 12, unit = "in", dpi = 500, device = png)
+
+
+
+# old species specific plots: 
 (rich_emerg_yellow_plot_scaled <-ggplot(richard_emerg_yellow) +
     geom_point(data = all_phenocam_rich_all, aes(x =DOY , y =population , colour = population),
                alpha = 0.2)+
