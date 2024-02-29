@@ -1463,20 +1463,20 @@ write.csv(stem_elong_out_back, "output/garden_stem_elong_out_back.csv")
 # pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#35b779")
 
 theme_shrub <- function(){ theme(legend.position = "bottom",
-                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=16),
-                                 axis.text.x  = element_text(vjust=0.5, size=16, family = "Helvetica Light", colour = "black", angle = 270), 
-                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=16),
-                                 axis.text.y  = element_text(vjust=0.5, size=16, family = "Helvetica Light", colour = "black"),
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=14),
+                                 axis.text.x  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black", angle = 270), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=14),
+                                 axis.text.y  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y = element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
                                  plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
-                                 legend.title = element_text(size=16, family = "Helvetica Light"),
+                                 legend.title = element_text(size=14, family = "Helvetica Light"),
                                  legend.key=element_blank(),
                                  strip.text.x = element_text(
                                    size = 15, color = "black", face = "italic", family = "Helvetica Light"),
                                  strip.background = element_blank(),
-                                 legend.text=element_text(size = 15, family = "Helvetica Light"))}
+                                 legend.text=element_text(size = 12, family = "Helvetica Light"))}
 
 # make dataframe to plot ----
 # merge all richardsonii SLA, LDMC, LA outputs 
@@ -1567,6 +1567,8 @@ la_area_traits$population <- ordered(la_area_traits$population,
                                                    "N. Garden", 
                                                    "S. Source",  
                                                    "S. Garden"))
+write.csv(all_raw_traits_fig, "data/traits/all_raw_traits_fig.csv")
+
 
 # leaf length 
 colnames(rich_LL.pred) = c('population','fit', 'lwr', 'upr')
@@ -1621,6 +1623,7 @@ length_predictions$Species <- ordered(length_predictions$Species,
                                                   "Salix pulchra",
                                                   "Salix arctica"))
 
+
 # SLA FACET ----
 sla_predictions <- trait_predictions %>% 
   filter(trait == "SLA")
@@ -1638,6 +1641,14 @@ all_raw_traits_fig$population <- ordered(all_raw_traits_fig$population,
                                                       "S. Source",  
                                                       "S. Garden"))
 
+all_raw_traits_fig$group_shape <- ordered(all_raw_traits_fig$group_shape, 
+                                         levels = c("source", 
+                                                    "garden"))
+
+sla_predictions_wide$group_shape <- ordered(sla_predictions_wide$group_shape, 
+                                            levels = c("source", 
+                                                       "garden"))
+
 sla_predictions_wide$Species <- ordered(sla_predictions_wide$Species, 
                                            levels = c("Salix richardsonii", 
                                                       "Salix pulchra",
@@ -1645,56 +1656,39 @@ sla_predictions_wide$Species <- ordered(sla_predictions_wide$Species,
 
 pal_garden <- c("#332288", "#7ad151")
 pal_garden_traits <- c("#000080", "#2424a4",  "#61AA3E", "#83ba68")
-pal_garden_traits <- c("#000080", "red",  "#61AA3E", "black")
 
 names(pal_garden_traits) <- levels(sla_predictions_wide$population)                                                    # linking factor names to the colours
 names(pal_garden_traits) <- levels(all_raw_traits_fig$population)                                                    # linking factor names to the colours
 
-shapes_garden <- c(16, 17)
+shapes_garden <- c(17, 16)
 
-(sla_facet_plot <-ggplot(sla_predictions_wide) + # model predictions
-    geom_point(data = all_raw_traits_fig, aes(x = population, y = SLA, colour = group_color, shape = group_shape),
-               alpha = 0.5, position = position_jitter(w = 0.09, h = 0)) + # raw data
-    geom_point(aes(x = population, y = fit, shape = group_shape, color = group_color), size = 6)+
-    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = group_color),
-                  size = 1, alpha = 1, width=0.75) +
-    ylab(expression(atop("Specific Leaf Area", paste("(",mm^{2}," ",mg^{-1},")"))))+
-    xlab("" ) +
-    scale_color_manual(values=pal_garden) +
-    scale_fill_manual(values=pal_garden) +
-    coord_cartesian(ylim=c(5, 25)) +
-    scale_shape_manual(values = shapes_garden)+
-    facet_wrap(~Species) +
-    #scale_x_discrete(breaks = levels(sla_predictions_wide$population),
-    #               limits = c(levels(sla_predictions_wide$population)[1], "skip", levels(sla_predictions_wide$population)[-1]))+
-    theme_shrub()+
-    theme(axis.title.y = element_text(margin = margin (r = 10))))
-
-# (sla_simple_facet_plot <-ggplot(sla_predictions_wide) + # model predictions
-#     geom_jitter(data = all_raw_traits_fig, aes(x = population, y = SLA, colour = population, shape = group_shape),
-#                  alpha = 0.5) + # raw data
-#     geom_point(aes(x = population, y = fit, shape = group_shape, color = population), size = 6)+
-#     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population, shape = group_shape),
+# (sla_facet_plot <-ggplot(sla_predictions_wide) + # model predictions
+#     geom_point(data = all_raw_traits_fig, aes(x = population, y = SLA, colour = group_color, shape = group_shape),
+#                alpha = 0.5, position = position_jitter(w = 0.09, h = 0)) + # raw data
+#     geom_point(aes(x = population, y = fit, shape = group_shape, color = group_color), size = 6)+
+#     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = group_color),
 #                   size = 1, alpha = 1, width=0.75) +
-#     ylab(expression(atop("Specific leaf", paste("area (",mm^{2}," ",mg^{-1},")"))))+
-#     #xlab("" ) +
-#     scale_color_manual(values=pal_garden_traits, guide = "none") +
-#     scale_fill_manual(values=pal_garden_traits) +
+#     ylab(expression(atop("Specific Leaf Area", paste("(",mm^{2}," ",mg^{-1},")"))))+
+#     xlab("" ) +
+#     scale_color_manual(values=pal_garden) +
+#     scale_fill_manual(values=pal_garden) +
 #     coord_cartesian(ylim=c(5, 25)) +
 #     scale_shape_manual(values = shapes_garden)+
 #     facet_wrap(~Species) +
-#     theme_shrub()+ 
-#     theme(legend.background=element_blank(), legend.key=element_blank())+
-#     guides(shape=guide_legend(title = "Location")) +
-#     theme()+
+#     #scale_x_discrete(breaks = levels(sla_predictions_wide$population),
+#     #               limits = c(levels(sla_predictions_wide$population)[1], "skip", levels(sla_predictions_wide$population)[-1]))+
+#     theme_shrub()+
 #     theme(axis.title.y = element_text(margin = margin (r = 10))))
 
 (sla_simple_facet_plot <-ggplot(sla_predictions_wide) + # model predictions
-    geom_jitter(data = all_raw_traits_fig, aes(x = group_color, y = SLA, colour = group_color, shape = group_shape),
+    geom_jitter(data = all_raw_traits_fig, aes(x = group_color, y = SLA, 
+                                               colour = group_color, shape = group_shape),
                 alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
-    geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), position = position_dodge(width = 0.75), size = 6)+
-    geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, shape = group_shape),
-                  size = 1, alpha = 1, width=0.75, position = position_dodge(width = 0.75)) +
+    geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
+               position = position_dodge(width = 0.75), size = 5)+
+    geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, 
+                      shape = group_shape),
+                  size = 1, alpha = 1, width=0.5, position = position_dodge(width = 0.75)) +
     ylab(expression(atop("Specific leaf", paste("area (",mm^{2}," ",mg^{-1},")"))))+
     xlab("" ) +
     scale_color_manual(values=pal_garden, guide = "none") +
@@ -1722,31 +1716,36 @@ ldmc_predictions_wide$Species <- ordered(ldmc_predictions_wide$Species,
                                         levels = c("Salix richardsonii", 
                                                    "Salix pulchra",
                                                    "Salix arctica"))
+ldmc_predictions_wide$group_shape <- ordered(ldmc_predictions_wide$group_shape, 
+                                            levels = c("source", 
+                                                       "garden"))
 
-(lmdc_facet_plot <-ggplot(ldmc_predictions_wide) + # model predictions
-    geom_point(data = all_raw_traits_fig, aes(x = population, y = LDMC_percent, colour = group_color, shape = group_shape),
-               alpha = 0.5, position = position_jitter(w = 0.09, h = 0)) + # raw data
-    geom_point(aes(x = population, y = fit, shape = group_shape, color = group_color), size = 6)+
-    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = group_color),
-                  size = 1, alpha = 1, width=0.75) +
-    ylab(expression(atop("Leaf dry matter content", paste("(%)"))))+
-    xlab("" ) +
-    scale_color_manual(values=pal_garden) +
-    scale_fill_manual(values=pal_garden) +
-    coord_cartesian(ylim=c(15, 65)) +
-    scale_shape_manual(values = shapes_garden)+
-    facet_wrap(~Species) +
-    #scale_x_discrete(breaks = levels(sla_predictions_wide$population),
-    #               limits = c(levels(sla_predictions_wide$population)[1], "skip", levels(sla_predictions_wide$population)[-1]))+
-    theme_shrub()+
-    theme(axis.title.y = element_text(margin = margin (r = 10))))
+# (lmdc_facet_plot <-ggplot(ldmc_predictions_wide) + # model predictions
+#     geom_point(data = all_raw_traits_fig, aes(x = population, y = LDMC_percent, colour = group_color, shape = group_shape),
+#                alpha = 0.5, position = position_jitter(w = 0.09, h = 0)) + # raw data
+#     geom_point(aes(x = population, y = fit, shape = group_shape, color = group_color), size = 6)+
+#     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = group_color),
+#                   size = 1, alpha = 1, width=0.75) +
+#     ylab(expression(atop("Leaf dry matter content", paste("(%)"))))+
+#     xlab("" ) +
+#     scale_color_manual(values=pal_garden) +
+#     scale_fill_manual(values=pal_garden) +
+#     coord_cartesian(ylim=c(15, 65)) +
+#     scale_shape_manual(values = shapes_garden)+
+#     facet_wrap(~Species) +
+#     #scale_x_discrete(breaks = levels(sla_predictions_wide$population),
+#     #               limits = c(levels(sla_predictions_wide$population)[1], "skip", levels(sla_predictions_wide$population)[-1]))+
+#     theme_shrub()+
+#     theme(axis.title.y = element_text(margin = margin (r = 10))))
 
 (ldmc_simple_facet_plot <-ggplot(ldmc_predictions_wide) + # model predictions
-    geom_jitter(data = all_raw_traits_fig, aes(x = group_color, y = LDMC_percent, colour = group_color, shape = group_shape),
+    geom_jitter(data = all_raw_traits_fig, aes(x = group_color, y = LDMC_percent, 
+                                colour = group_color, shape = group_shape),
                 alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
-    geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), position = position_dodge(width = 0.75), size = 6)+
+    geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
+               position = position_dodge(width = 0.75), size = 5)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, shape = group_shape),
-                  size = 1, alpha = 1, width=0.75, position = position_dodge(width = 0.75)) +
+                  size = 1, alpha = 1, width=0.5, position = position_dodge(width = 0.75)) +
     ylab(expression(atop("Leaf dry matter", paste(" content (%)"))))+
     xlab("" ) +
     scale_color_manual(values=pal_garden, guide = "none") +
@@ -1761,20 +1760,6 @@ ldmc_predictions_wide$Species <- ordered(ldmc_predictions_wide$Species,
           strip.text.x = element_blank())+
     theme(axis.title.y = element_text(margin = margin (r = 10))))
 
-# (ldmc_facet_plot <-ggplot(ldmc_predictions_wide) +
-#     geom_point(data = all_raw_traits_fig, aes(x = population, y = LDMC_percent, colour = population),
-#                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
-#     geom_point(aes(x = population, y = fit, colour = population), size = 6)+
-#     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
-#                   size = 1, alpha = 1, width=0.75) +
-#     #    ylab(expression(paste("Leaf dry matter content (%)"))) +
-#     ylab(expression(atop("Leaf dry matter content", paste("(%)"))))+
-#     xlab("" ) +
-#     coord_cartesian(ylim=c(15, 65)) +
-#     scale_color_manual(values=pal) +
-#     facet_wrap(~Species) +
-#     theme_shrub()+ 
-#     theme(axis.title.y = element_text(margin = margin (r = 10))))
 
 # LA facet ----
 la_predictions <- trait_predictions %>% 
@@ -1790,7 +1775,12 @@ la_predictions_wide$Species <- ordered(la_predictions_wide$Species,
                                          levels = c("Salix richardsonii", 
                                                     "Salix pulchra",
                                                     "Salix arctica"))
-
+la_predictions_wide$group_shape <- ordered(la_predictions_wide$group_shape, 
+                                             levels = c("source", 
+                                                        "garden"))
+la_area_traits$group_shape <- ordered(la_area_traits$group_shape, 
+                                      levels = c("source", 
+                                                 "garden"))
 # (la_facet_plot <-ggplot(la_predictions_wide) +
 #     geom_point(data = la_area_traits, aes(x = population, y = LA_cm2, colour = population),
 #                alpha = 0.5, position = position_jitter(w = 0.09, h = 0))+ # raw data
@@ -1810,30 +1800,32 @@ la_predictions_wide$Species <- ordered(la_predictions_wide$Species,
 #     theme_shrub()+ 
 #     theme(axis.title.y = element_text(margin = margin (r = 10))))
 
-(la_facet_plot <-ggplot(la_predictions_wide) + # model predictions
-    geom_point(data = la_area_traits, aes(x = population, y = LA_cm2, colour = group_color, shape = group_shape),
-               alpha = 0.5, position = position_jitter(w = 0.09, h = 0)) + # raw data
-    geom_point(aes(x = population, y = fit, shape = group_shape, color = group_color), size = 6)+
-    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = group_color),
-                  size = 1, alpha = 1, width=0.75) +
-    ylab(expression(atop("", paste("Leaf Area cm"^"2"))))+
-    xlab("" ) +
-    scale_color_manual(values=pal_garden) +
-    scale_fill_manual(values=pal_garden) +
-    scale_y_continuous(breaks = c(5, 25, 45, 65, 85, 105, 125))+
-    scale_shape_manual(values = shapes_garden)+
-    facet_wrap(~Species) +
-    #scale_x_discrete(breaks = levels(sla_predictions_wide$population),
-    #               limits = c(levels(sla_predictions_wide$population)[1], "skip", levels(sla_predictions_wide$population)[-1]))+
-    theme_shrub()+
-    theme(axis.title.y = element_text(margin = margin (r = 10))))
+# (la_facet_plot <-ggplot(la_predictions_wide) + # model predictions
+#     geom_point(data = la_area_traits, aes(x = population, y = LA_cm2, colour = group_color, shape = group_shape),
+#                alpha = 0.5, position = position_jitter(w = 0.09, h = 0)) + # raw data
+#     geom_point(aes(x = population, y = fit, shape = group_shape, color = group_color), size = 6)+
+#     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = group_color),
+#                   size = 1, alpha = 1, width=0.75) +
+#     ylab(expression(atop("", paste("Leaf Area cm"^"2"))))+
+#     xlab("" ) +
+#     scale_color_manual(values=pal_garden) +
+#     scale_fill_manual(values=pal_garden) +
+#     scale_y_continuous(breaks = c(5, 25, 45, 65, 85, 105, 125))+
+#     scale_shape_manual(values = shapes_garden)+
+#     facet_wrap(~Species) +
+#     #scale_x_discrete(breaks = levels(sla_predictions_wide$population),
+#     #               limits = c(levels(sla_predictions_wide$population)[1], "skip", levels(sla_predictions_wide$population)[-1]))+
+#     theme_shrub()+
+#     theme(axis.title.y = element_text(margin = margin (r = 10))))
 
 (la_simple_facet_plot <-ggplot(la_predictions_wide) + # model predictions
-    geom_jitter(data = la_area_traits, aes(x = group_color, y = LA_cm2, colour = group_color, shape = group_shape),
+    geom_jitter(data = la_area_traits, aes(x = group_color, y = LA_cm2, 
+                                           colour = group_color, shape = group_shape),
                 alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
-    geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), position = position_dodge(width = 0.75), size = 6)+
+    geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
+               position = position_dodge(width = 0.75), size = 5)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, shape = group_shape),
-                  size = 1, alpha = 1, width=0.75, position = position_dodge(width = 0.75)) +
+                  size = 1, alpha = 1, width=0.5, position = position_dodge(width = 0.75)) +
     ylab(expression(atop("Leaf area", paste("(cm"^"2)"))))+
     xlab("" ) +
     scale_color_manual(values=pal_garden, guide = "none") +
@@ -1851,12 +1843,21 @@ la_predictions_wide$Species <- ordered(la_predictions_wide$Species,
 # LEAF LENGTH facet ----
 ll_predictions_wide <- pivot_wider(length_predictions, names_from = "type", values_from = "value")
 
+ll_predictions_wide$group_shape <- ordered(ll_predictions_wide$group_shape, 
+                                      levels = c("source", 
+                                                 "garden"))
+leaf_length_raw_fig$group_shape <- ordered(leaf_length_raw_fig$group_shape, 
+                                           levels = c("source", 
+                                                      "garden"))
+
 (ll_simple_facet_plot <-ggplot(ll_predictions_wide) + # model predictions
-    geom_jitter(data = leaf_length_raw_fig, aes(x = group_color, y = mean_leaf_length, colour = group_color, shape = group_shape),
+    geom_jitter(data = leaf_length_raw_fig, aes(x = group_color, y = mean_leaf_length, 
+                                                colour = group_color, shape = group_shape),
                 alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
-    geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), position = position_dodge(width = 0.75), size = 6)+
+    geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
+               position = position_dodge(width = 0.75), size = 5)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, shape = group_shape),
-                  size = 1, alpha = 1, width=0.75, position = position_dodge(width = 0.75)) +
+                  size = 1, alpha = 1, width=0.5, position = position_dodge(width = 0.75)) +
     ylab(expression(atop("Leaf length ", paste("(mm)"))))+
     xlab("" ) +
     scale_color_manual(values=pal_garden, guide = "none") +

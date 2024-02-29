@@ -1179,20 +1179,20 @@ save_kable(kable_season_garden, file = "output/phenology/season__length_results.
 
 # PLOTS ====
 theme_shrub <- function(){ theme(legend.position = "bottom",
-                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
-                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"), 
-                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
-                                 axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=16),
+                                 axis.text.x  = element_text(vjust=0.5, size=16, family = "Helvetica Light", colour = "black"), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=16),
+                                 axis.text.y  = element_text(vjust=0.5, size=16, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y = element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
-                                 legend.title = element_text(size=16, family = "Helvetica Light"),
+                                 plot.title = element_text(color = "black", size = 16, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 legend.title = element_text(size=14, family = "Helvetica Light"),
                                  legend.key=element_blank(),
                                  strip.text.x = element_text(
                                    size = 15, color = "black", face = "italic", family = "Helvetica Light"),
                                  strip.background = element_blank(),
-                                 legend.text=element_text(size = 18, family = "Helvetica Light"))}
+                                 legend.text=element_text(size = 12, family = "Helvetica Light"))}
 
 all_phenocam_rich$population <- ordered(all_phenocam_rich$population, 
                                         levels = c("N. Source", 
@@ -1474,6 +1474,9 @@ all_pheno_fig_raw$shape_stage <- paste(all_pheno_fig_raw$group_shape,all_pheno_f
 write.csv(all_pheno_fig_pred, "data/phenology/all_pheno_fig_pred.csv")
 write.csv(all_pheno_fig_raw, "data/phenology/all_pheno_fig_raw.csv")
 
+all_pheno_fig_pred <- read.csv("data/phenology/all_pheno_fig_pred.csv")
+all_pheno_fig_raw <- read.csv("data/phenology/all_pheno_fig_raw.csv")
+
 (facet_pheno_plot <-ggplot(all_pheno_fig_pred) + # model predictions
     geom_point(data = all_pheno_fig_raw, aes(y = population, x = DOY, colour = group_color, shape = group_shape),
                 alpha = 0.5, position = position_jitter(h = 0.2)) + # raw data
@@ -1508,11 +1511,11 @@ write.csv(all_pheno_fig_raw, "data/phenology/all_pheno_fig_raw.csv")
     geom_point(data = all_pheno_fig_raw, aes(y = DOY, x = population, colour = group_color, 
                                              shape = shape_stage), alpha = 0.5) + # raw data
     geom_point(aes(x = population, y = Estimate_trans, shape = shape_stage, 
-                   color = group_color), size = 6, stroke = 2)+
+                   color = group_color), size = 5, stroke = 2)+
     geom_errorbar(aes(ymin = CI_low_trans, ymax = CI_high_trans, x = population, 
                       colour = group_color),
-                  size = 1, alpha = 1, width=0.4) +
-    ylab("\n Day of year") +
+                  size = 1, alpha = 1, width=0.5) +
+    ylab("Day of year ") +
     xlab("") +
     geom_line(aes(x = population , y = Estimate_trans, colour = group_color), 
               linewidth = 1, alpha = 1)+
