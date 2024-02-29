@@ -65,43 +65,43 @@ summary_pheno <- all_pheno_2023 %>%
   group_by(Species, population) %>% 
   summarise(mean_growing = mean(growing_season, na.rm = T))
 
-# SOURCE POP ONLY species specific datasets -----
-all_phenocam_rich_source <- all_phenocam_rich %>%
-  filter(population %in% c("N. Source", "S. Source"))
-all_phenocam_rich_source$population <- as.character(all_phenocam_rich_source$population)
-all_phenocam_rich_source$population <- as.factor(all_phenocam_rich_source$population)
-unique(all_phenocam_rich_source$population)
+# # SOURCE POP ONLY species specific datasets -----
+# all_phenocam_rich_source <- all_phenocam_rich %>%
+#   filter(population %in% c("N. Source", "S. Source"))
+# all_phenocam_rich_source$population <- as.character(all_phenocam_rich_source$population)
+# all_phenocam_rich_source$population <- as.factor(all_phenocam_rich_source$population)
+# unique(all_phenocam_rich_source$population)
+# 
+# all_phenocam_pul_source <- all_phenocam_pulchra %>%
+#   filter(population %in% c("N. Source", "S. Source"))
+# all_phenocam_pul_source$population <- as.character(all_phenocam_pul_source$population)
+# all_phenocam_pul_source$population <- as.factor(all_phenocam_pul_source$population)
+# unique(all_phenocam_pul_source$population)
+# 
+# all_phenocam_arc_source <- all_phenocam_arctica %>%
+#   filter(population %in% c("N. Source", "S. Source"))
+# all_phenocam_arc_source$population <- as.character(all_phenocam_arc_source$population)
+# all_phenocam_arc_source$population <- as.factor(all_phenocam_arc_source$population)
+# unique(all_phenocam_arc_source$population)
 
-all_phenocam_pul_source <- all_phenocam_pulchra %>%
-  filter(population %in% c("N. Source", "S. Source"))
-all_phenocam_pul_source$population <- as.character(all_phenocam_pul_source$population)
-all_phenocam_pul_source$population <- as.factor(all_phenocam_pul_source$population)
-unique(all_phenocam_pul_source$population)
-
-all_phenocam_arc_source <- all_phenocam_arctica %>%
-  filter(population %in% c("N. Source", "S. Source"))
-all_phenocam_arc_source$population <- as.character(all_phenocam_arc_source$population)
-all_phenocam_arc_source$population <- as.factor(all_phenocam_arc_source$population)
-unique(all_phenocam_arc_source$population)
-
-# CG only species specific data -----
-all_phenocam_rich_garden <- all_phenocam_rich %>% 
-  filter(population %in% c("N. Garden", "S. Garden"))
-all_phenocam_rich_garden$population <- as.character(all_phenocam_rich_garden$population)
-all_phenocam_rich_garden$population <- as.factor(all_phenocam_rich_garden$population)
-unique(all_phenocam_rich_garden$population)
-
-all_phenocam_pul_garden <- all_phenocam_pulchra %>% 
-  filter(population %in% c("N. Garden", "S. Garden"))
-all_phenocam_pul_garden$population <- as.character(all_phenocam_pul_garden$population)
-all_phenocam_pul_garden$population <- as.factor(all_phenocam_pul_garden$population)
-unique(all_phenocam_pul_garden$population)
-
-all_phenocam_arc_garden <- all_phenocam_arctica %>% 
-  filter(population %in% c("N. Garden", "S. Garden"))
-all_phenocam_arc_garden$population <- as.character(all_phenocam_arc_garden$population)
-all_phenocam_arc_garden$population <- as.factor(all_phenocam_arc_garden$population)
-unique(all_phenocam_arc_garden$population)
+# # CG only species specific data -----
+# all_phenocam_rich_garden <- all_phenocam_rich %>% 
+#   filter(population %in% c("N. Garden", "S. Garden"))
+# all_phenocam_rich_garden$population <- as.character(all_phenocam_rich_garden$population)
+# all_phenocam_rich_garden$population <- as.factor(all_phenocam_rich_garden$population)
+# unique(all_phenocam_rich_garden$population)
+# 
+# all_phenocam_pul_garden <- all_phenocam_pulchra %>% 
+#   filter(population %in% c("N. Garden", "S. Garden"))
+# all_phenocam_pul_garden$population <- as.character(all_phenocam_pul_garden$population)
+# all_phenocam_pul_garden$population <- as.factor(all_phenocam_pul_garden$population)
+# unique(all_phenocam_pul_garden$population)
+# 
+# all_phenocam_arc_garden <- all_phenocam_arctica %>% 
+#   filter(population %in% c("N. Garden", "S. Garden"))
+# all_phenocam_arc_garden$population <- as.character(all_phenocam_arc_garden$population)
+# all_phenocam_arc_garden$population <- as.factor(all_phenocam_arc_garden$population)
+# unique(all_phenocam_arc_garden$population)
 
 # exploring variables ------
 hist(all_phenocam_pul_source$First_bud_burst_DOY, breaks=30) # defo not normal
@@ -234,7 +234,7 @@ summary(garden_pul_emerg_compare)
 plot(garden_pul_emerg_compare)
 pp_check(garden_pul_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
 saveRDS(garden_pul_emerg_compare, file = "output/phenology/garden_pul_emerg_compare.rds")
-garden_pul_emerg_compare<- readRDS(file = "output/phenology/garden_pul_emerg_compare.rds")
+garden_pul_emerg_compare <- readRDS(file = "output/phenology/garden_pul_emerg_compare.rds")
 
 # extract output with function
 pul_emerg_results <- model_summ_pheno(garden_pul_emerg_compare)
@@ -300,7 +300,12 @@ summary(garden_arc_emerg_compare)
 plot(garden_arc_emerg_compare)
 pp_check(garden_arc_emerg_compare, type = "dens_overlay", nsamples = 100) # looks good
 saveRDS(garden_arc_emerg_compare, file = "output/phenology/garden_arc_emerg_compare.rds")
-garden_arc_emerg_compare<- readRDS(file = "output/phenology/garden_arc_emerg_compare.rds")
+garden_arc_emerg_compare <- readRDS(file = "output/phenology/garden_arc_emerg_compare.rds")
+
+sum_arc_pheno <- all_phenocam_arctica %>% 
+  dplyr::group_by(population) %>% 
+  summarize(mean_emerg = mean(First_bud_burst_DOY, na.rm = T), 
+            mean_yello = mean(First_leaf_yellow_DOY, na.rm = T))
 
 # extract output with function
 arc_emerg_results <- model_summ_pheno(garden_arc_emerg_compare)
@@ -578,7 +583,7 @@ summary(garden_rich_yellow_compare)
 plot(garden_rich_yellow_compare)
 pp_check(garden_rich_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
 saveRDS(garden_rich_yellow_compare, file = "output/phenology/garden_rich_yellow_compare.rds")
-garden_rich_yellow_compare<- readRDS(file = "output/phenology/garden_rich_yellow_compare.rds")
+garden_rich_yellow_compare <- readRDS(file = "output/phenology/garden_rich_yellow_compare.rds")
 
 # extract output with function
 rich_yellow_results <- model_summ_pheno(garden_rich_yellow_compare)
@@ -645,7 +650,7 @@ summary(garden_pul_yellow_compare)
 plot(garden_pul_yellow_compare)
 pp_check(garden_pul_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
 saveRDS(garden_pul_yellow_compare, file = "output/phenology/garden_pul_yellow_compare.rds")
-garden_pul_yellow_compare<- readRDS(file = "output/phenology/garden_pul_yellow_compare.rds")
+garden_pul_yellow_compare <- readRDS(file = "output/phenology/garden_pul_yellow_compare.rds")
 
 # extract output with function
 pul_yellow_results <- model_summ_pheno(garden_pul_yellow_compare)
@@ -708,11 +713,12 @@ garden_arc_yellow_compare <- brms::brm(First_leaf_yellow_DOY_center ~ population
                                        iter = 3000, warmup = 1000,
                                        control = list(max_treedepth = 15, adapt_delta = 0.99))
 
+
 summary(garden_arc_yellow_compare)
 plot(garden_arc_yellow_compare)
 pp_check(garden_arc_yellow_compare, type = "dens_overlay", ndraws = 100) # looks good
 saveRDS(garden_arc_yellow_compare, file = "output/phenology/garden_arc_yellow_compare.rds")
-garden_arc_yellow_compare<- readRDS(file = "output/phenology/garden_arc_yellow_compare.rds")
+garden_arc_yellow_compare <- readRDS(file = "output/phenology/garden_arc_yellow_compare.rds")
 
 # extract output with function
 arc_yellow_results <- model_summ_pheno(garden_arc_yellow_compare)
@@ -1173,10 +1179,10 @@ save_kable(kable_season_garden, file = "output/phenology/season__length_results.
 
 # PLOTS ====
 theme_shrub <- function(){ theme(legend.position = "bottom",
-                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=16),
-                                 axis.text.x  = element_text(vjust=0.5, size=16, family = "Helvetica Light", colour = "black", angle = 270), 
-                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=16),
-                                 axis.text.y  = element_text(vjust=0.5, size=16, family = "Helvetica Light", colour = "black"),
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y = element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
@@ -1186,7 +1192,7 @@ theme_shrub <- function(){ theme(legend.position = "bottom",
                                  strip.text.x = element_text(
                                    size = 15, color = "black", face = "italic", family = "Helvetica Light"),
                                  strip.background = element_blank(),
-                                 legend.text=element_text(size = 15, family = "Helvetica Light"))}
+                                 legend.text=element_text(size = 18, family = "Helvetica Light"))}
 
 all_phenocam_rich$population <- ordered(all_phenocam_rich$population, 
                                         levels = c("N. Source", 
@@ -1207,8 +1213,6 @@ all_phenocam_arctica$population <- ordered(all_phenocam_arctica$population,
 # pal_garden <- c("#440154FF", "#7AD151FF") # for only garden 
 # pal_arc  <- c("#2A788EFF", "#440154FF", "#7AD151FF") # for when southern source is missing  
 
-pal_garden_pheno <- c("#332288", "#7ad151")
-shapes_garden <- c(16, 17)
 
 # LEAF EMERGENCE prep ----
 # S. richardsonii ------
@@ -1278,101 +1282,114 @@ arctica_yellow_trans <- arc_yellow_data %>%
   dplyr::mutate(Estimate_trans = (estimate__ + m_arc_yellow), 
                 Est.Error_trans = (se__ + m_arc_yellow)) 
 
-# GROWING SEASON season scaled prep ----
-# S. richardsonii -------
-ric_grow <- (conditional_effects(growing_season_rich_scale)) # extracting conditional effects from bayesian model
-ric_grow_data <- ric_grow[[1]] # making the extracted model outputs into a dataset (for plotting)
-
-m_rich_grow <- mean(all_phenocam_rich$growing_season, na.rm = T)
-rich_grow_trans <- ric_grow_data %>% 
-  dplyr::mutate(CI_low_trans = ((lower__) + m_rich_grow)) %>% 
-  dplyr::mutate(CI_high_trans = ((upper__) + m_rich_grow)) %>% 
-  dplyr::mutate(Estimate_trans = (estimate__ + m_rich_grow), 
-                Est.Error_trans = (se__ + m_rich_grow))  
-
-# S. pulchra ----------
-pul_grow_scale <- (conditional_effects(growing_season_pul_scaled)) # extracting conditional effects from bayesian model
-pul_grow_data <- pul_grow_scale[[1]] # making the extracted model outputs into a dataset (for plotting)
-m_pul_grow <- mean(all_phenocam_pulchra$growing_season, na.rm = T)
-pulchra_grow_trans <- pul_grow_data %>% 
-  dplyr::mutate(CI_low_trans = ((lower__) + m_pul_grow)) %>% 
-  dplyr::mutate(CI_high_trans = ((upper__) + m_pul_grow)) %>% 
-  dplyr::mutate(Estimate_trans = (estimate__ + m_pul_grow), 
-                Est.Error_trans = (se__ + m_pul_grow)) 
-
-# S. arctica --------
-arc_grow_scale <- (conditional_effects(growing_season_arc_scaled)) # extracting conditional effects from bayesian model
-arc_grow_data <- arc_grow_scale[[1]] # making the extracted model outputs into a dataset (for plotting)
-
-m_arc_grow <- mean(all_phenocam_arctica$growing_season, na.rm = T)
-arctica_grow_trans <- arc_grow_data %>% 
-  dplyr::mutate(CI_low_trans = ((lower__) + m_arc_grow)) %>% 
-  dplyr::mutate(CI_high_trans = ((upper__) + m_arc_grow)) %>% 
-  dplyr::mutate(Estimate_trans = (estimate__ + m_arc_grow), 
-                Est.Error_trans = (se__ + m_arc_grow)) 
+# GROWING SEASON season scaled prep
+# # S. richardsonii -------
+# ric_grow <- (conditional_effects(growing_season_rich_scale)) # extracting conditional effects from bayesian model
+# ric_grow_data <- ric_grow[[1]] # making the extracted model outputs into a dataset (for plotting)
+# 
+# m_rich_grow <- mean(all_phenocam_rich$growing_season, na.rm = T)
+# rich_grow_trans <- ric_grow_data %>% 
+#   dplyr::mutate(CI_low_trans = ((lower__) + m_rich_grow)) %>% 
+#   dplyr::mutate(CI_high_trans = ((upper__) + m_rich_grow)) %>% 
+#   dplyr::mutate(Estimate_trans = (estimate__ + m_rich_grow), 
+#                 Est.Error_trans = (se__ + m_rich_grow))  
+# 
+# # S. pulchra ----------
+# pul_grow_scale <- (conditional_effects(growing_season_pul_scaled)) # extracting conditional effects from bayesian model
+# pul_grow_data <- pul_grow_scale[[1]] # making the extracted model outputs into a dataset (for plotting)
+# m_pul_grow <- mean(all_phenocam_pulchra$growing_season, na.rm = T)
+# pulchra_grow_trans <- pul_grow_data %>% 
+#   dplyr::mutate(CI_low_trans = ((lower__) + m_pul_grow)) %>% 
+#   dplyr::mutate(CI_high_trans = ((upper__) + m_pul_grow)) %>% 
+#   dplyr::mutate(Estimate_trans = (estimate__ + m_pul_grow), 
+#                 Est.Error_trans = (se__ + m_pul_grow)) 
+# 
+# # S. arctica --------
+# arc_grow_scale <- (conditional_effects(growing_season_arc_scaled)) # extracting conditional effects from bayesian model
+# arc_grow_data <- arc_grow_scale[[1]] # making the extracted model outputs into a dataset (for plotting)
+# 
+# m_arc_grow <- mean(all_phenocam_arctica$growing_season, na.rm = T)
+# arctica_grow_trans <- arc_grow_data %>% 
+#   dplyr::mutate(CI_low_trans = ((lower__) + m_arc_grow)) %>% 
+#   dplyr::mutate(CI_high_trans = ((upper__) + m_arc_grow)) %>% 
+#   dplyr::mutate(Estimate_trans = (estimate__ + m_arc_grow), 
+#                 Est.Error_trans = (se__ + m_arc_grow)) 
 # NEW overall figure-----
 # S.rich ----
 richard_emerg_trans_2 <- richard_emerg_trans %>%
-  dplyr::rename("DOY" = "First_bud_burst_DOY_center")
+  dplyr::rename("DOY" = "First_bud_burst_DOY_center") %>% 
+  dplyr::mutate(stage = "bud_burst")
 
 richard_yellow_trans_2 <- richard_yellow_trans %>%
-  dplyr::rename("DOY" = "First_leaf_yellow_DOY_center")
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY_center") %>% 
+  dplyr::mutate(stage = "yellowing")
 
 richard_emerg_yellow <- rbind(richard_emerg_trans_2,richard_yellow_trans_2)
 all_phenocam_rich_1 <- all_phenocam_rich %>%
   dplyr::rename("DOY" = "First_bud_burst_DOY")%>%
-  dplyr::select(-First_leaf_yellow_DOY) 
+  dplyr::select(-First_leaf_yellow_DOY) %>% 
+  dplyr::mutate(stage = "bud_burst")
 
 all_phenocam_rich_2 <- all_phenocam_rich %>%
   dplyr::rename("DOY" = "First_leaf_yellow_DOY") %>%
-  dplyr::select(-First_bud_burst_DOY)
+  dplyr::select(-First_bud_burst_DOY) %>% 
+  dplyr::mutate(stage = "yellowing")
 
 all_phenocam_rich_all <- rbind(all_phenocam_rich_1, all_phenocam_rich_2)
 all_phenocam_rich_all$Species <- "Salix richardsonii"
 # pulchra 
 
 pul_emerg_trans_1 <-pulchra_emerg_trans %>%
-  dplyr::rename("DOY" = "First_bud_burst_DOY_center")
+  dplyr::rename("DOY" = "First_bud_burst_DOY_center") %>% 
+  dplyr::mutate(stage = "bud_burst")
 
 pul_yellow_trans_2 <- pulchra_yellow_trans %>%
-  dplyr::rename("DOY" = "First_leaf_yellow_DOY_center")
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY_center") %>% 
+  dplyr::mutate(stage = "yellowing")
 
 pul_emerg_yellow <- rbind(pul_yellow_trans_2,pul_emerg_trans_1)
 
 all_phenocam_pul_1 <- all_phenocam_pulchra %>%
   dplyr::rename("DOY" = "First_bud_burst_DOY")%>%
-  dplyr::select(-First_leaf_yellow_DOY) 
+  dplyr::select(-First_leaf_yellow_DOY) %>% 
+  dplyr::mutate(stage = "bud_burst")
 
 all_phenocam_pul_2 <- all_phenocam_pulchra %>%
   dplyr::rename("DOY" = "First_leaf_yellow_DOY") %>%
-  dplyr::select(-First_bud_burst_DOY)
+  dplyr::select(-First_bud_burst_DOY) %>% 
+  dplyr::mutate(stage = "yellowing")
 
 all_phenocam_pul_all <- rbind(all_phenocam_pul_1, all_phenocam_pul_2)
 all_phenocam_pul_all$Species <- "Salix pulchra"
 
 # arctica
 arc_emerg_trans_1 <-arc_emerg_trans %>%
-  dplyr::rename("DOY" = "First_bud_burst_DOY_center")
+  dplyr::rename("DOY" = "First_bud_burst_DOY_center") %>% 
+  dplyr::mutate(stage = "bud_burst")
 
 arc_yellow_trans_2 <- arctica_yellow_trans %>%
-  dplyr::rename("DOY" = "First_leaf_yellow_DOY_center")
+  dplyr::rename("DOY" = "First_leaf_yellow_DOY_center") %>% 
+  dplyr::mutate(stage = "yellowing")
 
 arc_emerg_yellow <- rbind(arc_emerg_trans_1,arc_yellow_trans_2)
 
 all_phenocam_arc_1 <- all_phenocam_arctica %>%
   dplyr::rename("DOY" = "First_bud_burst_DOY")%>%
-  dplyr::select(-First_leaf_yellow_DOY) 
+  dplyr::select(-First_leaf_yellow_DOY) %>% 
+  dplyr::mutate(stage = "bud_burst")
 
 all_phenocam_arc_2 <- all_phenocam_arctica %>%
   dplyr::rename("DOY" = "First_leaf_yellow_DOY") %>%
-  dplyr::select(-First_bud_burst_DOY)
+  dplyr::select(-First_bud_burst_DOY) %>% 
+  dplyr::mutate(stage = "yellowing")
+
 
 all_phenocam_arc_all <- rbind(all_phenocam_arc_1, all_phenocam_arc_2)
 
 all_phenocam_figure_predictions <- rbind(all_phenocam_rich_all, all_phenocam_pul_all, all_phenocam_arc_all)
 
 all_pheno_fig_raw <- all_phenocam_figure_predictions %>% 
-  dplyr::select(Species, DOY, population) %>% 
+  dplyr::select(Species, DOY, population, stage) %>% 
   mutate(group_color = (case_when(str_detect(population, '^S') ~ 'south',
                                 TRUE ~ 'north'))) %>% 
   mutate(group_shape = (case_when(grepl("Garden", population) ~ "garden",
@@ -1414,6 +1431,7 @@ all_pheno_fig_pred <- all_pheno_fig_pred_merge %>%
 
 pal_garden <- c("#332288", "#7ad151")
 shapes_garden <- c(16, 17)
+shape_stage <- c(1, 16, 2, 17)
 lines_garden <- c(1,2)
 
 all_pheno_fig_pred$Species <- ordered(all_pheno_fig_pred$Species, 
@@ -1436,18 +1454,21 @@ all_pheno_fig_raw <- all_pheno_fig_raw %>%
   drop_na(Species)
 
 all_pheno_fig_pred$population <- ordered(all_pheno_fig_pred$population, 
-                                         levels = c("N. Garden", 
-                                                    "N. Source", 
+                                         levels = c("N. Source", 
+                                                    "N. Garden", 
                                                     "",
-                                                    "S. Garden",
-                                                    "S. Source"))
+                                                    "S. Source",
+                                                    "S. Garden"))
 
 all_pheno_fig_raw$population <- ordered(all_pheno_fig_raw$population, 
-                                        levels = c("N. Garden", 
-                                                   "N. Source", 
+                                        levels = c("N. Source", 
+                                                   "N. Garden", 
                                                    "",
-                                                   "S. Garden",
-                                                   "S. Source"))
+                                                   "S. Source",
+                                                   "S. Garden"))
+all_pheno_fig_pred$shape_stage <- paste(all_pheno_fig_pred$group_shape,all_pheno_fig_pred$stage)
+
+all_pheno_fig_raw$shape_stage <- paste(all_pheno_fig_raw$group_shape,all_pheno_fig_raw$stage)
 
 
 write.csv(all_pheno_fig_pred, "data/phenology/all_pheno_fig_pred.csv")
@@ -1483,7 +1504,35 @@ write.csv(all_pheno_fig_raw, "data/phenology/all_pheno_fig_raw.csv")
   #geom_vline(data=filter(all_pheno_fig_pred, Species=="Salix arctica"), aes(xintercept=125), linetype ="dashed") +
   
 
-ggsave("output/figures/pheno_panel.png",  height = 5, width = 12, unit = "in", dpi = 500, device = png)
+(facet_pheno_plot_vert <-ggplot(all_pheno_fig_pred) + # model predictions
+    geom_point(data = all_pheno_fig_raw, aes(y = DOY, x = population, colour = group_color, 
+                                             shape = shape_stage), alpha = 0.5) + # raw data
+    geom_point(aes(x = population, y = Estimate_trans, shape = shape_stage, 
+                   color = group_color), size = 6, stroke = 2)+
+    geom_errorbar(aes(ymin = CI_low_trans, ymax = CI_high_trans, x = population, 
+                      colour = group_color),
+                  size = 1, alpha = 1, width=0.4) +
+    ylab("\n Day of year") +
+    xlab("") +
+    geom_line(aes(x = population , y = Estimate_trans, colour = group_color), 
+              linewidth = 1, alpha = 1)+
+    scale_color_manual(values=pal_garden, guide = "none") +
+    scale_fill_manual(values=pal_garden, guide = "none") +
+    scale_y_continuous(limits = c(110, 240), breaks = seq(110, 240, by = 30)) +
+    scale_shape_manual(labels = c("Garden emergence", "Garden yellowing", 
+                                  "Source emergence", "Source yellowing"), values = shape_stage)+
+    scale_x_discrete(drop=FALSE,
+                     labels=c('      North', '', "", "      South", ''), expand=c(0.2, 0.2)) +
+    facet_grid(~Species, scales = "free_y", drop=T) +
+    theme_shrub()+ 
+    theme(legend.background=element_blank(), legend.key=element_blank(), 
+          legend.position = "bottom", 
+          axis.ticks.x = element_blank(), 
+          axis.text.x  = element_text(angle = 0), 
+          legend.box="vertical", legend.margin=margin())+
+    guides(shape=guide_legend(title = "Location - \n Stage", nrow=2,byrow=TRUE)))
+
+ggsave("output/figures/pheno_panel.png",  height = 12, width = 18, unit = "cm", dpi = 500, device = png)
 
 
 (facet_presen_plot1 <-ggplot(all_pheno_fig_pred) + # model predictions
