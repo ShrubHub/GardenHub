@@ -14,7 +14,6 @@ library(ggeffects)
 #all_CG_source_growth <- read_csv("data/all_CG_source_growth.csv") # 2022 data 
 all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv") # 2023 data
 
- 
 
 # 1. scale function =====
 # centering with 'scale()'
@@ -172,7 +171,8 @@ colnames(ggpred_height_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
           axis.title.x=element_blank()) +
     scale_y_continuous(limits = c(0, 125), breaks = seq(0, 125, by = 25)) +
     theme( axis.text.x  = element_text(angle = 0)) +
-    labs(title = "Salix richardsonii", size = 16, family = "Helvetica Light")) # if i log everything it's exactly the same plot as with conditional effects! 
+    labs(title = "Salix richardsonii", size = 16, family = "Helvetica Light")) 
+
 
 # estimate for northern sample age: 1.46+0.10*1 = exp(1.56) = 4.758821 cm, in year 1
 # estimate for southern sample age: (1.46+1.06)+(0.10*1+0.11*1) = exp(2.73) = 15.33289 in year 1
