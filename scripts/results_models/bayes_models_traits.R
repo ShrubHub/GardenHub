@@ -1879,7 +1879,7 @@ leaf_length_raw_fig$group_shape <- ordered(leaf_length_raw_fig$group_shape,
                              ncol = 1, nrow = 4, 
                           heights = c(0.9, 0.8, 0.8, 0.9)))
 # save 
-ggsave("outputs/figures/trait_panel.png", height = 24, width = 18, unit = "cm", dpi = 500, device = png)
+ggsave("output/figures/trait_panel.png", height = 24, width = 18, unit = "cm", dpi = 500, device = png)
 
 # species specific figures ==== 
 

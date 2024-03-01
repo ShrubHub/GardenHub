@@ -86,7 +86,7 @@ model_summ_time <- function(x) {
 all_CG_growth <- all_CG_source_growth %>%
   filter(population %in% c("Northern", "Southern"))
 
-# making a growth rate column
+# making a growth rate column
 all_CG_height_growth_rates <- all_CG_growth %>%
   group_by(SampleID_standard) %>% 
   arrange(Sample_age) %>%
@@ -125,20 +125,20 @@ pal_garden <- c("#332288", "#7ad151")
 
 
 theme_shrub <- function(){ theme(legend.position = "bottom",
-                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=16),
-                                 axis.text.x  = element_text(vjust=0.5, size=16, family = "Helvetica Light", colour = "black", angle = 270), 
-                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=16),
-                                 axis.text.y  = element_text(vjust=0.5, size=16, family = "Helvetica Light", colour = "black"),
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=27),
+                                 axis.text.x  = element_text(vjust=0.5, size=27, family = "Helvetica Light", colour = "black", angle = 270), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=27),
+                                 axis.text.y  = element_text(vjust=0.5, size=27, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y = element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 16, family = "Helvetica Light", face = "italic", hjust = 0.5),
-                                 legend.title = element_text(size=18, family = "Helvetica Light"),
+                                 plot.title = element_text(color = "black", size = 27, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 legend.title = element_text(size=27, family = "Helvetica Light"),
                                  legend.key=element_blank(),
                                  strip.text.x = element_text(
-                                   size = 15, color = "black", face = "italic", family = "Helvetica Light"),
+                                   size = 24, color = "black", face = "italic", family = "Helvetica Light"),
                                  strip.background = element_blank(),
-                                 legend.text=element_text(size = 18, family = "Helvetica Light"))}
+                                 legend.text=element_text(size = 27, family = "Helvetica Light"))}
 
 # Salix richardsonii -------
 height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
@@ -152,10 +152,11 @@ summary(height_rich)
 
 ggpred_height_ric <- ggpredict(height_rich, terms = c("Sample_age", "population"))
 colnames(ggpred_height_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
+ggpred_height_ric$species <- "Salix richardsonii"
 
 (ggpred_height_rich_plot <-ggplot(ggpred_height_ric) +
     geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5)+ # raw data
     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1.5)+
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
@@ -230,6 +231,7 @@ summary(height_pul)
 
 ggpred_height_pul <- ggpredict(height_pul, terms = c("Sample_age", "population"))
 colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
+ggpred_height_pul$species <- "Salix pulchra"
 
 (ggpred_height_pul_plot <-ggplot(ggpred_height_pul) +
     geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
@@ -291,6 +293,7 @@ summary(height_arc) # significant growth over time
 
 ggpred_height_arc <- ggpredict(height_arc, terms = c("Sample_age", "population"))
 colnames(ggpred_height_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
+ggpred_height_arc$species <- "Salix arctica"
 
 (ggpred_height_arc_plot <-ggplot(ggpred_height_arc) +
     geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
@@ -309,15 +312,31 @@ colnames(ggpred_height_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
            axis.title.x=element_blank()) + 
     labs(title = "Salix arctica", size = 16, family = "Helvetica Light")) # if i log everything it's exactly the same plot as with conditional effects! 
 
+# combine all datasets to facet figure 
+# raw data: all_CG_growth
+ggpred_height_pred <- rbind(ggpred_height_ric, ggpred_height_pul, ggpred_height_arc)
+ggpred_height_pred
+# reorder species 
+ggpred_height_pred$species <- ordered(ggpred_height_pred$Species, 
+                                      levels = c("Salix richardsonii", 
+                                                 "Salix pulchra",
+                                                 "Salix arctica"))
+
+ggpred_height_pred$species <- ordered(ggpred_height_pred$Species, 
+                                     levels = c("Salix richardsonii", 
+                                                "Salix pulchra",
+                                                "Salix arctica"))
+
 (ggpred_CG_height_panel <- ggarrange(ggpred_height_rich_plot,
                                     ggpred_height_pul_plot, 
                                     ggpred_height_arc_plot, nrow = 1,
                                     common.legend = TRUE, 
                                     labels = c("A)", "B)", "C)"),
-                                    legend="none"))
+                                    legend="none", 
+                                    font.label=list(color="black",size = 24)))
 
-ggsave(ggpred_CG_height_panel, filename ="outputs/figures/ggpred_CG_height_panel_2023.png",
-       width = 14.67, height = 6.53, units = "in", device = png)
+ggsave(ggpred_CG_height_panel, filename ="output/figures/ggpred_CG_height_panel_2023.png",
+       width = 18, height = 8, units = "cm", device = png)
 
 height_arc_summ <- model_summ(height_arc)
 
@@ -602,10 +621,11 @@ all_CG_growth_arc$population <- ordered(all_CG_growth_arc$population,
                                    ggpred_stem_arc_plot, nrow = 1,
                                      common.legend = TRUE, 
                                      labels = c("D)", "E)", "F)"),
-                                     legend="bottom"))
+                                     legend="bottom", 
+  font.label=list(color="black",size = 24)))
 
-ggsave(ggpred_CG_stem_panel, filename ="outputs/figures/ggpred_CG_stem_panel_2023.png",
-       width = 14.67, height = 6.53, units = "in", device = png)
+ggsave(ggpred_CG_stem_panel, filename ="output/figures/ggpred_CG_stem_panel_2023.png",
+       width = 18, height = 8, units = "in", device = png)
 
 (ggpred_growth_panel <- ggarrange(ggpred_CG_height_panel,
                                   ggpred_CG_stem_panel, 
@@ -613,8 +633,8 @@ ggsave(ggpred_CG_stem_panel, filename ="outputs/figures/ggpred_CG_stem_panel_202
                                    common.legend = TRUE,
                                    legend="bottom",heights = c(0.9, 1)))
 
-ggsave(ggpred_growth_panel, filename ="outputs/figures/ggpred_CG_growth_panel_2023.png",
-       width = 14.67, height = 12, units = "in", device = png)
+ggsave(ggpred_growth_panel, filename ="output/figures/ggpred_CG_growth_panel_2023.png",
+       width = 18, height = 14, units = "in", device = png)
 
 stem_elong_arc_summ <- model_summ(stem_arc)
 stem_elong_arc_summ$Species <- "Salix arctica"
