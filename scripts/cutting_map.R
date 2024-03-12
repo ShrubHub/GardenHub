@@ -1,7 +1,8 @@
 # Created 28 February 2024
 # Madelaine Anderson 
 
-theme_shrub <- function(){ theme(axis.title.x = element_text(face="bold", family = "Helvetica Light", size=14),
+theme_shrub <- function(){ theme(legend.position = "bottom",
+  axis.title.x = element_text(face="bold", family = "Helvetica Light", size=14),
                                  axis.text.x  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black"), 
                                  axis.title.y = element_text(face="bold", family = "Helvetica Light", size=14),
                                  axis.text.y  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black"),
@@ -9,7 +10,8 @@ theme_shrub <- function(){ theme(axis.title.x = element_text(face="bold", family
                                  panel.grid.minor.y = element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
                                  plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
-                                 legend.text = element_text(size=14, family = "Helvetica Light"),
+  legend.title = element_text(size=14, family = "Helvetica Light"),
+  legend.text = element_text(size=14, family = "Helvetica Light"),
                                  strip.text.x = element_text(
                                    size = 15, color = "black", face = "italic", family = "Helvetica Light"))
                                  }
@@ -29,10 +31,10 @@ e <- extent(-144, -123, 59, 70.5) # Define extent (long_min, long_max, lat_min, 
 t <- crop(provinces, e) # Crop provincial/territorial spatial polygon dataframe to extent
 t2 <- crop(states, e) # Crop states spatial polygon dataframe to extent
 
-alp_klu <- c(lat = 60.97, long = -138.4, site = "source")
-qhi <- c(lat = 69.6, long = -138.9, "source")
+alp_klu <- c(lat = 60.97, long = -138.4, site = "Source")
+qhi <- c(lat = 69.6, long = -138.98, "Source")
 field_sites <- as.data.frame(rbind(alp_klu, qhi))
-cg <- data.frame(lat = 61.03, long = -138.41, site = "common_garden")
+cg <- data.frame(lat = 61.03, long = -138.41, site = "Common garden")
 sites <- as.data.frame(rbind(alp_klu, qhi, cg))
 sites$lat <- as.numeric(sites$lat)
 sites$long <- as.numeric(sites$long)
@@ -45,7 +47,7 @@ yukon_map <-  ggplot() +
   geom_polygon(data = t2, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
   geom_polygon(data = subset(t, NAME_1 == "Yukon"), aes(x = long, y =lat, group = group), fill = 'grey85', colour = 'black') +
   geom_point(data = sites, aes(x = long, y = lat, shape = site, size = site), colour = "black") +
-  annotate('text', y = 65, x = -137, label = 'Yukon', fontface =1, size = 7) +
+  annotate('text', y = 65, x = -137, label = 'Yukon', fontface =1, size = 6) +
   annotate('text', y = 69.75, x = -139.6, label = 'a', fontface =1, size = 5) + 
   annotate('text', y = 61.05, x = -139.2, label = 'b', fontface =1, size = 5) + 
   scale_x_continuous(expand = c(0,0)) +
@@ -55,7 +57,7 @@ yukon_map <-  ggplot() +
   scale_shape_manual(values = main_map_shapes) +
   scale_size_manual(values = c(2, 4), guide = "none") +
   theme_bw() +
-  guides(shape=guide_legend(title = "Site")) +
+  guides(shape=guide_legend(title = "Site", override.aes = list(size = 4))) +
   theme_shrub()
 yukon_map
 
