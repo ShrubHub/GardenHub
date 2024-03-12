@@ -14,7 +14,7 @@ library(sjPlot)
 # 2. LOADING DATA -----
 
 # Datasets with mother data (2013-2017) and source pop data
-mother_data <- read_csv("data/source_pops/mother_data.csv")
+mother_data <- read.csv("data/source_pops/mother_data.csv")
 
 # maximum height and width data from CG 2013-2022 
 max_cg_heights <- read.csv("data/common_garden_data_2022/max_heights_cg.csv")
