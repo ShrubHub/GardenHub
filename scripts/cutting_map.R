@@ -1,7 +1,7 @@
 # Created 28 February 2024
 # Madelaine Anderson 
 
-theme_shrub <- function(){ theme(legend.position = "bottom",
+theme_map <- function(){ theme(legend.position = "bottom",
   axis.title.x = element_text(face="bold", family = "Helvetica Light", size=14),
                                  axis.text.x  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black"), 
                                  axis.title.y = element_text(face="bold", family = "Helvetica Light", size=14),
@@ -15,8 +15,6 @@ theme_shrub <- function(){ theme(legend.position = "bottom",
                                  strip.text.x = element_text(
                                    size = 15, color = "black", face = "italic", family = "Helvetica Light"))
                                  }
-
-
 # map of cutting locations for common garden
 
 library(raster)
@@ -58,31 +56,72 @@ yukon_map <-  ggplot() +
   scale_size_manual(values = c(2, 4), guide = "none") +
   theme_bw() +
   guides(shape=guide_legend(title = "Site", override.aes = list(size = 4))) +
-  theme_shrub()
+  theme_map()
 yukon_map
 
 # QHI MAP ====
 
 qhi_gps <- read.csv("data/map/qhi_cuttings_gps.csv")
 
+library(sf)
+qhi_sf <- st_read("~/Desktop/Ecological_classification_Herschel_Island/Ecological_classification_Herschel_Island.shp")
+qhi_geom = st_geometry(shapefile)
+
 e_qhi <- extent(-139.25, -138, 69.55, 70.5) #Define extent (long_min, long_max, lat_min, lat_max)
 t_qhi <- crop(provinces, e_qhi) # Crop provincial/territorial spatial polygon dataframe to extent
 #t2_qhi <- crop(states, e_qhi) # Crop states spatial polygon dataframe to extent
 
+
+plot(st_geometry(qhi_sf))
+
 qhi_map <- ggplot() +
-  coord_map() +
-  geom_polygon(data = t_qhi, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
-  #geom_polygon(data = t2_qhi, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
-  geom_polygon(data = subset(t_qhi, NAME_1 == "Yukon"), aes(x = long, y =lat, group = group), fill = 'grey85', colour = 'black') +
-  geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=2, size=2, colour = "black") +
-  annotate('text', y = 69.57, x = -138.95, label = 'Pauline Cove', fontface = 1, size = 4) +
-  scale_x_continuous(expand = c(0,0)) +
-  scale_y_continuous(expand = c(0,0)) +
+  geom_sf(data = qhi_sf, fill = 'grey95', colour = 'grey') +
+  coord_sf() +
+  #geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=2, size=2, colour = "black") +
+  annotate('text', -Inf, Inf, label = 'Pauline Cove', fontface = 1, size = 3, 
+           hjust = -5.5, vjust = 15) +
+  #scale_x_continuous(expand = c(0,0)) +
+  #scale_y_continuous(expand = c(0,0)) +
   xlab("") +
   ylab("") +
-  theme_bw() +
+  theme_classic() +
   theme(axis.text = element_text(colour = 'black'))+
-          theme_shrub()
+  theme_map()
+qhi_map
+
+qhi_zoom <- st_crop(qhi_sf, c(xmin=572248.4, xmax=583782.3, ymin=7715140, ymax=7734833))
+
+# -139.25, -138, 69.55, 70.5
+qhi_zoom_map <- ggplot() +
+  geom_sf(data = qhi_zoom, fill = 'grey95', colour = 'grey95') +
+  coord_sf() +
+  #geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=2, size=2, colour = "black") +
+  annotate('text', -Inf, Inf, label = 'Pauline Cove', fontface = 1, size = 3, 
+           hjust = -5.52, vjust = 44.5) +
+  #scale_x_continuous(expand = c(0,0)) +
+  #scale_y_continuous(expand = c(0,0)) +
+  xlab("") +
+  ylab("") +
+  theme_classic() +
+  theme(axis.text = element_text(colour = 'black'))+
+  theme_map()
+
+qhi_zoom_map
+
+# qhi_map <- ggplot() +
+#   coord_map() +
+#   geom_polygon(data = t_qhi, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
+#   #geom_polygon(data = t2_qhi, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
+#   geom_polygon(data = subset(t_qhi, NAME_1 == "Yukon"), aes(x = long, y =lat, group = group), fill = 'grey85', colour = 'black') +
+#   geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=2, size=2, colour = "black") +
+#   annotate('text', y = 69.57, x = -138.95, label = 'Pauline Cove', fontface = 1, size = 4) +
+#   scale_x_continuous(expand = c(0,0)) +
+#   scale_y_continuous(expand = c(0,0)) +
+#   xlab("") +
+#   ylab("") +
+#   theme_bw() +
+#   theme(axis.text = element_text(colour = 'black'))+
+#           theme_map()
 qhi_map
 
 # KLUANE MAP ====
@@ -116,3 +155,41 @@ kluane_map <- ggplot() +
   theme_bw() +
   theme(axis.text = element_text(colour = 'black'))
 kluane_map
+
+
+# polar map code
+data("wrld_simpl", package = "maptools")  
+
+data("wrld_simpl", package = "maptools")                                                                            
+(soil_map <- ggplot() +
+    geom_polygon(data = wrld_simpl, aes(x = long, y = lat, group = group), fill = "grey80", 
+                 colour = "grey80", size = 0.5, alpha = 0.5) +
+    coord_map("ortho", orientation = c(90, 0, 0)) +
+    scale_y_continuous(breaks = seq(45, 90, by = 50), labels = NULL) +
+    scale_x_continuous(breaks = NULL) +
+    labs(x = NULL, y = NULL, legend = "Current Status") +
+    theme(panel.background = element_blank(),
+          panel.grid.major = element_line(colour = NA),
+          axis.ticks = element_blank(),
+          legend.title = element_blank()))
+
+data("wrld_simpl", package = "maptools")                                                                            
+(soil_map <- ggplot() +
+    geom_polygon(data = wrld_simpl, aes(x = long, y = lat, group = group), fill = "grey80", 
+                 colour = "grey80", size = 0.5, alpha = 0.5) +
+    coord_map("ortho", orientation = c(90, 0, 0)) +
+    scale_y_continuous(breaks = seq(45, 90, by = 50), labels = NULL) +
+    scale_x_continuous(breaks = NULL) +
+    labs(x = NULL, y = NULL, legend = "Current Status") +
+    theme(panel.background = element_blank(),
+          panel.grid.major = element_line(colour = NA),
+          axis.ticks = element_blank(),
+          legend.title = element_blank())) 
+# geom_point(data = soilcores_process,  
+#           aes(x = lon, y = lat), size = 7, position = "jitter", alpha = 0.6, color = "#F09205") +
+#geom_label_repel(data = soilcores_process,
+#                 aes(x = lon, y = lat,
+#                     label = site) ,
+# Setting the positions of the labels
+#                 box.padding = 0.9, size = 4, nudge_x = 2, nudge_y = -6, 
+#                 segment.alpha = 0.8, segment.colour = "#F09205"))
