@@ -62,6 +62,8 @@ yukon_map
 # QHI MAP ====
 
 qhi_gps <- read.csv("data/map/qhi_cuttings_gps.csv")
+qhi_gps <- qhi_gps %>% 
+  mutate(lon_pos = lon*-1)
 
 library(sf)
 qhi_sf <- st_read("~/Desktop/Ecological_classification_Herschel_Island/Ecological_classification_Herschel_Island.shp")
@@ -91,11 +93,22 @@ qhi_map
 
 qhi_zoom <- st_crop(qhi_sf, c(xmin=572248.4, xmax=583782.3, ymin=7715140, ymax=7734833))
 
+LongLatToUTM<-function(x,y,zone){
+  xy <- data.frame(ID = 1:length(x), X = x, Y = y)
+  coordinates(xy) <- c("X", "Y")
+  proj4string(xy) <- CRS("+proj=longlat +datum=WGS84")  ## for example
+  res <- spTransform(xy, CRS(paste("+proj=utm +zone=",zone," ellps=WGS84",sep='')))
+  return(as.data.frame(res))
+}
+
+qhi_gps_UTM <- LongLatToUTM(qhi_gps$lon,qhi_gps$lat,7)
+
+
 # -139.25, -138, 69.55, 70.5
 qhi_zoom_map <- ggplot() +
   geom_sf(data = qhi_zoom, fill = 'grey95', colour = 'grey95') +
   coord_sf() +
-  #geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=2, size=2, colour = "black") +
+  geom_point(data = qhi_gps_UTM, aes(x = coords.x1, y = coords.x2), shape=2, size=2, colour = "black") +
   annotate('text', -Inf, Inf, label = 'Pauline Cove', fontface = 1, size = 3, 
            hjust = -5.52, vjust = 44.5) +
   #scale_x_continuous(expand = c(0,0)) +
