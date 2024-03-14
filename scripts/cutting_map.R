@@ -21,6 +21,8 @@ library(raster)
 library(ggplot2)
 library(tidyr)
 library(dplyr)
+library(ggspatial)
+
 
 provinces <- getData(country="Canada", level=1)
 states <- getData(country="USA", level=1)
@@ -46,7 +48,7 @@ yukon_map <-  ggplot() +
   geom_polygon(data = subset(t, NAME_1 == "Yukon"), aes(x = long, y =lat, group = group), fill = 'grey85', colour = 'black') +
   geom_point(data = sites, aes(x = long, y = lat, shape = site, size = site), colour = "black") +
   annotate('text', y = 65, x = -137, label = 'Yukon', fontface =1, size = 6) +
-  annotate('text', y = 69.75, x = -139.6, label = 'a', fontface =1, size = 5) + 
+  annotate('text', y = 69.75, x = -139.63, label = 'a', fontface =1, size = 5) + 
   annotate('text', y = 61.05, x = -139.2, label = 'b', fontface =1, size = 5) + 
   scale_x_continuous(expand = c(0,0)) +
   scale_y_continuous(expand = c(0,0)) +
@@ -56,8 +58,12 @@ yukon_map <-  ggplot() +
   scale_size_manual(values = c(2, 4), guide = "none") +
   theme_bw() +
   guides(shape=guide_legend(title = "Site", override.aes = list(size = 4))) +
-  theme_map()
+  theme_map()+
+  theme(legend.position = "bottom", axis.title.x = element_blank())
 yukon_map
+
+ggsave("output/figures/map/yukon_map.png", 
+       height = 18, width = 18, unit = "cm", dpi = 500, device = png)
 
 # QHI MAP ====
 
@@ -86,12 +92,15 @@ qhi_map <- ggplot() +
   #scale_y_continuous(expand = c(0,0)) +
   xlab("") +
   ylab("") +
+  annotation_scale()+
   theme_classic() +
   theme(axis.text = element_text(colour = 'black'))+
   theme_map()
 qhi_map
 
-qhi_zoom <- st_crop(qhi_sf, c(xmin=572248.4, xmax=583782.3, ymin=7715140, ymax=7734833))
+qhi_zoom <- st_crop(qhi_sf, c(xmin=572248, xmax=583782, ymin=7715140, ymax=7734833))
+
+qhi_zoom <- st_crop(qhi_sf, c(xmin=580500, xmax=583782, ymin=7716200, ymax=7721600))
 
 LongLatToUTM<-function(x,y,zone){
   xy <- data.frame(ID = 1:length(x), X = x, Y = y)
@@ -108,18 +117,22 @@ qhi_gps_UTM <- LongLatToUTM(qhi_gps$lon,qhi_gps$lat,7)
 qhi_zoom_map <- ggplot() +
   geom_sf(data = qhi_zoom, fill = 'grey95', colour = 'grey95') +
   coord_sf() +
-  geom_point(data = qhi_gps_UTM, aes(x = coords.x1, y = coords.x2), shape=2, size=2, colour = "black") +
+  geom_point(data = qhi_gps_UTM, aes(x = coords.x1, y = coords.x2), shape=1, size=1, 
+             colour = "black", alpha = 0.8, position = position_dodge(width = 0.5)) +
   annotate('text', -Inf, Inf, label = 'Pauline Cove', fontface = 1, size = 3, 
-           hjust = -5.52, vjust = 44.5) +
+           hjust = -2.3, vjust = 60) +
+  #annotate('text', -Inf, Inf, label = 'Qikiqtaruk', fontface = 1, size = 5, 
+  #         hjust = -3.3, vjust = 20.5) +
   #scale_x_continuous(expand = c(0,0)) +
   #scale_y_continuous(expand = c(0,0)) +
-  xlab("") +
   ylab("") +
+  annotation_scale()+
   theme_classic() +
   theme(axis.text = element_text(colour = 'black'))+
   theme_map()
 
 qhi_zoom_map
+
 
 # qhi_map <- ggplot() +
 #   coord_map() +
