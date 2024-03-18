@@ -35,8 +35,6 @@ library(dplyr)
 library(ggspatial)
 library(sf)
 
-
-
 provinces <- getData(country="Canada", level=1)
 states <- getData(country="USA", level=1)
 crs(provinces) # CRS = World Geodetic System 1984 ("EPSG",6326)
@@ -84,8 +82,6 @@ qhi_gps <- qhi_gps %>%
   mutate(lon_pos = lon*-1)
 
 qhi_sf <- st_read("data/map/Ecological_classification_Herschel_Island.shp")
-
-
 
 e_qhi <- extent(-139.25, -138, 69.55, 70.5) #Define extent (long_min, long_max, lat_min, lat_max)
 t_qhi <- crop(provinces, e_qhi) # Crop provincial/territorial spatial polygon dataframe to extent
@@ -197,6 +193,12 @@ qhi_zoom_sp_map
 # import cg data with GPS points  
 mother_gps <- read.csv("data/source_pops/all_source_pop_plus_mother.csv")
 
+printers_pass <- c(Latitude = 61.3, Longitude_neg = -139.1, Site = "Printers Pass")
+pika_camp <- c(Latitude = 61.12, Longitude_neg = -138.16, Site = "Pika Camp")
+kluane_regions <- as.data.frame(rbind(printers_pass, pika_camp))
+kluane_regions$Latitude <- as.numeric(kluane_regions$Latitude)
+kluane_regions$Longitude_neg <- as.numeric(kluane_regions$Longitude_neg)
+
 cg_gps <- mother_gps %>% 
   dplyr::select(Latitude, Longitude, Species, Site, SampleID, Elevation) %>% 
   drop_na(SampleID) %>% 
@@ -204,8 +206,9 @@ cg_gps <- mother_gps %>%
   mutate(Longitude_neg = Longitude*-1)
 # the above appear only to be from Kluane but alas use for now 
 
+kluane_gps <- full_join(cg_gps, kluane_regions, by = c("Latitude", "Longitude_neg", "Site"))
 
-e_klu <- extent(-140, -138, 60.5, 62.5) #Define extent (long_min, long_max, lat_min, lat_max)
+e_klu <- extent(-139.5, -138, 60.75, 61.5) #Define extent (long_min, long_max, lat_min, lat_max)
 t_klu <- crop(provinces, e_klu) # Crop provincial/territorial spatial polygon dataframe to extent
 #t2_qhi <- crop(states, e_qhi) # Crop states spatial polygon dataframe to extent
 
@@ -213,14 +216,17 @@ kluane_map <- ggplot() +
   coord_map() +
   geom_polygon(data = t_klu, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
   #geom_polygon(data = t2_qhi, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
-  geom_polygon(data = subset(t_klu, NAME_1 == "Yukon"), aes(x = long, y =lat, group = group), fill = 'grey85', colour = 'black') +
-  geom_point(data = cg_gps, aes(x = Longitude_neg, y = Latitude), shape = 2, size = 2, colour = "black") +
-  #annotate('text', y = 65, x = -137, label = 'Yukon', fontface =2, size = 8) +
+  #geom_polygon(data = subset(t_klu, NAME_1 == "Yukon"), aes(x = long, y =lat, group = group), fill = 'grey85', colour = 'black') +
+  geom_point(data = kluane_gps, aes(x = Longitude_neg, y = Latitude), shape = 2, size = 2, colour = "black") +
+  annotate('text', y = 61.34, x = -139.1, label = "Printer's Pass", fontface =1, size = 3) +
+  annotate('text', y = 61.16, x = -138.16, label = "Pika Camp", fontface =1, size = 3) +
+  annotate('text', y = 60.95, x = -138.41, label = "Kluane Plateau", fontface =1, size = 3) +
   scale_x_continuous(expand = c(0,0)) +
   scale_y_continuous(expand = c(0,0)) +
   xlab("") +
   ylab("") +
   theme_bw() +
+  theme_map() +
   theme(axis.text = element_text(colour = 'black'))
 kluane_map
 
