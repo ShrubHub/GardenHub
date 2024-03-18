@@ -83,7 +83,9 @@ qhi_gps <- read.csv("data/map/qhi_cuttings_gps.csv")
 qhi_gps <- qhi_gps %>% 
   mutate(lon_pos = lon*-1)
 
-qhi_sf <- st_read("~/Desktop/Ecological_classification_Herschel_Island/Ecological_classification_Herschel_Island.shp")
+qhi_sf <- st_read("data/map/Ecological_classification_Herschel_Island.shp")
+
+
 
 e_qhi <- extent(-139.25, -138, 69.55, 70.5) #Define extent (long_min, long_max, lat_min, lat_max)
 t_qhi <- crop(provinces, e_qhi) # Crop provincial/territorial spatial polygon dataframe to extent
