@@ -16,7 +16,7 @@ theme_map <- function(){ theme(legend.position = "bottom",
 
 theme_map_qhi <- function(){ theme(legend.position = "bottom",
                                axis.title.x = element_text(face="bold", family = "Helvetica Light", size=14),
-                               axis.text.x  = element_blank(), 
+                               axis.text.x  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black"), 
                                axis.title.y = element_text(face="bold", family = "Helvetica Light", size=14),
                                axis.text.y  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black"),
                                panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
@@ -33,6 +33,8 @@ library(ggplot2)
 library(tidyr)
 library(dplyr)
 library(ggspatial)
+library(sf)
+
 
 
 provinces <- getData(country="Canada", level=1)
@@ -81,9 +83,7 @@ qhi_gps <- read.csv("data/map/qhi_cuttings_gps.csv")
 qhi_gps <- qhi_gps %>% 
   mutate(lon_pos = lon*-1)
 
-library(sf)
 qhi_sf <- st_read("~/Desktop/Ecological_classification_Herschel_Island/Ecological_classification_Herschel_Island.shp")
-qhi_geom = st_geometry(shapefile)
 
 e_qhi <- extent(-139.25, -138, 69.55, 70.5) #Define extent (long_min, long_max, lat_min, lat_max)
 t_qhi <- crop(provinces, e_qhi) # Crop provincial/territorial spatial polygon dataframe to extent
@@ -110,7 +110,7 @@ qhi_map
 
 qhi_zoom <- st_crop(qhi_sf, c(xmin=572248, xmax=583782, ymin=7715140, ymax=7734833))
 
-qhi_zoom <- st_crop(qhi_sf, c(xmin=580500, xmax=583782, ymin=7713140, ymax=7721600))
+qhi_zoom <- st_crop(qhi_sf, c(xmin=580500, xmax=583782, ymin=7710140, ymax=7721600))
 
 LongLatToUTM<-function(x,y,zone){
   xy <- data.frame(ID = 1:length(x), X = x, Y = y)
@@ -127,8 +127,8 @@ qhi_gps_UTM$type <- "point"
 qhi_zoom_map <- ggplot() +
   geom_sf(data = qhi_zoom, fill = 'grey95', colour = 'grey95', inherit.aes = FALSE) +
   coord_sf(expand = F) +
-  # geom_point(data = qhi_gps_UTM, aes(x = coords.x1, y = coords.x2, shape = type), shape=1, size=1, 
-  #            colour = "black", alpha = 0.8) +
+  geom_point(data = qhi_gps_UTM, aes(x = coords.x1, y = coords.x2, shape = type), shape=1, size=1, 
+              colour = "black", alpha = 0.8) +
   annotate('text', -Inf, Inf, label = 'Pauline Cove', fontface = 1, size = 4, 
            hjust = -2.2, vjust = 55) +
   #annotate('text', -Inf, Inf, label = 'Qikiqtaruk', fontface = 1, size = 5, 
@@ -141,9 +141,7 @@ qhi_zoom_map <- ggplot() +
   theme(axis.text = element_text(colour = 'black'), 
                                  legend.position = "bottom", 
                                  axis.title.x = element_blank(), 
-                                 axis.title.y = element_blank()) +
-  scale_x_continuous(breaks = c(-138.92, -138.90, -138.88, -138.86), 
-                     lables = c("-138.92", "-138.90", "-138.88", "-138.86"))
+                                 axis.title.y = element_blank()) 
 
 qhi_zoom_map
 
@@ -155,7 +153,7 @@ t_qhi <- crop(qhi_sp, e_qhi) # Crop provincial/territorial spatial polygon dataf
 
 qhi_map <- ggplot() +
   coord_map() +
-  geom_polygon(data = t_qhi, aes(x = long, y = lat), fill = 'grey95', colour = 'grey95') +
+  geom_polygon(data = qhi_sp, aes(x = long, y = lat), fill = 'grey95', colour = 'grey95') +
   #geom_polygon(data = t2_qhi, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
   geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=1, size=2, colour = "black") +
   #annotate('text', y = 69.6, x = 138.93, label = 'Pauline Cove', fontface = 1, size = 4) +
@@ -169,6 +167,28 @@ qhi_map <- ggplot() +
         axis.title.y = element_blank())+ 
           theme_map()
 qhi_map
+
+qhi_zoom_lat_long_sf <- qhi_zoom %>% st_transform(4979)
+
+qhi_sp_zoom <- as(qhi_zoom_lat_long_sf, 'Spatial')
+
+qhi_zoom_sp_map <- ggplot() +
+  coord_map() +
+  geom_polygon(data = qhi_sp_zoom, aes(x = long, y = lat), fill = 'grey95', colour = 'grey95') +
+  #geom_polygon(data = t2_qhi, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
+  geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=1, size=2, colour = "black") +
+  #annotate('text', y = 69.6, x = 138.93, label = 'Pauline Cove', fontface = 1, size = 4) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_y_continuous(expand = c(0,0)) +
+  xlab("") +
+  ylab("") +
+  theme_bw() +
+  theme(axis.text = element_text(colour = 'black'), 
+        axis.title.x = element_blank(), 
+        axis.title.y = element_blank())+ 
+  theme_map()
+qhi_zoom_sp_map
+
 
 # KLUANE MAP ====
 

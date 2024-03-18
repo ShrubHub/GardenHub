@@ -254,7 +254,6 @@ plot(pulchra_SLA)
 pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
 saveRDS(pulchra_SLA, file = "output/traits/models/sla_pulchra_compare.rds")
 pulchra_SLA <- readRDS("output/traits/models/sla_pulchra_compare.rds")
-
 pul_SLA.pred <- ggpredict(pulchra_SLA, terms = c('population'))
 
 # extract output with function
@@ -1540,6 +1539,7 @@ all_raw_traits_fig <- all_raw_traits %>%
   mutate(group_shape = (case_when(grepl("Garden", population) ~ "garden",
                                   grepl("Source", population, ignore.case = TRUE) ~"source")))
 
+
 # bind LA data because these were separated out 
 la_area_traits <- rbind(richardsonii_mad_traits, pulchra_mad_traits, arctica_mad_traits) %>% 
   mutate(group_color = (case_when(str_detect(population, '^S') ~ 'south',
@@ -1568,7 +1568,7 @@ la_area_traits$population <- ordered(la_area_traits$population,
                                                    "S. Source",  
                                                    "S. Garden"))
 write.csv(all_raw_traits_fig, "data/traits/all_raw_traits_fig.csv")
-
+all_raw_traits_fig <- read.csv("data/traits/all_raw_traits_fig.csv")
 
 # leaf length 
 colnames(rich_LL.pred) = c('population','fit', 'lwr', 'upr')
@@ -1685,7 +1685,7 @@ shapes_garden <- c(17, 16)
                                                colour = group_color, shape = group_shape),
                 alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
     geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
-               position = position_dodge(width = 0.75), size = 5)+
+               position = position_dodge(width = 0.75), size = 4)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, 
                       shape = group_shape),
                   size = 1, alpha = 1, width=0.5, position = position_dodge(width = 0.75)) +
@@ -1743,7 +1743,7 @@ ldmc_predictions_wide$group_shape <- ordered(ldmc_predictions_wide$group_shape,
                                 colour = group_color, shape = group_shape),
                 alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
     geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
-               position = position_dodge(width = 0.75), size = 5)+
+               position = position_dodge(width = 0.75), size = 4)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, shape = group_shape),
                   size = 1, alpha = 1, width=0.5, position = position_dodge(width = 0.75)) +
     ylab(expression(atop("Leaf dry matter", paste(" content (%)"))))+
@@ -1823,7 +1823,7 @@ la_area_traits$group_shape <- ordered(la_area_traits$group_shape,
                                            colour = group_color, shape = group_shape),
                 alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
     geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
-               position = position_dodge(width = 0.75), size = 5)+
+               position = position_dodge(width = 0.75), size = 4)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, shape = group_shape),
                   size = 1, alpha = 1, width=0.5, position = position_dodge(width = 0.75)) +
     ylab(expression(atop("Leaf area", paste("(cm"^"2)"))))+
@@ -1855,7 +1855,7 @@ leaf_length_raw_fig$group_shape <- ordered(leaf_length_raw_fig$group_shape,
                                                 colour = group_color, shape = group_shape),
                 alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
     geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
-               position = position_dodge(width = 0.75), size = 5)+
+               position = position_dodge(width = 0.75), size = 4)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, shape = group_shape),
                   size = 1, alpha = 1, width=0.5, position = position_dodge(width = 0.75)) +
     ylab(expression(atop("Leaf length ", paste("(mm)"))))+
