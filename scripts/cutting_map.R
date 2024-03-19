@@ -81,14 +81,12 @@ qhi_gps <- read.csv("data/map/qhi_cuttings_gps.csv")
 qhi_gps <- qhi_gps %>% 
   mutate(lon_pos = lon*-1)
 
-qhi_sf <- st_read("data/map/Ecological_classification_Herschel_Island.shp")
+qhi_sf <- st_read("~/Desktop/Ecological_classification_Herschel_Island/Ecological_classification_Herschel_Island.shp")
 
 e_qhi <- extent(-139.25, -138, 69.55, 70.5) #Define extent (long_min, long_max, lat_min, lat_max)
 t_qhi <- crop(provinces, e_qhi) # Crop provincial/territorial spatial polygon dataframe to extent
 #t2_qhi <- crop(states, e_qhi) # Crop states spatial polygon dataframe to extent
 
-
-plot(st_geometry(qhi_sf))
 
 qhi_map <- ggplot() +
   geom_sf(data = qhi_sf, fill = 'grey95', colour = 'grey') +
@@ -106,7 +104,7 @@ qhi_map <- ggplot() +
   theme_map()
 qhi_map
 
-qhi_zoom <- st_crop(qhi_sf, c(xmin=572248, xmax=583782, ymin=7715140, ymax=7734833))
+#qhi_zoom <- st_crop(qhi_sf, c(xmin=572248, xmax=583782, ymin=7715140, ymax=7734833))
 
 qhi_zoom <- st_crop(qhi_sf, c(xmin=580500, xmax=583782, ymin=7710140, ymax=7721600))
 
@@ -121,18 +119,34 @@ LongLatToUTM<-function(x,y,zone){
 qhi_gps_UTM <- LongLatToUTM(qhi_gps$lon,qhi_gps$lat,7)
 qhi_gps_UTM$type <- "point"
 
+qhi_points_1 <- (c(x1 = 581050.8, x2 = 7720105, type = "point"))
+qhi_points_4 <- (c(x1 = 581196.0, x2 = 7720128, type = "point"))
+qhi_points_5 <- (c(x1 = 581846.0, x2 = 7719782, type = "point"))
+qhi_points_7 <- (c(x1 = 581872.0, x2 = 7719887, type = "point"))
+qhi_points_8 <- (c(x1 = 581948.0, x2 = 7719348, type = "point"))
+qhi_points_9 <- (c(x1 = 582052.1, x2 = 7719405, type = "point"))
+qhi_points_10 <- (c(x1 = 582851.0, x2 = 7720448, type = "point"))
+qhi_points_11 <- (c(x1 = 583120.9, x2 = 7719931, type = "point"))
+
+qhi_point <- as.data.frame(rbind(qhi_points_1, qhi_points_4, qhi_points_5,
+                    qhi_points_7, qhi_points_8, qhi_points_9, qhi_points_10,
+                   qhi_points_11))
+qhi_point$x1 <- as.numeric(qhi_point$x1)
+qhi_point$x2 <- as.numeric(qhi_point$x2)
+
+
 # -139.25, -138, 69.55, 70.5
 qhi_zoom_map <- ggplot() +
-  geom_sf(data = qhi_zoom, fill = 'grey95', colour = 'grey95', inherit.aes = FALSE) +
-  coord_sf(expand = F) +
-  geom_point(data = qhi_gps_UTM, aes(x = coords.x1, y = coords.x2, shape = type), shape=1, size=1, 
+  geom_sf(data = qhi_zoom, fill = 'grey95', colour = 'grey95',  inherit.aes = FALSE) +
+  coord_sf(label_graticule = "SW", expand = T) +
+  geom_point(data = qhi_point, aes(x = x1, y = x2, shape = type), shape=2, size=3, 
               colour = "black", alpha = 0.8) +
   annotate('text', -Inf, Inf, label = 'Pauline Cove', fontface = 1, size = 4, 
-           hjust = -2.2, vjust = 55) +
+           hjust = -1.6, vjust = 48) +
   #annotate('text', -Inf, Inf, label = 'Qikiqtaruk', fontface = 1, size = 5, 
   #         hjust = -3.3, vjust = 20.5) +
   ylab("") +
-  annotation_scale()+
+  #annotation_scale()+
   theme_classic() +
   scale_size_manual(values = 1) +
   theme_map_qhi()+
@@ -142,6 +156,8 @@ qhi_zoom_map <- ggplot() +
                                  axis.title.y = element_blank()) 
 
 qhi_zoom_map
+ggsave("output/figures/map/qhi_map.png", 
+       height = 18, width = 18, unit = "cm", dpi = 500, device = png)
 
 qhi_lat_long_sf <- qhi_sf %>% st_transform(4979)
 
@@ -167,6 +183,8 @@ qhi_map <- ggplot() +
 qhi_map
 
 qhi_zoom_lat_long_sf <- qhi_zoom %>% st_transform(4979)
+
+qhi_sp_zoom_test <- as(qhi_zoom, 'Spatial')
 
 qhi_sp_zoom <- as(qhi_zoom_lat_long_sf, 'Spatial')
 
@@ -208,7 +226,7 @@ cg_gps <- mother_gps %>%
 
 kluane_gps <- full_join(cg_gps, kluane_regions, by = c("Latitude", "Longitude_neg", "Site"))
 
-e_klu <- extent(-139.5, -138, 60.75, 61.5) #Define extent (long_min, long_max, lat_min, lat_max)
+e_klu <- extent(-139.2, -138, 60.9, 61.4) #Define extent (long_min, long_max, lat_min, lat_max)
 t_klu <- crop(provinces, e_klu) # Crop provincial/territorial spatial polygon dataframe to extent
 #t2_qhi <- crop(states, e_qhi) # Crop states spatial polygon dataframe to extent
 
@@ -217,10 +235,13 @@ kluane_map <- ggplot() +
   geom_polygon(data = t_klu, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
   #geom_polygon(data = t2_qhi, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
   #geom_polygon(data = subset(t_klu, NAME_1 == "Yukon"), aes(x = long, y =lat, group = group), fill = 'grey85', colour = 'black') +
-  geom_point(data = kluane_gps, aes(x = Longitude_neg, y = Latitude), shape = 2, size = 2, colour = "black") +
+  geom_point(data = kluane_regions, aes(x = Longitude_neg, y = Latitude), shape = 2, size = 2, colour = "black") +
   annotate('text', y = 61.34, x = -139.1, label = "Printer's Pass", fontface =1, size = 3) +
   annotate('text', y = 61.16, x = -138.16, label = "Pika Camp", fontface =1, size = 3) +
   annotate('text', y = 60.95, x = -138.41, label = "Kluane Plateau", fontface =1, size = 3) +
+  annotate('point', y = 60.97020, x = -138.41, label = "Kluane Plateau", shape = 2, size = 3) +
+  annotate('text', y = 61.06, x = -138.41, label = "Common Garden", fontface =1, size = 3) +
+  annotate('point', y = 61.03, x = -138.41,  shape =16, size = 3) +
   scale_x_continuous(expand = c(0,0)) +
   scale_y_continuous(expand = c(0,0)) +
   xlab("") +
@@ -230,6 +251,8 @@ kluane_map <- ggplot() +
   theme(axis.text = element_text(colour = 'black'))
 kluane_map
 
+ggsave("output/figures/map/kluane_map.png", 
+       height = 18, width = 18, unit = "cm", dpi = 500, device = png)
 
 # polar map code
 data("wrld_simpl", package = "maptools")  
