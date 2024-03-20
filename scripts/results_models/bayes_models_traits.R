@@ -1469,11 +1469,11 @@ theme_shrub <- function(){ theme(legend.position = "bottom",
                                  panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y = element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 plot.title = element_text(color = "black", size = 14, family = "Helvetica Light", face = "italic", hjust = 0.5),
                                  legend.title = element_text(size=14, family = "Helvetica Light"),
                                  legend.key=element_blank(),
                                  strip.text.x = element_text(
-                                   size = 15, color = "black", face = "italic", family = "Helvetica Light"),
+                                   size = 14, color = "black", face = "italic", family = "Helvetica Light"),
                                  strip.background = element_blank(),
                                  legend.text=element_text(size = 12, family = "Helvetica Light"))}
 

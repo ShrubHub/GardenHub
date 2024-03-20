@@ -1239,14 +1239,14 @@ colnames(rich_width.pred) = c('population','fit', 'lwr', 'upr')
     geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   linewidth = 1, alpha = 1, width = 0.75) +
-    ylab("Max. mean width (cm)\n") +
+    ylab("Max. width (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values= pal_garden, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values= pal_garden, labels=c('North', 'South')) +
     scale_y_continuous(limits = c(0, 150), breaks = seq(0, 150, by = 25)) +
     theme_shrub()+
     theme( axis.text.x  = element_text(angle = 0), 
            axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern','Southern')))
+    scale_x_discrete(labels = c('North', 'South')))
 
 # S. pulchra ----
 # pul_width <- (conditional_effects(garden_pul_width)) # extracting conditional effects from bayesian model
@@ -1260,14 +1260,14 @@ colnames(pul_width.pred) = c('population','fit', 'lwr', 'upr')
     geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   linewidth = 1, alpha = 1, width = 0.75) +
-    ylab("Max. mean width (cm)\n") +
+    ylab("Max. width (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values= pal_garden, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values= pal_garden, labels=c('North', 'South')) +
     scale_y_continuous(limits = c(0, 125), breaks = seq(0, 125, by = 25)) +
     theme_shrub()+
     theme( axis.text.x  = element_text(angle = 0), 
            axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern','Southern')))
+    scale_x_discrete(labels = c('North', 'South')))
 
 # S. arctica ----
 # arc_width <- (conditional_effects(garden_arc_width)) # extracting conditional effects from bayesian model
@@ -1281,21 +1281,21 @@ colnames(arc_width.pred) = c('population','fit', 'lwr', 'upr')
     geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
                   linewidth = 1, alpha = 1, width = 0.75) +
-    ylab("Max. mean width (cm)\n") +
+    ylab("Max. width (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values= pal_garden, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values= pal_garden, labels=c('North', 'South')) +
     scale_y_continuous(limits = c(0, 75), breaks = seq(0, 75, by = 15)) +
     theme_shrub()+
     theme( axis.text.x  = element_text(angle = 0), 
            axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern','Southern')))
+    scale_x_discrete(labels = c('North', 'South')))
 
 # arrange 
 (growth_maxwidth <- ggarrange(rich_max_width_plot, pul_max_width_plot, arc_max_width_plot, 
                                 common.legend = TRUE, legend = "bottom",
                               labels = c("G)", "H)", "I)"),
                                 ncol = 3, nrow = 1, 
-  font.label=list(color="black",size = 18)))
+  font.label=list(color="black",size = 12)))
 
 ggsave(growth_maxwidth, filename ="output/figures/growth_maxhwidths.png", 
        width = 14.67, height = 6.53, units = "in", device = png)
