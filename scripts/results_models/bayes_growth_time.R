@@ -125,20 +125,20 @@ pal_garden <- c("#332288", "#7ad151")
 
 
 theme_shrub <- function(){ theme(legend.position = "bottom",
-                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=27),
-                                 axis.text.x  = element_text(vjust=0.5, size=27, family = "Helvetica Light", colour = "black", angle = 270), 
-                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=27),
-                                 axis.text.y  = element_text(vjust=0.5, size=27, family = "Helvetica Light", colour = "black"),
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.x  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black", angle = 270), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=20),
+                                 axis.text.y  = element_text(vjust=0.5, size=20, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y = element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 27, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 plot.title = element_text(color = "black", size = 20, family = "Helvetica Light", face = "italic", hjust = 0.5),
                                  legend.title = element_text(size=27, family = "Helvetica Light"),
                                  legend.key=element_blank(),
                                  strip.text.x = element_text(
-                                   size = 24, color = "black", face = "italic", family = "Helvetica Light"),
+                                   size = 20, color = "black", face = "italic", family = "Helvetica Light"),
                                  strip.background = element_blank(),
-                                 legend.text=element_text(size = 27, family = "Helvetica Light"))}
+                                 legend.text=element_text(size = 20, family = "Helvetica Light"))}
 
 # Salix richardsonii -------
 height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
@@ -639,10 +639,10 @@ ggsave(ggpred_growth_panel, filename ="output/figures/ggpred_CG_growth_panel_202
 (growth_panel <- ggarrange(ggpred_growth_panel,
                            growth_maxwidth, 
                                   nrow = 3, 
-                           heights = c(1.3, 0.6)))
+                           heights = c(1.8, 1)))
 
 ggsave(growth_panel, filename ="output/figures/CG_growth_panel_2023.png",
-       width = 18, height = 24, units = "cm", device = png)
+       height = 11, width = 8, unit = "in", dpi = 500, device = png)
 
 stem_elong_arc_summ <- model_summ(stem_arc)
 stem_elong_arc_summ$Species <- "Salix arctica"
