@@ -23,8 +23,8 @@ library(ggpubr)
 # Loading data ---- 
 all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv") # 2023 data
 # Only using max growth variables values
-max_widths_cg <- read_csv("data/common_garden_data_2023/max_widths_cg.csv")
-max_heights_cg <- read_csv("data/common_garden_data_2023/max_heights_cg.csv")
+max_widths_cg <- read.csv("data/common_garden_data_2023/max_widths_cg.csv")
+max_heights_cg <- read.csv("data/common_garden_data_2023/max_heights_cg.csv")
 max_biovol_cg <- read_csv("data/common_garden_data_2023/max_biovol_cg.csv")
 max_elong_cg <- read_csv("data/common_garden_data_2023/max_elong_cg.csv")
 max_diam_cg <- read_csv("data/common_garden_data_2023/max_diam_cg.csv")
@@ -1293,7 +1293,9 @@ colnames(arc_width.pred) = c('population','fit', 'lwr', 'upr')
 # arrange 
 (growth_maxwidth <- ggarrange(rich_max_width_plot, pul_max_width_plot, arc_max_width_plot, 
                                 common.legend = TRUE, legend = "bottom",
-                                ncol = 3, nrow = 1))
+                              labels = c("G)", "H)", "I)"),
+                                ncol = 3, nrow = 1, 
+  font.label=list(color="black",size = 18)))
 
 ggsave(growth_maxwidth, filename ="output/figures/growth_maxhwidths.png", 
        width = 14.67, height = 6.53, units = "in", device = png)

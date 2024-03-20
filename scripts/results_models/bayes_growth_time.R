@@ -333,7 +333,7 @@ ggpred_height_pred$species <- ordered(ggpred_height_pred$Species,
                                     common.legend = TRUE, 
                                     labels = c("A)", "B)", "C)"),
                                     legend="none", 
-                                    font.label=list(color="black",size = 24)))
+                                    font.label=list(color="black",size = 18)))
 
 ggsave(ggpred_CG_height_panel, filename ="output/figures/ggpred_CG_height_panel_2023.png",
        width = 18, height = 8, units = "cm", device = png)
@@ -404,84 +404,84 @@ save_kable(all_height_summ_table,file = "outputs/tables/kable_heights.pdf", # or
            keep_tex = FALSE,
            density = 300)
 
-# WDITH 2023 ####
-# S. richardsonii width ----
-width_ric <- brms::brm(log(mean_width) ~ Sample_age*population+(Sample_age|SampleID_standard),
-                       data = all_CG_growth_ric,  family = gaussian(), chains = 3,
-                       iter = 5000, warmup = 1000, 
-                       control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(width_ric)
-saveRDS(width_ric, file = "output/models/width_ric_2023.rds")
-width_ric <- readRDS("output/models/width_ric_2023.rds")
-
-ggpred_width_ric <- ggpredict(width_ric, terms = c("Sample_age", "population"))
-colnames(ggpred_width_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
-
-(ggpred_height_arc_plot <-ggplot(ggpred_width_ric) +
-    geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = mean_width, colour = population),
-               alpha = 0.5)+ # raw data
-    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
-    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
-                alpha = 0.2) +
-    ylab("Shrub width (cm)\n") +
-    xlab("\n Sample age " ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_shrub() + 
-    theme( axis.text.x  = element_text(angle = 0)) + 
-    labs(title = "Salix richardsonii", size = 20, family = "Helvetica Light"))
-
-# S. pulchra width ----
-width_pul <- brms::brm(log(mean_width) ~ Sample_age*population+(Sample_age|SampleID_standard),
-                       data = all_CG_growth_pul,  family = gaussian(), chains = 3,
-                       iter = 5000, warmup = 1000, 
-                       control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(width_pul)
-saveRDS(width_pul, file = "output/models/width_pul_2023.rds")
-width_pul <- readRDS("output/models/width_pul_2023.rds")
-
-ggpred_width_pul <- ggpredict(width_pul, terms = c("Sample_age", "population"))
-colnames(ggpred_width_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
-
-(ggpred_height_arc_plot <-ggplot(ggpred_width_pul) +
-    geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = mean_width, colour = population),
-               alpha = 0.5)+ # raw data
-    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
-    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
-                alpha = 0.2) +
-    ylab("Shrub width (cm)\n") +
-    xlab("\n Sample age " ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_shrub() + 
-    theme( axis.text.x  = element_text(angle = 0)) + 
-    labs(title = "Salix pulchra", size = 20, family = "Helvetica Light"))
-
-# # S arctica width ----
-width_arc <- brms::brm(log(mean_width) ~ Sample_age*population+(Sample_age|SampleID_standard),
-                       data = all_CG_growth_arc,  family = gaussian(), chains = 3,
-                       iter = 5000, warmup = 1000, 
-                       control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(width_arc)
-saveRDS(width_arc, file = "output/models/width_arc_2023.rds")
-width_arc <- readRDS("output/models/width_arc_2023.rds")
-
-ggpred_width_arc <- ggpredict(width_arc, terms = c("Sample_age", "population"))
-colnames(ggpred_width_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
-
-(ggpred_width_arc_plot <-ggplot(ggpred_width_arc) +
-    geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = mean_width, colour = population),
-               alpha = 0.5)+ # raw data
-    geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
-    geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
-                alpha = 0.2) +
-    ylab("Shrub width (cm)\n") +
-    xlab("\n Sample age " ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_shrub() + 
-    theme( axis.text.x  = element_text(angle = 0)) + 
-    labs(title = "Salix arctica", size = 20, family = "Helvetica Light"))
+# WDITH 2023
+# S. richardsonii width
+# width_ric <- brms::brm(log(mean_width) ~ Sample_age*population+(Sample_age|SampleID_standard),
+#                        data = all_CG_growth_ric,  family = gaussian(), chains = 3,
+#                        iter = 5000, warmup = 1000, 
+#                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+# summary(width_ric)
+# saveRDS(width_ric, file = "output/models/width_ric_2023.rds")
+# width_ric <- readRDS("output/models/width_ric_2023.rds")
+# 
+# ggpred_width_ric <- ggpredict(width_ric, terms = c("Sample_age", "population"))
+# colnames(ggpred_width_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
+# 
+# (ggpred_height_arc_plot <-ggplot(ggpred_width_ric) +
+#     geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = mean_width, colour = population),
+#                alpha = 0.5)+ # raw data
+#     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+#     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+#                 alpha = 0.2) +
+#     ylab("Shrub width (cm)\n") +
+#     xlab("\n Sample age " ) +
+#     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+#     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+#     theme_shrub() + 
+#     theme( axis.text.x  = element_text(angle = 0)) + 
+#     labs(title = "Salix richardsonii", size = 20, family = "Helvetica Light"))
+# 
+# # S. pulchra width
+# width_pul <- brms::brm(log(mean_width) ~ Sample_age*population+(Sample_age|SampleID_standard),
+#                        data = all_CG_growth_pul,  family = gaussian(), chains = 3,
+#                        iter = 5000, warmup = 1000, 
+#                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+# summary(width_pul)
+# saveRDS(width_pul, file = "output/models/width_pul_2023.rds")
+# width_pul <- readRDS("output/models/width_pul_2023.rds")
+# 
+# ggpred_width_pul <- ggpredict(width_pul, terms = c("Sample_age", "population"))
+# colnames(ggpred_width_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
+# 
+# (ggpred_height_arc_plot <-ggplot(ggpred_width_pul) +
+#     geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = mean_width, colour = population),
+#                alpha = 0.5)+ # raw data
+#     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+#     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+#                 alpha = 0.2) +
+#     ylab("Shrub width (cm)\n") +
+#     xlab("\n Sample age " ) +
+#     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+#     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+#     theme_shrub() + 
+#     theme( axis.text.x  = element_text(angle = 0)) + 
+#     labs(title = "Salix pulchra", size = 20, family = "Helvetica Light"))
+# 
+# # # S arctica width
+# width_arc <- brms::brm(log(mean_width) ~ Sample_age*population+(Sample_age|SampleID_standard),
+#                        data = all_CG_growth_arc,  family = gaussian(), chains = 3,
+#                        iter = 5000, warmup = 1000, 
+#                        control = list(max_treedepth = 15, adapt_delta = 0.99))
+# summary(width_arc)
+# saveRDS(width_arc, file = "output/models/width_arc_2023.rds")
+# width_arc <- readRDS("output/models/width_arc_2023.rds")
+# 
+# ggpred_width_arc <- ggpredict(width_arc, terms = c("Sample_age", "population"))
+# colnames(ggpred_width_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
+# 
+# (ggpred_width_arc_plot <-ggplot(ggpred_width_arc) +
+#     geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = mean_width, colour = population),
+#                alpha = 0.5)+ # raw data
+#     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
+#     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
+#                 alpha = 0.2) +
+#     ylab("Shrub width (cm)\n") +
+#     xlab("\n Sample age " ) +
+#     scale_colour_viridis_d(begin = 0.1, end = 0.85) +
+#     scale_fill_viridis_d(begin = 0.1, end = 0.85) +
+#     theme_shrub() + 
+#     theme( axis.text.x  = element_text(angle = 0)) + 
+#     labs(title = "Salix arctica", size = 20, family = "Helvetica Light"))
 
 
 # STEM ELONGATION 2023 ----
@@ -621,8 +621,8 @@ all_CG_growth_arc$population <- ordered(all_CG_growth_arc$population,
                                    ggpred_stem_arc_plot, nrow = 1,
                                      common.legend = TRUE, 
                                      labels = c("D)", "E)", "F)"),
-                                     legend="bottom", 
-  font.label=list(color="black",size = 24)))
+                                     legend="none", 
+  font.label=list(color="black",size = 18)))
 
 ggsave(ggpred_CG_stem_panel, filename ="output/figures/ggpred_CG_stem_panel_2023.png",
        width = 18, height = 8, units = "in", device = png)
@@ -631,10 +631,18 @@ ggsave(ggpred_CG_stem_panel, filename ="output/figures/ggpred_CG_stem_panel_2023
                                   ggpred_CG_stem_panel, 
                                    nrow = 2,
                                    common.legend = TRUE,
-                                   legend="bottom",heights = c(0.9, 1)))
+                                   legend="none",heights = c(0.9, 1)))
 
 ggsave(ggpred_growth_panel, filename ="output/figures/ggpred_CG_growth_panel_2023.png",
        width = 18, height = 14, units = "in", device = png)
+
+(growth_panel <- ggarrange(ggpred_growth_panel,
+                           growth_maxwidth, 
+                                  nrow = 3, 
+                           heights = c(1.3, 0.6)))
+
+ggsave(growth_panel, filename ="output/figures/CG_growth_panel_2023.png",
+       width = 18, height = 24, units = "cm", device = png)
 
 stem_elong_arc_summ <- model_summ(stem_arc)
 stem_elong_arc_summ$Species <- "Salix arctica"
