@@ -518,10 +518,16 @@ save_kable(kable_heights,file = "outputs/tables/kable_heights.pdf",
 
 # WIDTH ------
 # S. richardsonii -----
-garden_rich_width <- brms::brm(log(max_mean_width_cm) ~ population + (1|Sample_age),
-                                data = max_widths_cg_rich, family = gaussian(), chains = 3,
-                                iter = 5000, warmup = 1000, 
-                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+# garden_rich_width <- brms::brm(log(max_mean_width_cm) ~ population + (1|Sample_age),
+#                                 data = max_widths_cg_rich, family = gaussian(), chains = 3,
+#                                 iter = 5000, warmup = 1000, 
+#                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+garden_rich_width <- brms::brm(log(max_mean_width_cm) ~ population,
+                               data = max_widths_cg_rich, family = gaussian(), chains = 3,
+                               iter = 5000, warmup = 1000, 
+                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+
 summary(garden_rich_width) # significantly larger widths for southern shrubs in garden
 plot(garden_rich_width) # fine
 pp_check(garden_rich_width,  type = "dens_overlay", ndraws = 100) # good
