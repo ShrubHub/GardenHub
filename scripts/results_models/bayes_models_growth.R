@@ -578,7 +578,7 @@ rich_width_all <- full_join(rich_extract_width_df_1, rich_extract_width_df,
 rownames(rich_width_all) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
 
 # S. pulchra -----
-garden_pul_width <- brms::brm(log(max_mean_width_cm) ~ population + (1|Sample_age),
+garden_pul_width <- brms::brm(log(max_mean_width_cm) ~ population,
                                data = max_widths_cg_pul, family = gaussian(), chains = 3,
                                iter = 5000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -632,13 +632,13 @@ pul_width_extract_all <- full_join(pul_extract_width_df_1, pul_extract_width_df,
 rownames(pul_width_extract_all) <- c("Intercept ", "Southern Garden ", "Sample age ", "Sigma  ")
 
 # S. arctica -----
-garden_arc_width <- brms::brm(log(max_mean_width_cm) ~ population + (1|Sample_age),
+garden_arc_width <- brms::brm(log(max_mean_width_cm) ~ population,
                                data = max_widths_cg_arc, family = gaussian(), chains = 3,
                                iter = 5000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
 summary(garden_arc_width) # NOT significantly larger widths for southern shrubs in garden (makes sense)
 plot(garden_arc_width) # fine
-pp_check(garden_arc_width,  type = "dens_overlay", nsamples = 100) # fine
+pp_check(garden_arc_width,  type = "dens_overlay", ndraws = 100) # fine
 saveRDS(garden_arc_width, file = "output/models/garden_arc_width.rds")
 garden_arc_width <- readRDS("output/models/garden_arc_width.rds")
 arc_width.pred <- ggpredict(garden_arc_width, terms = c('population'))
