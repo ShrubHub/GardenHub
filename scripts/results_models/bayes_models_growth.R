@@ -102,6 +102,21 @@ model_summ_time <- function(x) {
   modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge it all together
 }
 
+# no random effect model summary function 
+model_summ_no_re <- function(x) {
+  sum = summary(x)
+  fixed = sum$fixed
+  sigma = sum$spec_pars
+  obs = sum$nobs
+  
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  sigma$effect <- "residual"
+  fixed$nobs <- obs  # add column with number of observations
+  sigma$nobs <- obs
+  
+  modelTerms <- as.data.frame(bind_rows(fixed, sigma))  # merge together
+}
+
 # Data wrangling ------
 # max height  
 max_heights_cg$Species <- as.factor(max_heights_cg$Species)
@@ -536,7 +551,7 @@ garden_rich_width <- readRDS("output/models/garden_rich_width.rds")
 rich_width.pred <- ggpredict(garden_rich_width, terms = c('population'))
 
 # extract output with function
-rich_extract_width <- model_summ_growth(garden_rich_width)
+rich_extract_width <- model_summ_no_re(garden_rich_width)
 
 rich_extract_width <- rich_extract_width %>% 
   dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
@@ -590,7 +605,7 @@ garden_pul_width <-  readRDS("output/models/garden_pul_width.rds")
 pul_width.pred <- ggpredict(garden_pul_width, terms = c('population'))
 
 # extract output with function
-pul_extract_width <- model_summ_growth(garden_pul_width)
+pul_extract_width <- model_summ_no_re(garden_pul_width)
 
 pul_extract_width <- pul_extract_width %>% 
   dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
@@ -644,7 +659,7 @@ garden_arc_width <- readRDS("output/models/garden_arc_width.rds")
 arc_width.pred <- ggpredict(garden_arc_width, terms = c('population'))
 
 # extract output with function
-arc_extract_width <- model_summ_growth(garden_arc_width)
+arc_extract_width <- model_summ_no_re(garden_arc_width)
 
 arc_extract_width <- arc_extract_width %>% 
   dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
