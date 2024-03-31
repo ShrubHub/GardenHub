@@ -19,6 +19,7 @@ library(knitr) # For kable tables
 library(kableExtra) # For kable tables
 library(gridExtra)
 library(ggpubr)
+library(ggeffects)
 
 # Loading data ---- 
 all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv") # 2023 data
@@ -571,8 +572,8 @@ rich_extract_width_2[2,3] <- rich_extract_width_2[2,3] + rich_extract_width_2[1,
 rich_extract_width_2[2,4] <- rich_extract_width_2[2,4] + rich_extract_width_2[1,4]
 
 # extraction for model output table
-rownames(rich_extract_width) <- c("Intercept  ", "Southern Garden  ", "Sample age  ", "Sigma  ")
-rownames(rich_extract_width_2) <- c("Intercept ", "Southern Garden ", "Sample age ", "Sigma ")
+rownames(rich_extract_width) <- c("Intercept  ", "Southern Garden  ", "Sigma  ")
+rownames(rich_extract_width_2) <- c("Intercept ", "Southern Garden ", "Sigma ")
 
 rich_extract_width_df_1 <- rich_extract_width %>% 
   mutate(Species = rep("Salix richardsonii")) %>%
@@ -590,7 +591,7 @@ rich_width_all <- full_join(rich_extract_width_df_1, rich_extract_width_df,
                                     "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                     "Species"="Species", "Rhat"="Rhat"))
 
-rownames(rich_width_all) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
+rownames(rich_width_all) <- c("Intercept", "Southern Garden", "Sigma")
 
 # S. pulchra -----
 garden_pul_width <- brms::brm(log(max_mean_width_cm) ~ population,
@@ -625,8 +626,8 @@ pul_extract_width_2[2,3] <- pul_extract_width_2[2,3] + pul_extract_width_2[1,3]
 pul_extract_width_2[2,4] <- pul_extract_width_2[2,4] + pul_extract_width_2[1,4]
 
 # extraction for model output table
-rownames(pul_extract_width) <- c("Intercept  ", "Southern Garden  ", "Sample age  ", "Sigma  ")
-rownames(pul_extract_width_2) <- c("Intercept ", "Southern Garden ", "Sample age ", "Sigma ")
+rownames(pul_extract_width) <- c("Intercept  ", "Southern Garden  ", "Sigma  ")
+rownames(pul_extract_width_2) <- c("Intercept ", "Southern Garden ", "Sigma ")
 
 pul_extract_width_df_1 <- pul_extract_width %>% 
   mutate(Species = rep("Salix pulchra")) %>%
@@ -644,7 +645,7 @@ pul_width_extract_all <- full_join(pul_extract_width_df_1, pul_extract_width_df,
                                     "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                     "Species"="Species", "Rhat"="Rhat"))
 
-rownames(pul_width_extract_all) <- c("Intercept ", "Southern Garden ", "Sample age ", "Sigma  ")
+rownames(pul_width_extract_all) <- c("Intercept ", "Southern Garden ", "Sigma  ")
 
 # S. arctica -----
 garden_arc_width <- brms::brm(log(max_mean_width_cm) ~ population,
@@ -679,8 +680,8 @@ arc_extract_width_2[2,3] <- arc_extract_width_2[2,3] + arc_extract_width_2[1,3]
 arc_extract_width_2[2,4] <- arc_extract_width_2[2,4] + arc_extract_width_2[1,4]
 
 # extraction for model output table
-rownames(arc_extract_width) <- c("Intercept  ", "Southern Garden  ", "Sample age  ", "Sigma  ")
-rownames(arc_extract_width_2) <- c("Intercept ", "Southern Garden ", "Sample age ", "Sigma ")
+rownames(arc_extract_width) <- c("Intercept  ", "Southern Garden  ", "Sigma  ")
+rownames(arc_extract_width_2) <- c("Intercept ", "Southern Garden ", "Sigma ")
 
 arc_extract_width_df_1 <- arc_extract_width %>% 
   mutate(Species = rep("Salix arctica")) %>%
@@ -698,7 +699,7 @@ arc_width_extract_all <- full_join(arc_extract_width_df_1, arc_extract_width_df,
                                     "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
                                     "Species"="Species", "Rhat"="Rhat"))
 
-rownames(arc_width_extract_all) <- c("Intercept  ", "Southern Garden  ", "Sample age  ", "Sigma  ")
+rownames(arc_width_extract_all) <- c("Intercept  ", "Southern Garden  ", "Sigma  ")
 
 # merging all extracted outputs
 all_width_output <- rbind(rich_width_all, pul_width_extract_all, arc_width_extract_all)
@@ -723,9 +724,9 @@ write.csv(garden_width_out_back, "output/garden_width_out_back.csv")
 garden_width_out_back <- read.csv("output/garden_width_out_back.csv")
 
 # adding spaces before/after each name so they let me repeat them in the table
-rownames(garden_width_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
-                                      "Sigma", " Intercept", " Southern Garden", " Sample age", 
-                                      " Sigma", "Intercept ", "Southern Garden ", "Sample age ", 
+rownames(garden_width_out_back) <- c("Intercept", "Southern Garden",  
+                                      "Sigma", " Intercept", " Southern Garden",  
+                                      " Sigma", "Intercept ", "Southern Garden ",  
                                       "Sigma ")
 
 # making sure Rhat keeps the .00 

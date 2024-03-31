@@ -161,15 +161,14 @@ ggpred_height_ric$species <- "Salix richardsonii"
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
     ylab("Canopy height (cm)\n") +
-    xlab("\n Sample age " ) +
+    xlab("\n" ) +
     scale_color_manual(values=pal_garden) +
     scale_fill_manual(values=pal_garden) +
     ggtitle(expression(italic("Salix richardsonii"))) +
     scale_x_continuous(limits = c(1, 10), breaks = seq(1, 10, by = 1)) +
     theme_shrub()+ 
     theme(text=element_text(family="Helvetica
-                                           Light"),
-          axis.title.x=element_blank()) +
+                                           Light")) +
     scale_y_continuous(limits = c(0, 125), breaks = seq(0, 125, by = 25)) +
     theme( axis.text.x  = element_text(angle = 0)) +
     labs(title = "Salix richardsonii", size = 14, family = "Helvetica Light")) 
@@ -240,15 +239,14 @@ ggpred_height_pul$species <- "Salix pulchra"
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
     ylab("Canopy height (cm)\n") +
-    xlab("\n Sample age " ) +
+    xlab("\n" ) +
     scale_color_manual(values=pal_garden) +
     scale_fill_manual(values=pal_garden) +
     ggtitle(expression(italic("Salix pulchra"))) +
     theme_shrub()+ theme(text=element_text(family="Helvetica
                                            Light")) +
     scale_y_continuous(limits = c(0, 100), breaks = seq(0, 90, by = 15)) +
-    theme( axis.text.x  = element_text(angle = 0), 
-           axis.title.x=element_blank()) +
+    theme( axis.text.x  = element_text(angle = 0)) +
     scale_x_continuous(limits = c(1, 10), breaks = seq(1, 10, by = 1)) +
     labs(title = "Salix pulchra", size = 14, family = "Helvetica Light"))
 
@@ -302,14 +300,13 @@ ggpred_height_arc$species <- "Salix arctica"
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
     ylab("Canopy height (cm)\n") +
-    xlab("\n Sample age " ) +
+    xlab("\n" ) +
     scale_color_manual(values=pal_garden) +
     scale_fill_manual(values=pal_garden) +
     theme_shrub() + 
     scale_y_continuous(limits = c(0, 15), breaks = seq(0, 15, by = 3)) +
     scale_x_continuous(limits = c(1, 8), breaks = seq(1, 8, by = 1)) +
-    theme( axis.text.x  = element_text(angle = 0), 
-           axis.title.x=element_blank()) + 
+    theme( axis.text.x  = element_text(angle = 0)) + 
     labs(title = "Salix arctica", size = 14, family = "Helvetica Light")) # if i log everything it's exactly the same plot as with conditional effects! 
 
 # combine all datasets to facet figure 
@@ -317,15 +314,15 @@ ggpred_height_arc$species <- "Salix arctica"
 ggpred_height_pred <- rbind(ggpred_height_ric, ggpred_height_pul, ggpred_height_arc)
 ggpred_height_pred
 # reorder species 
-ggpred_height_pred$species <- ordered(ggpred_height_pred$Species, 
-                                      levels = c("Salix richardsonii", 
-                                                 "Salix pulchra",
-                                                 "Salix arctica"))
-
-ggpred_height_pred$species <- ordered(ggpred_height_pred$Species, 
-                                     levels = c("Salix richardsonii", 
-                                                "Salix pulchra",
-                                                "Salix arctica"))
+# ggpred_height_pred$species <- ordered(ggpred_height_pred$Species, 
+#                                       levels = c("Salix richardsonii", 
+#                                                  "Salix pulchra",
+#                                                  "Salix arctica"))
+# 
+# ggpred_height_pred$species <- ordered(ggpred_height_pred$Species, 
+#                                      levels = c("Salix richardsonii", 
+#                                                 "Salix pulchra",
+#                                                 "Salix arctica"))
 
 (ggpred_CG_height_panel <- ggarrange(ggpred_height_rich_plot,
                                     ggpred_height_pul_plot, 
@@ -510,7 +507,7 @@ all_CG_growth_ric$population <- ordered(all_CG_growth_ric$population,
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
     ylab("Stem elongation (mm)\n") +
-    xlab("Sample age " ) +
+    xlab("Sample age \n" ) +
     scale_colour_manual(values=pal_garden) +
     scale_fill_manual(values=pal_garden) +
     scale_x_continuous(limits = c(1, 10), breaks = seq(1, 10, by = 1)) +
@@ -563,7 +560,7 @@ all_CG_growth_pul_elong$population <- ordered(all_CG_growth_pul_elong$population
     ylab("Stem elongation (mm)\n") +
     scale_x_continuous(limits = c(1, 10), breaks = seq(1, 10, by = 1)) +
     scale_y_continuous(limits = c(0, 90), breaks = seq(0, 90, by = 15)) +
-    xlab("Sample age " ) +
+    xlab("Sample age \n" ) +
     scale_colour_manual(values=pal_garden) +
     scale_fill_manual(values=pal_garden) +
     theme_shrub() + 
@@ -608,7 +605,7 @@ all_CG_growth_arc$population <- ordered(all_CG_growth_arc$population,
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
     ylab("Stem elongation (mm)\n") +
-    xlab("Sample age " ) +
+    xlab("Sample age \n" ) +
     scale_y_continuous(limits = c(0, 40), breaks = seq(0, 40, by = 8)) +
     scale_colour_manual(values=pal_garden) +
     scale_x_continuous(limits = c(1, 8), breaks = seq(1, 8, by = 1)) +
