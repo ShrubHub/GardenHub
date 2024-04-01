@@ -186,17 +186,17 @@ height_rich_summ <- height_rich_summ %>%
   dplyr::rename("l_95_CI_log" = "l-95% CI", 
                 "u_95_CI_log" = "u-95% CI")
 
-# change estimates by adding estimate to other rows 
-#height_rich_summ[3,1] <- height_rich_summ[3,1] + height_rich_summ[1,1]
-#height_rich_summ[4,1] <- height_rich_summ[4,1] + height_rich_summ[2,1]
-
-# change lower CI by adding 
-#height_rich_summ[3,3] <- height_rich_summ[3,3] + height_rich_summ[1,3]
-#height_rich_summ[4,3] <- height_rich_summ[4,3] + height_rich_summ[2,3]
-
-# change upper CI
-#height_rich_summ[3,4] <- height_rich_summ[3,4] + height_rich_summ[1,4]
-#height_rich_summ[4,4] <- height_rich_summ[4,4] + height_rich_summ[2,4]
+# # change estimates by adding estimate to other rows 
+# height_rich_summ[3,1] <- height_rich_summ[3,1] + height_rich_summ[1,1]
+# height_rich_summ[4,1] <- height_rich_summ[4,1] + height_rich_summ[2,1]
+# 
+# # change lower CI by adding
+# height_rich_summ[3,3] <- height_rich_summ[3,3] + height_rich_summ[1,3]
+# height_rich_summ[4,3] <- height_rich_summ[4,3] + height_rich_summ[2,3]
+# 
+# # change upper CI
+# height_rich_summ[3,4] <- height_rich_summ[3,4] + height_rich_summ[1,4]
+# height_rich_summ[4,4] <- height_rich_summ[4,4] + height_rich_summ[2,4]
 
 #height_rich_summ <- height_rich_summ[c(1:4),] # this removes the random effects
 
@@ -251,31 +251,32 @@ ggpred_height_pul$species <- "Salix pulchra"
     labs(title = "Salix pulchra", size = 14, family = "Helvetica Light"))
 
 height_pul_summ <- model_summ(height_pul)
-
-rownames(height_pul_summ) <- c("Intercept      ", "Sample age      ", "Southern population "
-                               , "Sample age:Southern population ", "Random intercept ", 
-                               "sd(Sample age) ", "cor(Intercept, Sample age) ", "sigma ")
-height_pul_summ$Rhat <- as.character(formatC(height_pul_summ$Rhat, digits = 2, format = 'f'))
-
-height_pul_summ <- height_pul_summ %>%
-  mutate(Species = "Salix pulchra")%>%
-  relocate("Species", .before = "Estimate")
-
+height_pul_summ$Species <- "Salix pulchra"
 height_pul_summ <- height_pul_summ %>% 
   dplyr::rename("l_95_CI_log" = "l-95% CI", 
                 "u_95_CI_log" = "u-95% CI")
 
 # change estimates by adding estimate to other rows 
-#height_pul_summ[3,1] <- height_pul_summ[3,1] + height_pul_summ[1,1]
-#height_pul_summ[4,1] <- height_pul_summ[4,1] + height_pul_summ[2,1]
+# height_pul_summ[3,1] <- height_pul_summ[3,1] + height_pul_summ[1,1]
+# height_pul_summ[4,1] <- height_pul_summ[4,1] + height_pul_summ[2,1]
+# 
+# # change lower CI by adding 
+# height_pul_summ[3,3] <- height_pul_summ[3,3] + height_pul_summ[1,3]
+# height_pul_summ[4,3] <- height_pul_summ[4,3] + height_pul_summ[2,3]
+# 
+# # change upper CI
+# height_pul_summ[3,4] <- height_pul_summ[3,4] + height_pul_summ[1,4]
+# height_pul_summ[4,4] <- height_pul_summ[4,4] + height_pul_summ[2,4]
 
-# change lower CI by adding 
-#height_pul_summ[3,3] <- height_pul_summ[3,3] + height_pul_summ[1,3]
-#height_pul_summ[4,3] <- height_pul_summ[4,3] + height_pul_summ[2,3]
+rownames(height_pul_summ) <- c("Intercept ", "Sample age ", "Southern population "
+                               , "Sample age:Southern population ", "Random intercept ", 
+                               "sd(Sample age) ", "cor(Intercept, Sample age) ", "sigma ")
 
-# change upper CI
-#height_pul_summ[3,4] <- height_pul_summ[3,4] + height_pul_summ[1,4]
-#height_pul_summ[4,4] <- height_pul_summ[4,4] + height_pul_summ[2,4]
+height_pul_summ$Rhat <- as.character(formatC(height_pul_summ$Rhat, digits = 2, format = 'f'))
+
+height_pul_summ <- height_pul_summ %>%
+#mutate(Species = "Salix pulchra")%>%
+relocate("Species", .before = "Estimate")
 
 # Salix arctica  -------
 height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
@@ -307,22 +308,7 @@ ggpred_height_arc$species <- "Salix arctica"
     scale_y_continuous(limits = c(0, 15), breaks = seq(0, 15, by = 3)) +
     scale_x_continuous(limits = c(1, 8), breaks = seq(1, 8, by = 1)) +
     theme( axis.text.x  = element_text(angle = 0)) + 
-    labs(title = "Salix arctica", size = 14, family = "Helvetica Light")) # if i log everything it's exactly the same plot as with conditional effects! 
-
-# combine all datasets to facet figure 
-# raw data: all_CG_growth
-ggpred_height_pred <- rbind(ggpred_height_ric, ggpred_height_pul, ggpred_height_arc)
-ggpred_height_pred
-# reorder species 
-# ggpred_height_pred$species <- ordered(ggpred_height_pred$Species, 
-#                                       levels = c("Salix richardsonii", 
-#                                                  "Salix pulchra",
-#                                                  "Salix arctica"))
-# 
-# ggpred_height_pred$species <- ordered(ggpred_height_pred$Species, 
-#                                      levels = c("Salix richardsonii", 
-#                                                 "Salix pulchra",
-#                                                 "Salix arctica"))
+    labs(title = "Salix arctica", size = 14, family = "Helvetica Light")) 
 
 (ggpred_CG_height_panel <- ggarrange(ggpred_height_rich_plot,
                                     ggpred_height_pul_plot, 
@@ -342,22 +328,25 @@ height_arc_summ <- height_arc_summ %>%
   dplyr::rename("l_95_CI_log" = "l-95% CI", 
                 "u_95_CI_log" = "u-95% CI")
 
-# change estimates by adding estimate to other rows 
-#height_arc_summ[3,1] <- height_arc_summ[3,1] + height_arc_summ[1,1]
-#height_arc_summ[4,1] <- height_arc_summ[4,1] + height_arc_summ[2,1]
-
-## change lower CI by adding 
-#height_arc_summ[3,3] <- height_arc_summ[3,3] + height_arc_summ[1,3]
-#height_arc_summ[4,3] <- height_arc_summ[4,3] + height_arc_summ[2,3]
-
-# change upper CI
-#height_arc_summ[3,4] <- height_arc_summ[3,4] + height_arc_summ[1,4]3
-#height_arc_summ[4,4] <- height_arc_summ[4,4] + height_arc_summ[2,4]
+# # change estimates by adding estimate to other rows 
+# height_arc_summ_2[3,1] <- height_arc_summ_2[3,1] + height_arc_summ_2[1,1]
+# height_arc_summ_2[4,1] <- height_arc_summ_2[4,1] + height_arc_summ_2[2,1]
+# 
+# ## change lower CI by adding 
+# height_arc_summ_2[3,3] <- height_arc_summ_2[3,3] + height_arc_summ_2[1,3]
+# height_arc_summ_2[4,3] <- height_arc_summ_2[4,3] + height_arc_summ_2[2,3]
+# 
+# # change upper CI
+# height_arc_summ_2[3,4] <- height_arc_summ_2[3,4] + height_arc_summ_2[1,4]
+# height_arc_summ_2[4,4] <- height_arc_summ_2[4,4] + height_arc_summ_2[2,4]
 
 rownames(height_arc_summ) <- c(" Intercept ", " Sample age ", " Southern population "
                                , " Sample age:Southern population ", " Random intercept ", 
                                " sd(Sample age) ", " cor(Intercept, Sample age) ", " sigma ")
 height_arc_summ$Rhat <- as.character(formatC(height_arc_summ$Rhat, digits = 2, format = 'f'))
+
+height_arc_summ <- height_arc_summ %>%
+  relocate("Species", .before = "Estimate")
 
 #height_arc_summ <- height_arc_summ[c(1:4),]
 
@@ -373,7 +362,7 @@ all_height_summ_back <- all_height_summ %>%
   dplyr::rename("Upper 95% CI (log)" = "u_95_CI_log")
 
 write.csv(all_height_summ_back, "outputs/tables/all_height_time_output.csv")
-
+all_height_summ_back <- read.csv("outputs/tables/all_height_time_output.csv")
 #all_height_summ_table <- all_height_summ_back %>% 
 #  kbl(caption="Table. Heights over time of northern and southern shrubs in the common garden. ", 
   #    col.names = c("Species", "Estimate (log)", "Error (log)", "Lower 95% CI (log)", "Upper 95% CI (log)",
