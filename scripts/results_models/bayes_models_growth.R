@@ -1260,7 +1260,7 @@ colnames(rich_width.pred) = c('population','fit', 'lwr', 'upr')
                 alpha = 0.3, position = position_jitter(w = 0.09, h = 0))+
     geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
-                  linewidth = 1, alpha = 1, width = 0.75) +
+                  linewidth = 1, alpha = 1, width = 0.5) +
     ylab("Max. width (cm)\n") +
     xlab("\n Population" ) +
     scale_color_manual(values= pal_garden, labels=c('North', 'South')) +
@@ -1281,7 +1281,7 @@ colnames(pul_width.pred) = c('population','fit', 'lwr', 'upr')
                 alpha = 0.3, position = position_jitter(w = 0.09, h = 0))+
     geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
-                  linewidth = 1, alpha = 1, width = 0.75) +
+                  linewidth = 1, alpha = 1, width = 0.5) +
     ylab("Max. width (cm)\n") +
     xlab("\n Population" ) +
     scale_color_manual(values= pal_garden, labels=c('North', 'South')) +
@@ -1302,7 +1302,7 @@ colnames(arc_width.pred) = c('population','fit', 'lwr', 'upr')
                 alpha = 0.3, position = position_jitter(w = 0.09, h = 0))+
     geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
     geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
-                  linewidth = 1, alpha = 1, width = 0.75) +
+                  linewidth = 1, alpha = 1, width = 0.5) +
     ylab("Max. width (cm)\n") +
     xlab("\n Population" ) +
     scale_color_manual(values= pal_garden, labels=c('North', 'South')) +
@@ -1319,7 +1319,7 @@ colnames(arc_width.pred) = c('population','fit', 'lwr', 'upr')
                                 ncol = 3, nrow = 1, 
   font.label=list(color="black",size = 12)))
 
-ggsave(growth_maxwidth, filename ="output/figures/growth_maxhwidths.png", 
+ggsave(growth_maxwidth, filename ="output/figures/growth_max_widths.png", 
        width = 14.67, height = 6.53, units = "in", device = png)
 
 (max_size_panel <- ggarrange(growth_maxheights, growth_maxwidth, 

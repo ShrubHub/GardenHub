@@ -125,20 +125,20 @@ pal_garden <- c("#332288", "#7ad151")
 
 
 theme_shrub <- function(){ theme(legend.position = "bottom",
-                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=12),
-                                 axis.text.x  = element_text(vjust=0.5, size=12, family = "Helvetica Light", colour = "black", angle = 270), 
-                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=12),
-                                 axis.text.y  = element_text(vjust=0.5, size=12, family = "Helvetica Light", colour = "black"),
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=14),
+                                 axis.text.x  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black", angle = 270), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=14),
+                                 axis.text.y  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y = element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 12, family = "Helvetica Light", face = "italic", hjust = 0.5),
-                                 legend.title = element_text(size=12, family = "Helvetica Light"),
+                                 plot.title = element_text(color = "black", size = 14, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 legend.title = element_text(size=14, family = "Helvetica Light"),
                                  legend.key=element_blank(),
                                  strip.text.x = element_text(
                                    size = 12, color = "black", face = "italic", family = "Helvetica Light"),
                                  strip.background = element_blank(),
-                                 legend.text=element_text(size = 12, family = "Helvetica Light"))}
+                                 legend.text=element_text(size = 14, family = "Helvetica Light"))}
 
 # Salix richardsonii -------
 height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_age|SampleID_standard),
@@ -156,7 +156,7 @@ ggpred_height_ric$species <- "Salix richardsonii"
 
 (ggpred_height_rich_plot <-ggplot(ggpred_height_ric) +
     geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, size = 1)+ # raw data
     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
@@ -172,7 +172,6 @@ ggpred_height_ric$species <- "Salix richardsonii"
     scale_y_continuous(limits = c(0, 125), breaks = seq(0, 125, by = 25)) +
     theme( axis.text.x  = element_text(angle = 0)) +
     labs(title = "Salix richardsonii", size = 14, family = "Helvetica Light")) 
-
 
 # estimate for northern sample age: 1.46+0.10*1 = exp(1.56) = 4.758821 cm, in year 1
 # estimate for southern sample age: (1.46+1.06)+(0.10*1+0.11*1) = exp(2.73) = 15.33289 in year 1
@@ -234,7 +233,7 @@ ggpred_height_pul$species <- "Salix pulchra"
 
 (ggpred_height_pul_plot <-ggplot(ggpred_height_pul) +
     geom_point(data = all_CG_growth_pul, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, size = 1)+ # raw data
     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
@@ -296,7 +295,7 @@ ggpred_height_arc$species <- "Salix arctica"
 
 (ggpred_height_arc_plot <-ggplot(ggpred_height_arc) +
     geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, size = 1)+ # raw data
     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
@@ -491,7 +490,7 @@ all_CG_growth_ric$population <- ordered(all_CG_growth_ric$population,
 
 (ggpred_stem_ric_plot <-ggplot(ggpred_stem_ric) +
     geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = mean_stem_elong, colour = population),
-               alpha = 0.5) + # raw data
+               alpha = 0.5, size = 1) + # raw data
     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
@@ -542,7 +541,7 @@ all_CG_growth_pul_elong$population <- ordered(all_CG_growth_pul_elong$population
 
 (ggpred_stem_pul_plot <-ggplot(ggpred_stem_pul) +
     geom_point(data = all_CG_growth_pul_elong, aes(x = Sample_age, y = mean_stem_elong, colour = population),
-               alpha = 0.5)+ # raw data
+               alpha = 0.5, size = 1)+ # raw data
     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
@@ -589,7 +588,7 @@ all_CG_growth_arc$population <- ordered(all_CG_growth_arc$population,
 
 (ggpred_stem_arc_plot <-ggplot(ggpred_stem_arc) +
     geom_point(data = all_CG_growth_arc, aes(x = Sample_age, y = mean_stem_elong, colour = population),
-               alpha = 0.5) + # raw data
+               alpha = 0.5, size = 1) + # raw data
     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
     geom_ribbon(aes(x = Sample_age, ymin = lwr, ymax = upr,  fill = population),
                 alpha = 0.2) +
