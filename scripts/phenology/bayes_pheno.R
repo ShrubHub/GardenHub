@@ -1430,8 +1430,8 @@ all_pheno_fig_pred <- all_pheno_fig_pred_merge %>%
 #     theme(axis.title.y = element_text(margin = margin (r = 10))))
 
 pal_garden <- c("#332288", "#7ad151")
-shapes_garden <- c(16, 17)
-shape_stage <- c(1, 16, 2, 17)
+shapes_garden <- c(24, 21)
+shape_stage <- c(21, 16, 24, 17)
 lines_garden <- c(1,2)
 
 all_pheno_fig_pred$Species <- ordered(all_pheno_fig_pred$Species, 
@@ -1480,10 +1480,11 @@ all_pheno_fig_raw <- read.csv("data/phenology/all_pheno_fig_raw.csv")
 (facet_pheno_plot <-ggplot(all_pheno_fig_pred) + # model predictions
     geom_point(data = all_pheno_fig_raw, aes(y = population, x = DOY, colour = group_color, shape = group_shape),
                 alpha = 0.5, position = position_jitter(h = 0.2)) + # raw data
-    geom_point(aes(x = Estimate_trans, y = population, shape = group_shape, color = group_color), size = 4)+
     geom_errorbar(aes(xmin = CI_low_trans, xmax = CI_high_trans, y = population, 
                       colour = group_color, shape = group_shape),
                   size = 1, alpha = 1, width=0.4) +
+    geom_point(aes(x = Estimate_trans, y = population, shape = group_shape, color = group_color), size = 4, fill = "white")+
+    
     xlab("\n Day of year") +
     ylab("") +
    geom_line(aes(x = Estimate_trans , y = population, colour = group_color, linetype = group_shape), 
@@ -1510,8 +1511,6 @@ all_pheno_fig_raw <- read.csv("data/phenology/all_pheno_fig_raw.csv")
 (facet_pheno_plot_vert <-ggplot(all_pheno_fig_pred) + # model predictions
     geom_point(data = all_pheno_fig_raw, aes(y = DOY, x = population, colour = group_color, 
                                              shape = shape_stage), alpha = 0.5) + # raw data
-    geom_point(aes(x = population, y = Estimate_trans, shape = shape_stage, 
-                   color = group_color), size = 3, stroke = 1)+
     geom_errorbar(aes(ymin = CI_low_trans, ymax = CI_high_trans, x = population, 
                       colour = group_color),
                   size = 1, alpha = 1, width=0.4) +
@@ -1519,35 +1518,8 @@ all_pheno_fig_raw <- read.csv("data/phenology/all_pheno_fig_raw.csv")
     xlab("") +
     geom_line(aes(x = population , y = Estimate_trans, colour = group_color), 
               linewidth = 0.8, alpha = 1)+
-    scale_color_manual(values=pal_garden, guide = "none") +
-    scale_fill_manual(values=pal_garden, guide = "none") +
-    scale_y_continuous(limits = c(110, 240), breaks = seq(110, 240, by = 30)) +
-    scale_shape_manual(labels = c("Garden emergence", "Garden yellowing", 
-                                  "Source emergence", "Source yellowing"), values = shape_stage)+
-    scale_x_discrete(drop=FALSE,
-                     labels=c('      North', '', "", "      South", ''), expand=c(0.2, 0.2)) +
-    facet_grid(~Species, scales = "free_y", drop=T) +
-    theme_shrub()+ 
-    theme(legend.background=element_blank(), legend.key=element_blank(), 
-          legend.position = "bottom", 
-          axis.ticks.x = element_blank(), 
-          axis.text.x  = element_text(angle = 0), 
-          legend.box="vertical", legend.margin=margin())+
-    guides(shape=guide_legend(title = "Location - \n Stage", nrow=2,byrow=TRUE)))
-
-library(pBrackets)
-(facet_pheno_plot_vert <-ggplot(all_pheno_fig_pred) + # model predictions
-    geom_point(data = all_pheno_fig_raw, aes(y = DOY, x = population, colour = group_color, 
-                                             shape = shape_stage), alpha = 0.5) + # raw data
     geom_point(aes(x = population, y = Estimate_trans, shape = shape_stage, 
-                   color = group_color), size = 3, stroke = 1)+
-    geom_errorbar(aes(ymin = CI_low_trans, ymax = CI_high_trans, x = population, 
-                      colour = group_color),
-                  size = 1, alpha = 1, width=0.4) +
-    ylab("Day of year ") +
-    xlab("") +
-    geom_line(aes(x = population , y = Estimate_trans, colour = group_color), 
-              linewidth = 0.8, alpha = 1, linetype = "dashed", position = position_nudge(x = 0.25))+
+                   color = group_color), size = 3, stroke = 1, fill = "white")+
     scale_color_manual(values=pal_garden, guide = "none") +
     scale_fill_manual(values=pal_garden, guide = "none") +
     scale_y_continuous(limits = c(110, 240), breaks = seq(110, 240, by = 30)) +
@@ -1564,11 +1536,7 @@ library(pBrackets)
           legend.box="vertical", legend.margin=margin())+
     guides(shape=guide_legend(title = "Location - \n Stage", nrow=2,byrow=TRUE)))
 
-grid.locator(unit="native") 
-
-grid.brackets(54, 119, 54, 219, lwd=2, col="red", xpd = FALSE)
-segments(x0 = c(54, 54), y0 = -119, y1 = -219, xpd = TRUE) # vertical lines
-
+#position = position_nudge(x = 0.25)
 
 ggsave("output/figures/pheno_panel.png",  height = 12, width = 18, unit = "cm", dpi = 500, device = png)
 
