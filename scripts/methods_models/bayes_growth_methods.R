@@ -1,5 +1,5 @@
 # BAYESIAN growth methods models -----
-# Script by Erica
+# Script by Erica and Madi
 # Last update: 27/10/2023 by Madi
 
 # 1. Loading libraries ----
@@ -7,6 +7,7 @@
 library(brms)
 library(tidyverse)
 library(tidybayes)
+library(ggeffects)
 library(dplyr)
 library(knitr) # For kable tables
 library(kableExtra) # For kable tables
@@ -44,6 +45,20 @@ model_summ_methods <- function(x) {
   modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge it all together
 }
 
+# no random effect model summary function 
+model_summ_no_re <- function(x) {
+  sum = summary(x)
+  fixed = sum$fixed
+  sigma = sum$spec_pars
+  obs = sum$nobs
+  
+  fixed$effect <- "fixed"  # add ID column for type of effect (fixed, random, residual)
+  sigma$effect <- "residual"
+  fixed$nobs <- obs  # add column with number of observations
+  sigma$nobs <- obs
+  
+  modelTerms <- as.data.frame(bind_rows(fixed, sigma))  # merge together
+}
 
 # 3. Wrangling ----
 # variables in right format
@@ -309,27 +324,62 @@ save_kable(kable_heights_source, file = "output/source/source_height_results.pdf
 
 # b. STEM ELONGATION ---- 
 # Salix richardsonii -------
-source_rich_elong <- brms::brm(log(mean_stem_elong) ~ Site + (1|SampleYear),
+source_rich_elong <- brms::brm(log(mean_stem_elong) ~ Site,
                                 data = unique_source_mother_rich, family = gaussian(), chains = 3,
                                 iter = 3000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
 
-summary(source_rich_elong)# shorter elongations for QHi
+summary(source_rich_elong)# shorter elongations for QHI
 plot(source_rich_elong)
 pp_check(source_rich_elong,  type = "dens_overlay", nsamples = 100)
+saveRDS(source_rich_elong, file = "output/models/source_rich_elong.rds")
+source_rich_elong <- readRDS("output/models/source_rich_elong.rds")
+rich_soruce_elong.pred <- ggpredict(source_rich_elong, terms = c('Site'))
+View(rich_soruce_elong.pred)
 
 # extract output with function
-source_rich_elong <- model_summ_methods(source_rich_elong)
+source_rich_elong_dat <- model_summ_no_re(source_rich_elong)
+source_rich_elong_dat <- source_rich_elong_dat %>% 
+  dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
+                "u_95_CI_log_og" = "u-95% CI", 
+                "Estimate (log og)"= "Estimate")
+
+source_rich_elong_dat_2 <- source_rich_elong_dat %>% 
+  dplyr::rename("l_95_CI_log_sum" = "l_95_CI_log_og", 
+                "u_95_CI_log_sum" = "u_95_CI_log_og",
+                "Estimate_log_sum"= "Estimate (log og)")
+
+# change estimates by adding estimate to other rows 
+source_rich_elong_dat_2[2,1] <- source_rich_elong_dat_2[2,1] + source_rich_elong_dat_2[1,1]
+# change lower CI by adding 
+source_rich_elong_dat_2[2,3] <- source_rich_elong_dat_2[2,3] + source_rich_elong_dat_2[1,3]
+# change upper CI
+source_rich_elong_dat_2[2,4] <- source_rich_elong_dat_2[2,4] + source_rich_elong_dat_2[1,4]
 
 # extraction for model output table
-rownames(source_rich_elong) <- c("Intercept", "Northern source", "Sample year", "Sigma")
-source_rich_elong_df <- source_rich_elong %>% 
-  mutate(Species = rep("Salix richardsonii")) %>% 
-  relocate("Species", .before = "Estimate")%>%
+rownames(source_rich_elong_dat) <- c("Intercept", "Northern source", "Sigma")
+rownames(source_rich_elong_dat_2) <- c("Intercept", "Northern source", "Sigma")
+
+source_rich_elong_df_1 <- source_rich_elong_dat %>% 
+  mutate(Species = rep("Salix richardsonii"))  %>%
+  relocate("Species", .before = "Estimate (log og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+source_rich_elong_df <- source_rich_elong_dat_2 %>% 
+  mutate(Species = rep("Salix richardsonii")) %>%
+  relocate("Species", .before = "Estimate_log_sum") %>%
   relocate("nobs", .before = "effect")
 
+rich_source_elong_all <- full_join(source_rich_elong_df_1, source_rich_elong_df, 
+                                     by = c("effect" = "effect", "nobs"="nobs",
+                                            "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                            "Species"="Species", "Rhat"="Rhat"))
+
+rownames(rich_source_elong_all) <- c("Intercept ", "Northern Source ", "Sigma  ")
+
 # Salix pulchra -------
-source_pul_elong <- brms::brm(log(mean_stem_elong) ~ Site + (1|SampleYear),
+source_pul_elong <- brms::brm(log(mean_stem_elong) ~ Site,
                                data = unique_source_mother_pulchra, family = gaussian(), chains = 3,
                                iter = 5000, warmup = 1000, 
                                control = list(max_treedepth = 15, adapt_delta = 0.99))
@@ -337,67 +387,68 @@ source_pul_elong <- brms::brm(log(mean_stem_elong) ~ Site + (1|SampleYear),
 summary(source_pul_elong)# shorter elongations for QHi
 plot(source_pul_elong)
 pp_check(source_pul_elong,  type = "dens_overlay", nsamples = 100)
+saveRDS(source_pul_elong, file = "output/models/source_pul_elong.rds")
+source_pul_elong <- readRDS("output/models/source_pul_elong.rds")
+source_pul_elong.pred <- ggpredict(source_pul_elong, terms = c('Site'))
+View(source_pul_elong.pred)
 
 # extract output with function
-source_pul_elong <- model_summ_methods(source_pul_elong)
+source_pul_elong_dat <- model_summ_no_re(source_pul_elong)
+source_pul_elong_dat <- source_pul_elong_dat %>% 
+  dplyr::rename("l_95_CI_log_og" = "l-95% CI", 
+                "u_95_CI_log_og" = "u-95% CI", 
+                "Estimate (log og)"= "Estimate")
+
+source_pul_elong_dat_2 <- source_pul_elong_dat %>% 
+  dplyr::rename("l_95_CI_log_sum" = "l_95_CI_log_og", 
+                "u_95_CI_log_sum" = "u_95_CI_log_og",
+                "Estimate_log_sum"= "Estimate (log og)")
+
+# change estimates by adding estimate to other rows 
+source_pul_elong_dat_2[2,1] <- source_pul_elong_dat_2[2,1] + source_pul_elong_dat_2[1,1]
+# change lower CI by adding 
+source_pul_elong_dat_2[2,3] <- source_pul_elong_dat_2[2,3] + source_pul_elong_dat_2[1,3]
+# change upper CI
+source_pul_elong_dat_2[2,4] <- source_pul_elong_dat_2[2,4] + source_pul_elong_dat_2[1,4]
 
 # extraction for model output table
-rownames(source_pul_elong) <- c("Intercept", "Northern source", "Sample year", "Sigma")
-source_pul_elong_df <- source_pul_elong %>% 
-  mutate(Species = rep("Salix pulchra")) %>% 
-  relocate("Species", .before = "Estimate")%>%
+rownames(source_pul_elong_dat) <- c("Intercept", "Northern source", "Sigma")
+rownames(source_pul_elong_dat_2) <- c("Intercept", "Northern source", "Sigma")
+
+source_pul_elong_df_1 <- source_pul_elong_dat %>% 
+  mutate(Species = rep("Salix pulchra"))  %>%
+  relocate("Species", .before = "Estimate (log og)") %>%
+  relocate("nobs", .before = "effect")%>%
+  dplyr::select(-Est.Error)
+
+source_pul_elong_df <- source_pul_elong_dat_2 %>% 
+  mutate(Species = rep("Salix pulchra")) %>%
+  relocate("Species", .before = "Estimate_log_sum") %>%
   relocate("nobs", .before = "effect")
 
+pul_source_elong_all <- full_join(source_pul_elong_df_1, source_pul_elong_df, 
+                                   by = c("effect" = "effect", "nobs"="nobs",
+                                          "Bulk_ESS"="Bulk_ESS", "Tail_ESS"="Tail_ESS",
+                                          "Species"="Species", "Rhat"="Rhat"))
+
+rownames(pul_source_elong_all) <- c("Intercept ", "Northern Source ", "Sigma  ")
 # merging all extracted outputs
-source_elong_out <- rbind(source_rich_elong_df, source_pul_elong_df) 
-                        
+source_elong_out <- rbind(rich_source_elong_all, pul_source_elong_all) 
+
 # back transforming from log
 source_elong_out_back <- source_elong_out %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(Estimate), 
-         Est.Error_trans = 10^(Est.Error)) %>% 
-  select(-CI_range)
+  mutate(CI_low_trans = exp(l_95_CI_log_sum)) %>% 
+  mutate(CI_high_trans = exp(u_95_CI_log_sum)) %>% 
+  mutate(Estimate_trans = exp(Estimate_log_sum))%>%
+  relocate(CI_low_trans, .before = Rhat) %>%
+  relocate(CI_high_trans, .before = Rhat) %>%
+  relocate(Estimate_trans, .before = CI_low_trans)%>%
+  relocate(Estimate_log_sum, .before = Estimate_trans) %>%
+  relocate(l_95_CI_log_sum, .before = Estimate_trans) %>%
+  relocate(u_95_CI_log_sum, .before = Estimate_trans)
 
 # save df of results 
 write.csv(source_elong_out_back, "output/source_elong_out_back.csv")
-
-# adding spaces before/after each name so they let me repeat them in the table
-rownames(source_elong_out_back) <- c("Intercept", "Northern source", "Sample year", 
-                                       "Sigma", " Intercept", " Northern source", " Sample year", 
-                                       " Sigma", "Intercept ", "Northern source ", "Sample year ", 
-                                       "Sigma ")
-
-# making sure Rhat keeps the .00 
-source_elong_out_back$Rhat <- as.character(formatC(source_elong_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
-# creating table
-kable_elong_source <- source_elong_out_back %>% 
-  kbl(caption="Table.xxx BRMS model outputs: mean stem elongation of northern vs southern shrubs in source populations. 
-      Model structure per species: log(mean_stem_elongation) ~ Site + (1|SampleYear). 
-      Including model output back-transformed in the table below. No Salix arctica due to lack of data from the southern source. ", 
-      col.names = c( "Species","Estimate",
-                     "Est. Error",
-                     "Lower 95% CI (log)",
-                     "Upper 95% CI (log)", 
-                     "Rhat", 
-                     "Bulk Effective Sample Size",
-                     "Tail Effective Sample Size", 
-                     "Sample Size",
-                     "Effect",
-                     "Lower 95% CI 
-                    (back transformed)", "Upper 95% CI
-                    (back transformed)", 
-                     "Estimate transformed", 
-                     "Error transformed"), digits=2, align = "c") %>% 
-  kable_classic(full_width=FALSE, html_font="Cambria")
-
-# making species column in cursive
-column_spec(kable_elong_source, 2, width = NULL, bold = FALSE, italic = TRUE)
-row_spec(kable_heights_source, 1:12, align = "c") 
 
 # Salix arctica: cannot do it because we dont have arctica on KP
 #source_arc_elong <- brms::brm(log(mean_stem_elong) ~ Site + (1|SampleYear),
@@ -781,7 +832,7 @@ theme_shrub <- function(){ theme(legend.position = "bottom",
 
 # CANOPY HEIGHT -------
 # S.rich ----
-colnames(rich_source_height.pred) = c('Site','fit', 'lwr', 'upr')
+colnames(rich_source_height.pred) = c('Site','fit','old', 'lwr', 'upr')
 
 rich_source_height.pred$Site <- ordered(rich_source_height.pred$Site,
                                            levels = c("Qikiqtaruk",
@@ -807,7 +858,7 @@ unique_source_mother_rich$Site <- ordered(unique_source_mother_rich$Site,
     ggtitle(expression(italic("Salix richardsonii"))))
 
 # S. pul----
-colnames(pul_source_height.pred) = c('Site','fit', 'lwr', 'upr')
+colnames(pul_source_height.pred) = c('Site','fit','old', 'lwr', 'upr')
 
 pul_source_height.pred$Site <- ordered(pul_source_height.pred$Site,
                                         levels = c("Qikiqtaruk",
@@ -833,7 +884,7 @@ unique_source_mother_pulchra$Site <- ordered(unique_source_mother_pulchra$Site,
     ggtitle(expression(italic("Salix pulchra"))))
 
 # S.arctica -----
-colnames(arc_source_height.pred) = c('Site','fit', 'lwr', 'upr')
+colnames(arc_source_height.pred) = c('Site','fit','old', 'lwr', 'upr')
 
 # arc_source_height.pred$Site <- plyr::revalue(arc_source_height.pred$Site ,
 #                                                    c("Qikiqtaruk"="N. Source",
@@ -872,7 +923,7 @@ ggsave(source_growth_heights_plots, filename ="output/figures/source_growth_heig
 
 # WIDTH -----
 # S.rich ----
-colnames(rich_source_width.pred) = c('Site','fit', 'lwr', 'upr')
+colnames(rich_source_width.pred) = c('Site','fit','old', 'lwr', 'upr')
 
 rich_source_width.pred$Site <- ordered(rich_source_width.pred$Site,
                                        levels = c("Qikiqtaruk",
@@ -894,7 +945,7 @@ rich_source_width.pred$Site <- ordered(rich_source_width.pred$Site,
     scale_x_discrete(labels = c('Northern','Southern')))
 
 # S. pul----
-colnames(pul_source_width.pred) = c('Site','fit', 'lwr', 'upr')
+colnames(pul_source_width.pred) = c('Site','fit', 'old', 'lwr', 'upr')
 
 pul_source_width.pred$Site <- ordered(pul_source_width.pred$Site,
                                        levels = c("Qikiqtaruk",
@@ -916,7 +967,7 @@ pul_source_width.pred$Site <- ordered(pul_source_width.pred$Site,
     scale_x_discrete(labels = c('Northern','Southern')))
 
 # S.arctica -----
-colnames(arc_source_width.pred) = c('Site','fit', 'lwr', 'upr')
+colnames(arc_source_width.pred) = c('Site','fit', 'old', 'lwr', 'upr')
 
 arc_source_width.pred$Site <- plyr::revalue(arc_source_width.pred$Site ,
                                                    c("N. Source" = "Qikiqtaruk",
@@ -958,44 +1009,81 @@ ggsave(source_size_panel, filename ="outputs/figures/source_size_plots.png",
 
 # STEM ELONG -----
 # S.rich ----
-rich_source_elong <- (conditional_effects(source_rich_elong)) # extracting conditional effects from bayesian model
-rich_source_elong_data <- rich_source_elong[[1]] # making the extracted model outputs into a dataset (for plotting)
-# [[1]] is to extract the first term in the model which in our case is population
+colnames(rich_soruce_elong.pred) = c('Site','fit', 'old', 'lwr', 'upr')
 
-(rich_source_elong_plot <-ggplot(rich_source_elong_data) +
-    geom_violin(data = unique_source_mother_rich, aes(x = Site, y = log(mean_stem_elong), fill = Site, colour = Site),
-                alpha = 0.1)+ # raw data
-    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = log(mean_stem_elong), colour = Site),
-                alpha = 0.8)+
-    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
-                  alpha = 1,  width=0.5) +
-    ylab("Mean stem elongation (log, mm)\n") +
-    xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_shrub() +
-    labs(title = "Salix richardsonii"))
-
+rich_soruce_elong.pred$Site <- ordered(rich_soruce_elong.pred$Site,
+                                        levels = c("Qikiqtaruk",
+                                                   "Kluane"))
+unique_source_mother_rich$Site <- ordered(unique_source_mother_rich$Site,
+                                          levels = c("Qikiqtaruk",
+                                                     "Kluane"))
+(rich_source_elong_plot <-ggplot(rich_soruce_elong.pred) +
+    geom_jitter(data = unique_source_mother_rich, aes(x = Site, y = mean_stem_elong, colour = Site),
+                alpha = 0.3, position = position_jitter(w = 0.09, h = 0), shape = 17)+
+    geom_point(aes(x = Site, y = fit, colour = Site), width=0.5, size = 4, shape = 17)+
+    geom_errorbar(aes(x = Site, ymin = lwr, ymax = upr, colour = Site),
+                  linewidth = 1, alpha = 1, width = 0.75) +
+    ylab("Stem elongation (mm)\n") +
+    xlab("\n Population") +
+    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
+    scale_y_continuous(breaks = seq(0, 100, by = 20), limits = c(0,100)) +
+    theme_shrub()+
+    theme(axis.text.x  = element_blank(), 
+          axis.title.x=element_blank())+
+    scale_x_discrete(labels = c('Northern', 'Southern'))+
+    ggtitle(expression(italic("Salix richardsonii"))))
 # S. pul----
-pul_source_elong <- (conditional_effects(source_pul_elong)) # extracting conditional effects from bayesian model
-pul_source_elong_data <- pul_source_elong[[1]] # making the extracted model outputs into a dataset (for plotting)
-# [[1]] is to extract the first term in the model which in our case is population
+colnames(source_pul_elong.pred) = c('Site','fit', 'old', 'lwr', 'upr')
 
-(pul_source_elong_plot <-ggplot(pul_source_elong_data) +
-    geom_violin(data = unique_source_mother_pulchra, aes(x = Site, y = log(mean_stem_elong), fill = Site, colour = Site),
-                alpha = 0.1)+ # raw data
-    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = log(mean_stem_elong), colour = Site),
-                alpha = 0.8)+
-    geom_point(aes(x = effect1__, y = estimate__,colour = Site), width=0.5, size = 6)+
-    geom_errorbar(aes(x = effect1__, ymin = lower__, ymax = upper__,colour = Site),
-                  alpha = 1,  width=0.5) +
-    ylab("Mean stem elongation (log, mm)\n") +
-    xlab("\n Population" ) +
-    scale_colour_viridis_d(begin = 0.1, end = 0.85) +
-    scale_fill_viridis_d(begin = 0.1, end = 0.85) +
-    theme_shrub() +
-    labs(title = "Salix pulchra"))
+source_pul_elong.pred$Site <- ordered(source_pul_elong.pred$Site,
+                                       levels = c("Qikiqtaruk",
+                                                  "Kluane"))
+unique_source_mother_pulchra$Site <- ordered(unique_source_mother_pulchra$Site,
+                                          levels = c("Qikiqtaruk",
+                                                     "Kluane"))
+(pul_source_elong_plot <-ggplot(source_pul_elong.pred) +
+    geom_jitter(data = unique_source_mother_pulchra, aes(x = Site, y = mean_stem_elong, colour = Site),
+                alpha = 0.3, position = position_jitter(w = 0.09, h = 0), shape = 17)+
+    geom_point(aes(x = Site, y = fit, colour = Site), width=0.5, size = 4, shape = 17)+
+    geom_errorbar(aes(x = Site, ymin = lwr, ymax = upr, colour = Site),
+                  linewidth = 1, alpha = 1, width = 0.75) +
+    ylab("Stem elongation (mm)\n") +
+    xlab("\n Population") +
+    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
+    scale_y_continuous(breaks = seq(0, 100, by = 20), limits = c(0,100)) +
+    theme_shrub()+
+    theme(axis.text.x  = element_blank(), 
+          axis.title.x=element_blank())+
+    scale_x_discrete(labels = c('Northern', 'Southern'))+
+    ggtitle(expression(italic("Salix pulchra"))))
+
+# S. arctica just for reference 
+(arc_source_elong_plot <-ggplot(unique_source_mother_arctica) +
+    geom_jitter(data = unique_source_mother_arctica, aes(x = Site, y = mean_stem_elong, colour = Site),
+                alpha = 1, position = position_jitter(w = 0.09, h = 0), shape = 17)+
+    ylab("Stem elongation (mm)\n") +
+    xlab("\n Population") +
+    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
+    scale_y_continuous(breaks = seq(0, 50, by = 10), limits = c(0,50)) +
+    theme_shrub()+
+    theme(axis.text.x  = element_blank(), 
+          axis.title.x=element_blank())+
+    scale_x_discrete(labels = c('Northern', 'Southern'))+
+    ggtitle(expression(italic("Salix arctica"))))
+# panel together 
+(source_elong_plots <- ggarrange(rich_source_elong_plot, pul_source_elong_plot, arc_source_elong_plot, 
+                                          common.legend = TRUE, legend = "bottom",
+                                          ncol = 3, nrow = 1))
+ggsave(source_elong_plots, filename ="output/figures/source_elong_plots.png", 
+       width = 12, height = 6., units = "in", device = png)
+
+(source_size_panel <- ggarrange(source_growth_heights_plots, source_growth_width_plots,
+                                source_elong_plots,
+                                common.legend = TRUE, legend = "bottom",
+                                ncol = 1, nrow = 3))
+
+ggsave(source_size_panel, filename ="outputs/figures/source_size_plots.png", 
+       height = 12, width = 12, dpi = 300, units = "in", device = png)
 
 # STEM DIAM -----
 # S.rich ----

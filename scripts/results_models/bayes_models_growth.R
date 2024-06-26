@@ -1,5 +1,5 @@
 # BAYESIAN growth results models -----
-# Script by Erica
+# Script by Erica and Madi
 # Last update: 31/10/2023 by Madi aka halloween
 # Code adapted from coding club tutorial by Louise Litrico:
 # https://ourcodingclub.github.io/tutorials/brms/ 
@@ -885,6 +885,21 @@ kable_biovol <- garden_biovol_out_back %>%
 column_spec(kable_biovol, 2, width = NULL, bold = FALSE, italic = TRUE)
 
 # STEM ELONGATION ------
+
+stem_elong_summary <- all_CG_source_growth %>% 
+  dplyr::group_by(Species, population) %>% 
+  summarize(mean_elong = (mean(mean_stem_elong, na.rm = TRUE) ))
+
+rich_CG_source_growth <- all_CG_source_growth %>% 
+  dplyr::filter(Species == "Salix richardsonii")
+
+all_rich_elong <- brms::brm((mean_stem_elong) ~ population,
+                               data = rich_CG_source_growth, family = gaussian(), chains = 3,
+                               iter = 3000, warmup = 1000, 
+                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(all_rich_elong)
+
 # S. richardsonii -----
 # model
 garden_rich_elong <- brms::brm(log(max_stem_elong) ~ population,
