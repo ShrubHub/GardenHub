@@ -52,14 +52,14 @@ sites$long <- as.numeric(sites$long)
 
 main_map_shapes <- c(16, 0)
 
-yukon_map <-  ggplot() +
+(yukon_map <-  ggplot() +
   coord_map() +
   geom_polygon(data = t, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
   geom_polygon(data = t2, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
   geom_polygon(data = subset(t, NAME_1 == "Yukon"), aes(x = long, y =lat, group = group), fill = 'grey85', colour = 'black') +
-  geom_point(data = sites, aes(x = long, y = lat, shape = site, size = site), colour = "black") +
+  geom_point(data = sites, aes(x = long, y = lat, shape = site, size = site), colour = "black", stroke = 2) +
   annotate('text', y = 65, x = -137, label = 'Yukon', fontface =1, size = 6) +
-  annotate('text', y = 69.75, x = -139.63, label = 'a', fontface =1, size = 6) + 
+  annotate('text', y = 69.75, x = -139.75, label = 'a', fontface =1, size = 6) + 
   annotate('text', y = 61.05, x = -139.2, label = 'b', fontface =1, size = 6) + 
   scale_x_continuous(expand = c(0,0), limits = c(-144.0, -123), 
                      breaks = c(-140.0, -135.00, -130.00, -125.00), 
@@ -73,7 +73,7 @@ yukon_map <-  ggplot() +
   guides(shape=guide_legend(title = "Site", override.aes = list(size = 4))) +
   theme_map()+
   theme(legend.position = "bottom", axis.title.x = element_blank(), 
-        axis.title.y = element_blank())
+        axis.title.y = element_blank()))
 yukon_map
 
 ggsave("output/figures/map/yukon_map.png", 
@@ -92,21 +92,21 @@ t_qhi <- crop(provinces, e_qhi) # Crop provincial/territorial spatial polygon da
 #t2_qhi <- crop(states, e_qhi) # Crop states spatial polygon dataframe to extent
 
 
-qhi_map <- ggplot() +
-  geom_sf(data = qhi_sf, fill = 'grey95', colour = 'grey') +
-  coord_sf() +
-  #geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=2, size=2, colour = "black") +
-  annotate('text', -Inf, Inf, label = 'Pauline Cove', fontface = 1, size = 3, 
-           hjust = -5.5, vjust = 15) +
-  #scale_x_continuous(expand = c(0,0)) +
-  #scale_y_continuous(expand = c(0,0)) +
-  xlab("") +
-  ylab("") +
-  annotation_scale()+
-  theme_classic() +
-  theme(axis.text = element_text(colour = 'black'))+
-  theme_map()
-qhi_map
+# qhi_map <- ggplot() +
+#   geom_sf(data = qhi_sf, fill = 'grey95', colour = 'grey') +
+#   coord_sf() +
+#   #geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=2, size=2, colour = "black") +
+#   annotate('text', -Inf, Inf, label = 'Pauline Cove', fontface = 1, size = 3, 
+#            hjust = -5.5, vjust = 15) +
+#   #scale_x_continuous(expand = c(0,0)) +
+#   #scale_y_continuous(expand = c(0,0)) +
+#   xlab("") +
+#   ylab("") +
+#   annotation_scale()+
+#   theme_classic() +
+#   theme(axis.text = element_text(colour = 'black'))+
+#   theme_map()
+# qhi_map
 
 #qhi_zoom <- st_crop(qhi_sf, c(xmin=572248, xmax=583782, ymin=7715140, ymax=7734833))
 
@@ -160,51 +160,51 @@ qhi_zoom_map
 ggsave("output/figures/map/qhi_map.png", 
        height = 18, width = 18, unit = "cm", dpi = 500, device = png)
 
-qhi_lat_long_sf <- qhi_sf %>% st_transform(4979)
+# qhi_lat_long_sf <- qhi_sf %>% st_transform(4979)
 
-qhi_sp <- as(qhi_lat_long_sf, 'Spatial')
-e_qhi <- extent(-139.25, -138.83, 69.55, 70.5) #Define extent (long_min, long_max, lat_min, lat_max)
-t_qhi <- crop(qhi_sp, e_qhi) # Crop provincial/territorial spatial polygon dataframe to extent
+# qhi_sp <- as(qhi_lat_long_sf, 'Spatial')
+# e_qhi <- extent(-139.25, -138.83, 69.55, 70.5) #Define extent (long_min, long_max, lat_min, lat_max)
+# t_qhi <- crop(qhi_sp, e_qhi) # Crop provincial/territorial spatial polygon dataframe to extent
+# 
+# qhi_map <- ggplot() +
+#   coord_map() +
+#   geom_polygon(data = qhi_sp, aes(x = long, y = lat), fill = 'grey95', colour = 'grey95') +
+#   #geom_polygon(data = t2_qhi, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
+#   geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=1, size=2, colour = "black") +
+#   #annotate('text', y = 69.6, x = 138.93, label = 'Pauline Cove', fontface = 1, size = 4) +
+#   scale_x_continuous(expand = c(0,0)) +
+#   scale_y_continuous(expand = c(0,0)) +
+#   xlab("") +
+#   ylab("") +
+#   theme_bw() +
+#   theme(axis.text = element_text(colour = 'black'), 
+#         axis.title.x = element_blank(), 
+#         axis.title.y = element_blank())+ 
+#           theme_map()
+# qhi_map
+# 
+# qhi_zoom_lat_long_sf <- qhi_zoom %>% st_transform(4979)
+# 
+# qhi_sp_zoom_test <- as(qhi_zoom, 'Spatial')
 
-qhi_map <- ggplot() +
-  coord_map() +
-  geom_polygon(data = qhi_sp, aes(x = long, y = lat), fill = 'grey95', colour = 'grey95') +
-  #geom_polygon(data = t2_qhi, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
-  geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=1, size=2, colour = "black") +
-  #annotate('text', y = 69.6, x = 138.93, label = 'Pauline Cove', fontface = 1, size = 4) +
-  scale_x_continuous(expand = c(0,0)) +
-  scale_y_continuous(expand = c(0,0)) +
-  xlab("") +
-  ylab("") +
-  theme_bw() +
-  theme(axis.text = element_text(colour = 'black'), 
-        axis.title.x = element_blank(), 
-        axis.title.y = element_blank())+ 
-          theme_map()
-qhi_map
-
-qhi_zoom_lat_long_sf <- qhi_zoom %>% st_transform(4979)
-
-qhi_sp_zoom_test <- as(qhi_zoom, 'Spatial')
-
-qhi_sp_zoom <- as(qhi_zoom_lat_long_sf, 'Spatial')
-
-qhi_zoom_sp_map <- ggplot() +
-  coord_map() +
-  geom_polygon(data = qhi_sp_zoom, aes(x = long, y = lat), fill = 'grey95', colour = 'grey95') +
-  #geom_polygon(data = t2_qhi, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
-  geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=1, size=2, colour = "black") +
-  #annotate('text', y = 69.6, x = 138.93, label = 'Pauline Cove', fontface = 1, size = 4) +
-  scale_x_continuous(expand = c(0,0)) +
-  scale_y_continuous(expand = c(0,0)) +
-  xlab("") +
-  ylab("") +
-  theme_bw() +
-  theme(axis.text = element_text(colour = 'black'), 
-        axis.title.x = element_blank(), 
-        axis.title.y = element_blank())+ 
-  theme_map()
-qhi_zoom_sp_map
+# qhi_sp_zoom <- as(qhi_zoom_lat_long_sf, 'Spatial')
+# 
+# qhi_zoom_sp_map <- ggplot() +
+#   coord_map() +
+#   geom_polygon(data = qhi_sp_zoom, aes(x = long, y = lat), fill = 'grey95', colour = 'grey95') +
+#   #geom_polygon(data = t2_qhi, aes(x = long, y =lat, group = group), fill = 'grey95', colour = 'grey50') +
+#   geom_point(data = qhi_gps, aes(x = lon, y = lat), shape=1, size=2, colour = "black") +
+#   #annotate('text', y = 69.6, x = 138.93, label = 'Pauline Cove', fontface = 1, size = 4) +
+#   scale_x_continuous(expand = c(0,0)) +
+#   scale_y_continuous(expand = c(0,0)) +
+#   xlab("") +
+#   ylab("") +
+#   theme_bw() +
+#   theme(axis.text = element_text(colour = 'black'), 
+#         axis.title.x = element_blank(), 
+#         axis.title.y = element_blank())+ 
+#   theme_map()
+# qhi_zoom_sp_map
 
 
 # KLUANE MAP ====
