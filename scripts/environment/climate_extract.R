@@ -167,7 +167,7 @@ july_enviro <- full_join(mean_prec_long, mean_temp_data,
 write.csv(july_enviro, "july_enviro_chelsa.csv")
 
 # Loading chelsa temperature and precipitation data -----
-july_enviro_chelsa <- read_csv("data/environment/july_enviro_chelsa.csv")
+july_enviro_chelsa <- read.csv("data/environment/july_enviro_chelsa.csv")
 
 
 # DATA WRANGLE ------
@@ -175,13 +175,12 @@ unique(july_enviro_chelsa$site)
 
 #rename column
 july_enviro_chelsa <- july_enviro_chelsa %>%
-  dplyr::rename ("mean_temp_C" ="(mean_temp_C = (mean_temp/10 - 273.15))") %>% 
+  dplyr::rename("mean_temp_C" ="X.mean_temp_C....mean_temp.10...273.15..") %>% 
   dplyr::mutate(mean_precip_mm = PrecipMeanJuly/100) # to get mm of rainfall
 str(july_enviro_chelsa)
 
 
 # means for three sites 
-
 sites_july_temp <- july_enviro_chelsa %>% 
   filter(site %in% c("QHI", "Kluane_plateau", "Common_garden")) %>% 
   filter(PrecipMeanJuly < 20000) # remove one values that's obscenly high 
@@ -192,7 +191,6 @@ mean_july_temp <- sites_july_temp %>%
             mean_precip = mean(PrecipMeanJuly, na.rm = T), 
             sd_temp = sd(mean_temp_C, na.rm = T), 
             sd_precip = sd(PrecipMeanJuly, na.rm = T))
-
 
 # QHI july mean temp and precip
 QHI_july_temp <- july_enviro_chelsa %>%
@@ -260,7 +258,6 @@ july_enviro_chelsa_temp_wide <- july_enviro_chelsa %>%
   pivot_wider(names_from=site, values_from=mean_temp_C) %>% 
   na.omit()
 
-
 Ordination.model1 <- metaMDS(july_enviro_chelsa_temp_wide, distance='bray',  k=2, trymax=1, 
                              autotransform=TRUE, noshare=0.1, expand=TRUE, trace=1, plot=FALSE)
 
@@ -268,34 +265,35 @@ plot1 <- ordiplot(Ordination.model1, choices=c(1,2))
 
 three_site_chelsa <-  july_enviro_chelsa %>% 
   filter(site %in% c("QHI", "Kluane_plateau", "Common_garden")) %>% 
-  filter(PrecipMeanJuly < 20000) # remove one values that's obscenly high 
+  filter(PrecipMeanJuly < 20000) %>%  # remove one values that's obscenly high 
+  mutate(site = recode(site, QHI = 'Qikiqtaruk', Kluane_plateau = 'Kluane Plateau', Common_garden =  'Common garden' )) %>% 
+  dplyr::rename("Site" = "site")
+
 
 pal_clim  <- c("#5ccc64","#FDE725FF", "#2A788EFF" )
 
 (climate_space <- ggplot(three_site_chelsa, 
-                         aes(x = mean_temp_C, y = mean_precip_mm, color = site, shape =site)) +
+                         aes(x = mean_temp_C, y = mean_precip_mm, color = Site, shape = Site)) +
   geom_point(size = 2.5)+
     stat_ellipse(geom = "polygon",
-                 aes(fill = site), 
+                 aes(fill = Site),
                  alpha = 0.25) +
-    ylab("Mean July precipitation (mm)\n") +
-    xlab("\nMean July temperature (°C)") +
-    #scale_colour_viridis_d(begin = 0.2, end = 0.85) +
-    #scale_fill_viridis_d(begin = 0.2, end = 0.85) +
-    scale_color_manual(values=pal_clim) +
-    scale_fill_manual(values=pal_clim) +
+    ylab("Mean July precipitation (mm)") +
+    xlab("Mean July temperature (°C)") +
+    scale_color_manual(values = pal_clim) +
+    scale_fill_manual(values = pal_clim) +
     theme_bw()+
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(),
+          legend.position = "bottom",
           panel.grid.minor = element_blank(),
-          strip.text = element_text(size = 15, color = "black", face = "italic"),
-          legend.title = element_text(size=15), #change legend title font size
+          legend.title = element_text(size=12), #change legend title font size
           legend.text = element_text(size=12),
           axis.line = element_line(colour = "black"),
-          axis.title = element_text(size = 18),
-          axis.text.x = element_text(vjust = 0.5, size = 15, colour = "black"),
-          axis.text.y = element_text(size = 15, colour = "black")))
+          axis.title = element_text(size = 14),
+          axis.text.x = element_text(vjust = 0.5, size = 14, colour = "black"),
+          axis.text.y = element_text(size = 14, colour = "black")))
 
-ggsave(climate_space, filename ="output/figures/climate_space.png", width = 12.67, height = 8.53, units = "in")
+ggsave(climate_space, filename ="output/figures/climate_space.png", width = 7, height = 7, units = "in")
 
 
