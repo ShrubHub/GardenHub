@@ -260,10 +260,13 @@ ggsave("output/figures/map/kluane_map.png",
        height = 18, width = 18, unit = "cm", dpi = 500, device = png)
 
 # source map panel
-(source_map <- ggarrange(qhi_zoom_map, kluane_map, nrow = 2, ncol = 1,
+source_map <- ggarrange(qhi_zoom_map, kluane_map, nrow = 2, ncol = 1,
                          labels = c("a", "b"), 
-                         font.label=list(color="black",size = 12), 
-                         heights = c(0.9, 1)))
+                         font.label=list(color="black", size = 12), 
+                         heights = c(0.9, 1))
+
+source_map <- ggpubr::ggarrange(qhi_zoom_map, kluane_map, nrow = 2, ncol = 1)
+
 # big map 
 
 map_overall <- ggarrange(yukon_map, source_map, ncol = 2)
