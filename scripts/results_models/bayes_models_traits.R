@@ -1479,44 +1479,44 @@ theme_shrub <- function(){ theme(legend.position = "bottom",
 
 # make dataframe to plot ----
 # merge all richardsonii SLA, LDMC, LA outputs 
-colnames(rich_SLA.pred) = c('population','fit', 'lwr', 'upr')
-colnames(rich_LDMC.pred) = c('population','fit', 'lwr', 'upr')
-colnames(rich_LA_mad.pred) = c('population','fit', 'lwr', 'upr')
+colnames(rich_SLA.pred) = c('population','fit', 'error', 'lwr', 'upr')
+colnames(rich_LDMC.pred) = c('population','fit', 'error', 'lwr', 'upr')
+colnames(rich_LA_mad.pred) = c('population','fit', 'error', 'lwr', 'upr')
 
 rich_SLA.pred$trait <- "SLA"
-rich_SLA.long <- gather(rich_SLA.pred, key = "type", "value", 2:4)
+rich_SLA.long <- gather(rich_SLA.pred, key = "type", "value", 2:5)
 rich_LDMC.pred$trait <- "LDMC"
-rich_LDMC.long <- gather(rich_LDMC.pred, key = "type", "value", 2:4)
+rich_LDMC.long <- gather(rich_LDMC.pred, key = "type", "value", 2:5)
 rich_LA_mad.pred$trait <- "LA"
-rich_LA.long <- gather(rich_LA_mad.pred, key = "type", "value", 2:4)
+rich_LA.long <- gather(rich_LA_mad.pred, key = "type", "value", 2:5)
 
 traits_preds_rich <- rbind(rich_SLA.long, rich_LDMC.long, rich_LA.long)
 traits_preds_rich$Species <- "Salix richardsonii"
 
-colnames(pul_SLA.pred) = c('population','fit', 'lwr', 'upr')
-colnames(pul_LDMC.pred) = c('population','fit', 'lwr', 'upr')
-colnames(pulchra_LA.pred) = c('population','fit', 'lwr', 'upr')
+colnames(pul_SLA.pred) = c('population','fit', 'error', 'lwr', 'upr')
+colnames(pul_LDMC.pred) = c('population','fit', 'error', 'lwr', 'upr')
+colnames(pulchra_LA.pred) = c('population','fit', 'error', 'lwr', 'upr')
 
 pul_SLA.pred$trait <- "SLA"
-pul_SLA.long <- gather(pul_SLA.pred, key = "type", "value", 2:4)
+pul_SLA.long <- gather(pul_SLA.pred, key = "type", "value", 2:5)
 pul_LDMC.pred$trait <- "LDMC"
-pul_LDMC.long <- gather(pul_LDMC.pred, key = "type", "value", 2:4)
+pul_LDMC.long <- gather(pul_LDMC.pred, key = "type", "value", 2:5)
 pulchra_LA.pred$trait <- "LA"
-pul_LA.long <- gather(pulchra_LA.pred, key = "type", "value", 2:4)
+pul_LA.long <- gather(pulchra_LA.pred, key = "type", "value", 2:5)
 
 traits_preds_pul <- rbind(pul_SLA.long, pul_LDMC.long, pul_LA.long)
 traits_preds_pul$Species <- "Salix pulchra"
 
-colnames(arc_SLA.pred) = c('population','fit', 'lwr', 'upr')
-colnames(arc_LDMC.pred) = c('population','fit', 'lwr', 'upr')
-colnames(arctica_LA.pred) = c('population','fit', 'lwr', 'upr')
+colnames(arc_SLA.pred) = c('population','fit', 'error', 'lwr', 'upr')
+colnames(arc_LDMC.pred) = c('population','fit', 'error', 'lwr', 'upr')
+colnames(arctica_LA.pred) = c('population','fit', 'error', 'lwr', 'upr')
 
 arc_SLA.pred$trait <- "SLA"
-arc_SLA.long <- gather(arc_SLA.pred, key = "type", "value", 2:4)
+arc_SLA.long <- gather(arc_SLA.pred, key = "type", "value", 2:5)
 arc_LDMC.pred$trait <- "LDMC"
-arc_LDMC.long <- gather(arc_LDMC.pred, key = "type", "value", 2:4)
+arc_LDMC.long <- gather(arc_LDMC.pred, key = "type", "value", 2:5)
 arctica_LA.pred$trait <- "LA" 
-arc_LA.long <- gather(arctica_LA.pred, key = "type", "value", 2:4)
+arc_LA.long <- gather(arctica_LA.pred, key = "type", "value", 2:5)
 
 traits_preds_arc <- rbind(arc_SLA.long, arc_LDMC.long, arc_LA.long)
 traits_preds_arc$Species <- "Salix arctica"
@@ -1538,7 +1538,6 @@ all_raw_traits_fig <- all_raw_traits %>%
                                   TRUE ~ 'north'))) %>% 
   mutate(group_shape = (case_when(grepl("Garden", population) ~ "garden",
                                   grepl("Source", population, ignore.case = TRUE) ~"source")))
-
 
 # bind LA data because these were separated out 
 la_area_traits <- rbind(richardsonii_mad_traits, pulchra_mad_traits, arctica_mad_traits) %>% 
@@ -1568,31 +1567,34 @@ la_area_traits$population <- ordered(la_area_traits$population,
                                                    "S. Source",  
                                                    "S. Garden"))
 write.csv(all_raw_traits_fig, "data/traits/all_raw_traits_fig.csv")
+write.csv(trait_predictions, "data/traits/trait_mod_predicitons.csv")
+
+trait_predictions <- read.csv("data/traits/trait_mod_predicitons.csv")
 all_raw_traits_fig <- read.csv("data/traits/all_raw_traits_fig.csv")
 
 # leaf length 
-colnames(rich_LL.pred) = c('population','fit', 'lwr', 'upr')
-colnames(pul_LL.pred) = c('population','fit', 'lwr', 'upr')
-colnames(arc_LL.pred) = c('population','fit', 'lwr', 'upr')
+colnames(rich_LL.pred) = c('population','fit', 'error', 'lwr', 'upr')
+colnames(pul_LL.pred) = c('population','fit', 'error', 'lwr', 'upr')
+colnames(arc_LL.pred) = c('population','fit', 'error', 'lwr', 'upr')
 
 rich_LL.pred$trait <- "leaf_length"
-rich_LL.long <- gather(rich_LL.pred, key = "type", "value", 2:4)
+rich_LL.long <- gather(rich_LL.pred, key = "type", "value", 2:5)
 rich_LL.long$Species <- "Salix richardsonii"
 
 pul_LL.pred$trait <- "leaf_length"
-pul_LL.pred <- gather(pul_LL.pred, key = "type", "value", 2:4)
+pul_LL.pred <- gather(pul_LL.pred, key = "type", "value", 2:5)
 pul_LL.pred$Species <- "Salix pulchra"
 
 arc_LL.pred$trait <- "leaf_length"
-arc_LL.pred <- gather(arc_LL.pred, key = "type", "value", 2:4)
+arc_LL.pred <- gather(arc_LL.pred, key = "type", "value", 2:5)
 arc_LL.pred$Species <- "Salix arctica"
 
 length_predictions <- rbind(rich_LL.long, pul_LL.pred, arc_LL.pred)
 length_predictions <- length_predictions[,-2]
 length_predictions <- length_predictions %>% 
-  mutate(group_color = (case_when(str_detect(population, '^S') ~ 'south',
+  dplyr::mutate(group_color = (case_when(str_detect(population, '^S') ~ 'south',
                                   TRUE ~ 'north'))) %>% 
-  mutate(group_shape = (case_when(grepl("Garden", population) ~ "garden",
+  dplyr::mutate(group_shape = (case_when(grepl("Garden", population) ~ "garden",
                                   grepl("Source", population, ignore.case = TRUE) ~"source")))
 
 leaf_length_raw <- rbind(richardsonii_all_growth, pulchra_all_growth, arctica_all_growth)
@@ -1622,7 +1624,6 @@ length_predictions$Species <- ordered(length_predictions$Species,
                                        levels = c("Salix richardsonii", 
                                                   "Salix pulchra",
                                                   "Salix arctica"))
-
 
 # SLA FACET ----
 sla_predictions <- trait_predictions %>% 
@@ -1681,15 +1682,15 @@ shapes_garden <- c(17, 16)
 #     theme(axis.title.y = element_text(margin = margin (r = 10))))
 
 (sla_simple_facet_plot <-ggplot(sla_predictions_wide) + # model predictions
-    geom_jitter(data = all_raw_traits_fig, aes(x = group_color, y = SLA, 
+    geom_point(data = all_raw_traits_fig, aes(x = group_color, y = SLA, 
                                                colour = group_color, shape = group_shape),
-                alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
+                alpha = 0.5, position_jitterdodge(jitter.width=0.2), stat="identity") + # raw data
     geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
                position = position_dodge(width = 0.75), size = 4)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, 
                       shape = group_shape),
                   size = 1, alpha = 1, width=0.5, position = position_dodge(width = 0.75)) +
-    ylab(expression(atop("Specific leaf", paste("area (",mm^{2}," ",mg^{-1},")"))))+
+    ylab(expression(atop("Specific leaf area", paste("(",mm^{2}," ",mg^{-1},")"))))+
     xlab("" ) +
     scale_color_manual(values=pal_garden, guide = "none") +
     scale_fill_manual(values=pal_garden) +
@@ -1739,9 +1740,9 @@ ldmc_predictions_wide$group_shape <- ordered(ldmc_predictions_wide$group_shape,
 #     theme(axis.title.y = element_text(margin = margin (r = 10))))
 
 (ldmc_simple_facet_plot <-ggplot(ldmc_predictions_wide) + # model predictions
-    geom_jitter(data = all_raw_traits_fig, aes(x = group_color, y = LDMC_percent, 
+    geom_point(data = all_raw_traits_fig, aes(x = group_color, y = LDMC_percent, 
                                 colour = group_color, shape = group_shape),
-                alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
+                alpha = 0.5, position_jitterdodge(jitter.width=0.2), stat="identity") + # raw data
     geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
                position = position_dodge(width = 0.75), size = 4)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, shape = group_shape),
@@ -1819,9 +1820,9 @@ la_area_traits$group_shape <- ordered(la_area_traits$group_shape,
 #     theme(axis.title.y = element_text(margin = margin (r = 10))))
 
 (la_simple_facet_plot <-ggplot(la_predictions_wide) + # model predictions
-    geom_jitter(data = la_area_traits, aes(x = group_color, y = LA_cm2, 
+    geom_point(data = la_area_traits, aes(x = group_color, y = LA_cm2, 
                                            colour = group_color, shape = group_shape),
-                alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
+                alpha = 0.5, position_jitterdodge(jitter.width=0.2), stat="identity") + # raw data
     geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
                position = position_dodge(width = 0.75), size = 4)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, shape = group_shape),
@@ -1850,10 +1851,15 @@ leaf_length_raw_fig$group_shape <- ordered(leaf_length_raw_fig$group_shape,
                                            levels = c("source", 
                                                       "garden"))
 
+ll_predictions_wide <- ll_predictions_wide %>%
+  mutate(group_color = recode(group_color, south = 'South', north = 'North'))
+leaf_length_raw_fig <- leaf_length_raw_fig %>%
+  mutate(group_color = recode(group_color, south = 'South', north = 'North'))
+
 (ll_simple_facet_plot <-ggplot(ll_predictions_wide) + # model predictions
-    geom_jitter(data = leaf_length_raw_fig, aes(x = group_color, y = mean_leaf_length, 
+    geom_point(data = leaf_length_raw_fig, aes(x = group_color, y = mean_leaf_length, 
                                                 colour = group_color, shape = group_shape),
-                alpha = 0.5, position = position_dodge(width = 0.75)) + # raw data
+                alpha = 0.5, position_jitterdodge(jitter.width=0.2), stat="identity") + # raw data
     geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
                position = position_dodge(width = 0.75), size = 4)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, shape = group_shape),
@@ -1871,7 +1877,6 @@ leaf_length_raw_fig$group_shape <- ordered(leaf_length_raw_fig$group_shape,
     theme(strip.text.x = element_blank(), 
           axis.text.x  = element_text(angle = 0))+
     theme(axis.title.y = element_text(margin = margin (r = 10))))
-
 # trait panel 
 (trait_panel <- ggarrange(sla_simple_facet_plot, ldmc_simple_facet_plot, la_simple_facet_plot,
                           ll_simple_facet_plot,
