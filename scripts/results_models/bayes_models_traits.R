@@ -1859,7 +1859,7 @@ leaf_length_raw_fig <- leaf_length_raw_fig %>%
 (ll_simple_facet_plot <-ggplot(ll_predictions_wide) + # model predictions
     geom_point(data = leaf_length_raw_fig, aes(x = group_color, y = mean_leaf_length, 
                                                 colour = group_color, shape = group_shape),
-                alpha = 0.5, position_jitterdodge(jitter.width=0.2), stat="identity") + # raw data
+                alpha = 0.5, position_jitterdodge(jitter.width=0.15), stat="identity") + # raw data
     geom_point(aes(x = group_color, y = fit, shape = group_shape, color = group_color), 
                position = position_dodge(width = 0.75), size = 4)+
     geom_errorbar(aes(x = group_color, ymin = lwr, ymax = upr, colour = group_color, shape = group_shape),
