@@ -1268,7 +1268,7 @@ ggsave(growth_maxheights, filename ="output/figures/growth_maxheights.png",
 #                                            c("Northern Garden"="N. Garden",
 #                                              "Southern Garden"="S. Garden"))
 
-colnames(rich_width.pred) = c('population','fit', 'lwr', 'upr')
+colnames(rich_width.pred) = c('population', 'fit', 'error', 'lwr', 'upr')
 
 (rich_max_width_plot <-ggplot(rich_width.pred) +
     geom_jitter(data = max_widths_cg_rich, aes(x = population, y = max_mean_width_cm, colour = population),
@@ -1282,14 +1282,15 @@ colnames(rich_width.pred) = c('population','fit', 'lwr', 'upr')
     scale_y_continuous(limits = c(0, 150), breaks = seq(0, 150, by = 25)) +
     theme_shrub()+
     theme( axis.text.x  = element_text(angle = 0), 
-           axis.title.x=element_blank())+
+           axis.title.x=element_blank(), 
+           legend.position = "none")+
     scale_x_discrete(labels = c('North', 'South')))
 
 # S. pulchra ----
 # pul_width <- (conditional_effects(garden_pul_width)) # extracting conditional effects from bayesian model
 # pul_width_data <- pul_width[[1]] # making the extracted model outputs into a dataset (for plotting)
 
-colnames(pul_width.pred) = c('population','fit', 'lwr', 'upr')
+colnames(pul_width.pred) = c('population', 'fit', 'error', 'lwr', 'upr')
 
 (pul_max_width_plot <-ggplot(pul_width.pred) +
     geom_jitter(data = max_widths_cg_pul, aes(x = population, y = max_mean_width_cm, colour = population),
@@ -1303,14 +1304,15 @@ colnames(pul_width.pred) = c('population','fit', 'lwr', 'upr')
     scale_y_continuous(limits = c(0, 125), breaks = seq(0, 125, by = 25)) +
     theme_shrub()+
     theme( axis.text.x  = element_text(angle = 0), 
-           axis.title.x=element_blank())+
+           axis.title.x=element_blank(), 
+           legend.position = "none")+
     scale_x_discrete(labels = c('North', 'South')))
 
 # S. arctica ----
 # arc_width <- (conditional_effects(garden_arc_width)) # extracting conditional effects from bayesian model
 # arc_width_data <- arc_width[[1]] # making the extracted model outputs into a dataset (for plotting)
 
-colnames(arc_width.pred) = c('population','fit', 'lwr', 'upr')
+colnames(arc_width.pred) = c('population', 'fit', 'error', 'lwr', 'upr')
 
 (arc_max_width_plot <-ggplot(arc_width.pred) +
     geom_jitter(data = max_widths_cg_pul, aes(x = population, y = max_mean_width_cm, colour = population),
@@ -1324,12 +1326,13 @@ colnames(arc_width.pred) = c('population','fit', 'lwr', 'upr')
     scale_y_continuous(limits = c(0, 75), breaks = seq(0, 75, by = 15)) +
     theme_shrub()+
     theme( axis.text.x  = element_text(angle = 0), 
-           axis.title.x=element_blank())+
+           axis.title.x=element_blank(), 
+           legend.position = "none")+
     scale_x_discrete(labels = c('North', 'South')))
 
 # arrange 
 (growth_maxwidth <- ggarrange(rich_max_width_plot, pul_max_width_plot, arc_max_width_plot, 
-                                common.legend = TRUE, legend = "bottom",
+                                common.legend = TRUE, legend = "none",
                               labels = c("G)", "H)", "I)"),
                                 ncol = 3, nrow = 1, 
   font.label=list(color="black",size = 12)))

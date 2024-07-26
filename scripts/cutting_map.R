@@ -30,6 +30,7 @@ theme_map_source <- function(){ theme(legend.position = "bottom",
 
 library(raster)
 library(ggplot2)
+library(ggpubr)
 library(tidyr)
 library(dplyr)
 library(ggspatial)
@@ -264,6 +265,10 @@ source_map <- ggarrange(qhi_zoom_map, kluane_map, nrow = 2, ncol = 1,
                          labels = c("a", "b"), 
                          font.label=list(color="black", size = 12), 
                          heights = c(0.9, 1))
+
+source_map <- grid.arrange(qhi_zoom_map, kluane_map, nrow = 2, ncol = 1, 
+             heights = c(0.9, 1) 
+             )
 
 source_map <- ggpubr::ggarrange(qhi_zoom_map, kluane_map, nrow = 2, ncol = 1)
 

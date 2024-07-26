@@ -1462,15 +1462,15 @@ write.csv(stem_elong_out_back, "output/garden_stem_elong_out_back.csv")
 # pal  <- c("#2A788EFF", "#440154FF", "#FDE725FF","#35b779")
 
 theme_shrub <- function(){ theme(legend.position = "bottom",
-                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=14),
-                                 axis.text.x  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black", angle = 270), 
-                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=14),
-                                 axis.text.y  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black"),
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=12),
+                                 axis.text.x  = element_text(vjust=0.5, size=12, family = "Helvetica Light", colour = "black", angle = 270), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=12),
+                                 axis.text.y  = element_text(vjust=0.5, size=12, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y = element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 14, family = "Helvetica Light", face = "italic", hjust = 0.5),
-                                 legend.title = element_text(size=14, family = "Helvetica Light"),
+                                 plot.title = element_text(color = "black", size = 12, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 legend.title = element_text(size=12, family = "Helvetica Light"),
                                  legend.key=element_blank(),
                                  strip.text.x = element_text(
                                    size = 14, color = "black", face = "italic", family = "Helvetica Light"),

@@ -151,10 +151,10 @@ height_rich <- readRDS("output/models/height_rich_2023.rds")
 summary(height_rich)
 
 ggpred_height_ric <- ggpredict(height_rich, terms = c("Sample_age", "population"))
-colnames(ggpred_height_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
+colnames(ggpred_height_ric) = c('Sample_age','fit', 'error', 'lwr', 'upr',"population")
 ggpred_height_ric$species <- "Salix richardsonii"
 
-(ggpred_height_rich_plot <-ggplot(ggpred_height_ric) +
+(ggpred_height_rich_plot <- ggplot(ggpred_height_ric) +
     geom_point(data = all_CG_growth_ric, aes(x = Sample_age, y = Canopy_Height_cm, colour = population),
                alpha = 0.5, size = 1)+ # raw data
     geom_line(aes(x = Sample_age , y = fit, colour = population), linewidth = 1)+
@@ -170,7 +170,8 @@ ggpred_height_ric$species <- "Salix richardsonii"
     theme(text=element_text(family="Helvetica
                                            Light")) +
     scale_y_continuous(limits = c(0, 125), breaks = seq(0, 125, by = 25)) +
-    theme( axis.text.x  = element_text(angle = 0)) +
+    theme( axis.text.x  = element_text(angle = 0), 
+           legend.position = "none") +
     labs(title = "Salix richardsonii", size = 14, family = "Helvetica Light")) 
 
 # estimate for northern sample age: 1.46+0.10*1 = exp(1.56) = 4.758821 cm, in year 1
@@ -228,7 +229,7 @@ summary(height_pul)
 # estimate for northern sample age at year 9: 1.99-0.02*9=1.97= 3.03, exp(3.03)= 6.110447 in year 9 --> 0.6789386 per year
 
 ggpred_height_pul <- ggpredict(height_pul, terms = c("Sample_age", "population"))
-colnames(ggpred_height_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
+colnames(ggpred_height_pul) = c('Sample_age','fit', 'error', 'lwr', 'upr',"population")
 ggpred_height_pul$species <- "Salix pulchra"
 
 (ggpred_height_pul_plot <-ggplot(ggpred_height_pul) +
@@ -245,7 +246,8 @@ ggpred_height_pul$species <- "Salix pulchra"
     theme_shrub()+ theme(text=element_text(family="Helvetica
                                            Light")) +
     scale_y_continuous(limits = c(0, 100), breaks = seq(0, 90, by = 15)) +
-    theme( axis.text.x  = element_text(angle = 0)) +
+    theme( axis.text.x  = element_text(angle = 0), 
+           legend.position = "none") +
     scale_x_continuous(limits = c(1, 10), breaks = seq(1, 10, by = 1)) +
     labs(title = "Salix pulchra", size = 14, family = "Helvetica Light"))
 
@@ -290,7 +292,7 @@ summary(height_arc) # significant growth over time
 # estimate for s. sample age: 0.86-0.28 + 0.08*9 + 0.11*9 = 2.29= exp(2.29)=  9.874938 --> 1.097215
 
 ggpred_height_arc <- ggpredict(height_arc, terms = c("Sample_age", "population"))
-colnames(ggpred_height_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
+colnames(ggpred_height_arc) = c('Sample_age','fit', 'error', 'lwr', 'upr',"population")
 ggpred_height_arc$species <- "Salix arctica"
 
 (ggpred_height_arc_plot <-ggplot(ggpred_height_arc) +
@@ -305,8 +307,8 @@ ggpred_height_arc$species <- "Salix arctica"
     scale_fill_manual(values=pal_garden) +
     theme_shrub() + 
     scale_y_continuous(limits = c(0, 15), breaks = seq(0, 15, by = 3)) +
-    scale_x_continuous(limits = c(1, 8), breaks = seq(1, 8, by = 1)) +
-    theme( axis.text.x  = element_text(angle = 0)) + 
+    scale_x_continuous(limits = c(1, 10), breaks = seq(1, 10, by = 1)) +
+    theme( axis.text.x  = element_text(angle = 0), legend.position = "none") + 
     labs(title = "Salix arctica", size = 14, family = "Helvetica Light")) 
 
 (ggpred_CG_height_panel <- ggarrange(ggpred_height_rich_plot,
@@ -484,7 +486,7 @@ saveRDS(stem_ric, file = "output/models/stem_elong_ric_2023.rds")
 stem_ric <- readRDS("output/models/stem_elong_ric_2023.rds")
 
 ggpred_stem_ric <- ggpredict(stem_ric, terms = c("Sample_age", "population"))
-colnames(ggpred_stem_ric) = c('Sample_age','fit', 'lwr', 'upr',"population")
+colnames(ggpred_stem_ric) = c('Sample_age','fit', 'error', 'lwr', 'upr',"population")
 
 ggpred_stem_ric$population <- ordered(ggpred_stem_ric$population, 
                                         levels = c("Northern", "Southern"))
@@ -505,7 +507,7 @@ all_CG_growth_ric$population <- ordered(all_CG_growth_ric$population,
     scale_x_continuous(limits = c(1, 10), breaks = seq(1, 10, by = 1)) +
     scale_y_continuous(limits = c(0, 125), breaks = seq(0, 125, by = 25)) +
     theme_shrub() + 
-    theme( axis.text.x  = element_text(angle = 0)))
+    theme( axis.text.x  = element_text(angle = 0), legend.position = "none"))
 
 stem_elong_rich_summ <- model_summ(stem_ric)
 stem_elong_rich_summ$Species <- "Salix richardsonii"
@@ -535,7 +537,7 @@ saveRDS(stem_pul, file = "output/models/stem_elong_pul_2023.rds")
 stem_pul <- readRDS("output/models/stem_elong_pul_2023.rds")
 
 ggpred_stem_pul <- ggpredict(stem_pul, terms = c("Sample_age", "population"))
-colnames(ggpred_stem_pul) = c('Sample_age','fit', 'lwr', 'upr',"population")
+colnames(ggpred_stem_pul) = c('Sample_age','fit', 'error', 'lwr', 'upr',"population")
 
 ggpred_stem_pul$population <- ordered(ggpred_stem_pul$population, 
                                       levels = c("Northern", "Southern"))
@@ -556,7 +558,7 @@ all_CG_growth_pul_elong$population <- ordered(all_CG_growth_pul_elong$population
     scale_colour_manual(values=pal_garden) +
     scale_fill_manual(values=pal_garden) +
     theme_shrub() + 
-    theme( axis.text.x  = element_text(angle = 0)))
+    theme( axis.text.x  = element_text(angle = 0), legend.position = "none"))
 
 stem_elong_pul_summ <- model_summ(stem_pul)
 stem_elong_pul_summ$Species <- "Salix pulchra"
@@ -582,7 +584,7 @@ saveRDS(stem_arc, file = "output/models/stem_elong_arc_2023.rds")
 stem_arc <- readRDS("output/models/stem_elong_arc_2023.rds")
 
 ggpred_stem_arc <- ggpredict(stem_arc, terms = c("Sample_age", "population"))
-colnames(ggpred_stem_arc) = c('Sample_age','fit', 'lwr', 'upr',"population")
+colnames(ggpred_stem_arc) = c('Sample_age','fit', 'error', 'lwr', 'upr',"population")
 
 ggpred_stem_arc$population <- ordered(ggpred_stem_arc$population, 
                                       levels = c("Northern", "Southern"))
@@ -600,10 +602,10 @@ all_CG_growth_arc$population <- ordered(all_CG_growth_arc$population,
     xlab("Sample age \n" ) +
     scale_y_continuous(limits = c(0, 40), breaks = seq(0, 40, by = 8)) +
     scale_colour_manual(values=pal_garden) +
-    scale_x_continuous(limits = c(1, 8), breaks = seq(1, 8, by = 1)) +
+    scale_x_continuous(limits = c(1, 10), breaks = seq(1, 10, by = 1)) +
     scale_fill_manual(values=pal_garden) +
     theme_shrub() + 
-    theme( axis.text.x  = element_text(angle = 0)))
+    theme( axis.text.x  = element_text(angle = 0), legend.position = "none"))
 
 (ggpred_CG_stem_panel <- ggarrange(ggpred_stem_ric_plot,
                                    ggpred_stem_pul_plot, 
@@ -611,7 +613,7 @@ all_CG_growth_arc$population <- ordered(all_CG_growth_arc$population,
                                      common.legend = TRUE, 
                                      labels = c("D)", "E)", "F)"),
                                      legend="none", 
-  font.label=list(color="black",size = 12)))
+  font.label=list(color="black",size = 11)))
 
 ggsave(ggpred_CG_stem_panel, filename ="output/figures/ggpred_CG_stem_panel_2023.png",
        width = 18, height = 8, units = "in", device = png)
@@ -625,16 +627,16 @@ ggsave(ggpred_CG_stem_panel, filename ="output/figures/ggpred_CG_stem_panel_2023
 ggsave(ggpred_growth_panel, filename ="output/figures/ggpred_CG_growth_panel_2023.png",
        width = 18, height = 14, units = "in", device = png)
 
-(growth_panel <- ggarrange(ggpred_growth_panel, # run all figrues with theme from trait figure to reduce font size
-                           growth_maxwidth, 
+(growth_panel <- ggarrange(ggpred_growth_panel, # run all figures with theme from trait figure to reduce font size
+                           growth_maxwidth,
                                   nrow = 2,
                            heights = c(2, 0.9)))
 
-(growth_panel <- ggarrange(ggpred_CG_height_panel,
-                           ggpred_CG_stem_panel, # run all figrues with theme from trait figure to reduce font size
-                           growth_maxwidth, 
-                           nrow = 3,
-                           heights = c(0.95, 0.9, 0.95)))
+# (growth_panel <- ggarrange(ggpred_CG_height_panel,
+#                            ggpred_CG_stem_panel, # run all figures with theme from trait figure to reduce font size
+#                            growth_maxwidth, 
+#                            nrow = 3,
+#                            heights = c(0.95, 0.9, 0.95)))
 
 ggsave(growth_panel, filename ="output/figures/CG_growth_panel_2023.png",
        height = 22, width = 19, unit = "cm", dpi = 500, device = png)
