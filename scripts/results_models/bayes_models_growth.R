@@ -26,9 +26,23 @@ all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv
 # Only using max growth variables values
 max_widths_cg <- read.csv("data/common_garden_data_2023/max_widths_cg.csv")
 max_heights_cg <- read.csv("data/common_garden_data_2023/max_heights_cg.csv")
-max_biovol_cg <- read_csv("data/common_garden_data_2023/max_biovol_cg.csv")
-max_elong_cg <- read_csv("data/common_garden_data_2023/max_elong_cg.csv")
-max_diam_cg <- read_csv("data/common_garden_data_2023/max_diam_cg.csv")
+max_biovol_cg <- read.csv("data/common_garden_data_2023/max_biovol_cg.csv")
+max_elong_cg <- read.csv("data/common_garden_data_2023/max_elong_cg.csv")
+max_diam_cg <- read.csv("data/common_garden_data_2023/max_diam_cg.csv")
+
+CG_growth <- all_CG_source_growth %>% # how many unique samples
+  dplyr::filter(population != "S. Source") %>% 
+  dplyr::filter(population != "N. Source") %>% 
+  group_by(SampleID_standard) %>% 
+  slice(1) 
+
+CG_growth_bed <- all_CG_source_growth %>% # how many per bed
+  dplyr::filter(population != "S. Source") %>% 
+  dplyr::filter(population != "N. Source") %>% 
+  drop_na(Canopy_Height_cm) %>% 
+  group_by(Year, Bed) %>% 
+  summarise(bed_number = length(unique(SampleID_standard)))
+
 
 # Functions -------
 # 1. scale function =====

@@ -15,7 +15,7 @@ library(gridExtra)
 library(ggpubr)
 
 # 2. Loading data ---- 
-unique_source_mother <- read_csv("data/source_pops/unique_source_mother.csv")
+unique_source_mother <- read.csv("data/source_pops/unique_source_mother.csv")
 
 # Functions -------
 # 1. scale function =====
@@ -814,25 +814,26 @@ all_source_outputs <- rbind(source_heights_out_back, source_width_out_back,
 # DATA VISUALISATION --------
 pal_source <- c("#332288", "#7ad151")
 
+
 theme_shrub <- function(){ theme(legend.position = "bottom",
-                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=16),
-                                 axis.text.x  = element_text(vjust=0.5, size=15, family = "Helvetica Light", colour = "black", angle = 270), 
-                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=16),
-                                 axis.text.y  = element_text(vjust=0.5, size=16, family = "Helvetica Light", colour = "black"),
+                                 axis.title.x = element_text(face="bold", family = "Helvetica Light", size=12),
+                                 axis.text.x  = element_text(vjust=0.5, size=12, family = "Helvetica Light", colour = "black"), 
+                                 axis.title.y = element_text(face="bold", family = "Helvetica Light", size=12),
+                                 axis.text.y  = element_text(vjust=0.5, size=12, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
                                  panel.grid.minor.y = element_blank(), panel.grid.major.y=element_blank(), 
                                  panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-                                 plot.title = element_text(color = "black", size = 16, family = "Helvetica Light", face = "italic", hjust = 0.5),
-                                 legend.title = element_text(size=18, family = "Helvetica Light"),
+                                 plot.title = element_text(color = "black", size = 12, family = "Helvetica Light", face = "italic", hjust = 0.5),
+                                 legend.title = element_text(size=12, family = "Helvetica Light"),
                                  legend.key=element_blank(),
                                  strip.text.x = element_text(
-                                   size = 15, color = "black", face = "italic", family = "Helvetica Light"),
+                                   size = 14, color = "black", face = "italic", family = "Helvetica Light"),
                                  strip.background = element_blank(),
-                                 legend.text=element_text(size = 18, family = "Helvetica Light"))}
+                                 legend.text=element_text(size = 12, family = "Helvetica Light"))}
 
 # CANOPY HEIGHT -------
 # S.rich ----
-colnames(rich_source_height.pred) = c('Site','fit','old', 'lwr', 'upr')
+colnames(rich_source_height.pred) = c('Site','fit','error', 'lwr', 'upr')
 
 rich_source_height.pred$Site <- ordered(rich_source_height.pred$Site,
                                            levels = c("Qikiqtaruk",
@@ -849,16 +850,16 @@ unique_source_mother_rich$Site <- ordered(unique_source_mother_rich$Site,
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values=pal_source, labels=c('North', 'South')) +
     scale_y_continuous(breaks = seq(0, 200, by = 25)) +
     theme_shrub()+
-    theme(axis.text.x  = element_blank(), 
-          axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern', 'Southern'))+
+    theme(axis.title.x=element_blank(), 
+          legend.position = "none")+
+    scale_x_discrete(labels = c('North', 'South'))+
     ggtitle(expression(italic("Salix richardsonii"))))
 
 # S. pul----
-colnames(pul_source_height.pred) = c('Site','fit','old', 'lwr', 'upr')
+colnames(pul_source_height.pred) = c('Site','fit','error', 'lwr', 'upr')
 
 pul_source_height.pred$Site <- ordered(pul_source_height.pred$Site,
                                         levels = c("Qikiqtaruk",
@@ -875,16 +876,16 @@ unique_source_mother_pulchra$Site <- ordered(unique_source_mother_pulchra$Site,
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values=pal_source, labels=c('North', 'South')) +
     scale_y_continuous(limits = c(0, 210), breaks = seq(0, 210, by = 30)) +
     theme_shrub()+
-    theme(axis.text.x  = element_blank(), 
+    theme(legend.position = "none", 
           axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern', 'Southern'))+
+    scale_x_discrete(labels = c('North', 'South'))+
     ggtitle(expression(italic("Salix pulchra"))))
 
 # S.arctica -----
-colnames(arc_source_height.pred) = c('Site','fit','old', 'lwr', 'upr')
+colnames(arc_source_height.pred) = c('Site','fit','error', 'lwr', 'upr')
 
 # arc_source_height.pred$Site <- plyr::revalue(arc_source_height.pred$Site ,
 #                                                    c("Qikiqtaruk"="N. Source",
@@ -905,17 +906,17 @@ unique_source_mother_arctica$Site <- ordered(unique_source_mother_arctica$Site,
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Canopy height (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values=pal_source) +
     scale_y_continuous(limits = c(0, 25), breaks = seq(0, 25, by = 5)) +
     theme_shrub()+
-    theme(axis.text.x  = element_blank(), 
+    theme(legend.position = "none", 
           axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern','Southern'))+
+    scale_x_discrete(labels = c('North','South'))+
     ggtitle(expression(italic("Salix arctica"))))
 
 # arrange 
 (source_growth_heights_plots <- ggarrange(rich_source_height_plot, pul_source_height_plot, arc_source_height_plot, 
-                                common.legend = TRUE, legend = "bottom",
+                                common.legend = TRUE, legend = "none",
                                 ncol = 3, nrow = 1))
 ggsave(source_growth_heights_plots, filename ="output/figures/source_growth_heights_plots.png", 
        width = 12, height = 6., units = "in", device = png)
@@ -923,7 +924,7 @@ ggsave(source_growth_heights_plots, filename ="output/figures/source_growth_heig
 
 # WIDTH -----
 # S.rich ----
-colnames(rich_source_width.pred) = c('Site','fit','old', 'lwr', 'upr')
+colnames(rich_source_width.pred) = c('Site','fit','error', 'lwr', 'upr')
 
 rich_source_width.pred$Site <- ordered(rich_source_width.pred$Site,
                                        levels = c("Qikiqtaruk",
@@ -937,15 +938,15 @@ rich_source_width.pred$Site <- ordered(rich_source_width.pred$Site,
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Canopy width (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values=pal_source, labels=c('North', 'South')) +
     scale_y_continuous(breaks = seq(0, 500, by = 100)) +
     theme_shrub()+
-    theme(axis.text.x  = element_blank(), 
+    theme(legend.position = "none", 
           axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern','Southern')))
+    scale_x_discrete(labels = c('North','South')))
 
 # S. pul----
-colnames(pul_source_width.pred) = c('Site','fit', 'old', 'lwr', 'upr')
+colnames(pul_source_width.pred) = c('Site','fit', 'error', 'lwr', 'upr')
 
 pul_source_width.pred$Site <- ordered(pul_source_width.pred$Site,
                                        levels = c("Qikiqtaruk",
@@ -959,15 +960,15 @@ pul_source_width.pred$Site <- ordered(pul_source_width.pred$Site,
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Canopy width (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values=pal_source, labels=c('North', 'South')) +
     scale_y_continuous(limits = c(0, 500), breaks = seq(0, 500, by = 100)) +
     theme_shrub()+
-    theme(axis.text.x  = element_blank(), 
+    theme(legend.position = "none", 
           axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern','Southern')))
+    scale_x_discrete(labels = c('North','South')))
 
 # S.arctica -----
-colnames(arc_source_width.pred) = c('Site','fit', 'old', 'lwr', 'upr')
+colnames(arc_source_width.pred) = c('Site','fit', 'error', 'lwr', 'upr')
 
 arc_source_width.pred$Site <- plyr::revalue(arc_source_width.pred$Site ,
                                                    c("N. Source" = "Qikiqtaruk",
@@ -985,22 +986,22 @@ arc_source_width.pred$Site <- ordered(arc_source_width.pred$Site,
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Canopy width (cm)\n") +
     xlab("\n Population" ) +
-    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values=pal_source) +
     scale_y_continuous(limits = c(-1, 65), breaks = seq(0, 65, by = 15)) +
     theme_shrub()+
-    theme(axis.text.x  = element_blank(), 
+    theme(legend.position = "none", 
           axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern','Southern')))
+    scale_x_discrete(labels = c('North','South')))
 
 # arrange 
 (source_growth_width_plots <- ggarrange(rich_source_width_plot, pul_source_width_plot, arc_source_width_plot, 
-                                          common.legend = TRUE, legend = "bottom",
+                                          common.legend = TRUE, legend = "none",
                                           ncol = 3, nrow = 1))
 ggsave(source_growth_width_plots, filename ="output/figures/source_growth_width_plot.png", 
        width = 12, height = 6, units = "in", device = png)
 
 (source_size_panel <- ggarrange(source_growth_heights_plots, source_growth_width_plots, 
-                             common.legend = TRUE, legend = "bottom",
+                             common.legend = TRUE, legend = "none",
                              ncol = 1, nrow = 2))
 
 ggsave(source_size_panel, filename ="outputs/figures/source_size_plots.png", 
@@ -1009,7 +1010,7 @@ ggsave(source_size_panel, filename ="outputs/figures/source_size_plots.png",
 
 # STEM ELONG -----
 # S.rich ----
-colnames(rich_soruce_elong.pred) = c('Site','fit', 'old', 'lwr', 'upr')
+colnames(rich_soruce_elong.pred) = c('Site','fit', 'error', 'lwr', 'upr')
 
 rich_soruce_elong.pred$Site <- ordered(rich_soruce_elong.pred$Site,
                                         levels = c("Qikiqtaruk",
@@ -1025,15 +1026,15 @@ unique_source_mother_rich$Site <- ordered(unique_source_mother_rich$Site,
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Stem elongation (mm)\n") +
     xlab("\n Population") +
-    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values=pal_source) +
     scale_y_continuous(breaks = seq(0, 100, by = 20), limits = c(0,100)) +
     theme_shrub()+
-    theme(axis.text.x  = element_blank(), 
+    theme(legend.position = "none", 
           axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern', 'Southern'))+
+    scale_x_discrete(labels = c('North', 'South'))+
     ggtitle(expression(italic("Salix richardsonii"))))
 # S. pul----
-colnames(source_pul_elong.pred) = c('Site','fit', 'old', 'lwr', 'upr')
+colnames(source_pul_elong.pred) = c('Site','fit', 'error', 'lwr', 'upr')
 
 source_pul_elong.pred$Site <- ordered(source_pul_elong.pred$Site,
                                        levels = c("Qikiqtaruk",
@@ -1049,12 +1050,12 @@ unique_source_mother_pulchra$Site <- ordered(unique_source_mother_pulchra$Site,
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Stem elongation (mm)\n") +
     xlab("\n Population") +
-    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values=pal_source) +
     scale_y_continuous(breaks = seq(0, 100, by = 20), limits = c(0,100)) +
     theme_shrub()+
-    theme(axis.text.x  = element_blank(), 
+    theme(legend.position = "none", 
           axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern', 'Southern'))+
+    scale_x_discrete(labels = c('North', 'South'))+
     ggtitle(expression(italic("Salix pulchra"))))
 
 # S. arctica just for reference 
@@ -1063,27 +1064,27 @@ unique_source_mother_pulchra$Site <- ordered(unique_source_mother_pulchra$Site,
                 alpha = 1, position = position_jitter(w = 0.09, h = 0), shape = 17)+
     ylab("Stem elongation (mm)\n") +
     xlab("\n Population") +
-    scale_color_manual(values=pal_source, labels=c('Northern', 'Southern')) +
+    scale_color_manual(values=pal_source) +
     scale_y_continuous(breaks = seq(0, 50, by = 10), limits = c(0,50)) +
     theme_shrub()+
-    theme(axis.text.x  = element_blank(), 
+    theme(legend.position = "none", 
           axis.title.x=element_blank())+
-    scale_x_discrete(labels = c('Northern', 'Southern'))+
+    scale_x_discrete(labels = c('North', 'South'))+
     ggtitle(expression(italic("Salix arctica"))))
 # panel together 
 (source_elong_plots <- ggarrange(rich_source_elong_plot, pul_source_elong_plot, arc_source_elong_plot, 
-                                          common.legend = TRUE, legend = "bottom",
+                                          common.legend = TRUE, legend = "none",
                                           ncol = 3, nrow = 1))
 ggsave(source_elong_plots, filename ="output/figures/source_elong_plots.png", 
        width = 12, height = 6., units = "in", device = png)
 
 (source_size_panel <- ggarrange(source_growth_heights_plots, source_growth_width_plots,
                                 source_elong_plots,
-                                common.legend = TRUE, legend = "bottom",
+                                common.legend = TRUE, legend = "none",
                                 ncol = 1, nrow = 3))
 
 ggsave(source_size_panel, filename ="outputs/figures/source_size_plots.png", 
-       height = 12, width = 12, dpi = 300, units = "in", device = png)
+       height = 12, width = 12, dpi = 500, units = "in", device = png)
 
 # STEM DIAM -----
 # S.rich ----
