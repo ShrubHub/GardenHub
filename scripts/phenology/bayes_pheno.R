@@ -1510,7 +1510,8 @@ all_pheno_fig_raw <- read.csv("data/phenology/all_pheno_fig_raw.csv")
 
 (facet_pheno_plot_vert <-ggplot(all_pheno_fig_pred) + # model predictions
     geom_point(data = all_pheno_fig_raw, aes(y = DOY, x = population, colour = group_color, 
-                                             shape = shape_stage), alpha = 0.5) + # raw data
+                                             shape = shape_stage), position_jitterdodge(jitter.width=0.2, dodge.width = 0), stat="identity",
+               alpha = 0.5) + # raw data
     geom_errorbar(aes(ymin = CI_low_trans, ymax = CI_high_trans, x = population, 
                       colour = group_color),
                   size = 1, alpha = 1, width=0.4) +
@@ -1519,7 +1520,8 @@ all_pheno_fig_raw <- read.csv("data/phenology/all_pheno_fig_raw.csv")
     geom_line(aes(x = population , y = Estimate_trans, colour = group_color), 
               linewidth = 0.8, alpha = 1)+
     geom_point(aes(x = population, y = Estimate_trans, shape = shape_stage, 
-                   color = group_color), size = 3, stroke = 1, fill = "white")+
+                   color = group_color), 
+               size = 3, stroke = 1, fill = "white")+
     scale_color_manual(values=pal_garden, guide = "none") +
     scale_fill_manual(values=pal_garden, guide = "none") +
     scale_y_continuous(limits = c(110, 240), breaks = seq(110, 240, by = 30)) +
@@ -1529,16 +1531,20 @@ all_pheno_fig_raw <- read.csv("data/phenology/all_pheno_fig_raw.csv")
                      labels=c('      North', '', "", "      South", ''), expand=c(0.2, 0.2)) +
     facet_grid(~Species, scales = "free_y", drop=T) +
     theme_shrub()+ 
+    geom_hline(data=filter(all_pheno_fig_pred, Species=="Salix richardsonii"), aes(yintercept=172), linetype ="dashed") + 
+    geom_hline(data=filter(all_pheno_fig_pred, Species=="Salix pulchra"), aes(yintercept=172), linetype ="dashed") + 
+    geom_hline(data=filter(all_pheno_fig_pred, Species=="Salix arctica"), aes(yintercept=172), linetype ="dashed") +
     theme(legend.background=element_blank(), legend.key=element_blank(), 
           legend.position = "bottom", 
           axis.ticks.x = element_blank(), 
           axis.text.x  = element_text(angle = 0), 
           legend.box="vertical", legend.margin=margin())+
-    guides(shape=guide_legend(title = "Location - \n Stage", nrow=2,byrow=TRUE)))
+    guides(shape=guide_legend(title = "Location & \n Stage", nrow=2,byrow=TRUE)))
 
 #position = position_nudge(x = 0.25)
 
-ggsave("output/figures/pheno_panel.png",  height = 12, width = 18, unit = "cm", dpi = 500, device = png)
+ggsave("output/figures/pheno_panel.png",  
+       height = 12, width = 18, unit = "cm", dpi = 500, device = png)
 
 
 (facet_presen_plot1 <-ggplot(all_pheno_fig_pred) + # model predictions

@@ -919,7 +919,7 @@ unique_source_mother_arctica$Site <- ordered(unique_source_mother_arctica$Site,
                                 common.legend = TRUE, legend = "none",
                                 ncol = 3, nrow = 1))
 ggsave(source_growth_heights_plots, filename ="output/figures/source_growth_heights_plots.png", 
-       width = 12, height = 6., units = "in", device = png)
+       width = 10, height = 3.5, units = "in", device = png)
 
 
 # WIDTH -----
