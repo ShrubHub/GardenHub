@@ -1525,8 +1525,8 @@ all_pheno_fig_raw <- read.csv("data/phenology/all_pheno_fig_raw.csv")
     scale_color_manual(values=pal_garden, guide = "none") +
     scale_fill_manual(values=pal_garden, guide = "none") +
     scale_y_continuous(limits = c(110, 240), breaks = seq(110, 240, by = 30)) +
-    scale_shape_manual(labels = c("Garden emergence", "Garden yellowing", 
-                                  "Source emergence", "Source yellowing"), values = shape_stage)+
+    scale_shape_manual(labels = c("Garden bud burst", "Garden yellowing", 
+                                  "Source bud burst", "Source yellowing"), values = shape_stage)+
     scale_x_discrete(drop=FALSE,
                      labels=c('      North', '', "", "      South", ''), expand=c(0.2, 0.2)) +
     facet_grid(~Species, scales = "free_y", drop=T) +

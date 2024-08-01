@@ -780,123 +780,123 @@ save_kable(kable_width,file = "outputs/tables/kable_width.pdf",
            keep_tex =TRUE,
            density = 300)
 
-# 3. BIOVOLUME ------
+# 4. BIOVOLUME
 # S. richardsonii -----
 # model
-garden_rich_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
-                                data = max_biovol_cg_rich, family = gaussian(), chains = 3,
-                                iter = 5000, warmup = 1000, 
-                                control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(garden_rich_biovol) # significantly larger biovolume for southern shrubs in garden
-plot(garden_rich_biovol) # fine
-pp_check(garden_rich_biovol,  type = "dens_overlay", nsamples = 100) # fine
-saveRDS(garden_rich_biovol, file = "output/models/garden_rich_biovol.rds")
-
-# extract output with function
-rich_biovol_extract <- model_summ_growth(garden_rich_biovol)
-
-# extraction for model output table
-rownames(rich_biovol_extract) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
-rich_biovol_extract_df <- rich_biovol_extract %>% 
-  mutate(Species = rep("Salix richardsonii")) %>%
-  # "Sample Size" = rep(81)) %>% 
-  relocate("Species", .before = "Estimate")%>% 
-  relocate("nobs", .before = "effect")
-
-# S. pulchra -----
-garden_pul_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
-                               data = max_biovol_cg_pul, family = gaussian(), chains = 3,
-                               iter = 5000, warmup = 1000, 
-                               control = list(max_treedepth = 15, adapt_delta = 0.99))
-summary(garden_pul_biovol) # significantly larger biovolume for southern shrubs in garden
-plot(garden_pul_biovol) # fine
-pp_check(garden_pul_biovol,  type = "dens_overlay", nsamples = 100) # fine
-saveRDS(garden_pul_biovol, file = "output/models/garden_pul_biovol.rds")
-
-# extract output with function
-pul_extract_biovol <- model_summ_growth(garden_pul_biovol)
-
-# extraction for model output table
-rownames(pul_extract_biovol) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
-pul_extract_biovol_df <- pul_extract_biovol %>% 
-  mutate(Species = rep("Salix pulchra")) %>%
-  # "Sample Size" = rep(114)) %>%
-  relocate("Species", .before = "Estimate")%>% 
-  relocate("nobs", .before = "effect")
-
-# S. arctica -----
-garden_arc_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
-                               data = max_biovol_cg_arc, family = gaussian(), chains = 3,
-                               iter = 5000, warmup = 1000, 
-                               control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-
-summary(garden_arc_biovol) # NOT significant diff. 
-plot(garden_arc_biovol) # fine
-pp_check(garden_arc_biovol,  type = "dens_overlay", nsamples = 100) # fine
-saveRDS(garden_arc_biovol, file = "output/models/garden_arc_biovol.rds")
-
-# extract output with function
-arc_extract_biovol <- model_summ_growth(garden_arc_biovol)
-
-# extraction for model output table
-rownames(arc_extract_biovol) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
-arc_extract_biovol_df <- arc_extract_biovol %>% 
-  mutate(Species = rep("Salix arctica")) %>% 
-  # "Sample Size" = rep(53)) %>%
-  relocate("Species", .before = "Estimate") %>%
-  relocate("nobs", .before = "effect")
-
-# merging all extracted outputs
-garden_biovol_out <- rbind(rich_biovol_extract_df, pul_extract_biovol_df, 
-                           arc_extract_biovol_df) 
-
-# back transforming from log
-garden_biovol_out_back <- garden_biovol_out %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(Estimate), 
-         Est.Error_trans = 10^(Est.Error)) %>% 
-  select(-CI_range)
-
-# save df of results 
-write.csv(garden_biovol_out_back, "output/garden_biovol_out_back.csv")
-
-# adding spaces before/after each name so they let me repeat them in the table
-rownames(garden_biovol_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
-                                      "Sigma", " Intercept", " Southern Garden", " Sample age", 
-                                      " Sigma", "Intercept ", "Southern Garden ", "Sample age ", 
-                                      "Sigma ")
-
-# making sure Rhat keeps the .00 
-garden_biovol_out_back$Rhat <- as.character(formatC(garden_biovol_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
-# creating table
-kable_biovol <- garden_biovol_out_back %>% 
-  kbl(caption="Table.xxx BRMS model outputs: max. biovolume (height x width 1 x width 2) of northern vs southern shrubs in the common garden. 
-      Model structure per species: (log(max_biovolume) ~ population + (1|Sample_age). 
-      Model output back-transformed in the table below.", 
-      col.names = c( "Species","Estimate",
-                     "Est. Error",
-                     "Lower 95% CI (log)",
-                     "Upper 95% CI (log)", 
-                     "Rhat", 
-                     "Bulk Effective Sample Size",
-                     "Tail Effective Sample Size", 
-                     "Sample Size",
-                     "Effect",
-                     "Lower 95% CI 
-                    (back transformed)", "Upper 95% CI
-                    (back transformed)", 
-                     "Estimate transformed", 
-                     "Error transformed"), digits=2, align = "c") %>% 
-  kable_classic(full_width=FALSE, html_font="Cambria")
-
-# making species column in cursive
-column_spec(kable_biovol, 2, width = NULL, bold = FALSE, italic = TRUE)
+# garden_rich_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
+#                                 data = max_biovol_cg_rich, family = gaussian(), chains = 3,
+#                                 iter = 5000, warmup = 1000, 
+#                                 control = list(max_treedepth = 15, adapt_delta = 0.99))
+# summary(garden_rich_biovol) # significantly larger biovolume for southern shrubs in garden
+# plot(garden_rich_biovol) # fine
+# pp_check(garden_rich_biovol,  type = "dens_overlay", nsamples = 100) # fine
+# saveRDS(garden_rich_biovol, file = "output/models/garden_rich_biovol.rds")
+# 
+# # extract output with function
+# rich_biovol_extract <- model_summ_growth(garden_rich_biovol)
+# 
+# # extraction for model output table
+# rownames(rich_biovol_extract) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
+# rich_biovol_extract_df <- rich_biovol_extract %>% 
+#   mutate(Species = rep("Salix richardsonii")) %>%
+#   # "Sample Size" = rep(81)) %>% 
+#   relocate("Species", .before = "Estimate")%>% 
+#   relocate("nobs", .before = "effect")
+# 
+# # S. pulchra -----
+# garden_pul_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
+#                                data = max_biovol_cg_pul, family = gaussian(), chains = 3,
+#                                iter = 5000, warmup = 1000, 
+#                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+# summary(garden_pul_biovol) # significantly larger biovolume for southern shrubs in garden
+# plot(garden_pul_biovol) # fine
+# pp_check(garden_pul_biovol,  type = "dens_overlay", nsamples = 100) # fine
+# saveRDS(garden_pul_biovol, file = "output/models/garden_pul_biovol.rds")
+# 
+# # extract output with function
+# pul_extract_biovol <- model_summ_growth(garden_pul_biovol)
+# 
+# # extraction for model output table
+# rownames(pul_extract_biovol) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
+# pul_extract_biovol_df <- pul_extract_biovol %>% 
+#   mutate(Species = rep("Salix pulchra")) %>%
+#   # "Sample Size" = rep(114)) %>%
+#   relocate("Species", .before = "Estimate")%>% 
+#   relocate("nobs", .before = "effect")
+# 
+# # S. arctica -----
+# garden_arc_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
+#                                data = max_biovol_cg_arc, family = gaussian(), chains = 3,
+#                                iter = 5000, warmup = 1000, 
+#                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+# 
+# 
+# summary(garden_arc_biovol) # NOT significant diff. 
+# plot(garden_arc_biovol) # fine
+# pp_check(garden_arc_biovol,  type = "dens_overlay", nsamples = 100) # fine
+# saveRDS(garden_arc_biovol, file = "output/models/garden_arc_biovol.rds")
+# 
+# # extract output with function
+# arc_extract_biovol <- model_summ_growth(garden_arc_biovol)
+# 
+# # extraction for model output table
+# rownames(arc_extract_biovol) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
+# arc_extract_biovol_df <- arc_extract_biovol %>% 
+#   mutate(Species = rep("Salix arctica")) %>% 
+#   # "Sample Size" = rep(53)) %>%
+#   relocate("Species", .before = "Estimate") %>%
+#   relocate("nobs", .before = "effect")
+# 
+# # merging all extracted outputs
+# garden_biovol_out <- rbind(rich_biovol_extract_df, pul_extract_biovol_df, 
+#                            arc_extract_biovol_df) 
+# 
+# # back transforming from log
+# garden_biovol_out_back <- garden_biovol_out %>%
+#   dplyr::rename("l_95_CI_log" = "l-95% CI", 
+#                 "u_95_CI_log" = "u-95% CI") %>%
+#   mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
+#   mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
+#   mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
+#   mutate(Estimate_trans = 10^(Estimate), 
+#          Est.Error_trans = 10^(Est.Error)) %>% 
+#   select(-CI_range)
+# 
+# # save df of results 
+# write.csv(garden_biovol_out_back, "output/garden_biovol_out_back.csv")
+# 
+# # adding spaces before/after each name so they let me repeat them in the table
+# rownames(garden_biovol_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
+#                                       "Sigma", " Intercept", " Southern Garden", " Sample age", 
+#                                       " Sigma", "Intercept ", "Southern Garden ", "Sample age ", 
+#                                       "Sigma ")
+# 
+# # making sure Rhat keeps the .00 
+# garden_biovol_out_back$Rhat <- as.character(formatC(garden_biovol_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+# 
+# # creating table
+# kable_biovol <- garden_biovol_out_back %>% 
+#   kbl(caption="Table.xxx BRMS model outputs: max. biovolume (height x width 1 x width 2) of northern vs southern shrubs in the common garden. 
+#       Model structure per species: (log(max_biovolume) ~ population + (1|Sample_age). 
+#       Model output back-transformed in the table below.", 
+#       col.names = c( "Species","Estimate",
+#                      "Est. Error",
+#                      "Lower 95% CI (log)",
+#                      "Upper 95% CI (log)", 
+#                      "Rhat", 
+#                      "Bulk Effective Sample Size",
+#                      "Tail Effective Sample Size", 
+#                      "Sample Size",
+#                      "Effect",
+#                      "Lower 95% CI 
+#                     (back transformed)", "Upper 95% CI
+#                     (back transformed)", 
+#                      "Estimate transformed", 
+#                      "Error transformed"), digits=2, align = "c") %>% 
+#   kable_classic(full_width=FALSE, html_font="Cambria")
+# 
+# # making species column in cursive
+# column_spec(kable_biovol, 2, width = NULL, bold = FALSE, italic = TRUE)
 
 # STEM ELONGATION ------
 
@@ -960,7 +960,7 @@ pul_extract_elong_df <- pul_extract_elong %>%
   relocate("Species", .before = "Estimate")%>% 
   relocate("nobs", .before = "effect")
 
-# S. Arctica -----
+# S. srctica -----
 garden_arc_elong <- brms::brm(log(max_stem_elong) ~ population + (1|Sample_age),
                               data = max_elong_cg_arc, family = gaussian(), chains = 3,
                               iter = 3000, warmup = 1000, 
@@ -1033,133 +1033,133 @@ kable_elong <- garden_elong_out_back %>%
 column_spec(kable_elong, 2, width = NULL, bold = FALSE, italic = TRUE)
 
 
-# STEM DIAMETER ------
-# S. Richardsonii -----
+# STEM DIAMETER
+# S. richardsonii
 # model
-garden_rich_diam <- brms::brm(log(max_stem_diam) ~ population + (1|Sample_age),
-                               data = max_diam_cg_rich, family = gaussian(), chains = 3,
-                               iter = 5000, warmup = 1000, 
-                               control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-
-summary(garden_rich_diam) # significantly larger stem diameters for southern shrubs in garden
-plot(garden_rich_diam) # fine
-pp_check(garden_rich_diam,  type = "dens_overlay", nsamples = 100) # fine
-
-# extract output with function
-rich_extract_diam <- model_summ_growth(garden_rich_diam)
-
-# extraction for model output table
-rownames(rich_extract_diam) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
-rich_extract_diam_df <- rich_extract_diam %>% 
-  mutate(Species = rep("Salix richardsonii")) %>% 
-  # "Sample Size" = rep(81)) %>% 
-  relocate("Species", .before = "Estimate")%>% 
-  relocate("nobs", .before = "effect")
-
-# S. Pulchra -----
-garden_pul_diam <- brms::brm(log(max_stem_diam) ~ population + (1|Sample_age),
-                              data = max_diam_cg_pul, family = gaussian(), chains = 3,
-                              iter = 5000, warmup = 1000, 
-                              control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-
-summary(garden_pul_diam) # significantly larger stem diameters for southern shrubs in garden
-plot(garden_pul_diam) # fine
-pp_check(garden_pul_diam,  type = "dens_overlay", nsamples = 100) # fine
-
-# extract output with function
-pul_extract_diam <- model_summ_growth(garden_pul_diam)
-
-# extraction for model output table
-rownames(pul_extract_diam) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
-pul_extract_diam_df <- pul_extract_diam %>% 
-  mutate(Species = rep("Salix pulchra")) %>%
-  # "Sample Size" = rep(114)) %>%
-  relocate("Species", .before = "Estimate")%>% 
-  relocate("nobs", .before = "effect")
-
-
-# S. Arctica -----
-garden_arc_diam <- brms::brm(log(max_stem_diam) ~ population + (1|Sample_age),
-                              data = max_diam_cg_arc, family = gaussian(), chains = 3,
-                              iter = 5000, warmup = 1000, 
-                              control = list(max_treedepth = 15, adapt_delta = 0.99))
-
-
-summary(garden_arc_diam) # no significant diff.
-plot(garden_arc_diam) # fine
-pp_check(garden_arc_diam,  type = "dens_overlay", nsamples = 100) # fine
-
-# extract output with function
-arc_extract_diam <- model_summ_growth(garden_arc_diam)
-
-# extraction for model output table
-rownames(arc_extract_diam) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
-arc_extract_diam_df <- arc_extract_diam %>% 
-  mutate(Species = rep("Salix arctica")) %>% 
-  # "Sample Size" = rep(53)) %>%
-  relocate("Species", .before = "Estimate") %>%
-  relocate("nobs", .before = "effect")
-
-# merging all extracted outputs
-garden_diam_out <- rbind(rich_extract_diam_df, pul_extract_diam_df, 
-                          arc_extract_diam_df) 
-
-# back transforming from log
-garden_diam_out_back <- garden_diam_out %>%
-  dplyr::rename("l_95_CI_log" = "l-95% CI", 
-                "u_95_CI_log" = "u-95% CI") %>%
-  mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
-  mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
-  mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
-  mutate(Estimate_trans = 10^(Estimate), 
-         Est.Error_trans = 10^(Est.Error)) %>% 
-  select(-CI_range)
-
-# save df of results 
-write.csv(garden_diam_out_back, "output/garden_diam_out_back.csv")
-
-# adding spaces before/after each name so they let me repeat them in the table
-rownames(garden_diam_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
-                                     "Sigma", " Intercept", " Southern Garden", " Sample age", 
-                                     " Sigma", "Intercept ", "Southern Garden ", "Sample age ", 
-                                     "Sigma ")
-
-# making sure Rhat keeps the .00 
-garden_diam_out_back$Rhat <- as.character(formatC(garden_diam_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
-
-# creating table
-kable_diam <- garden_diam_out_back %>% 
-  kbl(caption="Table.xxx BRMS model outputs: max. stem diameter of northern vs southern shrubs in the common garden. 
-      Model structure per species: (log(max_stem_diameter) ~ population + (1|Sample_age). 
-      Model output back-transformed in the table below.", 
-      col.names = c("Species","Estimate",
-                    "Est. Error",
-                    "Lower 95% CI (log)",
-                    "Upper 95% CI (log)", 
-                    "Rhat", 
-                    "Bulk Effective Sample Size",
-                    "Tail Effective Sample Size", 
-                    "Sample Size",
-                    "Effect",
-                    "Lower 95% CI 
-                    (back transformed)", "Upper 95% CI
-                    (back transformed)", 
-                    "Estimate transformed", 
-                    "Error transformed"), digits=2, align = "c") %>% 
-  kable_classic(full_width=FALSE, html_font="Cambria")
-
-# making species column in cursive
-column_spec(kable_diam, 2, width = NULL, bold = FALSE, italic = TRUE)
-
-save_kable(kable_diam,file = "output/kable_diam.pdf",
-           bs_theme = "simplex",
-           self_contained = TRUE,
-           extra_dependencies = NULL,
-           latex_header_includes = NULL,
-           keep_tex =TRUE,
-           density = 300)
+# garden_rich_diam <- brms::brm(log(max_stem_diam) ~ population + (1|Sample_age),
+#                                data = max_diam_cg_rich, family = gaussian(), chains = 3,
+#                                iter = 5000, warmup = 1000, 
+#                                control = list(max_treedepth = 15, adapt_delta = 0.99))
+# 
+# 
+# summary(garden_rich_diam) # significantly larger stem diameters for southern shrubs in garden
+# plot(garden_rich_diam) # fine
+# pp_check(garden_rich_diam,  type = "dens_overlay", nsamples = 100) # fine
+# 
+# # extract output with function
+# rich_extract_diam <- model_summ_growth(garden_rich_diam)
+# 
+# # extraction for model output table
+# rownames(rich_extract_diam) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
+# rich_extract_diam_df <- rich_extract_diam %>% 
+#   mutate(Species = rep("Salix richardsonii")) %>% 
+#   # "Sample Size" = rep(81)) %>% 
+#   relocate("Species", .before = "Estimate")%>% 
+#   relocate("nobs", .before = "effect")
+# 
+# # S. pulchra
+# garden_pul_diam <- brms::brm(log(max_stem_diam) ~ population + (1|Sample_age),
+#                               data = max_diam_cg_pul, family = gaussian(), chains = 3,
+#                               iter = 5000, warmup = 1000, 
+#                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+# 
+# 
+# summary(garden_pul_diam) # significantly larger stem diameters for southern shrubs in garden
+# plot(garden_pul_diam) # fine
+# pp_check(garden_pul_diam,  type = "dens_overlay", nsamples = 100) # fine
+# 
+# # extract output with function
+# pul_extract_diam <- model_summ_growth(garden_pul_diam)
+# 
+# # extraction for model output table
+# rownames(pul_extract_diam) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
+# pul_extract_diam_df <- pul_extract_diam %>% 
+#   mutate(Species = rep("Salix pulchra")) %>%
+#   # "Sample Size" = rep(114)) %>%
+#   relocate("Species", .before = "Estimate")%>% 
+#   relocate("nobs", .before = "effect")
+# 
+# 
+# # S. arctica
+# garden_arc_diam <- brms::brm(log(max_stem_diam) ~ population + (1|Sample_age),
+#                               data = max_diam_cg_arc, family = gaussian(), chains = 3,
+#                               iter = 5000, warmup = 1000, 
+#                               control = list(max_treedepth = 15, adapt_delta = 0.99))
+# 
+# 
+# summary(garden_arc_diam) # no significant diff.
+# plot(garden_arc_diam) # fine
+# pp_check(garden_arc_diam,  type = "dens_overlay", nsamples = 100) # fine
+# 
+# # extract output with function
+# arc_extract_diam <- model_summ_growth(garden_arc_diam)
+# 
+# # extraction for model output table
+# rownames(arc_extract_diam) <- c("Intercept", "Southern Garden", "Sample age", "Sigma")
+# arc_extract_diam_df <- arc_extract_diam %>% 
+#   mutate(Species = rep("Salix arctica")) %>% 
+#   # "Sample Size" = rep(53)) %>%
+#   relocate("Species", .before = "Estimate") %>%
+#   relocate("nobs", .before = "effect")
+# 
+# # merging all extracted outputs
+# garden_diam_out <- rbind(rich_extract_diam_df, pul_extract_diam_df, 
+#                           arc_extract_diam_df) 
+# 
+# # back transforming from log
+# garden_diam_out_back <- garden_diam_out %>%
+#   dplyr::rename("l_95_CI_log" = "l-95% CI", 
+#                 "u_95_CI_log" = "u-95% CI") %>%
+#   mutate(CI_range = (Estimate - l_95_CI_log)) %>% 
+#   mutate(CI_low_trans = 10^(Estimate - CI_range)) %>% 
+#   mutate(CI_high_trans = 10^(Estimate + CI_range)) %>% 
+#   mutate(Estimate_trans = 10^(Estimate), 
+#          Est.Error_trans = 10^(Est.Error)) %>% 
+#   select(-CI_range)
+# 
+# # save df of results 
+# write.csv(garden_diam_out_back, "output/garden_diam_out_back.csv")
+# 
+# # adding spaces before/after each name so they let me repeat them in the table
+# rownames(garden_diam_out_back) <- c("Intercept", "Southern Garden", "Sample age", 
+#                                      "Sigma", " Intercept", " Southern Garden", " Sample age", 
+#                                      " Sigma", "Intercept ", "Southern Garden ", "Sample age ", 
+#                                      "Sigma ")
+# 
+# # making sure Rhat keeps the .00 
+# garden_diam_out_back$Rhat <- as.character(formatC(garden_diam_out_back$Rhat, digits = 2, format = 'f')) #new character variable with format specification
+# 
+# # creating table
+# kable_diam <- garden_diam_out_back %>% 
+#   kbl(caption="Table.xxx BRMS model outputs: max. stem diameter of northern vs southern shrubs in the common garden. 
+#       Model structure per species: (log(max_stem_diameter) ~ population + (1|Sample_age). 
+#       Model output back-transformed in the table below.", 
+#       col.names = c("Species","Estimate",
+#                     "Est. Error",
+#                     "Lower 95% CI (log)",
+#                     "Upper 95% CI (log)", 
+#                     "Rhat", 
+#                     "Bulk Effective Sample Size",
+#                     "Tail Effective Sample Size", 
+#                     "Sample Size",
+#                     "Effect",
+#                     "Lower 95% CI 
+#                     (back transformed)", "Upper 95% CI
+#                     (back transformed)", 
+#                     "Estimate transformed", 
+#                     "Error transformed"), digits=2, align = "c") %>% 
+#   kable_classic(full_width=FALSE, html_font="Cambria")
+# 
+# # making species column in cursive
+# column_spec(kable_diam, 2, width = NULL, bold = FALSE, italic = TRUE)
+# 
+# save_kable(kable_diam,file = "output/kable_diam.pdf",
+#            bs_theme = "simplex",
+#            self_contained = TRUE,
+#            extra_dependencies = NULL,
+#            latex_header_includes = NULL,
+#            keep_tex =TRUE,
+#            density = 300)
 
 # DATA VISUALISATION -----
 pal_garden <- c("#332288", "#7ad151")

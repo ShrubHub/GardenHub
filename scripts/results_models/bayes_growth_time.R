@@ -473,8 +473,7 @@ save_kable(all_height_summ_table,file = "outputs/tables/kable_heights.pdf", # or
 
 # STEM ELONGATION 2023 ----
 
-# compare stem elongation to source populations 
-
+# compare stem elongation across common garden population 
 
 # S. richardsonii ---- 
 stem_ric <- brms::brm(log(mean_stem_elong) ~ Sample_age*population+(Sample_age|SampleID_standard),
