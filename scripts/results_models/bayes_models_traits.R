@@ -2242,3 +2242,55 @@ colnames(arctica_stem.pred) = c('population','fit', 'lwr', 'upr')
                                ncol = 1, nrow = 2))
 ggsave("figures/leaf_size_panel.png", height = 10, width = 12, dpi = 300, device = png) 
 
+
+
+# prep data for final_versions =====
+all_CG_source_traits <- read.csv("data/all_CG_source_traits_2023.csv") # most traits
+
+all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv") # 2023 data leaf length data
+
+# omit one anamonolously higher LMDC value from QHI 2015 
+all_CG_source_traits_clean <- all_CG_source_traits %>% 
+  filter(LDMC_g_g < 0.76 | is.na(LDMC_g_g)) %>% 
+  filter(SLA < 26 | is.na(SLA)) %>% 
+  mutate(LDMC_percent = (LDMC_g_g *100)) %>% # change LDMC into percent instead
+  mutate(LA_cm2 = (LA/100)) %>% 
+  select(-c(X.1, Wood_density_mg_mm3, Dry_mass, X, MONTH, number_leaves, LA,
+            leaf_mass_per_area_g_m2, leaf_status, total_leaf_dry_mass_g, site_id,
+            Lat, Lon, total_leaf_dry_mass_mg, total_rehydrated_leaf_mass_g, 
+            Dry_mass, Elevation_m, equivalent_water_thickness_cm, date, Sample_Date, 
+            actual_leaf_dry_matter_content_perc, LDMC_g_g, leaf_fresh_mass_g))
+
+arctica_all_traits <- all_CG_source_traits_clean %>% 
+  filter(Species == "Salix arctica") %>% 
+  filter(LDMC_percent < 60) %>% 
+  filter(SLA < 24) 
+
+pulchra_all_traits <- all_CG_source_traits_clean %>% 
+  filter(Species == "Salix pulchra") %>% 
+  filter(LDMC_percent < 70)
+
+richardsonii_all_traits <- all_CG_source_traits_clean %>% 
+  filter(Species == "Salix richardsonii") %>% 
+  filter(SLA < 24) 
+
+all_spp_traits <- rbind(arctica_all_traits, pulchra_all_traits, richardsonii_all_traits)
+
+leaf_area <- all_spp_traits %>% 
+  select(-c(LDMC_percent, SLA)) %>% 
+  filter(year %in% c(2021, 2022, 2023)) %>% 
+  filter(LA_cm2 <140)
+
+all_spp_traits_no_area <- all_spp_traits %>% 
+  select(-LA_cm2)
+
+all_traits <- full_join(all_spp_traits_no_area, leaf_area, 
+                        by = c("population", 
+                               "DOY", 
+                               "Species", 
+                               "plant_tag_id", 
+                               "sample_id", 
+                               "date_sampled", 
+                               "Site", 
+                               "year", 
+                               "month"))
