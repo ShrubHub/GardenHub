@@ -1,10 +1,10 @@
 # models for Common garden manuscript 
-# citation: 
+# citation: TBD! 
 # email for questions: madelaine.anderson@usherbrooke.ca
 
 # Outline ----
 # NB: within each section, one model per species is run aka three models. 
-# NB: model outputs are saved after running, rerunning may yield slightly different results (exact numbers due to random variation in iterations)
+# NB: model outputs were saved after running, rerunning models may yield slightly different results (exact numbers due to random variation in iterations)
 
 # 1. Growth models 
 # 1.1 source population size: height, width, stem elongation 
@@ -13,7 +13,7 @@
 
 # 2. Phenology models
 # 2.1 leaf bud burst 
-# 2.2 leaf sensence onset 
+# 2.2 leaf senescence onset 
 
 # 3. Trait models 
 # 3.1 specific leaf area
@@ -21,17 +21,11 @@
 # 3.3 leaf area
 # 3.4 leaf length 
 
-# Libraries -----
+# libraries -----
 library(plyr) # load before dplyr aka tidyverse 
-library(tidyverse)
-library(brms)
-library(ggplot2)
-library(tidybayes)
-library(ggpubr)
-library(gridExtra)
-library(ggeffects)
-library(cowplot)
-
+library(tidyverse) # most data manip
+library(brms) # models
+library(ggeffects) # ggpredict function to see model outputs 
 
 # Functions -------
 #  scale function 
@@ -41,8 +35,8 @@ center_scale <- function(x) {
 }
 
 # extract model result functions =====
-
-model_summ_methods <- function(x) {
+# summary function for one random effect (e.g. source growth models)
+model_summ_oneRE <- function(x) {
   sum = summary(x)
   fixed = sum$fixed
   sigma = sum$spec_pars
@@ -56,10 +50,12 @@ model_summ_methods <- function(x) {
   random$nobs <- obs
   sigma$nobs <- obs
   
-  row.names(random)[row.names(random) == "sd(Intercept)"] <- "SampleYear"
+  row.names(random)[row.names(random) == "sd(Intercept)"] <- "SampleYear" # call this whatever random effect is
   
   modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge it all together
 }
+
+
 
 # no random effect model summary function 
 model_summ_no_re <- function(x) {
@@ -113,7 +109,7 @@ pp_check(source_rich_height, type = "dens_overlay", ndraws = 100)  # looks good
 rich_source_height.pred <- ggpredict(source_rich_height, terms = c('Site'))
 
 # extract output with function
-source_rich_height_dat <- model_summ_methods(source_rich_height)
+source_rich_height_dat <- model_summ_oneRE(source_rich_height)
 
 #### S. pulchra ----
 source_pul_height <- brms::brm(log(Canopy_Height_cm) ~ Site + (1|SampleYear),
@@ -131,7 +127,7 @@ pp_check(source_pul_height, type = "dens_overlay", nsamples = 100)  # looks good
 pul_source_height.pred <- ggpredict(source_pul_height, terms = c('Site'))
 
 # extract output with function
-source_pul_height_dat<- model_summ_methods(source_pul_height)
+source_pul_height_dat<- model_summ_oneRE(source_pul_height)
 
 #### S. arctica ----
 source_arc_height <- brms::brm(log(Canopy_Height_cm) ~ Site + (1|SampleYear),
@@ -149,7 +145,7 @@ pp_check(source_arc_height, type = "dens_overlay", nsamples = 100)  # looks good
 arc_source_height.pred <- ggpredict(source_arc_height, terms = c('Site'))
 
 # extract output with function
-source_arc_height_dat <- model_summ_methods(source_arc_height)
+source_arc_height_dat <- model_summ_oneRE(source_arc_height)
 
 
 #### 1.1.2 width in source populations ----
@@ -167,7 +163,7 @@ pp_check(source_rich_width_mod, type = "dens_overlay", nsamples = 100)  # fine
 rich_source_width.pred <- ggpredict(source_rich_width_mod, terms = c('Site'))
 
 # extract output with function
-source_rich_width <- model_summ_methods(source_rich_width_mod)
+source_rich_width <- model_summ_oneRE(source_rich_width_mod)
 
 #### S. pulchra ----
 source_pul_width<- brms::brm((mean_width) ~ Site + (1|SampleYear),
@@ -185,7 +181,7 @@ pp_check(source_pul_width, type = "dens_overlay", nsamples = 100)  # fine
 pul_source_width.pred <- ggpredict(source_pul_width, terms = c('Site'))
 
 # extract output with function
-source_pul_width <- model_summ_methods(source_pul_width)
+source_pul_width <- model_summ_oneRE(source_pul_width)
 
 #### S. arctica ----
 source_arc_width<- brms::brm((mean_width) ~ Site + (1|SampleYear),
@@ -201,7 +197,7 @@ pp_check(source_arc_width, type = "dens_overlay", nsamples = 100)  # fine
 arc_source_width.pred <- ggpredict(source_arc_width, terms = c('Site'))
 
 # extract output with function
-source_arc_width <- model_summ_methods(source_arc_width)
+source_arc_width <- model_summ_oneRE(source_arc_width)
 
 ### 1.1.3 stem elongation in source populations -----
 #### S. richardsonii ----
@@ -515,25 +511,188 @@ pp_check(arctica_yellowing, type = "dens_overlay", ndraws = 100) # looks good
 # arctica_yellowing <- readRDS(file = "final_versions/model_outputs/arctica_yellowing.rds")
 
 # 3. TRAITS -----
-## 3.1 specific leaf area ----
-### S. richardsonii ----
-### S. pulchra ----
-### S. arctica ----
+# data: 
+all_CG_source_traits <- read.csv("final_versions/data/all_CG_source_traits_2023.csv") # most traits
 
-## 3.2 leaf dry matter content ----
+all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv") # leaf length data
+
+# rename levels of variables for easier interpretation 
+all_CG_source_traits$population <- plyr::revalue(all_CG_source_traits$population, 
+                                                 c("Northern"="N. Garden",
+                                                   "Southern"="S. Garden",
+                                                   "source_south"="S. Source",
+                                                   "source_north"="N. Source"))
+
+all_CG_source_growth$population <- plyr::revalue(all_CG_source_growth$population, 
+                                                 c("Northern"="N. Garden",
+                                                   "Southern"="S. Garden",
+                                                   "source_south"="S. Source",
+                                                   "source_north"="N. Source")) 
+
+# species specific trait datasets: 
+arctica_all_traits <- all_CG_source_traits %>% 
+  filter(Species == "Salix arctica") 
+pulchra_all_traits <- all_CG_source_traits %>% 
+  filter(Species == "Salix pulchra") 
+richardsonii_all_traits <- all_CG_source_traits %>% 
+  filter(Species == "Salix richardsonii") 
+
+# species specific datasets for leaf length 
+# leaf length data were collected with other growth measurements: 
+arctica_all_growth <- all_CG_source_growth %>% 
+  filter(Species == "Salix arctica")
+pulchra_all_growth <- all_CG_source_growth %>% 
+  filter(Species == "Salix pulchra")
+richardsonii_all_growth <- all_CG_source_growth %>% 
+  filter(Species == "Salix richardsonii")
+
+## 3.1 specific leaf area (SLA) ----
 ### S. richardsonii ----
+rich_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
+                      iter = 5000, warmup = 1000, 
+                      control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(rich_SLA) 
+plot(rich_SLA)
+pp_check(rich_SLA, type = "dens_overlay", ndraws = 100) # good 
+# saveRDS(rich_SLA, file = "final_versions/model_outputs/sla_richardsonii.rds")
+# rich_SLA <- readRDS("final_versions/model_outputs/sla_richardsonii.rds")
+rich_SLA.pred <- ggpredict(rich_SLA, terms = c('population'))
+
 ### S. pulchra ----
+pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
+                         iter = 3000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99))
+
+summary(pulchra_SLA) 
+plot(pulchra_SLA)
+pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # good 
+# saveRDS(pulchra_SLA, file = "final_versions/model_outputs/sla_pulchra.rds")
+# pulchra_SLA <- readRDS("final_versions/model_outputs/sla_pulchra.rds")
+pul_SLA.pred <- ggpredict(pulchra_SLA, terms = c('population'))
+
 ### S. arctica ----
+arctica_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
+                         iter = 3000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(arctica_SLA) 
+plot(arctica_SLA)
+pp_check(arctica_SLA, type = "dens_overlay", ndraws = 100) # pretty good 
+# saveRDS(arctica_SLA, file = "final_versions/model_outputs/sla_arctica.rds")
+# arctica_SLA <- readRDS("final_versions/model_outputs/sla_arctica.rds")
+arc_SLA.pred <- ggpredict(arctica_SLA, terms = c('population'))
+
+## 3.2 leaf dry matter content (LMDC) ----
+### S. richardsonii ----
+rich_LDMC_check <- brms::brm((LDMC_percent) ~ population + (1|year), data = richardsonii_all_traits, family = gaussian(), chains = 3,
+                             iter = 3000, warmup = 1000, 
+                             control = list(max_treedepth = 15, adapt_delta = 0.99)) 
+summary(rich_LDMC)
+plot(rich_LDMC)
+pp_check(rich_LDMC, type = "dens_overlay", ndraws = 100) 
+# saveRDS(rich_LDMC, file = "final_versions/model_outputs/ldmc_richardsonii.rds")
+# rich_LDMC <- readRDS("final_versions/model_outputs/ldmc_richardsonii.rds")
+rich_LDMC.pred <- ggpredict(rich_LDMC, terms = c('population'))
+
+### S. pulchra ----
+pulchra_LDMC <- brms::brm((LDMC_percent) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
+                          iter = 3000, warmup = 1000, 
+                          control = list(max_treedepth = 15, adapt_delta = 0.99)) 
+summary(pulchra_LDMC) 
+plot(pulchra_LDMC)
+pp_check(pulchra_LDMC, type = "dens_overlay", ndraws = 100) 
+# saveRDS(pulchra_LDMC, file = "final_versions/model_outputs/ldmc_pulchra.rds")
+# pulchra_LDMC <- readRDS("final_versions/model_outputs/ldmc_pulchra.rds")
+pul_LDMC.pred <- ggpredict(pulchra_LDMC, terms = c('population'))
+
+### S. arctica ----
+arctica_LDMC <- brms::brm(LDMC_percent ~ population + (1|year), data = arctica_all_traits, family = gaussian(), chains = 3,
+                          iter = 5000, warmup = 1000, 
+                          control = list(max_treedepth = 15, adapt_delta = 0.99)) 
+summary(arctica_LDMC)
+plot(arctica_LDMC)
+pp_check(arctica_LDMC, type = "dens_overlay", ndraws = 100) 
+# saveRDS(arctica_LDMC, file = "final_versions/model_outputs/ldmc_arctica.rds")
+# arctica_LDMC <- readRDS("final_versions/model_outputs/ldmc_arctica.rds")
+arc_LDMC.pred <- ggpredict(arctica_LDMC, terms = c('population'))
 
 ## 3.3 leaf area ----
 ### S. richardsonii ----
+rich_LA <- brms::brm((LA_cm2) ~ population + (1|year), data = richardsonii_all_traits, 
+                     family = gaussian(), chains = 3,
+                         iter = 3000, warmup = 1000, 
+                         control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(rich_LA)
+plot(rich_LA)
+pp_check(rich_LA, type = "dens_overlay", ndraws = 100)
+# saveRDS(rich_LA, file = "final_versions/model_outputs/la_richardsonii.rds")
+# rich_LA <- readRDS("final_versions/model_outputs/la_richardsonii.rds")
+rich_LA.pred <- ggpredict(rich_LA, terms = c('population'))
+
 ### S. pulchra ----
+pulchra_LA <- brms::brm((LA_cm2) ~ population + (1|year), data = pulchra_all_traits, 
+                            family = gaussian(), chains = 3,
+                            iter = 3000, warmup = 1000, 
+                            control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(pulchra_LA)
+plot(pulchra_LA)
+pp_check(pulchra_LA, type = "dens_overlay", ndraws = 100) # okay
+# saveRDS(pulchra_LA, file = "final_versions/model_outputs/la_pulchra.rds")
+# pulchra_LA <- readRDS(final_versions/model_outputs/la_pulchra.rds")
+pulchra_LA.pred <- ggpredict(pulchra_LA, terms = c('population'))
+
 ### S. arctica ----
+arctica_LA <- brms::brm((LA_cm2)  ~ population, data = arctica_all_traits, 
+                        family = gaussian(), chains = 3,
+                            iter = 3000, warmup = 1000, 
+                            control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(arctica_LA)
+plot(arctica_LA)
+pp_check(arctica_LA, type = "dens_overlay", ndraws = 100) 
+# saveRDS(arctica_LA, file = "final_versions/model_outputs/la_arctica.rds")
+# arctica_LA <- readRDS("final_versions/model_outputs/la_arctica.rds")
+arctica_LA.pred <- ggpredict(arctica_LA, terms = c('population'))
 
 ## 3.4 leaf length ----
+arctica_all_growth <- all_CG_source_growth %>% 
+  filter(Species == "Salix arctica")
+pulchra_all_growth <- all_CG_source_growth %>% 
+  filter(Species == "Salix pulchra")
+richardsonii_all_growth <- all_CG_source_growth %>% 
+  filter(Species == "Salix richardsonii")
+
 ### S. richardsonii ----
+rich_LL <- brms::brm(mean_leaf_length ~ population + (1|year), 
+                     data = richardsonii_all_growth, family = gaussian(), chains = 3,
+                     iter = 3000, warmup = 1000, 
+                     control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(rich_LL)
+plot(rich_LL)
+pp_check(rich_LL, type = "dens_overlay", ndraws = 100) 
+# saveRDS(rich_LL, file = "final_versions/model_outputs/ll_richardsonii.rds")
+# rich_LL <- readRDS("final_versions/model_outputs/ll_richardsonii.rds")
+rich_LL.pred <- ggpredict(rich_LL, terms = c('population'))
+
 ### S. pulchra ----
+pulchra_LL <- brms::brm(mean_leaf_length ~ population + (1|year), data = pulchra_all_growth, family = gaussian(), chains = 3,
+                        iter = 3000, warmup = 1000, 
+                        control = list(max_treedepth = 15, adapt_delta = 0.99)) 
+summary(pulchra_LL)
+plot(pulchra_LL)
+pp_check(pulchra_LL, type = "dens_overlay", ndraws = 100) 
+# saveRDS(pulchra_LL, file = "final_versions/model_outputs/ll_pulchra.rds")
+# pulchra_LL <- readRDS("final_versions/model_outputs/ll_pulchra.rds")
+pul_LL.pred <- ggpredict(pulchra_LL, terms = c('population'))
+
 ### S. arctica ----
+arctica_LL_CG <- brms::brm((mean_leaf_length) ~ population + (1|year) + (1|SampleID_standard), data = arctica_all_growth, family = gaussian(), chains = 3,
+                           iter = 3000, warmup = 1000, 
+                           control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(arctica_LL_CG)
+plot(arctica_LL_CG)
+pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
+# saveRDS(arctica_LL_CG, file = "final_versions/model_outputs/ll_arctica.rds")
+# arctica_LL_CG <- readRDS("final_versions/model_outputs/ll_arctica.rds")
+arc_LL.pred <- ggpredict(arctica_LL_CG, terms = c('population'))
 
 
 
