@@ -238,8 +238,7 @@ source_pul_elong_dat <- model_summ_no_re(source_pul_elong)
 
 ## 1.2 common garden size over time ----
 ### 1.2.1 height over time ----
-# data: 
-all_CG_source_growth <- read.csv("final_versions/data/all_cg_source_data_2023.csv") # 2023 data
+
 # model summary function: 
 model_summ_growth <- function(x) {
   sum = summary(x)
@@ -260,10 +259,11 @@ model_summ_growth <- function(x) {
   modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge together
 }
 
-# make common garden only and species specific datasets
-all_CG_growth <- all_CG_source_growth %>%
-  filter(population %in% c("Northern", "Southern"))
 
+# data: 
+all_CG_growth <- read.csv("final_versions/data/all_cg_data_2023.csv") 
+
+# make species specific datasets
 all_CG_growth_ric <- all_CG_growth %>%
   filter(Species == "Salix richardsonii")
 
@@ -514,7 +514,7 @@ pp_check(arctica_yellowing, type = "dens_overlay", ndraws = 100) # looks good
 # data: 
 all_CG_source_traits <- read.csv("final_versions/data/all_CG_source_traits_2023.csv") # most traits
 
-all_CG_source_growth <- read.csv("data/common_garden_data_2023/all_data_2023.csv") # leaf length data
+all_CG_growth <- read.csv("final_versions/data/all_cg_data_2023.csv") # leaf length data
 
 # rename levels of variables for easier interpretation 
 all_CG_source_traits$population <- plyr::revalue(all_CG_source_traits$population, 
