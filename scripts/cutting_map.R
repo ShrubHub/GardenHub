@@ -3,7 +3,7 @@
 
 theme_map <- function(){ theme(legend.position = "bottom",
   axis.title.x = element_text(face="bold", family = "Helvetica Light", size=14),
-                                 axis.text.x  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black", angle = 45), 
+                                 axis.text.x  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black", angle = 90), 
                                  axis.title.y = element_text(face="bold", family = "Helvetica Light", size=14),
                                  axis.text.y  = element_text(vjust=0.5, size=14, family = "Helvetica Light", colour = "black"),
                                  panel.grid.major.x = element_blank(), panel.grid.minor.x=element_blank(), 
@@ -62,13 +62,13 @@ main_map_shapes <- c(16, 0)
   annotate('text', y = 65, x = -137, label = 'Yukon', fontface =1, size = 6) +
   annotate('text', y = 69.75, x = -139.75, label = 'a', fontface =1, size = 6) + 
   annotate('text', y = 61.05, x = -139.2, label = 'b', fontface =1, size = 6) + 
-  scale_x_continuous(expand = c(0,0), limits = c(-144.0, -123), 
-                     breaks = c(-140.0, -135.00, -130.00, -125.00), 
-                     labels = c("140.00ºW", "135.00ºW", "130.00ºW", "125.00ºW")) +
-  scale_y_continuous(expand = c(0,0), limits = c(59, 70.5), 
-                     breaks = c(60, 62.5, 65.0, 67.5, 70.0), 
-                     labels = c("60.00ºN", "62.50ºN", "65.00ºN", "67.50ºN","70.00ºN"))+
-  scale_shape_manual(values = main_map_shapes) +
+  # scale_x_continuous(expand = c(0,0), limits = c(-144.0, -123), 
+  #                    breaks = c(-140.0, -135.00, -130.00, -125.00), 
+  #                    labels = c("140.00ºW", "135.00ºW", "130.00ºW", "125.00ºW")) +
+  # scale_y_continuous(expand = c(0,0), limits = c(59, 70.5), 
+  #                    breaks = c(60, 62.5, 65.0, 67.5, 70.0), 
+  #                    labels = c("60.00ºN", "62.50ºN", "65.00ºN", "67.50ºN","70.00ºN"))+
+   scale_shape_manual(values = main_map_shapes) +
   scale_size_manual(values = c(2, 4), guide = "none") +
   theme_bw() +
   guides(shape=guide_legend(title = "Site", override.aes = list(size = 4))) +
