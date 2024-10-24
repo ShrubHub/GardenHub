@@ -161,6 +161,24 @@ qhi_zoom_map
 ggsave("output/figures/map/qhi_map.png", 
        height = 18, width = 18, unit = "cm", dpi = 500, device = png)
 
+# all of QHI
+qhi_all_map <- ggplot() +
+  geom_sf(data = qhi_sf, fill = 'black',   
+          stroke = TRUE,  color = "black",
+          inherit.aes = FALSE) +
+  coord_sf(label_graticule = "SW", expand = T) +
+  ylab("") +
+  #annotation_scale()+
+  theme_classic() +
+  scale_size_manual(values = 1) +
+  theme(axis.text = element_text(colour = 'black'), 
+        legend.position = "bottom", 
+        axis.title.x = element_blank(), 
+        axis.title.y = element_blank()) 
+
+ggsave("qhi_outline.png", 
+       height = 10, width = 10, unit = "cm", dpi = 500, device = png)
+
 # qhi_lat_long_sf <- qhi_sf %>% st_transform(4979)
 
 # qhi_sp <- as(qhi_lat_long_sf, 'Spatial')
