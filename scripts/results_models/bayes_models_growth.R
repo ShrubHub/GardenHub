@@ -781,7 +781,7 @@ save_kable(kable_width,file = "outputs/tables/kable_width.pdf",
            density = 300)
 
 # 4. BIOVOLUME
-# S. richardsonii -----
+# S. richardsonii
 # model
 # garden_rich_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
 #                                 data = max_biovol_cg_rich, family = gaussian(), chains = 3,
@@ -803,7 +803,7 @@ save_kable(kable_width,file = "outputs/tables/kable_width.pdf",
 #   relocate("Species", .before = "Estimate")%>% 
 #   relocate("nobs", .before = "effect")
 # 
-# # S. pulchra -----
+# # S. pulchra
 # garden_pul_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
 #                                data = max_biovol_cg_pul, family = gaussian(), chains = 3,
 #                                iter = 5000, warmup = 1000, 
@@ -824,7 +824,7 @@ save_kable(kable_width,file = "outputs/tables/kable_width.pdf",
 #   relocate("Species", .before = "Estimate")%>% 
 #   relocate("nobs", .before = "effect")
 # 
-# # S. arctica -----
+# # S. arctica
 # garden_arc_biovol <- brms::brm(log(max_biovol) ~ population + (1|Sample_age),
 #                                data = max_biovol_cg_arc, family = gaussian(), chains = 3,
 #                                iter = 5000, warmup = 1000, 
@@ -1198,13 +1198,13 @@ max_heights_cg_arc$population <- ordered(max_heights_cg_arc$population,
 # ric_height_data <- ric_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
 # # [[1]] is to extract the first term in the model which in our case is population
 
-colnames(rich_height.pred) = c('population','fit', 'lwr', 'upr')
+colnames(rich_height.pred) = c('population','fit', 'error', 'lwr', 'upr')
 
 (ric_max_height_plot <-ggplot(rich_height.pred) +
     geom_jitter(data = max_heights_cg_rich, aes(x = population, y = max_canopy_height_cm, colour = population),
                 alpha = 0.3, position = position_jitter(w = 0.09, h = 0))+
     geom_point(aes(x = population, y = fit,colour = population), width=0.5, size = 4)+
-    geom_errorbar(aes(x = population, ymin = lwr, ymax = upr, colour = population),
+    geom_errorbar(aes(x = population, ymin = (lwr), ymax = upr, colour = population),
                   linewidth = 1, alpha = 1, width = 0.75) +
     ylab("Max. canopy height (cm)\n") +
     xlab("\n Population" ) +
@@ -1222,7 +1222,7 @@ colnames(rich_height.pred) = c('population','fit', 'lwr', 'upr')
 # pul_height_data <- pul_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
 # # [[1]] is to extract the first term in the model which in our case is population
 
-colnames(pul_height.pred) = c('population','fit', 'lwr', 'upr')
+colnames(pul_height.pred) = c('population','fit', 'error', 'lwr', 'upr')
 
 (pul_max_height_plot <-ggplot(pul_height.pred) +
     geom_jitter(data = max_heights_cg_pul, aes(x = population, y = max_canopy_height_cm, colour = population),
@@ -1244,7 +1244,7 @@ colnames(pul_height.pred) = c('population','fit', 'lwr', 'upr')
 # arc_heights <- (conditional_effects(garden_arc_height)) # extracting conditional effects from bayesian model
 # arc_height_data <- arc_heights[[1]] # making the extracted model outputs into a dataset (for plotting)
 
-colnames(arc_height.pred) = c('population','fit', 'lwr', 'upr')
+colnames(arc_height.pred) = c('population','fit', 'error', 'lwr', 'upr')
 
 (arc_max_height_plot <-ggplot(arc_height.pred) +
     geom_jitter(data = max_heights_cg_arc, aes(x = population, y = max_canopy_height_cm, colour = population),
@@ -1266,6 +1266,7 @@ colnames(arc_height.pred) = c('population','fit', 'lwr', 'upr')
 (growth_maxheights <- ggarrange(ric_max_height_plot, pul_max_height_plot, arc_max_height_plot, 
                            common.legend = TRUE, legend = "none",
                            ncol = 3, nrow = 1))
+ggsave <- function(..., bg = 'white') ggplot2::ggsave(..., bg = bg)
 
 ggsave(growth_maxheights, filename ="output/figures/growth_maxheights.png", 
        width = 14.67, height = 6.53, units = "in", device = png)

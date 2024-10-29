@@ -1528,7 +1528,7 @@ all_pheno_fig_raw <- read.csv("data/phenology/all_pheno_fig_raw.csv")
     scale_shape_manual(labels = c("Garden bud burst", "Garden yellowing", 
                                   "Source bud burst", "Source yellowing"), values = shape_stage)+
     scale_x_discrete(drop=FALSE,
-                     labels=c('      North', '', "", "      South", ''), expand=c(0.2, 0.2)) +
+                     labels=c('      North', '', "", "    South", ''), expand=c(0.2, 0.2)) +
     facet_grid(~Species, scales = "free_y", drop=T) +
     theme_shrub()+ 
     geom_hline(data=filter(all_pheno_fig_pred, Species=="Salix richardsonii"), aes(yintercept=172), linetype ="dashed") + 
