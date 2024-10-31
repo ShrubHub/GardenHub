@@ -543,7 +543,6 @@ rich_SLA.pred <- ggpredict(rich_SLA, terms = c('population'))
 pulchra_SLA <- brms::brm(log(SLA) ~ population + (1|year), data = pulchra_all_traits, family = gaussian(), chains = 3,
                          iter = 3000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
-
 summary(pulchra_SLA) 
 plot(pulchra_SLA)
 pp_check(pulchra_SLA, type = "dens_overlay", ndraws = 100) # good 
