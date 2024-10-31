@@ -21,6 +21,10 @@
 # 3.3 leaf area
 # 3.4 leaf length 
 
+# 4. Propagation effects models 
+# 4.1 length of cutting vs maximum height
+# 4.2 length of cutting vs maximum width 
+
 # libraries -----
 library(plyr) # load before dplyr aka tidyverse 
 library(tidyverse) # most data manip
@@ -83,10 +87,8 @@ source_size_data$Site <- as.factor(source_size_data$Site)
 # Species specific datasets:
 source_size_data_rich <- source_size_data %>%
   filter(Species == "Salix richardsonii")
-
 source_size_data_pulchra <- source_size_data %>%
   filter(Species == "Salix pulchra")
-
 source_size_data_arctica <- source_size_data %>%
   filter(Species == "Salix arctica")
 
@@ -123,12 +125,6 @@ pp_check(source_pul_height, type = "dens_overlay", nsamples = 100)  # looks good
 # saveRDS(source_pul_height, file = "final_versions/model_outputs/source_pul_height.rds")
 # source_pul_height <- readRDS(file = "final_versions/model_outputs/source_pul_height.rds")
 
-# view model estimates draws with ggpredict: 
-pul_source_height.pred <- ggpredict(source_pul_height, terms = c('Site'))
-
-# extract output with function
-source_pul_height_dat<- model_summ_oneRE(source_pul_height)
-
 #### S. arctica ----
 source_arc_height <- brms::brm(log(Canopy_Height_cm) ~ Site + (1|SampleYear),
                                data = source_size_data_arctica, family = gaussian(), chains = 3,
@@ -140,13 +136,6 @@ plot(source_arc_height)
 pp_check(source_arc_height, type = "dens_overlay", nsamples = 100)  # looks good 
 # saveRDS(source_arc_height, file = "final_versions/model_outputs/source_arc_height.rds")
 # source_arc_height <- readRDS(file = "final_versions/model_outputs/source_arc_height.rds")
-
-# view model estimates draws with ggpredict: 
-arc_source_height.pred <- ggpredict(source_arc_height, terms = c('Site'))
-
-# extract output with function
-source_arc_height_dat <- model_summ_oneRE(source_arc_height)
-
 
 #### 1.1.2 width in source populations ----
 #### S. richardsonii ----
@@ -259,17 +248,14 @@ model_summ_growth <- function(x) {
   modelTerms <- as.data.frame(bind_rows(fixed, random, sigma))  # merge together
 }
 
-
 # data: 
 all_CG_growth <- read.csv("final_versions/data/all_cg_data_2023.csv") 
 
 # make species specific datasets
 all_CG_growth_ric <- all_CG_growth %>%
   filter(Species == "Salix richardsonii")
-
 all_CG_growth_pul<-  all_CG_growth %>%
   filter(Species == "Salix pulchra")
-
 all_CG_growth_arc <-all_CG_growth %>%
   filter(Species == "Salix arctica")
 
@@ -278,11 +264,9 @@ height_rich <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_a
                          data = all_CG_growth_ric,  family = gaussian(), chains = 3,
                          iter = 5000, warmup = 1000, 
                          control = list(max_treedepth = 15, adapt_delta = 0.99))
-
 # saveRDS(height_rich, file = "final_versions/model_outputs/height_rich_2023.rds")
 # height_rich <- readRDS("final_versions/model_outputs/height_rich_2023.rds")
 summary(height_rich)
-
 ggpred_height_ric <- ggpredict(height_rich, terms = c("Sample_age", "population"))
 
 ### S. pulchra ----
@@ -306,7 +290,6 @@ height_arc <- brms::brm(log(Canopy_Height_cm) ~ Sample_age*population+(Sample_ag
 summary(height_arc) # growth over time
 ggpred_height_arc <- ggpredict(height_arc, terms = c("Sample_age", "population"))
 
-
 ### 1.2.2 stem elongation over time ----
 ### S. richardsonii ----
 stem_ric <- brms::brm(log(mean_stem_elong) ~ Sample_age*population+(Sample_age|SampleID_standard),
@@ -320,7 +303,7 @@ ggpred_stem_ric <- ggpredict(stem_ric, terms = c("Sample_age", "population"))
 
 ### S. pulchra ----
 all_CG_growth_pul_elong <- all_CG_growth_pul %>% 
-  filter(mean_stem_elong < 550) # filter some extreme values that don't make biological sense 
+  filter(mean_stem_elong < 550) # filter out extreme values that don't make biological sense 
 
 stem_pul <- brms::brm(log(mean_stem_elong) ~ Sample_age*population+(Sample_age|SampleID_standard),
                       data = all_CG_growth_pul_elong,  family = gaussian(), chains = 3,
@@ -421,7 +404,6 @@ all_pheno_pulchra <- all_pheno_2023 %>%
 all_pheno_arctica <- all_pheno_2023 %>%
   filter(Species == "Salix arctica")
 
-
 ## 2.1 leaf bud burst ----
 ### S. richardsonii ----
 all_phenocam_rich$First_bud_burst_DOY_center <- center_scale(all_phenocam_rich$First_bud_burst_DOY) 
@@ -513,7 +495,6 @@ pp_check(arctica_yellowing, type = "dens_overlay", ndraws = 100) # looks good
 # 3. TRAITS -----
 # data: 
 all_CG_source_traits <- read.csv("final_versions/data/all_CG_source_traits_2023.csv") # most traits
-
 all_CG_growth <- read.csv("final_versions/data/all_cg_data_2023.csv") # leaf length data
 
 # rename levels of variables for easier interpretation 
@@ -694,5 +675,57 @@ pp_check(arctica_LL_CG, type = "dens_overlay", ndraws = 100)
 # arctica_LL_CG <- readRDS("final_versions/model_outputs/ll_arctica.rds")
 arc_LL.pred <- ggpredict(arctica_LL_CG, terms = c('population'))
 
+# 4. Propagation effects -----
+# data: 
+prop_cg <- read.csv("final_versions/data/prop_cg_2023.csv")
+# make species specific dfs
+prop_cg_rich <- prop_cg %>% 
+  dplyr::filter(Species == "Salix richardsonii")
+prop_cg_pulchra <- prop_cg %>% 
+  dplyr::filter(Species == "Salix pulchra")
+prop_cg_arctica <- prop_cg %>% 
+  dplyr::filter(Species == "Salix arctica")
 
-
+## 4.1 max height and cutting length ----
+###### S. richardsonii----
+prop_height_rich <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
+                              data = prop_cg_rich, family = gaussian(), chains = 3,
+                              iter = 3000, warmup = 1000, 
+                              control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(prop_height_rich) 
+saveRDS(prop_height_rich, "final_versions/model_outputs/propagation_ric_height.rds")
+###### S. pulchra----
+prop_height_pul <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
+                             data = prop_cg_pulchra, family = gaussian(), chains = 3,
+                             iter = 3000, warmup = 1000, 
+                             control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(prop_height_pul)
+saveRDS(prop_height_pul, file = "final_versions/model_outputs/propagation_pul_height.rds")
+###### S. arctica----
+prop_height_arc <- brms::brm(log(max_canopy_height_cm) ~ log(Cutting_length) * Site,
+                             data = prop_cg_arctica, family = gaussian(), chains = 3,
+                             iter = 3000, warmup = 1000, 
+                             control = list(max_treedepth = 15, adapt_delta = 0.99))
+saveRDS(prop_height_arc, file = "final_versions/model_outputs/propagation_arc_height.rds")
+## 4.2 max width and cutting length ----
+###### S. richardsonii----
+prop_width_rich <- brms::brm(log(max_mean_width_cm) ~ log(Cutting_length) * Site,
+                             data = prop_cg_rich, family = gaussian(), chains = 3,
+                             iter = 3000, warmup = 1000, 
+                             control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(prop_width_rich)
+saveRDS(prop_width_rich, "final_versions/model_outputs/propagation_ric_width.rds")
+###### S. pulchra----
+prop_width_pul <- brms::brm(log(max_mean_width_cm) ~ log(Cutting_length) * Site,
+                            data = prop_cg_pulchra, family = gaussian(), chains = 3,
+                            iter = 3000, warmup = 1000, 
+                            control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(prop_width_pul) 
+saveRDS(prop_width_pul, file = "final_versions/model_outputs/propagation_pul_width.rds")
+###### S. arctica----
+prop_width_arc <- brms::brm(log(max_mean_width_cm) ~ log(Cutting_length) * Site,
+                            data = prop_cg_arctica, family = gaussian(), chains = 3,
+                            iter = 3000, warmup = 1000, 
+                            control = list(max_treedepth = 15, adapt_delta = 0.99))
+summary(prop_width_arc)
+saveRDS(prop_width_arc, file = "final_versions/model_outputs/propagation_arc_width.rds")
