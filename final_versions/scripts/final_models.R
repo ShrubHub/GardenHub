@@ -1,9 +1,9 @@
-# models for Common garden manuscript 
-# citation: TBD! 
-# email for questions: madelaine.anderson@usherbrooke.ca
+# Earlier and increased growth of tundra willows after a decade of growth in a warmer common garden environment 
+#  Anderson et al., 2024 
+# email: madelaine.anderson@usherbrooke.ca
 
 # Outline ----
-# NB: within each section, one model per species is run aka three models. 
+# NB: within each section, one model (three species) per species is run  
 # NB: model outputs were saved after running, rerunning models may yield slightly different results (exact numbers due to random variation in iterations)
 
 # 1. Growth models 
