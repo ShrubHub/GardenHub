@@ -8,5 +8,7 @@ contact email for questions: madelaine.anderson@usherbrooke.ca
 
 #### Folder structure: 
 data: contains all data used in the analysis
+
 model outputs: contains all model outputs reported in manuscript
+
 scripts: contains code for running analyses 
