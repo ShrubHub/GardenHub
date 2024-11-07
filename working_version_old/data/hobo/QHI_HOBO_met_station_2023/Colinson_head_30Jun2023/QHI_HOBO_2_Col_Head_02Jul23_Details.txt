@@ -1,0 +1,199 @@
+﻿Details
+Series: Temp, *C
+	Sensor Info
+		- Serial Number: 21414492
+		- Sub Sensor Number: 1
+		- Part Number: S-TMB-XXXX
+		- Label: 
+		- Resolution: 12 bit
+	Devices
+		Device Info
+			- Product: HOBO Micro Station Logger
+			- Serial Number: 21419290
+			- Version Number: 5.00
+			- Manufacturer: Onset Computer Corporation
+			- Device Memory: 524288
+			- Header Created: 07/19/22 12:29:02 PM GMT-07:00
+	Deployment Info
+		- Full Series Name: Temperature, *C
+		- Launch Name: QHI_HOBO_2
+		- Deployment Number: 4
+		- Wrap Enabled: No
+		- Launch Time: 07/19/22 12:29:11 PM GMT-07:00
+		- Logging Interval: 00 Hr 30 Min 00 Sec
+		- Sampling Interval: None
+		- Launch GMT Offset: -7 Hr 0 Min
+		- Battery Type: Alkaline
+	Series Statistics
+		- Samples: 16,709
+		- Max: 22.202
+		- Min: -18.877
+		- Avg: -5.511
+		- Std Dev (σ): 7.541
+		- First Sample Time: 07/19/22 12:29:14 PM GMT-07:00
+		- Last Sample Time: 07/02/23 02:29:14 PM GMT-07:00
+Series: Water Content, m³/m³
+	Sensor Info
+		- Serial Number: 21420676
+		- Sub Sensor Number: 1
+		- Part Number: S-SMD-M005
+		- Label: 
+		- Resolution: 12 bit
+	Devices
+		Device Info
+			- Product: HOBO Micro Station Logger
+			- Serial Number: 21419290
+			- Version Number: 5.00
+			- Manufacturer: Onset Computer Corporation
+			- Device Memory: 524288
+			- Header Created: 07/19/22 12:29:02 PM GMT-07:00
+	Deployment Info
+		- Full Series Name: Water Content, m³/m³
+		- Launch Name: QHI_HOBO_2
+		- Deployment Number: 4
+		- Wrap Enabled: No
+		- Launch Time: 07/19/22 12:29:11 PM GMT-07:00
+		- Logging Interval: 00 Hr 30 Min 00 Sec
+		- Sampling Interval: None
+		- Launch GMT Offset: -7 Hr 0 Min
+		- Battery Type: Alkaline
+	Series Statistics
+		- Samples: 16,709
+		- Max: 0.5308
+		- Min: -0.2520
+		- Avg: 0.2085
+		- Std Dev (σ): 0.0854
+		- First Sample Time: 07/19/22 12:29:14 PM GMT-07:00
+		- Last Sample Time: 07/02/23 02:29:14 PM GMT-07:00
+Series: Temperature, *C
+	Sensor Info
+		- Serial Number: 21420851
+		- Sub Sensor Number: 1
+		- Part Number: S-THC-XXXX
+		- Label: 
+		- Resolution: 16 bit
+	Devices
+		Device Info
+			- Product: HOBO Micro Station Logger
+			- Serial Number: 21419290
+			- Version Number: 5.00
+			- Manufacturer: Onset Computer Corporation
+			- Device Memory: 524288
+			- Header Created: 07/19/22 12:29:02 PM GMT-07:00
+	Deployment Info
+		- Full Series Name: Temperature, *C
+		- Launch Name: QHI_HOBO_2
+		- Deployment Number: 4
+		- Wrap Enabled: No
+		- Launch Time: 07/19/22 12:29:11 PM GMT-07:00
+		- Logging Interval: 00 Hr 30 Min 00 Sec
+		- Sampling Interval: None
+		- Launch GMT Offset: -7 Hr 0 Min
+		- Battery Type: Alkaline
+	Series Statistics
+		- Samples: 16,709
+		- Max: 26.8879
+		- Min: -39.2574
+		- Avg: -7.7629
+		- Std Dev (σ): 13.2470
+		- First Sample Time: 07/19/22 12:29:14 PM GMT-07:00
+		- Last Sample Time: 07/02/23 02:29:14 PM GMT-07:00
+Series: RH, %
+	Sensor Info
+		- Serial Number: 21420851
+		- Sub Sensor Number: 2
+		- Part Number: S-THC-XXXX
+		- Label: 
+		- Resolution: 16 bit
+	Devices
+		Device Info
+			- Product: HOBO Micro Station Logger
+			- Serial Number: 21419290
+			- Version Number: 5.00
+			- Manufacturer: Onset Computer Corporation
+			- Device Memory: 524288
+			- Header Created: 07/19/22 12:29:02 PM GMT-07:00
+	Deployment Info
+		- Full Series Name: RH, %
+		- Launch Name: QHI_HOBO_2
+		- Deployment Number: 4
+		- Wrap Enabled: No
+		- Launch Time: 07/19/22 12:29:11 PM GMT-07:00
+		- Logging Interval: 00 Hr 30 Min 00 Sec
+		- Sampling Interval: None
+		- Launch GMT Offset: -7 Hr 0 Min
+		- Battery Type: Alkaline
+	Series Statistics
+		- Samples: 16,709
+		- Max: 99.9969
+		- Min: 20.1114
+		- Avg: 88.7135
+		- Std Dev (σ): 12.3207
+		- First Sample Time: 07/19/22 12:29:14 PM GMT-07:00
+		- Last Sample Time: 07/02/23 02:29:14 PM GMT-07:00
+Series: Temp, *C
+	Sensor Info
+		- Serial Number: 21420922
+		- Sub Sensor Number: 1
+		- Part Number: S-TMB-XXXX
+		- Label: 
+		- Resolution: 12 bit
+	Devices
+		Device Info
+			- Product: HOBO Micro Station Logger
+			- Serial Number: 21419290
+			- Version Number: 5.00
+			- Manufacturer: Onset Computer Corporation
+			- Device Memory: 524288
+			- Header Created: 07/19/22 12:29:02 PM GMT-07:00
+	Deployment Info
+		- Full Series Name: Temperature, *C
+		- Launch Name: QHI_HOBO_2
+		- Deployment Number: 4
+		- Wrap Enabled: No
+		- Launch Time: 07/19/22 12:29:11 PM GMT-07:00
+		- Logging Interval: 00 Hr 30 Min 00 Sec
+		- Sampling Interval: None
+		- Launch GMT Offset: -7 Hr 0 Min
+		- Battery Type: Alkaline
+	Series Statistics
+		- Samples: 16,709
+		- Max: 22.561
+		- Min: -38.309
+		- Avg: -8.308
+		- Std Dev (σ): 12.942
+		- First Sample Time: 07/19/22 12:29:14 PM GMT-07:00
+		- Last Sample Time: 07/02/23 02:29:14 PM GMT-07:00
+Series: Temp, *C
+	Sensor Info
+		- Serial Number: 21420924
+		- Sub Sensor Number: 1
+		- Part Number: S-TMB-XXXX
+		- Label: 
+		- Resolution: 12 bit
+	Devices
+		Device Info
+			- Product: HOBO Micro Station Logger
+			- Serial Number: 21419290
+			- Version Number: 5.00
+			- Manufacturer: Onset Computer Corporation
+			- Device Memory: 524288
+			- Header Created: 07/19/22 12:29:02 PM GMT-07:00
+	Deployment Info
+		- Full Series Name: Temperature, *C
+		- Launch Name: QHI_HOBO_2
+		- Deployment Number: 4
+		- Wrap Enabled: No
+		- Launch Time: 07/19/22 12:29:11 PM GMT-07:00
+		- Logging Interval: 00 Hr 30 Min 00 Sec
+		- Sampling Interval: None
+		- Launch GMT Offset: -7 Hr 0 Min
+		- Battery Type: Alkaline
+	Series Statistics
+		- Samples: 16,709
+		- Max: 21.819
+		- Min: -17.770
+		- Avg: -5.571
+		- Std Dev (σ): 6.920
+		- First Sample Time: 07/19/22 12:29:14 PM GMT-07:00
+		- Last Sample Time: 07/02/23 02:29:14 PM GMT-07:00

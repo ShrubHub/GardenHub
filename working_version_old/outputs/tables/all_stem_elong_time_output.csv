@@ -1,0 +1,25 @@
+,Species,Estimate,Est.Error (log),Lower 95% CI (log),Upper 95% CI (log),Rhat,Bulk_ESS,Tail_ESS,effect,Estimate (back),Lower 95% CI (back),Upper 95% CI (back),,,,nobs
+Intercept,Salix richardsonii,3,0,3,4,1.00,3945,5862,fixed,24,16,36,,,,526
+Sample age,Salix richardsonii,0,0,0,0,1.00,3555,5935,fixed,1,1,1,,,,526
+Southern population,Salix richardsonii,1,0,1,2,1.00,3500,5633,fixed,4,2,6,,,,526
+Sample age:Southern population,Salix richardsonii,0,0,0,0,1.00,3491,5793,fixed,1,1,1,,,,526
+Random intercept,Salix richardsonii,1,0,1,1,1.00,4016,6815,random,3,2,4,,,,526
+sd(Sample age),Salix richardsonii,0,0,0,0,1.00,2054,3936,random,1,1,1,,,,526
+"cor(Intercept, Sample age)",Salix richardsonii,-1,0,-1,-1,1.00,3760,6405,random,0,0,1,,,,526
+sigma,Salix richardsonii,1,0,1,1,1.00,6607,8267,residual,2,2,2,,,,526
+Intercept1,Salix pulchra,2,0,2,3,1.00,7010,8729,fixed,11,8,16,,,,742
+Sample age1,Salix pulchra,0,0,0,0,1.00,6293,8085,fixed,1,1,1,,,,742
+Southern population1,Salix pulchra,1,0,1,1,1.00,6855,7459,fixed,3,2,4,,,,742
+Sample age:Southern population1,Salix pulchra,0,0,0,0,1.00,5975,6804,fixed,1,1,1,,,,742
+Random intercept1,Salix pulchra,1,0,1,1,1.00,2564,3556,random,2,2,3,,,,742
+sd(Sample age)1,Salix pulchra,0,0,0,0,1.00,1902,2536,random,1,1,1,,,,742
+"cor(Intercept, Sample age)1",Salix pulchra,-1,0,-1,-1,1.00,3019,3784,random,0,0,1,,,,742
+sigma1,Salix pulchra,1,0,1,1,1.00,7036,8295,residual,2,2,3,,,,742
+Intercept2,Salix arctica,1,0,1,2,1.00,6628,7784,fixed,4,3,5,,,,272
+Sample age2,Salix arctica,0,0,0,0,1.00,6551,7766,fixed,1,1,1,,,,272
+Southern population2,Salix arctica,0,0,0,1,1.00,5755,7241,fixed,1,1,2,,,,272
+Sample age:Southern population2,Salix arctica,0,0,0,0,1.00,5797,6523,fixed,1,1,1,,,,272
+Random intercept2,Salix arctica,0,0,0,1,1.00,4150,4200,random,1,1,2,,,,272
+sd(Sample age)2,Salix arctica,0,0,0,0,1.01,762,1696,random,1,1,1,,,,272
+"cor(Intercept, Sample age)2",Salix arctica,0,0,-1,1,1.00,1621,2338,random,1,1,3,,,,272
+sigma2,Salix arctica,1,0,0,1,1.00,5179,7629,residual,2,2,2,,,,272
