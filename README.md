@@ -1,7 +1,7 @@
 ## GardenHub
 ###### Repository for: Earlier and increased growth of tundra willows after a decade of growth in a warmer common garden environment 
 ###### Anderson et al. 2024
-preprint link: stay tuned! 
+preprint link: (https://doi.org/10.32942/X2132Q)  
 
 ****** 
 contact email for questions: madelaine.anderson@usherbrooke.ca
